@@ -9,6 +9,7 @@ public enum State {
     CLIMBING,
     JUMPING,
     MOVING_LEFT,
-    MOVING_RIGHT
+    MOVING_RIGHT,
+    STANDING
 
 }
