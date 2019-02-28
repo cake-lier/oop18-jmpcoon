@@ -1,6 +1,7 @@
 package view.game;
 
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 
 /**
  * an interface representing an {@link Entity} that can be drawn.
@@ -8,9 +9,14 @@ import javafx.scene.Scene;
 public interface DrawableEntity {
 
     /**
-     * draws the {@link DrawableEntity} in the given {@link Scene}.
-     * @param scene the scene where the {@link DrawableEntity} will be drawn
+     * updates the position of the {@link ImageView} of this {@link DrawableEntity}
+     * so that it's up to date with the one of the {@link Entity}.
      */
-    void draw(Scene scene);
+    void updatePosition();
+
+    /**
+     * @return the {@link ImageView} representing the {@link Entity}
+     */
+    ImageView getImageView();
 
 }
