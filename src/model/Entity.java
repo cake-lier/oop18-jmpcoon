@@ -7,9 +7,9 @@ import utils.Pair;
  */
 public interface Entity {
 
-    // TODO: better format the comment (line too long)
     /**
-     * @return the position of the entity, as a {@link Pair} where the first element is the x coordinate and the second element is the y one
+     * @return the position of the entity, as a {@link Pair} where the first element is the x coordinate
+     * and the second element is the y one
      */
     Pair<Double, Double> getPosition();
 
@@ -17,6 +17,12 @@ public interface Entity {
      * @return the shape of this {@link Entity}
      */
     EntityShape getShape();
+
+    // TODO: better phrase this comment
+    /**
+     * @return the angle in radians of this {@link Entity}
+     */
+    double getAngle();
 
     /**
      * @return the type of this {@link Entity}

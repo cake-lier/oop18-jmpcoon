@@ -18,6 +18,16 @@ public interface PhysicalBody {
     EntityShape getShape();
 
     /**
+     * @return the angle of this {@link PhysicalBody}
+     */
+    double getAngle();
+
+    /**
+     * @return the {@link State} this {@link PhysicalBody} is in
+     */
+    State getState();
+
+    /**
      * @return whether this {@link PhysicalBody} exists or not
      */
     boolean exist();
