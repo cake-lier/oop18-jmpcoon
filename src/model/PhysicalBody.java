@@ -31,4 +31,9 @@ public interface PhysicalBody {
      * @return whether this {@link PhysicalBody} exists or not
      */
     boolean exist();
+
+    /**
+     * @return the velocity of this {@link PhysicalBody}, divided in its x and y components.
+     */
+    Pair<Double, Double> getVelocity();
 }

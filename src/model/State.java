@@ -10,6 +10,6 @@ public enum State {
     JUMPING,
     MOVING_LEFT,
     MOVING_RIGHT,
-    STANDING
+    IDLE
 
 }
