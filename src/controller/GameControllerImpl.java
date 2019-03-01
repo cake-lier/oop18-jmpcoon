@@ -2,7 +2,7 @@ package controller;
 
 import java.util.Collection;
 
-import view.DrawableEntity;
+import view.game.DrawableEntity;
 
 /**
  * 
@@ -38,7 +38,9 @@ public class GameControllerImpl implements GameController {
         // TODO Auto-generated method stub
 
     }
-
+    /**
+     * 
+     */
     @Override
     public Collection<DrawableEntity> getDrawableEntities() {
         // TODO Auto-generated method stub

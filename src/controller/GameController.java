@@ -2,7 +2,7 @@ package controller;
 
 import java.util.Collection;
 
-import view.DrawableEntity;
+import view.game.DrawableEntity;
 
 /**
  * a controller for the game playing.
