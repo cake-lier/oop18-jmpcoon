@@ -1,5 +1,7 @@
 package view;
 
+import java.io.IOException;
+
 import javafx.stage.Stage;
 
 /**
@@ -10,6 +12,7 @@ public interface GameView {
     /**
      * Function drawing the menu of the game.
      * @param stage The current stage.
+     * @throws IOException If IO error occurs.
      */
-    void drawMenu(Stage stage);
+    void drawMenu(Stage stage) throws IOException;
 }

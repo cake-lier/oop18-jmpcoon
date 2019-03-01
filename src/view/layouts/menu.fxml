@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Group?>
+
+<Group xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<Button fx:id="startGame"
+				alignment="CENTER"
+				text="Start Game"	/>
+	</children>
+	<children>
+		<Button fx:id="exitGame"
+				alignment="CENTER"
+				text="Exit"	/>
+	</children>
+</Group>
