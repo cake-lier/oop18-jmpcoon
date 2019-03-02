@@ -34,8 +34,10 @@ public final class AppControllerImpl extends Application implements AppControlle
         new AppControllerImpl().startApp();
     }
     /**
-     * 
-     * @param stage
+     * Sets the stage size to the appropriate values, so as to make it always the
+     * biggest possible and with an aspect ratio of 16:9. It is also unresizable, so
+     * the ratio cannot be changed in any way.
+     * @param stage The stage being used.
      */
     private void setScreenSize(final Stage stage) {
         final Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -50,6 +52,7 @@ public final class AppControllerImpl extends Application implements AppControlle
             stage.setHeight(primaryScreenBounds.getHeight());
             stage.setWidth((primaryScreenBounds.getHeight() / heightRatio) * widthRatio);
         }
+        stage.setResizable(false);
     }
     /**
      * The method used by JavaFX to start the application.
@@ -58,7 +61,7 @@ public final class AppControllerImpl extends Application implements AppControlle
     public void start(final Stage stage) throws Exception {
         stage.setTitle(title);
         this.setScreenSize(stage);
-        final MenuView menuView = new MenuViewImpl();
+        final MenuView menuView = new MenuViewImpl(this);
         menuView.drawMenu(stage);
         menuView.showMenu();
     }
