@@ -17,8 +17,7 @@ public final class MenuImpl implements Menu {
     private final AppController controller;
     private Optional<Stage> drawnMenu = Optional.empty();
     /**
-     * Binds the menu view to the assigned controller, which is also the controller
-     * of this application.
+     * Binds this menu to its controller, which is also the controller of the application.
      * @param controller The application controller.
      */
     public MenuImpl(final AppController controller) {
@@ -44,6 +43,7 @@ public final class MenuImpl implements Menu {
     }
     /**
      * {@inheritDoc}
+     * It loads the ".fxml" associated file and sets as controller this specific instance of menu.
      */
     @Override
     public void drawMenu(final Stage stage) throws IOException {

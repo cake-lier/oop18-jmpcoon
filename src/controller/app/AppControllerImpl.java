@@ -20,9 +20,7 @@ public final class AppControllerImpl extends Application implements AppControlle
 
     private final GameController gameController;
     /**
-     * This constructor is private so as to not letting anyone create a second controller
-     * for this application, because it will lead to unintended errors. It create a new
-     * {@link GameController} to call when the user wants to begin a new game.
+     * Creates a new {@link GameController} to call when the user wants to begin a new game.
      */
     public AppControllerImpl() {
         super();
@@ -58,7 +56,8 @@ public final class AppControllerImpl extends Application implements AppControlle
         stage.setResizable(false);
     }
     /**
-     * The method used by JavaFX to start the application.
+     * The method used by JavaFX to start the application. Sets title and size of the stage,
+     * and then draws the menu on it.
      */
     @Override
     public void start(final Stage stage) throws Exception {

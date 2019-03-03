@@ -5,7 +5,7 @@ import java.io.IOException;
 import javafx.stage.Stage;
 
 /**
- * The view of the menu, it has to draw, show and hide the initial menu.
+ * The initial menu, it has to draw, show and hide itself.
  */
 public interface Menu {
     /**
