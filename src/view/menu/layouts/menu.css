@@ -1,4 +1,27 @@
-#title {
-    -fx-font-size: 5em;
-    
+@font-face {
+    src: url("../../../../res/forest_thing.ttf");
 }
+
+@font-face {
+    src: url("../../../../res/darkforest.ttf");
+}
+
+#container {
+    -fx-background-image: url("../../../../res/background.jpg");
+    -fx-background-repeat: round;
+    -fx-background-position: center center;
+}
+
+#title {
+    -fx-font-family: "FOREST THING";
+    -fx-font-size: 7em;
+    -fx-text-fill: rgb(143,89,2);
+}
+
+.buttons {
+    -fx-font-family: "dark forest";
+    -fx-font-size: 5em;
+    -fx-pref-width: 50em;
+    -fx-background-color: rgb(233,185,110);
+    -fx-text-fill: rgb(143,89,2);
+} 

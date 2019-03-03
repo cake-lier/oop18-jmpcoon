@@ -6,22 +6,27 @@
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8" 
-            xmlns:fx="http://javafx.com/fxml/1">
-    <top>       
-        <Text id="title"
+            xmlns:fx="http://javafx.com/fxml/1"
+            id="container">
+    <top>
+        <Label id="title"
               BorderPane.alignment="CENTER"
               text="Jumping Raccoon Adventures">
             <BorderPane.margin>
                 <Insets top="100" bottom="0" left="0" right="0" />
             </BorderPane.margin>
-        </Text>
+        </Label>
     </top>
     <center>
-        <VBox alignment="CENTER">
-            <Button onMouseClicked="#startGameController">Start Game</Button>
-            <Button onMouseClicked="#exitApp">Quit Game</Button>
+        <VBox alignment="CENTER"
+              spacing="25">
+            <Button styleClass="buttons"
+                    onMouseClicked="#startGameController">Start Game</Button>
+            <Button styleClass="buttons"
+                    onMouseClicked="#exitApp">Quit</Button>
         </VBox>
     </center>
     <stylesheets>
