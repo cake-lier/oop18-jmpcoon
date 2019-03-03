@@ -1,5 +1,7 @@
 package controller;
 
+import controller.game.GameController;
+
 /**
  * an enumeration representing the types of input a {@link GameController} can process.
  */

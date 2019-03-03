@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Text?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" 
+            xmlns:fx="http://javafx.com/fxml/1"
+            id="container">
+    <top>
+        <Label id="title"
+              BorderPane.alignment="CENTER"
+              text="Jumping Raccoon Adventures">
+            <BorderPane.margin>
+                <Insets top="100" bottom="0" left="0" right="0" />
+            </BorderPane.margin>
+        </Label>
+    </top>
+    <center>
+        <VBox alignment="CENTER"
+              spacing="25">
+            <Button styleClass="buttons"
+                    onMouseClicked="#startGame">Start Game</Button>
+            <Button styleClass="buttons"
+                    onMouseClicked="#exitApp">Quit</Button>
+        </VBox>
+    </center>
+    <stylesheets>
+      <URL value="@menu.css" />
+   </stylesheets>
+</BorderPane>
