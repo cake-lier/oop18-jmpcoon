@@ -1,39 +1,42 @@
 package model;
 
 import java.util.Collection;
+import java.util.EnumMap;
 
 import utils.Pair;
 
 /**
- * interface representing the World in which the game takes place.
+ * The World in which the game takes place. It creates, initializes, destroys and passes
+ * around all the entities which populate the game world.
  */
 public interface World {
-
     /**
-     * @return the dimensions of the world
+     * Gets the dimensions of the world.
+     * @return A pair, the dimensions of the game world in meters.
      */
     Pair<Double, Double> getDimensions();
-
     /**
-     * initialize the desired level.
+     * Initializes the world with the specified level, so it populates it with the entities
+     * which should be inside this level.
      */
-    // TODO: what should be passed to this method? int, enum, level object?
+    //TODO: what should be passed to this method? int, enum, level object?
     void initLevel();
-
     /**
-     * a method to move the player inside the {@link World}.
-     * @param movement the type of movement the player should execute
+     * It moves the player inside the world making her do one of the movements it's allowed
+     * to make, as specified in the {@link MovementType} enum.
+     * @param movement The type of movement the player should do.
      */
     void movePlayer(MovementType movement);
-
     /**
-     * @return whether the game has ended or not
+     * Checks whether the game has ended or not.
+     * @return True if the game has ended.
      */
     boolean isGameOver();
-
     /**
-     * @return the entities populating the {@link World}
+     * Produces all the entities which populate this world, divided by group depending
+     * of their type, as specified in the {@link EntityType} enum.
+     * @return An {@link EnumMap} from the {@link EntityType} to the collection of
+     * {@link Entity} of this type.
      */
-    Collection<Entity> getEntities();
-
+    EnumMap<EntityType, Collection<Entity>> getEntities();
 }
