@@ -1,4 +1,4 @@
-package controller;
+package controller.app;
 
 /**
  * Interface modeling the controller for the application: it should correctly start the

@@ -1,20 +1,22 @@
-package controller;
+package controller.app;
 
+import controller.game.GameController;
+import controller.game.GameControllerImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import view.menu.MenuView;
-import view.menu.MenuViewImpl;
+import view.menu.Menu;
+import view.menu.MenuImpl;
 
 /**
  * Class implementation of the interface {@link AppController}.
  */
 public final class AppControllerImpl extends Application implements AppController {
-    private final String title = "Jumping Raccoon Adventures";
-    private final int heightRatio = 9;
-    private final int widthRatio = 16;
+    private static final String TITLE = "Jumping Raccoon Adventures";
+    private static final int HEIGHT_RATIO = 9;
+    private static final int WIDTH_RATIO = 16;
 
     private final GameController gameController;
     /**
@@ -23,6 +25,7 @@ public final class AppControllerImpl extends Application implements AppControlle
      * {@link GameController} to call when the user wants to begin a new game.
      */
     public AppControllerImpl() {
+        super();
         this.gameController = new GameControllerImpl();
     }
     /**
@@ -43,14 +46,14 @@ public final class AppControllerImpl extends Application implements AppControlle
         final Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         stage.setX(primaryScreenBounds.getMinX());
         stage.setY(primaryScreenBounds.getMinY());
-        if (primaryScreenBounds.getWidth()
-            < (primaryScreenBounds.getHeight() / heightRatio) * widthRatio) {
+        final double unitaryHeight = primaryScreenBounds.getHeight() / HEIGHT_RATIO;
+        final double unitaryWidth = primaryScreenBounds.getWidth() / WIDTH_RATIO;
+        if (primaryScreenBounds.getWidth() < unitaryHeight * WIDTH_RATIO) {
             stage.setWidth(primaryScreenBounds.getWidth());
-            stage.setHeight((primaryScreenBounds.getWidth() / widthRatio) * heightRatio);
-        } else if (primaryScreenBounds.getHeight()
-                   < (primaryScreenBounds.getWidth() / widthRatio) * heightRatio) {
+            stage.setHeight(unitaryWidth * HEIGHT_RATIO);
+        } else if (primaryScreenBounds.getHeight() < unitaryWidth * HEIGHT_RATIO) {
             stage.setHeight(primaryScreenBounds.getHeight());
-            stage.setWidth((primaryScreenBounds.getHeight() / heightRatio) * widthRatio);
+            stage.setWidth(unitaryHeight * WIDTH_RATIO);
         }
         stage.setResizable(false);
     }
@@ -59,11 +62,11 @@ public final class AppControllerImpl extends Application implements AppControlle
      */
     @Override
     public void start(final Stage stage) throws Exception {
-        stage.setTitle(title);
+        stage.setTitle(TITLE);
         this.setScreenSize(stage);
-        final MenuView menuView = new MenuViewImpl(this);
-        menuView.drawMenu(stage);
-        menuView.showMenu();
+        final Menu menu = new MenuImpl(this);
+        menu.drawMenu(stage);
+        menu.showMenu();
     }
     /**
      * {@inheritDoc}

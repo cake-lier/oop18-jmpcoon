@@ -1,14 +1,15 @@
 @font-face {
-    src: url("../../../../res/forest_thing.ttf");
+    src: url("../fonts/forest_thing.ttf");
 }
 
 @font-face {
-    src: url("../../../../res/darkforest.ttf");
+    src: url("../fonts/darkforest.ttf");
 }
 
 #container {
-    -fx-background-image: url("../../../../res/background.jpg");
+    -fx-background-image: url("../images/background.jpg");
     -fx-background-repeat: round;
+    -fx-background-size: cover;
     -fx-background-position: center center;
 }
 
@@ -24,4 +25,8 @@
     -fx-pref-width: 50em;
     -fx-background-color: rgb(233,185,110);
     -fx-text-fill: rgb(143,89,2);
-} 
+}
+
+.buttons:hover {
+    -fx-background-color: derive(rgb(233,185,110), 20%);
+}

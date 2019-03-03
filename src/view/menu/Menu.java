@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 /**
  * The view of the menu, it has to draw, show and hide the initial menu.
  */
-public interface MenuView {
+public interface Menu {
     /**
      * Draws the menu of the game.
      * @param stage The stage in which to draw the menu.
@@ -15,11 +15,11 @@ public interface MenuView {
      */
     void drawMenu(Stage stage) throws IOException;
     /**
-     * Shows the previously drawed menu.
+     * Shows the previously drawn menu.
      */
     void showMenu();
     /**
-     * Hides the menu.
+     * Hides the currently shown menu.
      */
     void hideMenu();
 }

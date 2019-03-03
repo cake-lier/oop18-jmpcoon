@@ -24,7 +24,7 @@
         <VBox alignment="CENTER"
               spacing="25">
             <Button styleClass="buttons"
-                    onMouseClicked="#startGameController">Start Game</Button>
+                    onMouseClicked="#startGame">Start Game</Button>
             <Button styleClass="buttons"
                     onMouseClicked="#exitApp">Quit</Button>
         </VBox>

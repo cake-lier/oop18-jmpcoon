@@ -1,7 +1,8 @@
-package controller;
+package controller.game;
 
 import java.util.Collection;
 
+import controller.InputType;
 import view.game.DrawableEntity;
 
 /**
