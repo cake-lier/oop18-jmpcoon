@@ -9,7 +9,7 @@ public class Ladder extends StaticEntity {
      * builds a new {@link Ladder}.
      * @param body the {@link PhysicalBody} of this {@link Ladder}
      */
-    public Ladder(final PhysicalBody body) {
+    public Ladder(final StaticPhysicalBody body) {
         super(body);
     }
 
@@ -19,6 +19,14 @@ public class Ladder extends StaticEntity {
     @Override
     public EntityType getType() {
         return EntityType.LADDER;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public EntityShape getShape() {
+        return EntityShape.RECTANGLE;
     }
 
 }

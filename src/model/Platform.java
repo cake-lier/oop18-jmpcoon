@@ -9,7 +9,7 @@ public class Platform extends StaticEntity {
      * builds a new {@link Platform}.
      * @param body the {@link PhysicalBody} of this {@link Platform}
      */
-    public Platform(final PhysicalBody body) {
+    public Platform(final StaticPhysicalBody body) {
         super(body);
     }
 
@@ -19,6 +19,14 @@ public class Platform extends StaticEntity {
     @Override
     public EntityType getType() {
         return EntityType.PLATFORM;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public EntityShape getShape() {
+        return EntityShape.RECTANGLE;
     }
 
 }

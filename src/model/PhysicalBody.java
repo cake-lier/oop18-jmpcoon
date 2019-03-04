@@ -13,11 +13,6 @@ public interface PhysicalBody {
     Pair<Double, Double> getPosition();
 
     /**
-     * @return the shape of this {@link PhysicalBody}
-     */
-    EntityShape getShape();
-
-    /**
      * @return the angle of this {@link PhysicalBody}
      */
     double getAngle();

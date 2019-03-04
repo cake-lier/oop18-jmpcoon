@@ -29,9 +29,7 @@ public abstract class AbstractEntity implements Entity {
      * {@inheritDoc}
      */
     @Override
-    public EntityShape getShape() {
-        return this.body.getShape();
-    }
+    public abstract EntityShape getShape();
 
     /**
      * {@inheritDoc}
@@ -44,8 +42,13 @@ public abstract class AbstractEntity implements Entity {
     @Override
     public abstract EntityType getType();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public abstract State getState();
+    public State getState() {
+        return this.body.getState();
+    }
 
     /**
      * {@inheritDoc}
