@@ -1,6 +1,6 @@
-package model.entities.d;
+package model;
 
-import model.entities.AbstractEntity;
+import model.AbstractEntity;
 
 /**
  * a class representing an movable {@link Entity}.

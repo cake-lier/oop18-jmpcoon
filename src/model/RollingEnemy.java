@@ -1,7 +1,4 @@
-package model.entities.d;
-
-import model.enums.EntityShape;
-import model.enums.EntityType;
+package model;
 
 /**
  * TODO: add a non-linear velocity movement

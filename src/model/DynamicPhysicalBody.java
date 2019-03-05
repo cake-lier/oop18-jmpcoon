@@ -1,9 +1,6 @@
 package model;
 
 import org.jbox2d.dynamics.Body;
-
-import model.AbstractPhysicalBody;
-import model.State;
 /**
  * a class representing a {@link PhysicalBody} that can move (players and enemies).
  */
