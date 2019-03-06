@@ -2,9 +2,9 @@ package controller;
 
 import java.util.Collection;
 
+import model.Entity;
 import model.MovementType;
 import model.World;
-import view.game.DrawableEntity;
 
 /**
  * a {@link GameController} for a game set in a {@link World}.
@@ -53,10 +53,12 @@ public class GameControllerImpl implements GameController {
         this.gameWorld.movePlayer(inputToMovement(input));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Collection<DrawableEntity> getDrawableEntities() {
-        // TODO Auto-generated method stub
-        return null;
+    public Collection<Entity> getEntities() {
+        return this.gameWorld.getEntities();
     }
 
     private MovementType inputToMovement(final InputType input) {

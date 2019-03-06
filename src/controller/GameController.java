@@ -2,7 +2,7 @@ package controller;
 
 import java.util.Collection;
 
-import view.game.DrawableEntity;
+import model.Entity;
 
 /**
  * a controller for the game playing.
@@ -25,8 +25,8 @@ public interface GameController {
     void processInput(InputType input);
 
     /**
-     * @return the entities of the {@link World}, in such a way that they can be drawn
+     * @return the entities contained in the {@link World}
      */
-    Collection<DrawableEntity> getDrawableEntities();
+    Collection<Entity> getEntities();
 
 }
