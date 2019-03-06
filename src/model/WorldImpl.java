@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.LinkedHashSet;
-import org.jbox2d.common.Vec2;
 import utils.Pair;
 import utils.PairImpl;
 
@@ -13,15 +12,12 @@ import utils.PairImpl;
  * The class implementation of {@link World}.
  */
 public final class WorldImpl implements World {
-    private static final float X_GRAVITY_ACC = 0;
-    private static final float Y_GRAVITY_ACC = -9.81f;
-    private static final double X_WORLD_SIZE = 16;
-    private static final double Y_WORLD_SIZE = 9;
+    private static final double WORLD_WIDTH = 16;
+    private static final double WORLD_HEIGHT = 9;
 
-    private final org.jbox2d.dynamics.World world;
-    private final double width;
-    private final double height;
     private boolean gameOver;
+    private final PhysicsFactory factory;
+    private final PhysicalWorld innerWorld;
     private final Collection<Entity> platforms;
     private final Collection<Entity> ladders;
     private final Collection<Entity> walkingEnemies;
@@ -30,12 +26,11 @@ public final class WorldImpl implements World {
     private final Entity player;
     /**
      * This class delegates the job of managing the physics of the game to the library
-     * underneath and to do so, it wraps an instance of {@link org.jbox2d.dynamics.World}.
+     * underneath and to do so, it wraps an instance of the chosen library World.
      */
     public WorldImpl() {
-        this.world = new org.jbox2d.dynamics.World(new Vec2(X_GRAVITY_ACC, Y_GRAVITY_ACC));
-        this.width = X_WORLD_SIZE;
-        this.height = Y_WORLD_SIZE;
+        this.factory = new PhysicsFactoryImpl();
+        this.innerWorld = this.factory.createWorld(WORLD_WIDTH, WORLD_HEIGHT);
         this.gameOver = false;
         this.platforms = new LinkedHashSet<>();
         this.ladders = new LinkedHashSet<>();
@@ -49,7 +44,7 @@ public final class WorldImpl implements World {
      */
     @Override
     public Pair<Double, Double> getDimensions() {
-        return new PairImpl<>(this.width, this.height);
+        return new PairImpl<>(WORLD_WIDTH, WORLD_HEIGHT);
     }
     /**
      * {@inheritDoc}
