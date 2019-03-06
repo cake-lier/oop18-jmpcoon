@@ -1,14 +1,10 @@
 package controller.app;
 
 /**
- * Interface modeling the controller for the application: it should correctly start the
- * application, stop it and start the game when asked to do so.
+ * Interface modeling the controller for the application: it should correctly manage the
+ * application once started, so it should stop it and start the game when asked to do so.
  */
 public interface AppController {
-    /**
-     * Starts the application. It's invoked by the main method.
-     */
-    void startApp();
     /**
      * Exits the application.
      */

@@ -1,12 +1,9 @@
 package view.menu;
 
 import java.io.IOException;
-import java.util.Optional;
-
 import controller.app.AppController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -15,27 +12,37 @@ import javafx.stage.Stage;
  */
 public final class MenuImpl implements Menu {
     private final AppController controller;
-    private Optional<Stage> drawnMenu = Optional.empty();
+    private final Stage stage;
+    private boolean drawn;
+    private boolean showed;
     /**
-     * Binds this menu to its controller, which is also the controller of the application.
-     * @param controller The application controller.
+     * Binds this menu to the instance who has to be the controller of the menu, which is
+     * the controller of the application. Furthermore, it acquires the {@link Stage} in
+     * which to draw the menu.
+     * @param controller The controller.
+     * @param stage The stage in which to draw the menu.
      */
-    public MenuImpl(final AppController controller) {
+    public MenuImpl(final AppController controller, final Stage stage) {
         this.controller = controller;
+        this.stage = stage;
+        this.drawn = false;
+        this.showed = false;
     }
     /**
-     * Wrapper method to delegate to the application controller the job of starting the game. 
-     * This is made because every FXML file use only one controller and the application controller
-     * couldn't be weigh down with other functionalities which are view's relevance.
+     * Wrapper method to delegate to the application controller the job of starting the
+     * game. This is made because every FXML file use only one controller and the
+     * application controller couldn't be weigh down with other functionalities which are
+     * view's relevance.
      */
     @FXML
     private void startGame() {
         this.controller.startGameController();
     }
     /**
-     * Wrapper method to delegate to the application controller the job of exiting from the app. 
-     * This is made because every FXML file use only one controller and the application controller
-     * couldn't be weigh down with functionalities which are view's relevance.
+     * Wrapper method to delegate to the application controller the job of exiting from
+     * the app. This is made because every FXML file use only one controller and the
+     * application controller couldn't be weigh down with functionalities which are view's
+     * relevance.
      */
     @FXML
     private void exitApp() {
@@ -43,24 +50,29 @@ public final class MenuImpl implements Menu {
     }
     /**
      * {@inheritDoc}
-     * It loads the ".fxml" associated file and sets as controller this specific instance of menu.
+     * It loads the ".fxml" associated file and sets as JavaFX controller this specific
+     * instance of menu, then draws it.
      */
     @Override
-    public void drawMenu(final Stage stage) throws IOException {
+    public void drawMenu() {
         final FXMLLoader loader = new FXMLLoader();
         loader.setController(this);
         loader.setLocation(ClassLoader.getSystemResource("layouts/menu.fxml"));
-        final Parent root = loader.load();
-        stage.setScene(new Scene(root));
-        this.drawnMenu = Optional.of(stage);
+        try {
+            this.stage.setScene(new Scene(loader.load()));
+        } catch (final IOException ex) {
+            ex.printStackTrace();
+        }
+        this.drawn = true;
     }
     /**
      * {@inheritDoc}
      */
     @Override
     public void showMenu() {
-        if (this.drawnMenu.isPresent() && !this.drawnMenu.get().isShowing()) {
-            this.drawnMenu.get().show();
+        if (this.drawn && !this.showed) {
+            this.stage.show();
+            this.showed = true;
         }
     }
     /**
@@ -68,9 +80,10 @@ public final class MenuImpl implements Menu {
      */
     @Override
     public void hideMenu() {
-        if (this.drawnMenu.isPresent() && this.drawnMenu.get().isShowing()) {
-            this.drawnMenu.get().hide();
-            this.drawnMenu = Optional.empty();
+        if (this.showed) {
+            this.stage.hide();
+            this.drawn = false;
+            this.showed = false;
         }
     }
 }
