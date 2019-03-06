@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 import org.jbox2d.dynamics.Body;
 
 import utils.Pair;
@@ -17,7 +19,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      * @param body the {@link Body} encapsulated by this {@link AbstractPhysicalBody}
      */
     public AbstractPhysicalBody(final Body body) {
-        this.body = body;
+        this.body = Objects.requireNonNull(body);
     }
 
     /**

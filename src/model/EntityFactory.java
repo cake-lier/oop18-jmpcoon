@@ -1,6 +1,6 @@
 package model;
 
-import org.jbox2d.dynamics.Body;
+import java.util.Objects;
 
 import utils.Pair;
 
@@ -9,14 +9,14 @@ import utils.Pair;
  */
 public class EntityFactory {
 
-    private final PhysicalWorld world;
+    private final PhysicalFactory factory;
 
     /**
      * builds a new {@link EntityFactory}.
-     * @param world the {@link PhysicalWorld} inside which the {@link PhysicalBody} of the {@link Entity} produced lives
+     * @param factory the factory that will produce the {@link PhysicalBody} for the {@link Entity}
      */
-    public EntityFactory(final PhysicalWorld world) {
-        this.world = world;
+    public EntityFactory(final PhysicalFactory factory) {
+        this.factory = Objects.requireNonNull(factory);
     }
 
     /**
@@ -25,10 +25,7 @@ public class EntityFactory {
      * @return the {@link Ladder} created
      */
     public Ladder createLadder(final Pair<Double, Double> position) {
-        // TODO: create the body
-        final Body body = null;
-        final Ladder ladder = new Ladder(new StaticPhysicalBody(body));
-        return ladder;
+        return new Ladder(this.factory.createStaticPhysicalBody(position, 0));
     }
 
     /**
@@ -38,9 +35,6 @@ public class EntityFactory {
      * @return the {@link Platform} created
      */
     public Platform createPlatform(final Pair<Double, Double> position, final double angle) {
-        // TODO: create the body
-        final Body body = null;
-        final Platform platform = new Platform(new StaticPhysicalBody(body));
-        return platform;
+        return new Platform(this.factory.createStaticPhysicalBody(position, angle));
     }
 }

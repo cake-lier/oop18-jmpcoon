@@ -1,6 +1,6 @@
 package view.game;
 
-import com.sun.webkit.ThemeClient;
+import java.util.Objects;
 
 import javafx.scene.image.ImageView;
 import model.Entity;
@@ -31,9 +31,9 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
                                             final Pair<Double, Double> sceneDimensions) {
         // TODO: new ImageView() may not work
         this.sprite = new ImageView(spriteUrl);
-        this.entity = entity;
-        this.worldDimensions = worldDimensions;
-        this.sceneDimensions = sceneDimensions;
+        this.entity = Objects.requireNonNull(entity);
+        this.worldDimensions = Objects.requireNonNull(worldDimensions);
+        this.sceneDimensions = Objects.requireNonNull(sceneDimensions);
         this.updateSpriteProperties();
     }
 

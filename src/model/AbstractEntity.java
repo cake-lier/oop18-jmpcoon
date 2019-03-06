@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 import utils.Pair;
 
 /**
@@ -14,7 +16,7 @@ public abstract class AbstractEntity implements Entity {
      * @param body the body of this {@link AbstractEntity}
      */
     public AbstractEntity(final PhysicalBody body) {
-        this.body = body;
+        this.body = Objects.requireNonNull(body);
     }
 
     /**
