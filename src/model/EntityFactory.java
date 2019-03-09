@@ -9,6 +9,12 @@ import utils.Pair;
  */
 public class EntityFactory {
 
+    private static final double PLATFORM_WIDTH = 200;
+    private static final double PLATFORM_HEIGHT = 10;
+
+    private static final double LADDER_WIDTH = 20;
+    private static final double LADDER_HEIGHT = 50;
+
     private final PhysicalFactory factory;
 
     /**
@@ -25,7 +31,7 @@ public class EntityFactory {
      * @return the {@link Ladder} created
      */
     public Ladder createLadder(final Pair<Double, Double> position) {
-        return new Ladder(this.factory.createStaticPhysicalBody(position, 0));
+        return new Ladder(this.factory.createRectangleStaticPhysicalBody(position, 0, LADDER_WIDTH, LADDER_HEIGHT, true));
     }
 
     /**
@@ -35,6 +41,6 @@ public class EntityFactory {
      * @return the {@link Platform} created
      */
     public Platform createPlatform(final Pair<Double, Double> position, final double angle) {
-        return new Platform(this.factory.createStaticPhysicalBody(position, angle));
+        return new Platform(this.factory.createRectangleStaticPhysicalBody(position, angle, PLATFORM_WIDTH, PLATFORM_HEIGHT, false));
     }
 }

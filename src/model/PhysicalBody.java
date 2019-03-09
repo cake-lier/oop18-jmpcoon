@@ -8,7 +8,7 @@ import utils.Pair;
 public interface PhysicalBody {
 
     /**
-     * @return the position of the {@link PhysicalBody}, as a {@link Pair} where the first element is the x coordinate and the second element is the y one
+     * @return the center of the {@link PhysicalBody}, as a {@link Pair} where the first element is the x coordinate and the second element is the y one
      */
     Pair<Double, Double> getPosition();
 

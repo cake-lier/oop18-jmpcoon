@@ -1,6 +1,6 @@
 package model;
 
-import org.jbox2d.dynamics.Body;
+import org.dyn4j.dynamics.Body;
 
 /**
  * a class representing a {@link PhysicalBody} that can't be moved.

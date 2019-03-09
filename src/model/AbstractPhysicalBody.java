@@ -2,7 +2,7 @@ package model;
 
 import java.util.Objects;
 
-import org.jbox2d.dynamics.Body;
+import org.dyn4j.dynamics.Body;
 
 import utils.Pair;
 import utils.PairImpl;
@@ -27,7 +27,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      */
     @Override
     public Pair<Double, Double> getPosition() {
-        return new PairImpl<Double, Double>((double) this.body.getPosition().x, (double) this.body.getPosition().y);
+        return new PairImpl<Double, Double>(this.body.getWorldCenter().x, this.body.getWorldCenter().y);
     }
 
     /**
@@ -35,7 +35,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      */
     @Override
     public double getAngle() {
-        return (double) this.body.getAngle();
+        return this.body.getChangeInOrientation();
     }
 
     /**
