@@ -40,22 +40,26 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     public StaticPhysicalBody createStaticPhysicalBody(
             final Pair<Double, Double> position, final double angle, final EntityShape shape,
                 final double width, final double height, final EntityType type) {
-        // TODO: make this code better
-        final Body body;
-        if (shape.equals(EntityShape.RECTANGLE)) {
-            body = createRectangleBody(position, angle, width, height);
-        } else {
-            throw new IllegalArgumentException("Static entities are only rectangular");
-        }
-        body.setMass(MassType.INFINITE);
-        if (type.equals(EntityType.PLATFORM) || type.equals(EntityType.LADDER)) {
+        if (isStaticBodyAllowed(shape, type)) {
+            final Body body;
+            if (shape.equals(EntityShape.RECTANGLE)) {
+                body = createRectangleBody(position, angle, width, height);
+            } else {
+                /* if a shape isn't rectangular, automatically it's circular */
+                body = createCircleBody(position, width);
+            }
+            body.setMass(MassType.INFINITE);
             body.setUserData(type);
+            this.world.addBody(body);
+            return new StaticPhysicalBody(body);
         } else {
-            // TODO: document exception throwing
-            throw new IllegalArgumentException("The only rectangular entities with static bodies are platforms and ladders");
+            throw new IllegalArgumentException("No such Entity can be created");
         }
-        this.world.addBody(body);
-        return new StaticPhysicalBody(body);
+    }
+
+    private boolean isStaticBodyAllowed(final EntityShape shape, final EntityType type) {
+        /* other allowed combinations could be added in the future */
+        return shape.equals(EntityShape.RECTANGLE) && (type.equals(EntityType.PLATFORM) || type.equals(EntityType.LADDER));
     }
 
     private Body createRectangleBody(final Pair<Double, Double> position, final double angle, final double width, final double height) {
@@ -64,6 +68,14 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         final Vector2 center = new Vector2(position.getX() + width / 2, position.getY() - height / 2);
         body.translate(center);
         body.rotate(angle);
+        return body;
+    }
+
+    private Body createCircleBody(final Pair<Double, Double> position, final double radius) {
+        final Body body = new Body();
+        body.addFixture(Geometry.createCircle(radius));
+        final Vector2 center = new Vector2(position.getX() + radius / 2, position.getY() - radius / 2);
+        body.translate(center);
         return body;
     }
 
