@@ -5,6 +5,8 @@ import java.util.Collection;
 import model.Entity;
 import model.MovementType;
 import model.World;
+import model.WorldImpl;
+import utils.Pair;
 
 /**
  * a {@link GameController} for a game set in a {@link World}.
@@ -15,10 +17,9 @@ public class GameControllerImpl implements GameController {
 
     /**
      * builds a new {@link GameControllerImpl}.
-     * @param gameWorld the {@link World} that will be controlled by this {@link GameControllerImpl}
      */
-    public GameControllerImpl(final World gameWorld) {
-        this.gameWorld = gameWorld;
+    public GameControllerImpl() {
+        this.gameWorld = new WorldImpl();
     }
 
     @Override
@@ -74,6 +75,14 @@ public class GameControllerImpl implements GameController {
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pair<Double, Double> getWorldDimensions() {
+        return this.gameWorld.getDimensions();
     }
 
 }

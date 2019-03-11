@@ -3,6 +3,7 @@ package controller;
 import java.util.Collection;
 
 import model.Entity;
+import utils.Pair;
 
 /**
  * a controller for the game playing.
@@ -28,5 +29,10 @@ public interface GameController {
      * @return the entities contained in the {@link World}
      */
     Collection<Entity> getEntities();
+
+    /**
+     * @return the dimensions (width and height) of the {@link World} in which the game is playing
+     */
+    Pair<Double, Double> getWorldDimensions();
 
 }

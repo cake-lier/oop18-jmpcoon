@@ -31,6 +31,8 @@ public interface World {
      */
     boolean isGameOver();
 
+    void update();
+
     /**
      * @return the entities populating the {@link World}
      */
