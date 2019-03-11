@@ -31,7 +31,7 @@ public class EntityFactory {
      * @return the {@link Ladder} created
      */
     public Ladder createLadder(final Pair<Double, Double> position) {
-        return new Ladder(this.factory.createRectangleStaticPhysicalBody(position, 0, LADDER_WIDTH, LADDER_HEIGHT, true));
+        return new Ladder(this.factory.createStaticPhysicalBody(position, 0, EntityShape.RECTANGLE, LADDER_WIDTH, LADDER_HEIGHT, EntityType.LADDER));
     }
 
     /**
@@ -41,6 +41,6 @@ public class EntityFactory {
      * @return the {@link Platform} created
      */
     public Platform createPlatform(final Pair<Double, Double> position, final double angle) {
-        return new Platform(this.factory.createRectangleStaticPhysicalBody(position, angle, PLATFORM_WIDTH, PLATFORM_HEIGHT, false));
+        return new Platform(this.factory.createStaticPhysicalBody(position, angle, EntityShape.RECTANGLE, PLATFORM_WIDTH, PLATFORM_HEIGHT, EntityType.PLATFORM));
     }
 }

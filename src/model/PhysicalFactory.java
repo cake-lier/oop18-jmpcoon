@@ -1,5 +1,7 @@
 package model;
 
+import com.sun.webkit.ThemeClient;
+
 import utils.Pair;
 
 /**
@@ -13,15 +15,16 @@ public interface PhysicalFactory {
     PhysicalWorld createPhysicalWorld();
 
     /**
-     * creates a rectangular {@link StaticPhysicalBody}.
+     * creates {@link StaticPhysicalBody}.
      * @param position the upper left corner of the {@link StaticPhysicalBody} created
      * @param angle the angle in radians of the created {@link StaticPhysicalBody}
-     * @param width the width of the rectangle
-     * @param height the height of the rectangle
-     * @param compenetrable whether the {@link StaticPhysicalBody} created can be crossed by other bodies
+     * @param shape the {@link EntityShape} of {@link StaticPhysicalBody} created
+     * @param width 
+     * @param height
+     * @param type the {@link EntityType} of the {@link Entity} that will use the created {@link StaticPhysicalBody}
      * @return a {@link StaticPhysicalBody} with the given characteristics
      */
-    StaticPhysicalBody createRectangleStaticPhysicalBody(Pair<Double, Double> position, double angle, double width, double height, boolean compenetrable);
+    StaticPhysicalBody createStaticPhysicalBody(Pair<Double, Double> position, double angle, EntityShape shape, double width, double height, EntityType type);
 
     // TODO: add method to create DynamicPhysicalBody
 

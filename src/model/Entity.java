@@ -9,7 +9,7 @@ public interface Entity {
 
     /**
      * @return the position of the entity, as a {@link Pair} where the first element is the x coordinate
-     * and the second element is the y one
+     * and the second element is the y one of the upper left corner of the {@link Entity}
      */
     Pair<Double, Double> getPosition();
 
