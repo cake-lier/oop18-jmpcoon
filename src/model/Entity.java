@@ -39,4 +39,9 @@ public interface Entity {
      */
     boolean isAlive();
 
+    /**
+     * @return the dimensions (width and height) of this {@link Entity}
+     */
+    Pair<Double, Double> getDimensions();
+
 }

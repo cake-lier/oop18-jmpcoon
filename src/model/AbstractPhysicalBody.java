@@ -3,6 +3,9 @@ package model;
 import java.util.Objects;
 
 import org.dyn4j.dynamics.Body;
+import org.dyn4j.geometry.Circle;
+import org.dyn4j.geometry.Convex;
+import org.dyn4j.geometry.Rectangle;
 
 import utils.Pair;
 import utils.PairImpl;
@@ -60,4 +63,26 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
         return new PairImpl<Double, Double>((double) this.body.getLinearVelocity().x, (double) this.body.getLinearVelocity().y);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pair<Double, Double> getDimensions() {
+        if (this.body.getFixtureCount() > 1 || this.body.getFixtureCount() <= 0) {
+            throw new IllegalStateException(); // TODO: can we do this?
+        }
+        final Convex shape = this.body.getFixture(0).getShape();
+        double width = 0;
+        double height = 0;
+        if (shape instanceof Circle) {
+            width = ((Circle) shape).getRadius();
+            height = width;
+        } else if (shape instanceof Rectangle) {
+            width = ((Rectangle) shape).getWidth();
+            height = ((Rectangle) shape).getHeight();
+        } else {
+            // TODO: what can we do here?
+        }
+        return new PairImpl<Double, Double>(width, height);
+    }
 }

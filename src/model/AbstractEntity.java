@@ -61,9 +61,17 @@ public abstract class AbstractEntity implements Entity {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public Pair<Double, Double> getDimensions() {
+        return this.body.getDimensions();
+    }
+
+    /**
      * @return the velocity of this {@link AbstractEntity}, divided in its x and y components.
      */
     protected Pair<Double, Double> getVelocity() {
         return this.body.getVelocity();
     }
+
 }

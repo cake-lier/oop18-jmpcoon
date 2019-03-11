@@ -28,7 +28,13 @@ public interface PhysicalBody {
     boolean exist();
 
     /**
+     * @return the dimensions (width and height) of this {@link PhysicalBody}
+     */
+    Pair<Double, Double> getDimensions();
+
+    /**
      * @return the velocity of this {@link PhysicalBody}, divided in its x and y components.
      */
     Pair<Double, Double> getVelocity();
+
 }
