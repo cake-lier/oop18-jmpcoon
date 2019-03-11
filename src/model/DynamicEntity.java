@@ -1,7 +1,5 @@
 package model;
 
-import model.AbstractEntity;
-
 /**
  * a class representing an movable {@link Entity}.
  */

@@ -4,7 +4,7 @@ package model;
  * TODO: add a linear velocity movement
  * a walking enemy inside the {@link World} of the game.
  */
-public class WalkingEnemy extends DynamicEntity{
+public class WalkingEnemy extends DynamicEntity {
 
     /**
      * builds a new {@link WalkingEnemy}.
