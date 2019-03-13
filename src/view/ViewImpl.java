@@ -7,6 +7,7 @@ import controller.game.GameControllerImpl;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import view.game.GameViewImpl;
 import view.menu.Menu;
 import view.menu.MenuImpl;
 
@@ -29,7 +30,6 @@ public final class ViewImpl implements View {
      * @param stage The stage in which to draw all the visual elements.
      */
     public ViewImpl(final Stage stage) {
-        this.gameController = new GameControllerImpl();
         this.appController = new AppControllerImpl(this.gameController);
         this.stage = stage;
         this.stage.setTitle(TITLE);
@@ -71,6 +71,6 @@ public final class ViewImpl implements View {
      */
     @Override
     public void displayGame() {
-        //TODO: Add call to GameView passing the GameController
+        new GameViewImpl(this.appController, this.stage);
     }
 }
