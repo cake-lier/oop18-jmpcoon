@@ -1,20 +1,25 @@
 package controller.app;
 
-import controller.game.GameController;
-import controller.game.GameControllerImpl;
+import view.View;
 
 /**
- * Class implementation of the interface {@link AppController}.
+ * Class implementation of the {@link AppController}.
  */
 public final class AppControllerImpl implements AppController {
-    private final GameController gameController;
+    private final View view;
     /**
-     * Acquires a new {@link GameController} to call when the user wants to begin a new
-     * game.
-     * @param gameController The controller responsible for the game.
+     * Acquires a new {@link View} to call when it's needed to display something.
+     * @param view The view element responsible for the application.
      */
-    public AppControllerImpl(final GameController gameController) {
-        this.gameController = new GameControllerImpl();
+    public AppControllerImpl(final View view) {
+        this.view = view;
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void startApp() {
+        this.view.displayMenu();
     }
     /**
      * {@inheritDoc}
@@ -27,7 +32,7 @@ public final class AppControllerImpl implements AppController {
      * {@inheritDoc}
      */
     @Override
-    public void startGameController() {
-        this.gameController.startGame();
+    public void startGame() {
+        this.view.displayGame();
     }
 }

@@ -2,8 +2,6 @@ package view;
 
 import controller.app.AppController;
 import controller.app.AppControllerImpl;
-import controller.game.GameController;
-import controller.game.GameControllerImpl;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -18,23 +16,22 @@ public final class ViewImpl implements View {
     private static final int HEIGHT_RATIO = 9;
     private static final int WIDTH_RATIO = 16;
 
-    private final AppController appController;
-    private final GameController gameController;
+    private final AppController controller;
     private final Stage stage;
     /**
-     * Acquires the stage in which to draw all the visual elements of this application.
-     * Constructs the controller of this application as a whole, as an
-     * {@link AppController} and a {@link GameController}, so as to let the Menu and the
-     * GameView to access it and make available its functionalities to the user.
-     * @param stage The stage in which to draw all the visual elements.
+     * Acquires the {@link Stage} in which to draw all the visual elements of this
+     * application and it initializes it appropriately. Constructs the controller of this
+     * application with this view, so as to let it call this view when the user instructs
+     * it to perform some operation, then starts the application via the
+     * {@link AppController}.
+     * @param stage The {@link Stage} in which to draw all visual elements.
      */
     public ViewImpl(final Stage stage) {
-        this.gameController = new GameControllerImpl();
-        this.appController = new AppControllerImpl(this.gameController);
+        this.controller = new AppControllerImpl(this);
         this.stage = stage;
         this.stage.setTitle(TITLE);
         this.setScreenSize(this.stage);
-        this.displayMenu();
+        this.controller.startApp();
     }
     /**
      * Sets the stage size to the appropriate values, so as to make it always the
@@ -62,7 +59,7 @@ public final class ViewImpl implements View {
      */
     @Override
     public void displayMenu() {
-        final Menu menu = new MenuImpl(this.appController, this.stage);
+        final Menu menu = new MenuImpl(this.controller, this.stage);
         menu.drawMenu();
         menu.showMenu();
     }
@@ -71,6 +68,6 @@ public final class ViewImpl implements View {
      */
     @Override
     public void displayGame() {
-        //TODO: Add call to GameView passing the GameController
+        //TODO: add creation of gameView
     }
 }
