@@ -5,6 +5,7 @@ import utils.Pair;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 
@@ -77,6 +78,16 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         final Vector2 center = new Vector2(position.getX() + radius / 2, position.getY() - radius / 2);
         body.translate(center);
         return body;
+    }
+
+    @Override
+    //TODO: add density/friction/restitution too?
+    public DynamicPhysicalBody createDynamicPhysicaBody(Pair<Double, Double> position, double angle, EntityShape shape,
+            double width, double height, EntityType type) {
+        final Body body = createRectangleBody(position, angle, width, height);
+        body.setMass(MassType.NORMAL);
+        this.world.addBody(body);
+        return new DynamicPhysicalBody(body);
     }
 
 }
