@@ -50,7 +50,7 @@ public final class WorldImpl implements World {
      * {@inheritDoc}
      */
     @Override
-    public void initLevel() {
+    public void initLevel(final Collection<EntityProperties> entities) {
         // TODO Auto-generated method stub
     }
     /**

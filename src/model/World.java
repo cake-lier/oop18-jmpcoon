@@ -18,9 +18,9 @@ public interface World {
     /**
      * Initializes the world with the specified level, so it populates it with the entities
      * which should be inside this level.
+     * @param entities 
      */
-    //TODO: what should be passed to this method? int, enum, level object?
-    void initLevel();
+    void initLevel(Collection<EntityProperties> entities);
     /**
      * It moves the player inside the world making her do one of the movements it's allowed
      * to make, as specified in the {@link MovementType} enum.
