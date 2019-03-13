@@ -1,6 +1,8 @@
 package controller;
 
 import java.util.Collection;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +22,7 @@ public class GameControllerImpl implements GameController {
 
     private final World gameWorld;
     private final GameView gameView;
-    private final ScheduledThreadPoolExecutor timer;
+    private Optional<ScheduledThreadPoolExecutor> timer;
 
     /**
      * builds a new {@link GameControllerImpl}.
@@ -28,10 +30,13 @@ public class GameControllerImpl implements GameController {
      */
     public GameControllerImpl(final GameView view) {
         this.gameWorld = new WorldImpl();
-        this.gameView = view;
+        this.gameView = Objects.requireNonNull(view);
+        // TODO: could just initialize timer to empty, and then at first run() call it would be created,
+        // but in previous tests that caused problems. So, consider leaving it like this or creating a private
+        // function to recall every time necessary
         // Runtime.getRuntime().availableProcessors() + 1 is the size of the pool of threads 
-        this.timer = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors() + 1);
-        this.timer.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+        this.timer = Optional.of(new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors() + 1));
+        this.timer.get().setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
     }
 
     /**
@@ -39,7 +44,14 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public void startGame() {
-        this.timer.scheduleWithFixedDelay(() -> updateWorldAndView(), DELTA_UPDATE, DELTA_UPDATE, TimeUnit.MILLISECONDS);
+        if (!this.timer.isPresent()) {
+            // Runtime.getRuntime().availableProcessors() + 1 is the size of the pool of threads 
+            this.timer = Optional.of(new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors() + 1));
+            this.timer.get().setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+        }
+        if (this.timer.isPresent()) {
+            this.timer.get().scheduleWithFixedDelay(() -> updateWorldAndView(), DELTA_UPDATE, DELTA_UPDATE, TimeUnit.MILLISECONDS);
+        }
     }
 
     /**
@@ -47,13 +59,18 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public void pauseGame() {
-        this.timer.shutdown();
+        if (this.timer.isPresent()) {
+            this.timer.get().shutdown();
+            this.timer = Optional.empty();
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void saveGame() {
-        // TODO Auto-generated method stub
-
+        throw new UnsupportedOperationException("Game saving functionalities have not been implemented yet"); 
     }
 
     @Override
