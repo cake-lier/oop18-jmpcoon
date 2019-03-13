@@ -34,6 +34,14 @@ public class GameViewImpl implements GameView {
     }
     
     private void getInput(KeyCode key) {
-        //TODO give input to GameController    
+        InputType it;
+        switch(key) {
+            case W: it=InputType.CLIMB; break;
+            case A: it=InputType.LEFT; break;
+            case D: it=InputType.RIGHT; break;
+            case SPACE: it=InputType.UP; break;
+            default: it=InputType.RIGHT; break;
+        }
+        gameController.processInput(it);
     }
 }
