@@ -5,6 +5,8 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import controller.InputType;
 import controller.app.AppController;
@@ -43,5 +45,23 @@ public class GameViewImpl implements GameView {
             default: it=InputType.RIGHT; break;
         }
         gameController.processInput(it);
+    }
+
+
+    @Override
+    public void showGameOver() {
+        final Text text = new Text(450, stage.getHeight()/2, "Game Over");
+        text.setFont(new Font(150));
+        final Scene gameOver = new Scene(new Group(text), stage.getHeight(), stage.getWidth(), Color.DARKRED);
+        stage.setScene(gameOver);
+    }
+
+
+    @Override
+    public void showPlayerWin() {
+        final Text text = new Text(450, stage.getHeight()/2, "You won!"); 
+        text.setFont(new Font(150));
+        final Scene win = new Scene(new Group(text), stage.getHeight(), stage.getWidth(), Color.DARKRED);
+        stage.setScene(win);
     }
 }

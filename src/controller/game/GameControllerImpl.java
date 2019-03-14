@@ -18,7 +18,7 @@ public class GameControllerImpl implements GameController {
         this.appController=appController;
         this.gameView=gameView;
     }
-    
+
     @Override
     public void startGame() {
         // TODO Auto-generated method stub
