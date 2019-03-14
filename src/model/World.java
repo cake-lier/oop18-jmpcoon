@@ -16,9 +16,9 @@ public interface World {
 
     /**
      * initialize the desired level.
+     * @param entities 
      */
-    // TODO: what should be passed to this method? int, enum, level object?
-    void initLevel();
+    void initLevel(Collection<EntityProperties> entities);
 
     /**
      * a method to move the player inside the {@link World}.
@@ -37,5 +37,7 @@ public interface World {
      * @return the entities populating the {@link World}
      */
     Collection<Entity> getEntities();
+
+    boolean hasPlayerWon();
 
 }

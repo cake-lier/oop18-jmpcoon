@@ -14,7 +14,7 @@ public class WorldImpl implements World {
     }
 
     @Override
-    public void initLevel() {
+    public void initLevel(Collection<EntityProperties> entities) {
         // TODO Auto-generated method stub
 
     }
@@ -41,6 +41,12 @@ public class WorldImpl implements World {
     public Collection<Entity> getEntities() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public boolean hasPlayerWon() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

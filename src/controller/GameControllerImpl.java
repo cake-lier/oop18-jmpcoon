@@ -1,11 +1,19 @@
 package controller;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import model.EntityProperties;
+import model.EntityPropertiesImpl;
+import model.EntityShape;
+import model.EntityType;
 import model.Entity;
 import model.MovementType;
 import model.World;
@@ -19,6 +27,8 @@ import view.game.GameView;
 public class GameControllerImpl implements GameController {
 
     private static final long DELTA_UPDATE = 15;
+    private static final String LEVEL_FILE = "res" + System.getProperty("file.separator") + "level1.txt";
+    private static final int N_PROPERTIES = 5;
 
     private final World gameWorld;
     private final GameView gameView;
@@ -30,6 +40,7 @@ public class GameControllerImpl implements GameController {
      */
     public GameControllerImpl(final GameView view) {
         this.gameWorld = new WorldImpl();
+        this.gameWorld.initLevel(loadLevel());
         this.gameView = Objects.requireNonNull(view);
         // TODO: could just initialize timer to empty, and then at first run() call it would be created,
         // but in previous tests that caused problems. So, consider leaving it like this or creating a private
@@ -95,6 +106,15 @@ public class GameControllerImpl implements GameController {
         return this.gameWorld.getEntities();
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pair<Double, Double> getWorldDimensions() {
+        return this.gameWorld.getDimensions();
+    }
+
     private MovementType inputToMovement(final InputType input) {
         switch (input) {
             case CLIMB:
@@ -110,17 +130,36 @@ public class GameControllerImpl implements GameController {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Pair<Double, Double> getWorldDimensions() {
-        return this.gameWorld.getDimensions();
-    }
-
     private void updateWorldAndView() {
-        this.gameWorld.update();
-        this.gameView.update();
+        if (this.gameWorld.isGameOver()) {
+            this.gameView.showGameOver();
+            this.timer.get().shutdown();
+        } else if (this.gameWorld.hasPlayerWon()) {
+            this.gameView.showPlayerWin();
+            this.timer.get().shutdown();
+        } else {
+            this.gameWorld.update();
+            this.gameView.update();
+        }
     }
 
+    private Collection<EntityProperties> loadLevel() {
+        final List<EntityProperties> entities = new LinkedList<>();
+        try {
+            final List<String> lines = Files.readAllLines(Paths.get(LEVEL_FILE));
+            lines.stream()
+                 .filter(s -> !s.startsWith("%"))
+                 .map(s -> s.split(":"))
+                 .filter(v -> v.length == N_PROPERTIES)
+                 .map(v -> new EntityPropertiesImpl(EntityType.valueOf(v[0]), 
+                                                    EntityShape.valueOf(v[1]), 
+                                                    Double.valueOf(v[2]), 
+                                                    Double.valueOf(v[3]),
+                                                    Double.valueOf(v[4])))
+                 .forEach(entities::add);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return entities;
+    }
 }
