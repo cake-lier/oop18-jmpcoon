@@ -1,10 +1,13 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.EnumMap;
-import java.util.LinkedHashSet;
+import java.util.Map;
+
+import model.entities.Entity;
+import model.entities.EntityFactory;
+import model.entities.EntityProperties;
+import model.entities.Player;
 import utils.Pair;
 import utils.PairImpl;
 
@@ -16,28 +19,20 @@ public final class WorldImpl implements World {
     private static final double WORLD_HEIGHT = 9;
 
     private boolean gameOver;
-    private final PhysicsFactory factory;
+    private final PhysicsFactory physicsFactory;
+    private final EntityFactory entityFactory;
     private final PhysicalWorld innerWorld;
-    private final Collection<Entity> platforms;
-    private final Collection<Entity> ladders;
-    private final Collection<Entity> walkingEnemies;
-    private final Collection<Entity> rollingEnemies;
-    private final Collection<Entity> powerUps;
-    private final Entity player;
+    private final ClassToInstanceMultimap<Entity> entities;
     /**
      * This class delegates the job of managing the physics of the game to the library
      * underneath and to do so, it wraps an instance of the chosen library World.
      */
     public WorldImpl() {
-        this.factory = new PhysicsFactoryImpl();
-        this.innerWorld = this.factory.createWorld(WORLD_WIDTH, WORLD_HEIGHT);
+        this.physicsFactory = new PhysicsFactoryImpl();
+        this.entityFactory = new EntityFactory(this.physicsFactory);
+        this.innerWorld = this.physicsFactory.createWorld(WORLD_WIDTH, WORLD_HEIGHT);
         this.gameOver = false;
-        this.platforms = new LinkedHashSet<>();
-        this.ladders = new LinkedHashSet<>();
-        this.powerUps = new LinkedHashSet<>();
-        this.walkingEnemies = new LinkedHashSet<>();
-        this.rollingEnemies = new LinkedHashSet<>();
-        this.player = new Player();
+        this.entities = new ClassToInstanceMultimapImpl<>();
     }
     /**
      * {@inheritDoc}
@@ -51,14 +46,34 @@ public final class WorldImpl implements World {
      */
     @Override
     public void initLevel(final Collection<EntityProperties> entities) {
-        // TODO Auto-generated method stub
+        entities.forEach(entity -> {
+            final Class<? extends Entity> entityClass = entity.getEntityType()
+                                                              .getTypeClass();
+            try {
+                this.entities.put(entityClass, 
+                                  entityClass.cast(
+                                      EntityFactory.class
+                                                   .getMethod("create"
+                                                              + entity.getEntityType()
+                                                                      .getTypeName())
+                                                   .invoke(this.entityFactory)));
+            } catch (IllegalAccessException | IllegalArgumentException 
+                     | InvocationTargetException | NoSuchMethodException 
+                     | SecurityException ex) {
+                ex.printStackTrace();
+            }
+        });
     }
     /**
      * {@inheritDoc}
      */
     @Override
     public void movePlayer(final MovementType movement) {
-        // TODO Auto-generated method stub
+        this.entities.getInstances(Player.class)
+                     .stream()
+                     .findFirst()
+                     .get()
+                     .move(movement);
     }
     /**
      * {@inheritDoc}
@@ -71,14 +86,7 @@ public final class WorldImpl implements World {
      * {@inheritDoc}
      */
     @Override
-    public EnumMap<EntityType, Collection<Entity>> getEntities() {
-        final EnumMap<EntityType, Collection<Entity>> entityMap = new EnumMap<>(EntityType.class);
-        entityMap.put(EntityType.LADDER, new LinkedHashSet<>(this.ladders));
-        entityMap.put(EntityType.PLATFORM, new LinkedHashSet<>(this.platforms));
-        entityMap.put(EntityType.PLAYER, new LinkedHashSet<>(new ArrayList<>(Arrays.asList(this.player))));
-        entityMap.put(EntityType.POWERUP, new LinkedHashSet<>(this.powerUps));
-        entityMap.put(EntityType.ROLLING_ENEMY, new LinkedHashSet<>(this.rollingEnemies));
-        entityMap.put(EntityType.WALKING_ENEMY, new LinkedHashSet<>(this.walkingEnemies));
-        return entityMap;
+    public Collection<Entity> getEntities() {
+        return this.entities.values();
     }
 }

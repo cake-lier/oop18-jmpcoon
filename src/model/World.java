@@ -1,8 +1,9 @@
 package model;
 
 import java.util.Collection;
-import java.util.EnumMap;
 
+import model.entities.Entity;
+import model.entities.EntityProperties;
 import utils.Pair;
 
 /**
@@ -35,8 +36,8 @@ public interface World {
     /**
      * Produces all the entities which populate this world, divided by group depending
      * of their type, as specified in the {@link EntityType} enum.
-     * @return An {@link EnumMap} from the {@link EntityType} to the collection of
-     * {@link Entity} of this type.
+     * @return An {@link Map} from the {@link Entity} class to the collection of
+     * {@link Entity}s of this type.
      */
-    EnumMap<EntityType, Collection<Entity>> getEntities();
+    Collection<Entity> getEntities();
 }
