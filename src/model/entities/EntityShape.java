@@ -1,4 +1,4 @@
-package model;
+package model.entities;
 
 /**
  * an enumeration representing the possible shapes of an {@link Entity}.

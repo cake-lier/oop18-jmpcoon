@@ -1,5 +1,7 @@
-package model;
+package model.entities;
 
+import model.State;
+import model.World;
 import utils.Pair;
 
 /**

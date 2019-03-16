@@ -1,5 +1,6 @@
 package model;
 
+import model.entities.EntityShape;
 import utils.Pair;
 
 /**

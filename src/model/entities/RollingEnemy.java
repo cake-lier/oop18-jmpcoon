@@ -1,11 +1,12 @@
-package model;
+package model.entities;
 
+import model.State;
 import utils.Pair;
 
 /**
  * 
  */
-public final class Player implements Entity {
+public final class RollingEnemy implements Entity {
 
     @Override
     public Pair<Double, Double> getPosition() {

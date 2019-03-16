@@ -1,5 +1,4 @@
 package model;
-
 /**
  * an enumeration representing the possible states an {@link Entity} can be in.
  */
