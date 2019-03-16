@@ -10,9 +10,14 @@ import utils.Pair;
  */
 public interface GameController {
 
-    // TODO: control if this methods are necessary, comment them
+    /**
+     * method to start the game for the first time, of after a pause.
+     */
     void startGame();
 
+    /**
+     * method to pause the game currently playing.
+     */
     void pauseGame();
 
     void saveGame();
