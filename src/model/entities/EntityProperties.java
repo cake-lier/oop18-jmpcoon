@@ -1,13 +1,15 @@
 package model.entities;
 
-import utils.Pair;
+import java.io.Serializable;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Contains the properties of an {@link Entity} which has to be created, such as the
  * {@link EntityType}, the {@link EntityShape}, the current position in the {@link World}
  * and its angle with the x axis.
  */
-public interface EntityProperties {
+public interface EntityProperties extends Serializable {
     /**
      * Getter for the {@link EntityType} property.
      * @return The {@link EntityType} property value.
