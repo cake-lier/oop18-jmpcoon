@@ -1,6 +1,6 @@
 package model.entities;
 
-import model.PhysicsFactory;
+import model.physics.PhysicsFactory;
 
 /**
  * 

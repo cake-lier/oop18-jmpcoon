@@ -1,4 +1,4 @@
-package model;
+package model.physics;
 
 import model.entities.EntityShape;
 import utils.Pair;
