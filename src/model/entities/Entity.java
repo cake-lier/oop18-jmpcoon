@@ -35,4 +35,8 @@ public interface Entity {
      */
     boolean isAlive();
 
+    /**
+     * 
+     */
+    void remove();
 }

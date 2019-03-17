@@ -3,8 +3,10 @@ package model.entities;
 import model.State;
 import utils.Pair;
 
-
-public class Enemy implements Entity {
+/**
+ * 
+ */
+public final class Enemy implements Entity {
 
     @Override
     public Pair<Double, Double> getPosition() {

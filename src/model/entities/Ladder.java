@@ -38,4 +38,9 @@ public final class Ladder implements Entity {
         return false;
     }
 
+    @Override
+    public void remove() {
+        // TODO Auto-generated method stub
+    }
+
 }
