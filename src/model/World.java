@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import model.entities.Entity;
 import model.entities.EntityProperties;
-import utils.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * The World in which the game takes place. It creates, initializes, destroys and passes

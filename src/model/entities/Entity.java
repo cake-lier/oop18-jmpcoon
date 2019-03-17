@@ -2,6 +2,7 @@ package model.entities;
 
 import model.State;
 import model.World;
+import model.physics.PhysicalBody;
 import utils.Pair;
 
 /**
@@ -39,4 +40,10 @@ public interface Entity {
      * 
      */
     void remove();
+
+    /**
+     * 
+     * @return a.
+     */
+    PhysicalBody getInternalPhysicalBody();
 }

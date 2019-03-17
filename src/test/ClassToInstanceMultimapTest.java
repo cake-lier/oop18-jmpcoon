@@ -16,8 +16,8 @@ import com.google.common.collect.MultimapBuilder;
 
 import model.ClassToInstanceMultimapImpl;
 import model.ClassToInstanceMultimap;
-import model.entities.Enemy;
 import model.entities.Entity;
+import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
 
@@ -26,8 +26,8 @@ import model.entities.Player;
  */
 public class ClassToInstanceMultimapTest {
     private final Player player = new Player();
-    private final Enemy firstEnemy = new Enemy();
-    private final Enemy secondEnemy = new Enemy();
+    private final Ladder firstLadder = new Ladder();
+    private final Ladder secondLadder = new Ladder();
     private final ClassToInstanceMultimap<Entity> testMultimap
                                                   = new ClassToInstanceMultimapImpl<>();
     /**
@@ -54,8 +54,8 @@ public class ClassToInstanceMultimapTest {
     private void initializeMultimap() {
         this.testMultimap.clear();
         this.testMultimap.putInstance(Player.class, player);
-        this.testMultimap.putInstance(Enemy.class, firstEnemy);
-        this.testMultimap.putInstance(Enemy.class, secondEnemy);
+        this.testMultimap.putInstance(Ladder.class, firstLadder);
+        this.testMultimap.putInstance(Ladder.class, secondLadder);
     }
     /**
      * Tests if the {@link ClassToInstanceMultiMap} adds elements to itself correctly
@@ -88,18 +88,18 @@ public class ClassToInstanceMultimapTest {
         final ClassToInstanceMultimap<Entity> multimap
                                               = new ClassToInstanceMultimapImpl<>();
         multimap.put(Player.class, this.player);
-        multimap.put(Enemy.class, this.firstEnemy);
-        multimap.put(Enemy.class, this.secondEnemy);
+        multimap.put(Ladder.class, this.firstLadder);
+        multimap.put(Ladder.class, this.secondLadder);
         final Collection<Entity> values = multimap.values();
         assertTrue("The 'put' method didn't insert elements correctly or the 'values'"
                    + "method didn't return the correct values for this multimap",
-                   Arrays.asList(this.player, this.firstEnemy, this.secondEnemy)
+                   Arrays.asList(this.player, this.firstLadder, this.secondLadder)
                          .containsAll(values));
         assertEquals("There should be three values in this multimap",
                      3, values.size());
-        final Collection<Entity> enemies = multimap.get(Enemy.class);
+        final Collection<Entity> enemies = multimap.get(Ladder.class);
         assertTrue("The 'get' method didn't obtain the two instances of Enemy present",
-                   Arrays.asList(this.firstEnemy, this.secondEnemy).containsAll(enemies));
+                   Arrays.asList(this.firstLadder, this.secondLadder).containsAll(enemies));
         assertEquals("There should be two instances of Enemy into the multimap",
                      2, enemies.size());
         multimap.putAll(Platform.class, Arrays.asList(new Platform(), new Platform()));
@@ -119,7 +119,7 @@ public class ClassToInstanceMultimapTest {
      */
     @Test(expected = ClassCastException.class)
     public void wrongTypeInsertionTest() {
-        this.testMultimap.put(Enemy.class, new Player());
+        this.testMultimap.put(Ladder.class, new Player());
     }
     /**
      * Tests if the incorrect use of the
@@ -140,7 +140,7 @@ public class ClassToInstanceMultimapTest {
     public void wrongTypeInsertionFromOtherMapTest() {
         final Multimap<Class<? extends Entity>, Entity> extMultimap =
               MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
-        extMultimap.put(Player.class, new Enemy());
+        extMultimap.put(Player.class, new Ladder());
         this.testMultimap.putAll(extMultimap);
     }
     /**
@@ -155,12 +155,12 @@ public class ClassToInstanceMultimapTest {
                      2, this.testMultimap.size());
         assertTrue("The two elements left aren't the two Enemy instances inserted before",
                    this.testMultimap.values().containsAll(Arrays.asList(
-                                                                 this.firstEnemy,
-                                                                 this.secondEnemy)));
+                                                                 this.firstLadder,
+                                                                 this.secondLadder)));
         this.testMultimap.putInstance(Player.class, new Player());
-        this.testMultimap.removeAll(Enemy.class);
+        this.testMultimap.removeAll(Ladder.class);
         assertTrue("No Enemy instance should be left inside the multimap",
-                   this.testMultimap.getInstances(Enemy.class).isEmpty());
+                   this.testMultimap.getInstances(Ladder.class).isEmpty());
         this.testMultimap.clear();
         assertTrue("The multimap should be empty now",
                    this.testMultimap.isEmpty());
@@ -177,13 +177,13 @@ public class ClassToInstanceMultimapTest {
                      2, this.testMultimap.keySet().size());
         assertTrue("The distinct keys in the multimap aren't the same as before",
                    this.testMultimap.keySet().containsAll(Arrays.asList(
-                                                          Player.class, Enemy.class)));
+                                                          Player.class, Ladder.class)));
         assertEquals("The total keys in this multimap aren't three",
                      3, this.testMultimap.keys().size());
         assertTrue("The total keys in this multimap aren't the one inserted before",
                    this.testMultimap.keys().containsAll(Arrays.asList(Player.class,
-                                                                      Enemy.class,
-                                                                      Enemy.class)));
+                                                                      Ladder.class,
+                                                                      Ladder.class)));
         assertEquals("There aren't three entries in the multimap",
                      3, this.testMultimap.entries().size());
         assertTrue("The keys in the entries aren't the same as before",
@@ -246,7 +246,7 @@ public class ClassToInstanceMultimapTest {
         assertFalse("The multimap shouldn't contain the Platform class key",
                     this.testMultimap.containsKey(Platform.class));
         assertTrue("The multimap should contain the Enemy instance previously inserted",
-                   this.testMultimap.containsValue(this.firstEnemy));
+                   this.testMultimap.containsValue(this.firstLadder));
         assertFalse("The multimap shouldn't contain a Player instance newly generated",
                     this.testMultimap.containsValue(new Player()));
         this.testMultimap.entries().forEach(entry -> {
@@ -265,12 +265,12 @@ public class ClassToInstanceMultimapTest {
     @Test(expected = ClassCastException.class)
     public void replaceMethodTest() {
         this.initializeMultimap();
-        final Enemy newEnemy = new Enemy();
-        this.testMultimap.replaceValues(Enemy.class, Arrays.asList(newEnemy));
+        final Ladder newEnemy = new Ladder();
+        this.testMultimap.replaceValues(Ladder.class, Arrays.asList(newEnemy));
         assertEquals("There aren't two values in the multimap as it should be",
                      2, this.testMultimap.size());
         assertTrue("There isn't the newly replaced Enemy instance inside the multimap",
                    this.testMultimap.containsValue(newEnemy));
-        this.testMultimap.replaceValues(Enemy.class, Arrays.asList(new Player()));
+        this.testMultimap.replaceValues(Ladder.class, Arrays.asList(new Player()));
     }
 }

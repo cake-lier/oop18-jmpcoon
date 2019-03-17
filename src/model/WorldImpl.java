@@ -2,14 +2,20 @@ package model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.Map;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import model.entities.Entity;
 import model.entities.EntityFactory;
 import model.entities.EntityProperties;
 import model.entities.Player;
-import utils.Pair;
-import utils.PairImpl;
+import model.physics.PhysicalWorld;
+import model.physics.PhysicsFactory;
+import model.physics.PhysicsFactoryImpl;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import model.entities.Platform;
 
 /**
  * The class implementation of {@link World}.
@@ -19,7 +25,6 @@ public final class WorldImpl implements World {
     private static final double WORLD_HEIGHT = 9;
 
     private boolean gameOver;
-    private final PhysicsFactory physicsFactory;
     private final EntityFactory entityFactory;
     private final PhysicalWorld innerWorld;
     private final ClassToInstanceMultimap<Entity> entities;
@@ -28,9 +33,9 @@ public final class WorldImpl implements World {
      * underneath and to do so, it wraps an instance of the chosen library World.
      */
     public WorldImpl() {
-        this.physicsFactory = new PhysicsFactoryImpl();
-        this.entityFactory = new EntityFactory(this.physicsFactory);
-        this.innerWorld = this.physicsFactory.createWorld(WORLD_WIDTH, WORLD_HEIGHT);
+        final PhysicsFactory physicsFactory = new PhysicsFactoryImpl();
+        this.entityFactory = new EntityFactory(physicsFactory);
+        this.innerWorld = physicsFactory.createWorld(WORLD_WIDTH, WORLD_HEIGHT);
         this.gameOver = false;
         this.entities = new ClassToInstanceMultimapImpl<>();
     }
@@ -39,7 +44,7 @@ public final class WorldImpl implements World {
      */
     @Override
     public Pair<Double, Double> getDimensions() {
-        return new PairImpl<>(WORLD_WIDTH, WORLD_HEIGHT);
+        return new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT);
     }
     /**
      * {@inheritDoc}
@@ -69,11 +74,21 @@ public final class WorldImpl implements World {
      */
     @Override
     public void movePlayer(final MovementType movement) {
-        this.entities.getInstances(Player.class)
-                     .stream()
-                     .findFirst()
-                     .get()
-                     .move(movement);
+        final Player player = this.entities.getInstances(Player.class)
+                                           .stream()
+                                           .findFirst()
+                                           .get();
+        if (movement == MovementType.JUMP
+            && this.entities
+                   .getInstances(Platform.class)
+                   .parallelStream()
+                   .noneMatch(platform -> 
+                              this.innerWorld.arePhysicalBodiesInContact(
+                                              platform.getInternalPhysicalBody(), 
+                                              player.getInternalPhysicalBody()))) {
+            return;
+        }
+        this.movePlayer(movement);
     }
     /**
      * {@inheritDoc}

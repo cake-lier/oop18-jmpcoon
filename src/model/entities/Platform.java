@@ -1,6 +1,7 @@
 package model.entities;
 
 import model.State;
+import model.physics.PhysicalBody;
 import utils.Pair;
 
 /**
@@ -41,6 +42,12 @@ public final class Platform implements Entity {
     @Override
     public void remove() {
         // TODO Auto-generated method stub 
+    }
+
+    @Override
+    public PhysicalBody getInternalPhysicalBody() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
