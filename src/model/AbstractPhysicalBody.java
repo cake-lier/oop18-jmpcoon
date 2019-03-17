@@ -6,6 +6,7 @@ import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.Rectangle;
+import org.dyn4j.dynamics.World;
 
 import utils.Pair;
 import utils.PairImpl;
@@ -16,13 +17,16 @@ import utils.PairImpl;
 public abstract class AbstractPhysicalBody implements PhysicalBody {
 
     private final Body body;
+    private final World world;
 
     /**
      * builds a new {@link AbstractPhysicalBody}.
      * @param body the {@link Body} encapsulated by this {@link AbstractPhysicalBody}
+     * @param world the {@link World} in which the given {@link Body} lives
      */
-    public AbstractPhysicalBody(final Body body) {
+    public AbstractPhysicalBody(final Body body, final World world) {
         this.body = Objects.requireNonNull(body);
+        this.world = Objects.requireNonNull(world);
     }
 
     /**

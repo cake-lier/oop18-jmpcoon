@@ -2,10 +2,12 @@ package model;
 
 import utils.Pair;
 
+import java.util.Optional;
+
+import org.dyn4j.collision.AxisAlignedBounds;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.Geometry;
-import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 
@@ -16,22 +18,22 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     // TODO: consider a static method and a private constructor
 
-    private final World world;
+    private Optional<World> world;
 
     /**
      * builds a new {@link PhysicalFactoryImpl}.
      */
     public PhysicalFactoryImpl() {
-        // TODO: fixed size world?
-        this.world = new World();
+        this.world = Optional.empty();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public PhysicalWorld createPhysicalWorld() {
-        return new PhysicalWorldImpl(this.world);
+    public PhysicalWorld createPhysicalWorld(final double width, final double height) {
+        this.world = Optional.of(new World(new AxisAlignedBounds(width * 2, height * 2)));
+        return new PhysicalWorldImpl(this.world.get());
     }
 
     /**
@@ -41,6 +43,9 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     public StaticPhysicalBody createStaticPhysicalBody(
             final Pair<Double, Double> position, final double angle, final EntityShape shape,
                 final double width, final double height, final EntityType type) {
+        if (!this.world.isPresent()) {
+            throw new IllegalStateException("A PhysicalWorld has yet to be created!");
+        }
         if (isStaticBodyAllowed(shape, type)) {
             final Body body;
             if (shape.equals(EntityShape.RECTANGLE)) {
@@ -51,8 +56,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
             }
             body.setMass(MassType.INFINITE);
             body.setUserData(type);
-            this.world.addBody(body);
-            return new StaticPhysicalBody(body);
+            this.world.get().addBody(body);
+            return new StaticPhysicalBody(body, this.world.get());
         } else {
             throw new IllegalArgumentException("No such Entity can be created");
         }
@@ -82,12 +87,13 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     @Override
     //TODO: add density/friction/restitution too?
+    //TODO: add control with isPresent()
     public DynamicPhysicalBody createDynamicPhysicaBody(Pair<Double, Double> position, double angle, EntityShape shape,
             double width, double height, EntityType type) {
         final Body body = createRectangleBody(position, angle, width, height);
         body.setMass(MassType.NORMAL);
-        this.world.addBody(body);
-        return new DynamicPhysicalBody(body);
+        this.world.get().addBody(body);
+        return new DynamicPhysicalBody(body, this.world.get());
     }
 
 }
