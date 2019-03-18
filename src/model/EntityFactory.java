@@ -1,7 +1,6 @@
 package model;
 
 import java.util.Objects;
-
 import utils.Pair;
 
 /**
@@ -14,6 +13,9 @@ public class EntityFactory {
 
     private static final double LADDER_WIDTH = 20;
     private static final double LADDER_HEIGHT = 50;
+
+    private static final double WALKING_ENEMY_WIDTH = 7;
+    private static final double WALKING_ENEMY_HEIGHT = 4; 
 
     private final PhysicalFactory factory;
 
@@ -42,5 +44,16 @@ public class EntityFactory {
      */
     public Platform createPlatform(final Pair<Double, Double> position, final double angle) {
         return new Platform(this.factory.createStaticPhysicalBody(position, angle, EntityShape.RECTANGLE, PLATFORM_WIDTH, PLATFORM_HEIGHT, EntityType.PLATFORM));
+    }
+
+    /**
+     * 
+     * @param position the position in which the {@link WalkingEnemy} is created
+     * @return the {@link WalkingEnemy} created
+     */
+    public WalkingEnemy createWalkingEnemy(final Pair<Double, Double> position) {
+        DynamicPhysicalBody body = this.factory.createDynamicPhysicalBody(position, 0, EntityShape.RECTANGLE,
+                WALKING_ENEMY_WIDTH, WALKING_ENEMY_HEIGHT, EntityType.WALKING_ENEMY);
+        return new WalkingEnemy(body);
     }
 }
