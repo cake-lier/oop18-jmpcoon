@@ -85,11 +85,14 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         return body;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     //TODO: add density/friction/restitution too?
     //TODO: add control with isPresent()
-    public DynamicPhysicalBody createDynamicPhysicaBody(Pair<Double, Double> position, double angle, EntityShape shape,
-            double width, double height, EntityType type) {
+    public DynamicPhysicalBody createDynamicPhysicalBody(final Pair<Double, Double> position, final double angle, final EntityShape shape,
+            final double width, final double height, final EntityType type) {
         final Body body = createRectangleBody(position, angle, width, height);
         body.setMass(MassType.NORMAL);
         this.world.get().addBody(body);

@@ -57,7 +57,7 @@ public interface PhysicalFactory {
      *            created {@link DynamicPhysicalBody}
      * @return a {@link DynamicPhysicalBody} with the given characteristics
      */
-    DynamicPhysicalBody createDynamicPhysicaBody(Pair<Double, Double> position, double angle, EntityShape shape,
+    DynamicPhysicalBody createDynamicPhysicalBody(Pair<Double, Double> position, double angle, EntityShape shape,
             double width, double height, EntityType type);
 
 }
