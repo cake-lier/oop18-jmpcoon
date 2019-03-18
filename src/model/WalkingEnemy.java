@@ -1,10 +1,16 @@
 package model;
 
+import org.dyn4j.geometry.Vector2;
+
 /**
- * TODO: add a linear velocity movement
  * a walking enemy inside the {@link World} of the game.
  */
 public class WalkingEnemy extends DynamicEntity {
+
+    private static final double DISTANCE = 5;
+    private static final double WALKING_SPEED = 4;
+    private double initialPosition;
+    private DynamicPhysicalBody body;
 
     /**
      * builds a new {@link WalkingEnemy}.
@@ -12,6 +18,8 @@ public class WalkingEnemy extends DynamicEntity {
      */
     public WalkingEnemy(final DynamicPhysicalBody body) {
         super(body);
+        this.body = body;
+        this.initialPosition = this.body.getWorldPosition().x;
     }
 
     /**
@@ -28,6 +36,19 @@ public class WalkingEnemy extends DynamicEntity {
     @Override
     public EntityType getType() {
         return EntityType.WALKING_ENEMY;
+    }
+
+    /**
+     * computes the backward-and-fordward movement.
+     */
+    public void computeMovement() {
+        double x = this.body.getWorldPosition().x;
+        if (x <= this.initialPosition) {
+            body.applyMovement(new Vector2(WALKING_SPEED, 0));
+        }
+        if (x >= this.initialPosition + DISTANCE) {
+            body.applyMovement(new Vector2(-WALKING_SPEED, 0));
+        }
     }
 
 }
