@@ -2,6 +2,7 @@ package view.game;
 
 import java.util.Objects;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.Entity;
 import model.StaticEntity;
@@ -19,9 +20,9 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
     private final Pair<Double, Double> sceneDimensions;
 
     /**
-     * builds a new {@link StaticDrawableEntity}.
+     * builds a new {@link AbstractDrawableEntity}.
      * @param spriteUrl the url of the image representing entity in the view
-     * @param entity the {@link StaticEntity} represented by this {@link StaticDrawableEntity}
+     * @param entity the {@link StaticEntity} represented by this {@link AbstractDrawableEntity}
      * @param worldDimensions the dimensions of the {@link World} in which the {@link Entity} lives
      * @param sceneDimensions the dimensions of the view in which this {@link AbstractDrawableEntity} will be drawn
      */
@@ -29,8 +30,22 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
                                     final StaticEntity entity, 
                                         final Pair<Double, Double> worldDimensions,
                                             final Pair<Double, Double> sceneDimensions) {
-        // TODO: new ImageView() may not work
-        this.sprite = new ImageView(spriteUrl);
+        // TODO: new Image() may not work
+        this(new Image(spriteUrl), entity, worldDimensions, sceneDimensions);
+    }
+
+    /**
+     * builds a new {@link AbstractDrawableEntity}.
+     * @param image the {@link Image} representing the entity in the view
+     * @param entity the {@link StaticEntity} represented by this {@link AbstractDrawableEntity}
+     * @param worldDimensions the dimensions of the {@link World} in which the {@link Entity} lives
+     * @param sceneDimensions the dimensions of the view in which this {@link AbstractDrawableEntity} will be drawn
+     */
+    public AbstractDrawableEntity(final Image image, 
+                                    final StaticEntity entity, 
+                                        final Pair<Double, Double> worldDimensions,
+                                            final Pair<Double, Double> sceneDimensions) {
+        this.sprite = new ImageView(Objects.requireNonNull(image));
         this.entity = Objects.requireNonNull(entity);
         this.worldDimensions = Objects.requireNonNull(worldDimensions);
         this.sceneDimensions = Objects.requireNonNull(sceneDimensions);
