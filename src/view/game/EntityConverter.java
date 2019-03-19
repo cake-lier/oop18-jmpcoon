@@ -1,6 +1,13 @@
 package view.game;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import model.Entity;
 import model.Ladder;
 import model.Platform;
@@ -12,8 +19,8 @@ import utils.Pair;
 public class EntityConverter {
 
     private static final String SPRITES_DIR = "res" + System.getProperty("file.separator");
-    private static final String LADDER_SPRITE = SPRITES_DIR + "ladder.png";
-    private static final String PLATFORM_SPRITE = SPRITES_DIR + "platform.png";
+    private static final String MODULE_LADDER_SPRITE = SPRITES_DIR + "ladder.png";
+    private static final String MODULE_PLATFORM_SPRITE = SPRITES_DIR + "platform.png";
 
     private final Pair<Double, Double> worldDimensions;
     private final Pair<Double, Double> sceneDimensions;
@@ -54,10 +61,48 @@ public class EntityConverter {
     }
 
     private DrawableEntity convertLadder(final Ladder ladder) {
-        return new StaticDrawableEntity(LADDER_SPRITE, ladder, this.worldDimensions, this.sceneDimensions);
+        /* how many times should the sprite be replicated multiplied for the sprite size,
+         *  (along the y axis, because it's a ladder */
+        final Double timesPerModule = this.sceneDimensions.getY() * ladder.getDimensions().getY() / this.worldDimensions.getY();
+        try {
+            return new StaticDrawableEntity(replicateSprite(MODULE_LADDER_SPRITE, timesPerModule, false), ladder, this.worldDimensions, this.sceneDimensions);
+        } catch (FileNotFoundException e) {
+            // TODO: what to do? this null should not be here
+            return null;
+        }
     }
 
     private DrawableEntity convertPlatform(final Platform platform) {
-        return new StaticDrawableEntity(PLATFORM_SPRITE, platform, this.worldDimensions, this.sceneDimensions);
+        /* how many times should the sprite be replicated multiplied for the sprite size,
+         * (along the x axis, because it's a platform */
+        final Double timesPerModule = this.sceneDimensions.getX() * platform.getDimensions().getX() / this.worldDimensions.getX();
+        try {
+            return new StaticDrawableEntity(replicateSprite(MODULE_PLATFORM_SPRITE, timesPerModule, true), platform, this.worldDimensions, this.sceneDimensions);
+        } catch (FileNotFoundException e) {
+            // TODO: what to do? this null should not be here
+            return null;
+        }
+    }
+
+    /* axis should be true to replicate a sprite along the x axis, and it should be false to replicate it along the y axis */
+    private Image replicateSprite(final String moduleUrl, final double timesPerModule, final boolean axis) throws FileNotFoundException {
+        final Image module = new Image(new FileInputStream(moduleUrl));
+        /* width and height of the sprite */
+        final int width = ((Double) module.getWidth()).intValue();
+        final int height = ((Double) module.getHeight()).intValue();
+        final int times = ((Double) (timesPerModule / (axis ? width : height))).intValue();
+        /* PixelReader to read pixel per pixel the module of the sprite */
+        final PixelReader pixelReader = module.getPixelReader();
+        final WritableImage image = new WritableImage(axis ? times * width : width, !axis ? times * height : height);
+        /* PixelWriter to write pixel per pixel the sprite */
+        final PixelWriter pixelWriter = image.getPixelWriter();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                for (int k = 0; k < times; k++) {
+                    pixelWriter.setColor(axis ? i + k * height : i, !axis ? j + k * height : j, pixelReader.getColor(i, j));
+                }
+            }
+        }
+        return image;
     }
 }
