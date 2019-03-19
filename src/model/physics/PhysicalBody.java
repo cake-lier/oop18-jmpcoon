@@ -1,7 +1,7 @@
 package model.physics;
 
 import model.entities.EntityShape;
-import utils.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * an interface representing the physical body of an {@link Entity}.
@@ -22,4 +22,10 @@ public interface PhysicalBody {
      * @return whether this {@link PhysicalBody} exists or not
      */
     boolean exist();
+
+    /**
+     * 
+     * @return a.
+     */
+    Pair<Double, Double> getDimensions();
 }

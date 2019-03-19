@@ -50,4 +50,10 @@ public final class WalkingEnemy implements Entity {
         return null;
     }
 
+    @Override
+    public Pair<Double, Double> getDimensions() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

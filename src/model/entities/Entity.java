@@ -45,5 +45,11 @@ public interface Entity {
      * 
      * @return a.
      */
+    Pair<Double, Double> getDimensions();
+
+    /**
+     * 
+     * @return a.
+     */
     PhysicalBody getInternalPhysicalBody();
 }

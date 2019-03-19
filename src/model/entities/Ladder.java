@@ -50,4 +50,10 @@ public final class Ladder implements Entity {
         return null;
     }
 
+    @Override
+    public Pair<Double, Double> getDimensions() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
