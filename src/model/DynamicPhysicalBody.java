@@ -10,8 +10,8 @@ import org.dyn4j.geometry.Vector2;
  * enemies).
  */
 public class DynamicPhysicalBody extends AbstractPhysicalBody {
+    private static final double MAXVELOCITY = 5;
 
-    private Vector2 movement = new Vector2(0, 0);
     private Body body;
 
     /**
@@ -32,18 +32,20 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
      */
     @Override
     public State getState() {
-        return (movement.y != 0) ? State.JUMPING
-                : (movement.x > 0) ? State.MOVING_RIGHT
-                        : (movement.x < 0) ? State.MOVING_LEFT : State.CLIMBING;
+        //TODO
+        return null;
     }
 
     /**
-     * @param movement
-     *        the movement applied to the body as a vector
+     * Applies given movement to current {@link Body}.
+     * @param x The horizontal component of the movement
+     * @param y The vertical component of the movement
      */
-    public void applyMovement(final Vector2 movement) {
-        this.body.applyImpulse(movement);
-        setMovement(movement);
+    public void applyMovement(final double x, final double y) {
+        this.body.applyImpulse(new Vector2(x, y));
+        if (this.body.getLinearVelocity().x > MAXVELOCITY) {
+            this.body.setLinearVelocity(new Vector2(MAXVELOCITY, this.body.getLinearVelocity().y));
+        }
     }
 
     /**
@@ -52,10 +54,6 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
      */
     public Vector2 getWorldPosition() {
         return body.getWorldCenter();
-    }
-    
-    private void setMovement(final Vector2 movement) {
-        this.movement.add(movement);
     }
 
 }

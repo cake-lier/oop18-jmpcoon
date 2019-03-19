@@ -1,7 +1,5 @@
 package model;
 
-import org.dyn4j.geometry.Vector2;
-
 /**
  * a walking enemy inside the {@link World} of the game.
  */
@@ -39,15 +37,15 @@ public class WalkingEnemy extends DynamicEntity {
     }
 
     /**
-     * computes the backward-and-fordward movement.
+     * computes the backward-and-forward movement.
      */
     public void computeMovement() {
         double x = this.body.getWorldPosition().x;
         if (x <= this.initialPosition) {
-            body.applyMovement(new Vector2(WALKING_SPEED, 0));
+            body.applyMovement(WALKING_SPEED, 0);
         }
         if (x >= this.initialPosition + DISTANCE) {
-            body.applyMovement(new Vector2(-WALKING_SPEED, 0));
+            body.applyMovement(-WALKING_SPEED, 0);
         }
     }
 
