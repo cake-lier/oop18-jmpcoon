@@ -71,18 +71,21 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
 
     /**
      * {@inheritDoc}
+     * @throws ClassCastException If the value passed isn't of the type specified by key.
      */
     @Override
-    public boolean put(final Class<? extends B> key, final B value) {
+    public boolean put(final Class<? extends B> key, final B value) throws ClassCastException {
         final Class<? extends B> copyKey = Objects.requireNonNull(key);
         return super.put(copyKey, this.cast(copyKey, Objects.requireNonNull(value)));
     }
 
     /**
      * {@inheritDoc}
+     * @throws ClassCastException If the multimap passed doesn't respect the rule which states that every value should be of the
+     * type of the key associated with it.
      */
     @Override
-    public boolean putAll(final Multimap<? extends Class<? extends B>, ? extends B> multimap) {
+    public boolean putAll(final Multimap<? extends Class<? extends B>, ? extends B> multimap) throws ClassCastException {
         final Multimap<Class<? extends B>, B> copy = MultimapBuilder.hashKeys()
                                                                     .hashSetValues()
                                                                     .build(Objects.requireNonNull(multimap));
@@ -102,18 +105,21 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
 
     /**
      * {@inheritDoc}
+     * @throws ClassCastException If the values inside the iterable aren't all of the same type specified by key.
      */
     @Override
-    public boolean putAll(final Class<? extends B> key, final Iterable<? extends B> values) {
+    public boolean putAll(final Class<? extends B> key, final Iterable<? extends B> values) throws ClassCastException {
         this.checkIterableValues(key, values);
         return super.putAll(key, values);
     }
 
     /**
      * {@inheritDoc}
+     * @throws ClassCastException If the values inside the iterable aren't all of the same type specified by key.
      */
     @Override
-    public Collection<B> replaceValues(final Class<? extends B> key, final Iterable<? extends B> values) {
+    public Collection<B> replaceValues(final Class<? extends B> key, final Iterable<? extends B> values)
+                                                                                                    throws ClassCastException {
         this.checkIterableValues(key, values);
         return super.replaceValues(key, values);
     }
