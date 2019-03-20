@@ -73,7 +73,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         body.addFixture(Geometry.createRectangle(width, height));
         final Vector2 center = new Vector2(position.getX() + width / 2, position.getY() - height / 2);
         body.translate(center);
-        body.rotate(angle);
+        /* rotation around the upper left corner */
+        body.rotate(angle, new Vector2(position.getX(), position.getY()));
         return body;
     }
 
