@@ -24,6 +24,16 @@ public interface EntityProperties {
      */
     Pair<Double, Double> getPosition();
     /**
+     * Getter for the width of this {@link Entity}.
+     * @return the width
+     */
+    double getWidth();
+    /**
+     * Getter for the height of this {@link Entity}.
+     * @return the height
+     */
+    double getHeight();
+    /**
      * Getter for the angle property.
      * @return The angle value in radians.
      */

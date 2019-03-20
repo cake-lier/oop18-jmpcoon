@@ -28,7 +28,7 @@ public class GameControllerImpl implements GameController {
 
     private static final long DELTA_UPDATE = 15;
     private static final String LEVEL_FILE = "res" + System.getProperty("file.separator") + "level1.txt";
-    private static final int N_PROPERTIES = 5;
+    private static final int N_PROPERTIES = 7;
 
     private final World gameWorld;
     private final GameView gameView;
@@ -155,7 +155,9 @@ public class GameControllerImpl implements GameController {
                                                     EntityShape.valueOf(v[1]), 
                                                     Double.valueOf(v[2]), 
                                                     Double.valueOf(v[3]),
-                                                    Double.valueOf(v[4])))
+                                                    Double.valueOf(v[4]),
+                                                    Double.valueOf(v[5]),
+                                                    Double.valueOf(v[6])))
                  .forEach(entities::add);
         } catch (Exception e) {
             System.out.println(e.getMessage());
