@@ -8,15 +8,6 @@ import utils.Pair;
  */
 public class EntityFactory {
 
-    private static final double PLATFORM_WIDTH = 200;
-    private static final double PLATFORM_HEIGHT = 10;
-
-    private static final double LADDER_WIDTH = 20;
-    private static final double LADDER_HEIGHT = 50;
-
-    private static final double WALKING_ENEMY_WIDTH = 7;
-    private static final double WALKING_ENEMY_HEIGHT = 4; 
-
     private final PhysicalFactory factory;
 
     /**
@@ -30,30 +21,36 @@ public class EntityFactory {
     /**
      * creates a {@link Ladder}.
      * @param position the position in which the {@link Ladder} is created
+     * @param width the width of the {@link Ladder} created
+     * @param height the height of the {@link Ladder} created
      * @return the {@link Ladder} created
      */
-    public Ladder createLadder(final Pair<Double, Double> position) {
-        return new Ladder(this.factory.createStaticPhysicalBody(position, 0, EntityShape.RECTANGLE, LADDER_WIDTH, LADDER_HEIGHT, EntityType.LADDER));
+    public Ladder createLadder(final Pair<Double, Double> position, final double width, final double height) {
+        return new Ladder(this.factory.createStaticPhysicalBody(position, 0, EntityShape.RECTANGLE, width, height, EntityType.LADDER));
     }
 
     /**
      * creates a {@link Platform}.
      * @param position the position in which the {@link Platform} is created
+     * @param width the width of the {@link Platform} created
+     * @param height the height of the {@link Platform} created
      * @param angle the inclination of the {@link Platform}
      * @return the {@link Platform} created
      */
-    public Platform createPlatform(final Pair<Double, Double> position, final double angle) {
-        return new Platform(this.factory.createStaticPhysicalBody(position, angle, EntityShape.RECTANGLE, PLATFORM_WIDTH, PLATFORM_HEIGHT, EntityType.PLATFORM));
+    public Platform createPlatform(final Pair<Double, Double> position, final double width, final double height, final double angle) {
+        return new Platform(this.factory.createStaticPhysicalBody(position, angle, EntityShape.RECTANGLE, width, height, EntityType.PLATFORM));
     }
 
     /**
      * 
      * @param position the position in which the {@link WalkingEnemy} is created
+     * @param width the width of the {@link WalkingEnemy} created
+     * @param height the height of the {@link WalkingEnemy} created
      * @return the {@link WalkingEnemy} created
      */
-    public WalkingEnemy createWalkingEnemy(final Pair<Double, Double> position) {
+    public WalkingEnemy createWalkingEnemy(final Pair<Double, Double> position, final double width, final double height) {
         DynamicPhysicalBody body = this.factory.createDynamicPhysicalBody(position, 0, EntityShape.RECTANGLE,
-                WALKING_ENEMY_WIDTH, WALKING_ENEMY_HEIGHT, EntityType.WALKING_ENEMY);
+                width, height, EntityType.WALKING_ENEMY);
         return new WalkingEnemy(body);
     }
 }
