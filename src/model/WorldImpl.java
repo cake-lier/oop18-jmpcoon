@@ -1,12 +1,12 @@
 package model;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import model.entities.Entity;
+import model.entities.EntityCreator;
 import model.entities.EntityFactory;
 import model.entities.EntityProperties;
 import model.entities.EntityType;
@@ -24,8 +24,8 @@ import org.apache.commons.lang3.tuple.Pair;
  * The class implementation of {@link World}.
  */
 public final class WorldImpl implements World {
-    private static final double WORLD_WIDTH = 16;
-    private static final double WORLD_HEIGHT = 9;
+    private static final double WORLD_WIDTH = 8;
+    private static final double WORLD_HEIGHT = 4.5;
 
     private final EntityFactory entityFactory;
     private final PhysicalWorld innerWorld;
@@ -34,7 +34,7 @@ public final class WorldImpl implements World {
 
     /**
      * Default constructor, delegates the job of managing the physics of the game to the library underneath and decides the size
-     * of itself.
+     * of itself in meters.
      */
     public WorldImpl() {
         final PhysicsFactory physicsFactory = new PhysicsFactoryImpl();
@@ -57,22 +57,10 @@ public final class WorldImpl implements World {
     @Override
     public void initLevel(final Collection<EntityProperties> entities) {
         entities.forEach(entity -> {
+            final EntityCreator creator = EntityCreator.valueOf(entity.getEntityType().name());
             if (entity.getEntityType() != EntityType.PLAYER) {
-                final Class<? extends Entity> entityClass = entity.getEntityType()
-                        .getTypeClass();
-                try {
-                    this.entities.put(entityClass, 
-                                      entityClass.cast(
-                                          EntityFactory.class
-                                                       .getMethod("create"
-                                                                  + entity.getEntityType()
-                                                       .getTypeName())
-                                                       .invoke(this.entityFactory)));
-                } catch (IllegalAccessException | IllegalArgumentException 
-                         | InvocationTargetException | NoSuchMethodException 
-                         | SecurityException ex) {
-                    ex.printStackTrace();
-                }
+                final Class<? extends Entity> entityClass = creator.getAssociatedClass();
+                this.entities.put(entityClass, creator.create(this.entityFactory));
             } else {
                 this.player = this.entityFactory.createPlayer();
             }
@@ -80,10 +68,8 @@ public final class WorldImpl implements World {
     }
 
     /*
-     * Gets if the {@link Player} is currently standing on a platform or not. This is true only if is currently in contact with
-     * a {@link Platform} and the contact point is at the bottom of the {@link Player} bounding box and at the top of the
-     * {@link Platform} bounding box.
-     * @return True if the player is standing on a platform, false otherwise.
+     * Gets if the Player is currently standing on a platform or not. This is true only if is currently in contact with
+     * a Platform and the contact point is at the bottom of the Player bounding box and at the top of the Platform bounding box.
      */
     private boolean isPlayerStanding() {
         final PhysicalBody innerPlayer = this.player.getInternalPhysicalBody();
@@ -142,5 +128,4 @@ public final class WorldImpl implements World {
     public Collection<Entity> getEntities() {
         return this.entities.values();
     }
-
 }
