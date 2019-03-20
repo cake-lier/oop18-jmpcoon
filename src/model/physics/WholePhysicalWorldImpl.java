@@ -18,6 +18,7 @@ import com.google.common.collect.HashBiMap;
 final class WholePhysicalWorldImpl implements WholePhysicalWorld {
     private final World world;
     private final BiMap<PhysicalBody, Body> associations;
+
     /**
      * Binds the current instance of {@link WholePhysicalWorldImpl} with the instance of {@link World} which will be wrapped and 
      * used.
@@ -27,14 +28,15 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.world = world;
         this.associations = HashBiMap.create();
     }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public void addContainerAssociation(final PhysicalBody container,
-                                        final Body contained) {
+    public void addContainerAssociation(final PhysicalBody container, final Body contained) {
         this.associations.putIfAbsent(container, contained);
     }
+
     /**
      * {@inheritDoc}
      */
@@ -42,14 +44,15 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
     public World getWorld() {
         return this.world;
     }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean arePhysicalBodiesInContact(final PhysicalBody first,
-                                              final PhysicalBody second) {
+    public boolean arePhysicalBodiesInContact(final PhysicalBody first, final PhysicalBody second) {
         return this.associations.get(first).isInContact(this.associations.get(second));
     }
+
     /**
      * {@inheritDoc}
      */
@@ -58,6 +61,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.world.removeBody(this.associations.get(body));
         this.associations.remove(body);
     }
+
     /**
      * {@inheritDoc}
      */

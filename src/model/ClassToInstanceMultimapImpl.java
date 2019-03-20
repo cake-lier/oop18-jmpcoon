@@ -11,31 +11,28 @@ import com.google.common.collect.MultimapBuilder;
 import com.google.common.primitives.Primitives;
 
 /**
- * The class implementation of {@link ClassToInstanceMultimap}. It also extends a
- * {@link ForwardingMultimap} because it's the multimap which has to be used in cases
- * we want to wrap another multimap and delegate to it all or part of the methods we
- * want to define.
+ * The class implementation of {@link ClassToInstanceMultimap}. It also extends a {@link ForwardingMultimap} because it's the 
+ * multimap which has to be used in cases we want to wrap another multimap and delegate to it all or part of the methods we want
+ * to define.
  * @param <B> An upper bound supertype shared by all the instances in the multimap.
  */
-public final class ClassToInstanceMultimapImpl<B>
-             extends ForwardingMultimap<Class<? extends B>, B>
-             implements ClassToInstanceMultimap<B> {
+public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Class<? extends B>, B> 
+                                                  implements ClassToInstanceMultimap<B> {
     private final Multimap<Class<? extends B>, B> backingMap;
+
     /**
-     * General constructor which accepts a backing map to wrap and use as a support.
-     * For consistency reasons, it rejects from being a backing map all multimaps which
-     * entries don't respect the rule for which the key is the class of the value instance
-     * before using the map.
+     * General constructor which accepts a backing map to wrap and use as a support. For consistency reasons, it rejects from
+     * being a backing map all multimaps which entries don't respect the rule for which the key is the class of the value
+     * instance before using the map.
      * @param backingMap The backing map to wrap.
-     * @throws ClassCastException If the multimap passed doesn't respect the rule 
-     * underlined before.
+     * @throws ClassCastException If the multimap passed doesn't respect the rule underlined before.
      */
-    public ClassToInstanceMultimapImpl(final Multimap<Class<? extends B>, B> backingMap)
-           throws ClassCastException {
+    public ClassToInstanceMultimapImpl(final Multimap<Class<? extends B>, B> backingMap) throws ClassCastException {
         super();
         this.checkMultimapEntries(Objects.requireNonNull(backingMap));
         this.backingMap = backingMap;
     }
+
     /**
      * Default constructor which chooses itself the map to rely on, which is a
      * {@link SetMultimap} with keys stored in a hash set.
@@ -43,16 +40,17 @@ public final class ClassToInstanceMultimapImpl<B>
     public ClassToInstanceMultimapImpl() {
         this(MultimapBuilder.hashKeys().hashSetValues().build());
     }
-    /**
-     * A method for checking all if the entries of a multimap follow the rule for which
-     * the key is the class of the value instance before using the map.
-     * @param multimap
+
+    /*
+     * A method for checking all if the entries of a multimap follow the rule for which the key is the class of the value
+     * instance before using the map.
+     * "multimap": The multimap to check.
      */
     private void checkMultimapEntries(final Multimap<Class<? extends B>, B> multimap) {
         multimap.entries()
-                .forEach(entry -> this.cast(entry.getKey(),
-                                            entry.getValue()));
+                .forEach(entry -> this.cast(entry.getKey(), entry.getValue()));
     }
+
     /**
      * {@inheritDoc}
      */
@@ -60,16 +58,17 @@ public final class ClassToInstanceMultimapImpl<B>
     protected Multimap<Class<? extends B>, B> delegate() {
         return this.backingMap;
     }
-    /**
-     * The method used instead of make a cast. It's copied from the
-     * {@link MutableClassToInstanceMap} implementation, although it isn't static.
-     * @param type The type to use while trying to cast the value.
-     * @param value The value to be casted.
-     * @return The value casted to the type T.
+
+    /*
+     * The method used instead of make a cast. It's copied from the MutableClassToInstanceMap implementation in the Guava
+     * library, although this it isn't static. It returns "value" casted to "type".
+     * "type": The type to use while trying to cast the value.
+     * "value": The value to be casted.
      */
     private <T extends B> T cast(final Class<T> type, final B value) {
         return Primitives.wrap(type).cast(value);
     }
+
     /**
      * {@inheritDoc}
      */
@@ -78,24 +77,29 @@ public final class ClassToInstanceMultimapImpl<B>
         final Class<? extends B> copyKey = Objects.requireNonNull(key);
         return super.put(copyKey, this.cast(copyKey, Objects.requireNonNull(value)));
     }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean putAll(
-                   final Multimap<? extends Class<? extends B>, ? extends B> multimap) {
-        final Multimap<Class<? extends B>, B> copy 
-              = MultimapBuilder.hashKeys()
-                               .hashSetValues()
-                               .build(Objects.requireNonNull(multimap));
+    public boolean putAll(final Multimap<? extends Class<? extends B>, ? extends B> multimap) {
+        final Multimap<Class<? extends B>, B> copy = MultimapBuilder.hashKeys()
+                                                                    .hashSetValues()
+                                                                    .build(Objects.requireNonNull(multimap));
         this.checkMultimapEntries(copy);
         return super.putAll(copy);
     }
-    private void checkIterableValues(final Class<? extends B> type,
-                                     final Iterable<? extends B> values) {
+
+    /*
+     * Given an iterable and a type, checks if all the values inside the iterable are of the same type specified.
+     * "type": the type of the value inside the iterable
+     * "values": the iterable to check
+     */
+    private void checkIterableValues(final Class<? extends B> type, final Iterable<? extends B> values) {
         StreamSupport.stream(Objects.requireNonNull(values).spliterator(), true)
                      .forEach(value -> this.cast(Objects.requireNonNull(type), value));
     }
+
     /**
      * {@inheritDoc}
      */
@@ -104,15 +108,16 @@ public final class ClassToInstanceMultimapImpl<B>
         this.checkIterableValues(key, values);
         return super.putAll(key, values);
     }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public Collection<B> replaceValues(final Class<? extends B> key,
-                                       final Iterable<? extends B> values) {
+    public Collection<B> replaceValues(final Class<? extends B> key, final Iterable<? extends B> values) {
         this.checkIterableValues(key, values);
         return super.replaceValues(key, values);
     }
+
     /**
      * {@inheritDoc}
      */
@@ -123,6 +128,7 @@ public final class ClassToInstanceMultimapImpl<B>
                                  .map(value -> this.cast(copyType, value))
                                  .collect(Collectors.toList());
     }
+
     /**
      * {@inheritDoc}
      */
