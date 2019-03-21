@@ -1,8 +1,8 @@
 package model.entities;
 
 import model.State;
-import model.World;
 import model.physics.PhysicalBody;
+import model.world.World;
 import utils.Pair;
 
 /**
@@ -35,11 +35,6 @@ public interface Entity {
      * @return whether the {@link Entity} is alive or not
      */
     boolean isAlive();
-
-    /**
-     * 
-     */
-    void remove();
 
     /**
      * 

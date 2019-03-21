@@ -47,11 +47,6 @@ public final class Player implements Entity {
     }
 
     @Override
-    public void remove() {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
     public PhysicalBody getInternalPhysicalBody() {
         // TODO Auto-generated method stub
         return null;

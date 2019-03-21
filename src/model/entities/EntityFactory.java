@@ -16,45 +16,108 @@ public final class EntityFactory {
     }
     /**
      * 
-     * @return a
+     * @param type a.
+     * @param shape a.
+     * @param xCoord a.
+     * @param yCoord a.
+     * @param width a.
+     * @param height a.
+     * @param angle a.
+     * @return a.
      */
-    public Player createPlayer() {
+    public Player createPlayer(final EntityType type, final EntityShape shape, final double xCoord, final double yCoord,
+            final double width, final double height, final double angle) {
         this.physicsFactory.getClass();
         return null;
     }
     /**
      * 
-     * @return a
+     * @param type q.
+     * @param shape a.
+     * @param xCoord a.
+     * @param yCoord a.
+     * @param width a.
+     * @param height a.
+     * @param angle a.
+     * @return a.
      */
-    public Platform createPlatform() {
+    public Platform createPlatform(final EntityType type, final EntityShape shape, final double xCoord, final double yCoord,
+            final double width, final double height, final double angle) {
         return null;
     }
     /**
      * 
-     * @return a
+     * @param type a.
+     * @param shape a.
+     * @param xCoord a.
+     * @param yCoord a.
+     * @param width a.
+     * @param height a.
+     * @param angle a.
+     * @return a.
      */
-    public Ladder createLadder() {
+    public Ladder createLadder(final EntityType type, final EntityShape shape, final double xCoord, final double yCoord,
+            final double width, final double height, final double angle) {
         return null;
     }
     /**
      * 
-     * @return a
+     * @param type a.
+     * @param shape a.
+     * @param xCoord a.
+     * @param yCoord a.
+     * @param width a.
+     * @param height a.
+     * @param angle a.
+     * @return a.
      */
-    public WalkingEnemy createWalkingEnemy() {
+    public WalkingEnemy createWalkingEnemy(final EntityType type, final EntityShape shape, final double xCoord, final double yCoord,
+            final double width, final double height, final double angle) {
         return null;
     }
     /**
      * 
-     * @return a
+     * @param type a.
+     * @param shape a.
+     * @param xCoord a.
+     * @param yCoord a.
+     * @param width a.
+     * @param height a.
+     * @param angle a.
+     * @return a.
      */
-    public RollingEnemy createRollingEnemy() {
+    public RollingEnemy createRollingEnemy(final EntityType type, final EntityShape shape, final double xCoord, final double yCoord,
+            final double width, final double height, final double angle) {
         return null;
     }
     /**
      * 
-     * @return a
+     * @param type a.
+     * @param shape a.
+     * @param xCoord a.
+     * @param yCoord a.
+     * @param width a.
+     * @param height a.
+     * @param angle a.
+     * @return a.
      */
-    public PowerUp createPowerUp() {
+    public PowerUp createPowerUp(final EntityType type, final EntityShape shape, final double xCoord, final double yCoord,
+            final double width, final double height, final double angle) {
+        return null;
+    }
+    /**
+     * 
+     * @param type a.
+     * @param shape a.
+     * @param xCoord a.
+     * @param yCoord a.
+     * @param width a.
+     * @param height a.
+     * @param angle a.
+     * @return a.
+     */
+    public GeneratorEnemy createGeneratorEnemy(final EntityType type, final EntityShape shape, final double xCoord, final double yCoord,
+            final double width, final double height, final double angle) {
         return null;
     }
 }

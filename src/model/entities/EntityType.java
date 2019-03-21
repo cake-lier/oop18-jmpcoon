@@ -27,5 +27,9 @@ public enum EntityType {
     /**
      * 
      */
-    WALKING_ENEMY;
+    WALKING_ENEMY,
+    /**
+     * 
+     */
+    GENERATOR_ENEMY;
 }

@@ -1,7 +1,8 @@
-package model;
+package model.world;
 
 import java.util.Collection;
 
+import model.MovementType;
 import model.entities.Entity;
 import model.entities.EntityProperties;
 import org.apache.commons.lang3.tuple.Pair;
@@ -24,6 +25,11 @@ public interface World {
      * that should be put inside this {@link World}.
      */
     void initLevel(Collection<EntityProperties> entities);
+
+    /**
+     * Updates the current state of the {@link World} by letting an interval of time pass.
+     */
+    void update();
 
     /**
      * It moves the player inside the world making her do one of the movements it's allowed to make, as specified in the 
