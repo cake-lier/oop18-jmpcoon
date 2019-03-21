@@ -81,25 +81,26 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
     }
 
     /**
-     * @return the position of {@link Entity} represented converted to the reference system of the scene. 
+     * converts the given world coordinates into scene coordinates.
+     * @param worldCoordinates the coordinates to be converted
+     * @return the converted coordinates 
      */
-    protected Pair<Double, Double> getConvertedPosition() {
-        return new PairImpl<Double, Double>(this.entity.getPosition().getX() * this.getXRatio(),
-                this.sceneDimensions.getY() - this.entity.getPosition().getY() * this.getYRatio());
+    protected Pair<Double, Double> getConvertedCoordinates(final Pair<Double, Double> worldCoordinates) {
+        return new PairImpl<Double, Double>(worldCoordinates.getX() * this.getXRatio(),
+                this.sceneDimensions.getY() - worldCoordinates.getY() * this.getYRatio());
     }
 
     /**
-     * @return the width of the {@link ImageView} representing the {@link Entity}
+     * @return the ratio to convert world dimensions to scene dimensions along the x axis
      */
-    protected double getImageViewWidth() {
-        return this.sprite.getImage().getWidth();
-    }
-
-    private double getXRatio() {
+    protected double getXRatio() {
         return this.sceneDimensions.getX() / this.worldDimensions.getX();
     }
 
-    private double getYRatio() {
+    /**
+     * @return the ratio to convert world dimensions to scene dimensions along the y axis
+     */
+    protected double getYRatio() {
         return this.sceneDimensions.getY() / this.worldDimensions.getY();
     }
 }
