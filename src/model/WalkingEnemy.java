@@ -42,10 +42,10 @@ public class WalkingEnemy extends DynamicEntity {
     public void computeMovement() {
         double x = this.body.getWorldPosition().x;
         if (x <= this.initialPosition) {
-            body.applyMovement(WALKING_SPEED, 0);
+            body.applyMovement(MovementType.MOVE_RIGHT, WALKING_SPEED, 0);
         }
         if (x >= this.initialPosition + DISTANCE) {
-            body.applyMovement(-WALKING_SPEED, 0);
+            body.applyMovement(MovementType.MOVE_LEFT, -WALKING_SPEED, 0);
         }
     }
 

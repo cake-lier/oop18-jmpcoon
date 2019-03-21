@@ -39,28 +39,11 @@ public class Player extends DynamicEntity {
      */
     public void move(final MovementType movement) {
         switch (movement) {
-            case JUMP: jump(); break;
-            case CLIMB: climb(); break;
-            case MOVE_RIGHT: moveRight(); break;
-            case MOVE_LEFT: moveLeft(); break;
+            case JUMP: this.body.applyMovement(MovementType.JUMP, 0, JUMPIMPULSE); break;
+            case CLIMB: this.body.applyMovement(MovementType.CLIMB, 0, 0.5); break;
+            case MOVE_RIGHT: this.body.applyMovement(MovementType.MOVE_RIGHT, WALKIMPULSE,  0); break;
+            case MOVE_LEFT: this.body.applyMovement(MovementType.MOVE_LEFT, -WALKIMPULSE,  0); break;
             default: 
         }
     }
-
-    private void jump() {
-        this.body.applyMovement(0, JUMPIMPULSE);
-    }
-
-    private void climb() {
-        this.body.applyMovement(0, 0.5);
-    }
-
-    private void moveRight() {
-        this.body.applyMovement(WALKIMPULSE,  0);
-    }
-
-    private void moveLeft() {
-        this.body.applyMovement(-WALKIMPULSE,  0);
-    }
-
 }

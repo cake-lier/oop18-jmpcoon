@@ -1,14 +1,40 @@
 package model;
 
 /**
- * the types of movement the player can do.
+ * The types of movement the player can do.
  */
 public enum MovementType {
-
-    // TODO: comment javadoc-style every type of the enum
+    /**
+     * Player climbs a ladder.
+     */
     CLIMB,
+    /**
+     * Player jumps.
+     */
     JUMP,
+    /**
+     * Player walks to the right.
+     */
     MOVE_RIGHT,
-    MOVE_LEFT
+    /**
+     * Player walks to the left.
+     */
+    MOVE_LEFT;
+
+    private State conversion;
+
+    static {
+        CLIMB.conversion = State.CLIMBING;
+        JUMP.conversion = State.JUMPING;
+        MOVE_RIGHT.conversion = State.MOVING_RIGHT;
+        MOVE_LEFT.conversion = State.MOVING_LEFT;
+    }
+    /**
+     * Converts the {@link MovementType} on which it's called to a {@link State}.
+     * @return the corresponding {@link State}.
+     */
+    public State convert() {
+        return conversion;
+    }
 
 }
