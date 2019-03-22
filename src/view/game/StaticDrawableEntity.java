@@ -46,31 +46,20 @@ public class StaticDrawableEntity extends AbstractDrawableEntity {
      * {@inheritDoc}
      */
     protected void updateSpriteProperties() {
-        final double imgWidth = this.getImageView().getImage().getWidth();
-        final double imgHeight = this.getImageView().getImage().getHeight();
-        final double entitySceneWidth = this.getEntity().getDimensions().getX() * this.getXRatio();
-        final double entitySceneHeight = this.getEntity().getDimensions().getY() * this.getYRatio();
-        final double rotationAngle = this.getEntity().getAngle();
-        /* scale the ImageView so that its Image has the correct dimensions */
-        this.getImageView().setScaleX(entitySceneWidth / imgWidth);
-        this.getImageView().setScaleY(entitySceneHeight / imgHeight);
-        /* distances between the bounds of the ImageView and the borders of its Image */
-        final double diffX = (imgWidth - entitySceneWidth) / 2;
-        final double diffY = (imgHeight - entitySceneHeight) / 2;
-        this.getImageView().setRotate(-Math.toDegrees(rotationAngle));
-        /* translation to correct position after rotation and scaling */
-        final double halfDiagonal = Math.sqrt(entitySceneWidth * entitySceneWidth + entitySceneHeight * entitySceneHeight) / 2;
-        final double distance = 2 * halfDiagonal * Math.sin(Math.abs(rotationAngle) / 2);
-        // TODO: control this calculation
-        final double angle1 = (Math.PI - Math.abs(rotationAngle)) / 2;
-        final double angle2 = Math.asin(entitySceneHeight / (2 * halfDiagonal));
-        final double deltaX = distance * Math.sin(Math.PI / 2 - angle1 - angle2);
-        final double deltaY = distance * Math.cos(Math.PI / 2 - angle1 - angle2);
-        final Pair<Double, Double> coordinates = new PairImpl<>(this.getEntity().getPosition().getX() + deltaX - diffX, 
-                                                                this.getEntity().getPosition().getY() - deltaY + diffY);
-        final Pair<Double, Double> finalCoordinates = this.getConvertedCoordinates(coordinates);
-        this.getImageView().setX(finalCoordinates.getX());
-        this.getImageView().setY(finalCoordinates.getY());
+        final double entityWidth = this.getEntity().getDimensions().getX();
+        final double entityHeight = this.getEntity().getDimensions().getY();
+        final double entityX = this.getEntity().getPosition().getX();
+        final double entityY = this.getEntity().getPosition().getY();
+        /* scaling the ImaegView to correct dimensions */
+        this.getImageView().setScaleX(entityWidth * this.getXRatio() / this.getImageView().getImage().getWidth());
+        this.getImageView().setScaleY(entityHeight * this.getYRatio() / this.getImageView().getImage().getHeight());
+        this.getImageView().setRotate(-Math.toDegrees(this.getEntity().getAngle()));
+        /* differences between the sizes of the ImageView and of the image reallt shown */
+        final double diffX = this.getImageView().getImage().getWidth() - entityWidth * this.getXRatio();
+        final double diffY = this.getImageView().getImage().getHeight() - entityHeight * this.getYRatio();
+        final Pair<Double, Double> sceneCoordinates = this.getConvertedCoordinates(new PairImpl<>(entityX - entityWidth / 2, entityY + entityHeight / 2));
+        this.getImageView().setX(sceneCoordinates.getX() - diffX / 2);
+        this.getImageView().setY(sceneCoordinates.getY() - diffY / 2);
     }
 
 }
