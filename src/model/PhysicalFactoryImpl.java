@@ -5,7 +5,9 @@ import utils.Pair;
 import java.util.Optional;
 
 import org.dyn4j.collision.AxisAlignedBounds;
+import org.dyn4j.collision.CategoryFilter;
 import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
@@ -15,6 +17,27 @@ import org.dyn4j.geometry.Vector2;
  * a class that implements {@link PhysicalFactory}.
  */
 public class PhysicalFactoryImpl implements PhysicalFactory {
+
+    private static final long CATEGORY_EMPTY = 0; // 000000
+    private static final long CATEGORY_WALKING_ENEMY = 1; // 000001
+    private static final long CATEGORY_ROLLING_ENEMY = 2; // 000010
+    private static final long CATEGORY_PLATFORM = 4; // 000100
+    private static final long CATEGORY_PLAYER = 8; // 001000
+    private static final long CATEGORY_LADDER = 16; // 010000
+    private static final long CATEGORY_GENERATOR_ENEMY = 32; // 100000
+
+    // TODO: indent correctly the lines that are too long
+    private static final CategoryFilter LADDER_FILTER = new CategoryFilter(CATEGORY_LADDER, CATEGORY_EMPTY);
+    private static final CategoryFilter PLATFORM_FILTER = 
+            new CategoryFilter(CATEGORY_PLATFORM, CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
+    private static final CategoryFilter PLAYER_FILTER = 
+            new CategoryFilter(CATEGORY_PLAYER, CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
+    private static final CategoryFilter ROLLING_ENEMY_FILTER = 
+            new CategoryFilter(CATEGORY_ROLLING_ENEMY, CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
+    private static final CategoryFilter WALKING_ENEMY_FILTER =
+            new CategoryFilter(CATEGORY_WALKING_ENEMY, CATEGORY_WALKING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
+    private static final CategoryFilter GENERATOR_ENEMY_FILTER = 
+            new CategoryFilter(CATEGORY_GENERATOR_ENEMY, CATEGORY_GENERATOR_ENEMY | CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
 
     // TODO: consider a static method and a private constructor
 
@@ -43,6 +66,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     public StaticPhysicalBody createStaticPhysicalBody(
             final Pair<Double, Double> position, final double angle, final EntityShape shape,
                 final double width, final double height, final EntityType type) {
+        // TODO: repetitive code
         if (!this.world.isPresent()) {
             throw new IllegalStateException("A PhysicalWorld has yet to be created!");
         }
@@ -53,6 +77,11 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
             } else {
                 /* if a shape isn't rectangular, automatically it's circular */
                 body = createCircleBody(position, width);
+            }
+            if (type.equals(EntityType.LADDER)) {
+                body.getFixture(0).setFilter(LADDER_FILTER);
+            } else if (type.equals(EntityType.PLATFORM)) {
+                body.getFixture(0).setFilter(PLATFORM_FILTER);
             }
             body.setMass(MassType.INFINITE);
             body.setUserData(type);

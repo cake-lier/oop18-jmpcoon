@@ -6,6 +6,7 @@ package model;
 public enum EntityType {
 
     // TODO: comment the various types
+    GENERATOR_ENEMY,
     LADDER,
     PLAYER,
     PLATFORM,
