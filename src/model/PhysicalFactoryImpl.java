@@ -71,10 +71,9 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private Body createRectangleBody(final Pair<Double, Double> position, final double angle, final double width, final double height) {
         final Body body = new Body();
         body.addFixture(Geometry.createRectangle(width, height));
-        final Vector2 center = new Vector2(position.getX() + width / 2, position.getY() - height / 2);
+        final Vector2 center = new Vector2(position.getX(), position.getY());
         body.translate(center);
-        /* rotation around the upper left corner */
-        body.rotate(angle, new Vector2(position.getX(), position.getY()));
+        body.rotate(angle, center);
         return body;
     }
 

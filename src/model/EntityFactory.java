@@ -20,7 +20,7 @@ public class EntityFactory {
 
     /**
      * creates a {@link Ladder}.
-     * @param position the position in which the {@link Ladder} is created
+     * @param position the center of the {@link Ladder} created
      * @param width the width of the {@link Ladder} created
      * @param height the height of the {@link Ladder} created
      * @return the {@link Ladder} created
@@ -31,7 +31,7 @@ public class EntityFactory {
 
     /**
      * creates a {@link Platform}.
-     * @param position the position in which the {@link Platform} is created
+     * @param position the center of the {@link Platform} created
      * @param width the width of the {@link Platform} created
      * @param height the height of the {@link Platform} created
      * @param angle the inclination of the {@link Platform}
@@ -43,7 +43,7 @@ public class EntityFactory {
 
     /**
      * 
-     * @param position the position in which the {@link WalkingEnemy} is created
+     * @param position the center of the {@link WalkingEnemy} created
      * @param width the width of the {@link WalkingEnemy} created
      * @param height the height of the {@link WalkingEnemy} created
      * @return the {@link WalkingEnemy} created

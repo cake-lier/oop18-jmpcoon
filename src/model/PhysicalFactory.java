@@ -22,7 +22,7 @@ public interface PhysicalFactory {
      * creates {@link StaticPhysicalBody}.
      * 
      * @param position
-     *            the upper left corner of the {@link StaticPhysicalBody} created
+     *            the center of the {@link StaticPhysicalBody} created
      * @param angle
      *            the angle in radians of the created {@link StaticPhysicalBody}
      * @param shape
@@ -43,7 +43,7 @@ public interface PhysicalFactory {
      * creates {@link DynamicPhysicalBody}.
      * 
      * @param position
-     *            the upper left corner of the {@link DynamicPhysicalBody} created
+     *            the center of the {@link DynamicPhysicalBody} created
      * @param angle
      *            the angle in radians of the created {@link DynamicPhysicalBody}
      * @param shape
