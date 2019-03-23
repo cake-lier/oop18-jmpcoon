@@ -7,8 +7,8 @@ public class WalkingEnemy extends DynamicEntity {
 
     private static final double DISTANCE = 5;
     private static final double WALKING_SPEED = 4;
-    private double initialPosition;
-    private DynamicPhysicalBody body;
+    private final double initialPosition;
+    private final DynamicPhysicalBody body;
 
     /**
      * builds a new {@link WalkingEnemy}.
