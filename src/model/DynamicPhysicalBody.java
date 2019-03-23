@@ -55,13 +55,4 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
             this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, MAXVELOCITY_Y));
         }
     }
-
-    /**
-     * 
-     * @return actual position of the body
-     */
-    public Vector2 getWorldPosition() {
-        return body.getWorldCenter();
-    }
-
 }
