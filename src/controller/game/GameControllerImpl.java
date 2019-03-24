@@ -94,6 +94,7 @@ public class GameControllerImpl implements GameController {
     @Override
     public void stopGame() {
         this.pauseGame();
+        this.appController.startApp();
     }
 
     /**
@@ -139,10 +140,10 @@ public class GameControllerImpl implements GameController {
     private void updateWorldAndView() {
         if (this.gameWorld.isGameOver()) {
             this.gameView.showGameOver();
-            this.stopGame();
+            this.pauseGame();
         } else if (this.gameWorld.hasPlayerWon()) {
             this.gameView.showPlayerWin();
-            this.stopGame();
+            this.pauseGame();
         } else {
             this.gameWorld.update();
             this.gameView.update();

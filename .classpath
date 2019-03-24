@@ -3,10 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
-	<classpathentry kind="lib" path="lib/jbox2d-library-2.2.1.1.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/jmpcoon/doc/jbox2d-library-2.2.1.1-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="lib/dyn4j-3.3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
