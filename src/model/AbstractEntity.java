@@ -2,6 +2,8 @@ package model;
 
 import java.util.Objects;
 
+import com.google.common.base.MoreObjects;
+
 import utils.Pair;
 
 /**
@@ -72,6 +74,39 @@ public abstract class AbstractEntity implements Entity {
      */
     protected Pair<Double, Double> getVelocity() {
         return this.body.getVelocity();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "Type: " + this.getType()
+                + "; Shape: " + this.getShape()
+                + "; Position: (" + this.getPosition().getX() + ", " + this.getPosition().getY()
+                + "); Dimensions: " + this.getDimensions().getX() + "x" + this.getDimensions().getY()
+                + "; Angle: " + this.getAngle();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.body, this.getType());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof AbstractEntity) {
+            final AbstractEntity otherEntity = (AbstractEntity) obj;
+            return this.body.equals(otherEntity.body) && this.getType().equals(otherEntity.getType());
+        } else {
+            return false;
+        }
     }
 
 }

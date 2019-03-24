@@ -89,4 +89,35 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
         }
         return new PairImpl<Double, Double>(width, height);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "Position: (" + this.getPosition().getX() + ", " + this.getPosition().getY()
+                + "); Dimensions: " + this.getDimensions().getX() + "x" + this.getDimensions().getY()
+                + "; Angle: " + this.getAngle();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.body);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof AbstractPhysicalBody) {
+            final AbstractPhysicalBody otherBody = (AbstractPhysicalBody) obj;
+            return this.body.equals(otherBody.body);
+        } else {
+            return false;
+        }
+    }
 }
