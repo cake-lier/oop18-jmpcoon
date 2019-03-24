@@ -2,6 +2,7 @@ package view.game;
 
 import java.util.Objects;
 
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.Entity;
@@ -49,7 +50,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
         this.entity = Objects.requireNonNull(entity);
         this.worldDimensions = Objects.requireNonNull(worldDimensions);
         this.sceneDimensions = Objects.requireNonNull(sceneDimensions);
-        this.updateSpriteProperties();
+        Platform.runLater(() -> this.updateSpriteProperties());
     }
 
     /**
@@ -57,7 +58,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      */
     @Override
     public void updatePosition() {
-        this.updateSpriteProperties();
+        Platform.runLater(() -> this.updateSpriteProperties());
     }
 
     /**
