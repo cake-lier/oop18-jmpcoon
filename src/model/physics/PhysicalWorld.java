@@ -15,13 +15,13 @@ public interface PhysicalWorld {
      * @param second The second {@link PhysicalBody} to check against.
      * @return True if the two are colliding, false otherwise.
      */
-    boolean arePhysicalBodiesInContact(PhysicalBody first, PhysicalBody second);
+    boolean areBodiesInContact(PhysicalBody first, PhysicalBody second);
 
     /**
      * Remove the {@link PhysicalBody} from this {@link PhysicalWorld}.
      * @param body The {@link PhysicalBody} to remove.
      */
-    void removePhysicalBody(PhysicalBody body);
+    void removeBody(PhysicalBody body);
 
     /**
      * Gets all bodies currently colliding with this {@link PhysicalBody} associated with the points in world coordinates in
@@ -30,5 +30,10 @@ public interface PhysicalWorld {
      * @return A {@link Set} made with {@link Pair}s of a colliding {@link PhysicalBody} and the point in which is colliding with
      * the passed {@link PhysicalBody}.
      */
-    Set<Pair<PhysicalBody, Pair<Double, Double>>> collidingPhysicalBodies(PhysicalBody body);
+    Set<Pair<PhysicalBody, Pair<Double, Double>>> getCollidingBodies(PhysicalBody body);
+
+    /**
+     * Updates the current state of the {@link PhysicalWorld} by advancing to the next simulation step.
+     */
+    void update();
 }

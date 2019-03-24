@@ -14,9 +14,9 @@ import model.entities.EntityFactory;
 import model.entities.EntityProperties;
 import model.entities.EntityType;
 import model.entities.GeneratorEnemy;
+import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
-import model.entities.PowerUp;
 import model.entities.RollingEnemy;
 import model.physics.PhysicalBody;
 import model.physics.PhysicalWorld;
@@ -25,12 +25,17 @@ import model.physics.PhysicsFactoryImpl;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.collect.MultimapBuilder;
+
 /**
  * The class implementation of {@link World}.
  */
 public final class WorldImpl implements World {
     private static final double WORLD_WIDTH = 8;
     private static final double WORLD_HEIGHT = 4.5;
+    private static final double WIN_ZONE_X = 0.37;
+    private static final double WIN_ZONE_Y = 3.71;
+    private static final double PRECISION = 0.001;
 
     private final EntityFactory entityFactory;
     private final PhysicalWorld innerWorld;
@@ -48,7 +53,7 @@ public final class WorldImpl implements World {
         this.entityFactory = new EntityFactory(physicsFactory);
         this.worldDimensions = new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT);
         this.innerWorld = physicsFactory.createWorld(this.worldDimensions.getLeft(), this.worldDimensions.getRight());
-        this.entities = new ClassToInstanceMultimapImpl<>();
+        this.entities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
         this.currentState = GameState.IS_GOING;
     }
 
@@ -90,15 +95,12 @@ public final class WorldImpl implements World {
      * created any new {@link RollingEnemy}.
      */
     public void update() {
+        this.innerWorld.update();
         if (this.currentState == GameState.IS_GOING) {
             if (!this.player.isAlive()) {
                 this.currentState = GameState.GAME_OVER;
             }
-            if (this.innerWorld.arePhysicalBodiesInContact(this.player.getInternalPhysicalBody(),
-                                                           this.entities.getInstances(PowerUp.class).stream()
-                                                                                                    .findFirst()
-                                                                                                    .get()
-                                                                                                    .getInternalPhysicalBody())) {
+            if (this.player.getPosition().getX() < WIN_ZONE_X && this.player.getPosition().getY() > WIN_ZONE_Y) {
                 this.currentState = GameState.PLAYER_WON;
             }
         }
@@ -107,7 +109,7 @@ public final class WorldImpl implements World {
             final Entity current = iterator.next();
             if (!current.isAlive()) {
                 iterator.remove();
-                this.innerWorld.removePhysicalBody(current.getInternalPhysicalBody());
+                this.innerWorld.removeBody(current.getInternalPhysicalBody());
             }
         }
         this.entities.getInstances(GeneratorEnemy.class).forEach(entity -> this.entities.putAll(RollingEnemy.class, 
@@ -124,16 +126,29 @@ public final class WorldImpl implements World {
                                                                       .parallelStream()
                                                                       .map(platform -> platform.getInternalPhysicalBody())
                                                                       .collect(Collectors.toSet());
-        return this.innerWorld.collidingPhysicalBodies(innerPlayer)
+        return this.innerWorld.getCollidingBodies(innerPlayer)
                               .parallelStream()
                               .filter(collision -> platformsBodies.contains(collision.getLeft()))
-                              .anyMatch(platformStand -> Double.compare(platformStand.getRight().getRight(),
-                                                                        innerPlayer.getPosition().getLeft()
-                                                                        - innerPlayer.getDimensions().getRight() / 2) == 0
-                                                         && Double.compare(platformStand.getRight().getRight(),
-                                                                           platformStand.getLeft().getPosition().getLeft()
-                                                                           + platformStand.getLeft().getDimensions().getRight()
-                                                                           / 2) == 0);
+                              .anyMatch(platformStand -> (innerPlayer.getPosition().getRight()
+                                                          - innerPlayer.getDimensions().getRight() / 2)
+                                                         - platformStand.getRight().getRight() < PRECISION
+                                                         && platformStand.getRight().getRight()
+                                                            - (platformStand.getLeft().getPosition().getRight()
+                                                               + platformStand.getLeft().getDimensions().getRight() / 2)
+                                                            < PRECISION);
+    }
+
+    /*
+     * Gets if the Player is currently standing in front of a ladder or not, and this is true only if is currently in contact with
+     * one of them.
+     */
+    private boolean isPlayerInFrontLadder() {
+        return this.entities.getInstances(Ladder.class).parallelStream()
+                                                       .map(ladder -> ladder.getInternalPhysicalBody())
+                                                       .anyMatch(ladderBody -> 
+                                                                 this.innerWorld
+                                                                     .areBodiesInContact(this.player.getInternalPhysicalBody(), 
+                                                                                         ladderBody));
     }
 
     /**
@@ -141,8 +156,10 @@ public final class WorldImpl implements World {
      */
     @Override
     public void movePlayer(final MovementType movement) {
-        if (this.currentState == GameState.IS_GOING && (movement != MovementType.JUMP || this.isPlayerStanding())) {
-            this.movePlayer(movement);
+        if (this.currentState == GameState.IS_GOING  && ((movement == MovementType.JUMP && this.isPlayerStanding()) 
+                                                         || (movement == MovementType.CLIMB && this.isPlayerInFrontLadder())
+                                                         || (movement != MovementType.JUMP && movement != MovementType.CLIMB))) {
+            this.player.move(movement);
         }
     }
 
