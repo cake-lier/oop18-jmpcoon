@@ -1,4 +1,4 @@
-package controller;
+package controller.game;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import controller.app.AppController;
 import model.EntityProperties;
 import model.EntityPropertiesImpl;
 import model.EntityShape;
@@ -32,16 +33,19 @@ public class GameControllerImpl implements GameController {
 
     private final World gameWorld;
     private final GameView gameView;
+    private final AppController appController;
     private Optional<ScheduledThreadPoolExecutor> timer;
 
     /**
      * builds a new {@link GameControllerImpl}.
      * @param view the {@link GameView} relative to the game controlled by this {@link GameController}
+     * @param appController the {@link AppController} relative to the app in which the game is shown
      */
-    public GameControllerImpl(final GameView view) {
+    public GameControllerImpl(final GameView view, final AppController appController) {
         this.gameWorld = new WorldImpl();
         this.gameWorld.initLevel(loadLevel());
         this.gameView = Objects.requireNonNull(view);
+        this.appController = Objects.requireNonNull(appController);
         // TODO: could just initialize timer to empty, and then at first run() call it would be created,
         // but in previous tests that caused problems. So, consider leaving it like this or creating a private
         // function to recall every time necessary
@@ -84,10 +88,12 @@ public class GameControllerImpl implements GameController {
         throw new UnsupportedOperationException("Game saving functionalities have not been implemented yet"); 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void stopGame() {
-        // TODO Auto-generated method stub
-
+        this.pauseGame();
     }
 
     /**
@@ -133,10 +139,10 @@ public class GameControllerImpl implements GameController {
     private void updateWorldAndView() {
         if (this.gameWorld.isGameOver()) {
             this.gameView.showGameOver();
-            this.timer.get().shutdown();
+            this.stopGame();
         } else if (this.gameWorld.hasPlayerWon()) {
             this.gameView.showPlayerWin();
-            this.timer.get().shutdown();
+            this.stopGame();
         } else {
             this.gameWorld.update();
             this.gameView.update();

@@ -1,4 +1,4 @@
-package controller;
+package controller.game;
 
 /**
  * an enumeration representing the types of input a {@link GameController} can process.
