@@ -11,6 +11,9 @@ import javafx.scene.image.WritableImage;
 import model.Entity;
 import model.Ladder;
 import model.Platform;
+import model.Player;
+import model.RollingEnemy;
+import model.WalkingEnemy;
 import utils.Pair;
 
 /**
@@ -21,6 +24,9 @@ public class EntityConverter {
     private static final String SPRITES_DIR = "res" + System.getProperty("file.separator");
     private static final String MODULE_LADDER_SPRITE = SPRITES_DIR + "ladder.png";
     private static final String MODULE_PLATFORM_SPRITE = SPRITES_DIR + "platform.png";
+    private static final String MODULE_PLAYER_SPRITE = SPRITES_DIR + "raccoon.png";
+    private static final String MODULE_ROLLING_ENEMY_SPRITE = SPRITES_DIR + "rollingEnemy.png";
+    private static final String MODULE_WALKING_ENEMY_SPRITE = SPRITES_DIR + "walkingEnemy.png";
 
     private final Pair<Double, Double> worldDimensions;
     private final Pair<Double, Double> sceneDimensions;
@@ -54,10 +60,40 @@ public class EntityConverter {
                 } else {
                     throw new IllegalStateException("Impossible entity");
                 }
+            case PLAYER:
+                if (entity instanceof Player) {
+                    return convertPlayer((Player) entity);
+                } else {
+                    throw new IllegalStateException("Impossible entity");
+                }
+            case ROLLING_ENEMY:
+                if (entity instanceof RollingEnemy) {
+                    return convertRollingEnemy((RollingEnemy) entity);
+                } else {
+                    throw new IllegalStateException("Impossible entity");
+                }
+            case WALKING_ENEMY: 
+                if (entity instanceof WalkingEnemy) {
+                    return convertWalkingEnemy((WalkingEnemy) entity);
+                } else {
+                    throw new IllegalStateException("Impossible entity");
+                }
             // TODO: add other entities
             default:
                 throw new IllegalStateException("Impossible entity");
         }
+    }
+
+    private DrawableEntity convertPlayer(final Player player) {
+        return new DynamicDrawableEntity(new Image(MODULE_PLAYER_SPRITE), player, this.worldDimensions, this.sceneDimensions);
+    }
+
+    private DrawableEntity convertRollingEnemy(final RollingEnemy enemy) {
+        return new DynamicDrawableEntity(new Image(MODULE_ROLLING_ENEMY_SPRITE), enemy, this.worldDimensions, this.sceneDimensions);
+    }
+
+    private DrawableEntity convertWalkingEnemy(final WalkingEnemy enemy) {
+        return new DynamicDrawableEntity(new Image(MODULE_WALKING_ENEMY_SPRITE), enemy, this.worldDimensions, this.sceneDimensions);
     }
 
     private DrawableEntity convertLadder(final Ladder ladder) {
