@@ -27,11 +27,11 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final long CATEGORY_GENERATOR_ENEMY = 32; // 100000
 
     // TODO: indent correctly the lines that are too long
-    private static final CategoryFilter LADDER_FILTER = new CategoryFilter(CATEGORY_LADDER, CATEGORY_EMPTY);
+    private static final CategoryFilter LADDER_FILTER = new CategoryFilter(CATEGORY_LADDER, CATEGORY_PLAYER);
     private static final CategoryFilter PLATFORM_FILTER = 
             new CategoryFilter(CATEGORY_PLATFORM, CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
     private static final CategoryFilter PLAYER_FILTER = 
-            new CategoryFilter(CATEGORY_PLAYER, CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
+            new CategoryFilter(CATEGORY_PLAYER, CATEGORY_LADDER | CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
     private static final CategoryFilter ROLLING_ENEMY_FILTER = 
             new CategoryFilter(CATEGORY_ROLLING_ENEMY, CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
     private static final CategoryFilter WALKING_ENEMY_FILTER =
@@ -80,6 +80,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
             }
             if (type.equals(EntityType.LADDER)) {
                 body.getFixture(0).setFilter(LADDER_FILTER);
+                body.getFixture(0).setSensor(true);
             } else if (type.equals(EntityType.PLATFORM)) {
                 body.getFixture(0).setFilter(PLATFORM_FILTER);
             }

@@ -54,7 +54,7 @@ public class StaticDrawableEntity extends AbstractDrawableEntity {
         this.getImageView().setScaleX(entityWidth * this.getXRatio() / this.getImageView().getImage().getWidth());
         this.getImageView().setScaleY(entityHeight * this.getYRatio() / this.getImageView().getImage().getHeight());
         this.getImageView().setRotate(-Math.toDegrees(this.getEntity().getAngle()));
-        /* differences between the sizes of the ImageView and of the image reallt shown */
+        /* differences between the sizes of the ImageView and of the image really shown */
         final double diffX = this.getImageView().getImage().getWidth() - entityWidth * this.getXRatio();
         final double diffY = this.getImageView().getImage().getHeight() - entityHeight * this.getYRatio();
         final Pair<Double, Double> sceneCoordinates = this.getConvertedCoordinates(new PairImpl<>(entityX - entityWidth / 2, entityY + entityHeight / 2));
