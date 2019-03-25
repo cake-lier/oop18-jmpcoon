@@ -8,10 +8,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import utils.PairImpl;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
-import controller.InputType;
+import controller.game.InputType;
 import controller.app.AppController;
 import controller.game.GameController;
 import controller.game.GameControllerImpl;
@@ -36,7 +38,7 @@ public class GameViewImpl implements GameView {
      */
     public GameViewImpl(final AppController appController, final Stage stage) {
         this.appController = appController;
-        this.gameController = new GameControllerImpl(this.appController, this);
+        this.gameController = new GameControllerImpl(this, this.appController);
         this.stage = stage;
         this.scene = new Scene(new Group(), stage.getHeight(), stage.getWidth(), Color.GREEN);
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> getInput(key.getCode()));
@@ -47,7 +49,13 @@ public class GameViewImpl implements GameView {
      *{@inheritDoc}
      */
     public void update() {
-        final Collection<DrawableEntity> drawableEntities = gameController.getDrawableEntities();
+        final EntityConverter entityConverter = new EntityConverter(this.gameController.getWorldDimensions(),
+                                                                    new PairImpl<>(this.scene.getWidth(), this.scene.getHeight()));
+        final Collection<DrawableEntity> drawableEntities = this.gameController.getEntities()
+                                                                               .parallelStream()
+                                                                               .map(entity -> entityConverter
+                                                                                                   .getDrawableEntity(entity))
+                                                                               .collect(Collectors.toSet());
         final Group root = new Group();
         drawableEntities.forEach(e -> {
             root.getChildren().add(e.getImageView());

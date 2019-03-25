@@ -1,15 +1,5 @@
 package view.game;
 
-<<<<<<< HEAD
-
-public interface GameView {
-
-    void update();
-
-    void showGameOver();
-
-    void showPlayerWin();    
-=======
 /**
  * Visual component of the game.
  */
@@ -29,6 +19,5 @@ public interface GameView {
      * Shows win screen.
      */
     void showPlayerWin();
->>>>>>> feature-game-view
 
 }

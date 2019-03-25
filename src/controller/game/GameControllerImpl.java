@@ -21,22 +21,12 @@ import model.World;
 import model.WorldImpl;
 import utils.Pair;
 
-import controller.InputType;
-import controller.app.AppController;
-import view.game.DrawableEntity;
 import view.game.GameView;
 
 /**
  * a {@link GameController} for a game set in a {@link World}.
  */
 public class GameControllerImpl implements GameController {
-    private final AppController appController;
-    private final GameView gameView;
-    
-    public GameControllerImpl(final AppController appController, final GameView gameView) {
-        this.appController = appController;
-        this.gameView = gameView;
-    }
 
     private static final long DELTA_UPDATE = 15;
     private static final String LEVEL_FILE = "res" + System.getProperty("file.separator") + "level1.txt";
