@@ -5,13 +5,14 @@ import java.util.Objects;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import model.Entity;
-import model.AbstractEntity;
-import utils.Pair;
-import utils.PairImpl;
+import model.entities.Entity;
+import model.entities.AbstractEntity;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
- *  a {@link Entity} that can be drawn.
+ *  a {@link Number} that can be drawn.
  */
 public abstract class AbstractDrawableEntity implements DrawableEntity {
 
@@ -24,7 +25,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      * builds a new {@link AbstractDrawableEntity}.
      * @param spriteUrl the url of the image representing entity in the view
      * @param entity the {@link AbstractEntity} represented by this {@link AbstractDrawableEntity}
-     * @param worldDimensions the dimensions of the {@link World} in which the {@link Entity} lives
+     * @param worldDimensions the dimensions of the {@link World} in which the {@link Number} lives
      * @param sceneDimensions the dimensions of the view in which this {@link AbstractDrawableEntity} will be drawn
      */
     public AbstractDrawableEntity(final String spriteUrl, 
@@ -39,7 +40,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      * builds a new {@link AbstractDrawableEntity}.
      * @param image the {@link Image} representing the entity in the view
      * @param entity the {@link AbstractEntity} represented by this {@link AbstractDrawableEntity}
-     * @param worldDimensions the dimensions of the {@link World} in which the {@link Entity} lives
+     * @param worldDimensions the dimensions of the {@link World} in which the {@link Number} lives
      * @param sceneDimensions the dimensions of the view in which this {@link AbstractDrawableEntity} will be drawn
      */
     public AbstractDrawableEntity(final Image image, 
@@ -87,21 +88,21 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      * @return the converted coordinates 
      */
     protected Pair<Double, Double> getConvertedCoordinates(final Pair<Double, Double> worldCoordinates) {
-        return new PairImpl<Double, Double>(worldCoordinates.getX() * this.getXRatio(),
-                this.sceneDimensions.getY() - worldCoordinates.getY() * this.getYRatio());
+        return new ImmutablePair<>(worldCoordinates.getLeft() * this.getXRatio(),
+                this.sceneDimensions.getRight() - worldCoordinates.getRight() * this.getYRatio());
     }
 
     /**
      * @return the ratio to convert world dimensions to scene dimensions along the x axis
      */
     protected double getXRatio() {
-        return this.sceneDimensions.getX() / this.worldDimensions.getX();
+        return this.sceneDimensions.getLeft() / this.worldDimensions.getLeft();
     }
 
     /**
      * @return the ratio to convert world dimensions to scene dimensions along the y axis
      */
     protected double getYRatio() {
-        return this.sceneDimensions.getY() / this.worldDimensions.getY();
+        return this.sceneDimensions.getRight() / this.worldDimensions.getRight();
     }
 }

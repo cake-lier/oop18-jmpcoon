@@ -1,4 +1,6 @@
-package model;
+package model.entities;
+
+import model.physics.StaticPhysicalBody;
 
 /**
  * a platform inside the {@link World} of the game.

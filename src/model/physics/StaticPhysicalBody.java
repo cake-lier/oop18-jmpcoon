@@ -1,7 +1,9 @@
-package model;
+package model.physics;
 
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.World;
+
+import model.entities.State;
 
 /**
  * a class representing a {@link PhysicalBody} that can't be moved.

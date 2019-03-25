@@ -11,15 +11,15 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import controller.app.AppController;
-import model.EntityProperties;
-import model.EntityPropertiesImpl;
-import model.EntityShape;
-import model.EntityType;
-import model.Entity;
-import model.MovementType;
-import model.World;
-import model.WorldImpl;
-import utils.Pair;
+import model.entities.EntityProperties;
+import model.entities.EntityPropertiesImpl;
+import model.entities.EntityShape;
+import model.entities.EntityType;
+import model.entities.Entity;
+import model.entities.MovementType;
+import model.world.World;
+import model.world.WorldImpl;
+import org.apache.commons.lang3.tuple.Pair;
 
 import view.game.GameView;
 

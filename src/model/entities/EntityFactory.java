@@ -1,10 +1,13 @@
-package model;
+package model.entities;
 
 import java.util.Objects;
-import utils.Pair;
+
+import model.physics.DynamicPhysicalBody;
+import model.physics.PhysicalFactory;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * a class used to produce instances of {@link Entity} whose {@link PhysicalBody} is inside a specific {@link PhysicalWorld}.
+ * a class used to produce instances of {@link Number} whose {@link PhysicalBody} is inside a specific {@link PhysicalWorld}.
  */
 public class EntityFactory {
 
@@ -12,18 +15,18 @@ public class EntityFactory {
 
     /**
      * builds a new {@link EntityFactory}.
-     * @param factory the factory that will produce the {@link PhysicalBody} for the {@link Entity}
+     * @param factory the factory that will produce the {@link PhysicalBody} for the {@link Number}
      */
     public EntityFactory(final PhysicalFactory factory) {
         this.factory = Objects.requireNonNull(factory);
     }
 
     /**
-     * creates a {@link Ladder}.
-     * @param position the center of the {@link Ladder} created
-     * @param width the width of the {@link Ladder} created
-     * @param height the height of the {@link Ladder} created
-     * @return the {@link Ladder} created
+     * creates a {@link Double}.
+     * @param position the center of the {@link Double} created
+     * @param width the width of the {@link Double} created
+     * @param height the height of the {@link Double} created
+     * @return the {@link Double} created
      */
     public Ladder createLadder(final Pair<Double, Double> position, final double width, final double height) {
         return new Ladder(this.factory.createStaticPhysicalBody(position, 0, EntityShape.RECTANGLE, width, height, EntityType.LADDER));

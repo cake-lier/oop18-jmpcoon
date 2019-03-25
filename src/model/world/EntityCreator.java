@@ -1,90 +1,95 @@
 package model.world;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import model.entities.Entity;
 import model.entities.EntityFactory;
-import model.entities.EntityShape;
 import model.entities.EntityType;
-import model.entities.GeneratorEnemy;
 import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
-import model.entities.PowerUp;
 import model.entities.RollingEnemy;
 import model.entities.WalkingEnemy;
 
 /**
- * An enum collecting all the possible creators of all possible {@link Entity}s. Its scope is package protected because it should
- * be used by the sole {@link World} which is the one who should create new {@link Entity}s.
+ * An enum collecting all the possible creators of all possible {@link Number}s. Its scope is package protected because it should
+ * be used by the sole {@link World} which is the one who should create new {@link Number}s.
  */
 enum EntityCreator {
     /**
      * A {@link Ladder} creator.
      */
-    LADDER(Ladder.class, EntityFactory::createLadder),
+    LADDER(Ladder.class),
     /**
      * A {@link Player} creator.
      */
-    PLAYER(Player.class, EntityFactory::createPlayer),
+    PLAYER(Player.class),
     /**
      * A {@link Platform} creator.
      */
-    PLATFORM(Platform.class, EntityFactory::createPlatform),
+    PLATFORM(Platform.class),
     /**
      * A {@link PowerUp} creator.
      */
-    POWERUP(PowerUp.class, EntityFactory::createPowerUp),
+    //POWERUP(PowerUp.class),
     /**
      * A {@link RollingEnemy} creator.
      */
-    ROLLING_ENEMY(RollingEnemy.class, EntityFactory::createRollingEnemy),
+    ROLLING_ENEMY(RollingEnemy.class),
     /**
      * A {@link WalkingEnemy} creator.
      */
-    WALKING_ENEMY(WalkingEnemy.class, EntityFactory::createWalkingEnemy),
+    WALKING_ENEMY(WalkingEnemy.class);
     /**
      * A {@link GeneratorEnemy} creator.
      */
-    GENERATOR_ENEMY(GeneratorEnemy.class, EntityFactory::createGeneratorEnemy);
+    //GENERATOR_ENEMY(GeneratorEnemy.class);
 
     private final Class<? extends Entity> associatedClass;
-    private final EntitySupplier<? extends Entity> supplier;
 
     /**
      * Creates a new element of this enum by registering the type, its associated class and its name.
      * @param <T> The type 
      * @param type The {@link EntityType} of the element.
      * @param associatedClass The class associated with the element.
-     * @param supplier The method for creating more instances associated with this element.
      */
-    <T extends Entity> EntityCreator(final Class<T> associatedClass, final EntitySupplier<T> supplier) {
+    <T extends Entity> EntityCreator(final Class<T> associatedClass) {
         this.associatedClass = associatedClass;
-        this.supplier = supplier;
     }
 
     /**
-     * Gets the class of the {@link Entity} associated with this element.
-     * @return The associated {@link Entity} subtype.
+     * Gets the class of the {@link Number} associated with this element.
+     * @return The associated {@link Number} subtype.
      */
     public Class<? extends Entity> getAssociatedClass() {
         return this.associatedClass;
     }
 
     /**
-      * Creates an instance of a specific subtype of {@link Entity} given the {@link EntityFactory} from which creating it and
+      * Creates an instance of a specific subtype of {@link Number} given the {@link EntityFactory} from which creating it and
       * the parameters from which creating it.
-      * @param factory The instance of {@link EntityFactory} from which create {@link Entity}s.
-      * @param type The {@link EntityType} of the {@link Entity} being created.
-      * @param shape The {@link EntityShape} of the {@link Entity} being created.
-      * @param xCoord The x coordinate of the {@link Entity} being created in meters in world coordinates.
-      * @param yCoord The y coordinate of the {@link Entity} being created in meters in world coordinates.
-      * @param width The width of the {@link Entity} being created in meters.
-      * @param height The height of the {@link Entity} being created in meters.
-      * @param angle The {@link EntityType} of the {@link Entity} being created in radians from the x axis.
-      * @return The {@link Entity} created in this way.
+      * @param factory The instance of {@link EntityFactory} from which create {@link Number}s.
+      * @param type The {@link EntityType} of the {@link Number} being created.
+      * @param shape The {@link EntityShape} of the {@link Number} being created.
+      * @param xCoord The x coordinate of the {@link Number} being created in meters in world coordinates.
+      * @param yCoord The y coordinate of the {@link Number} being created in meters in world coordinates.
+      * @param width The width of the {@link Number} being created in meters.
+      * @param height The height of the {@link Number} being created in meters.
+      * @param angle The {@link EntityType} of the {@link Number} being created in radians from the x axis.
+      * @return The {@link Number} created in this way.
       */
-    public Entity create(final EntityFactory factory, final EntityType type, final EntityShape shape, final double xCoord, 
-                         final double yCoord, final double width, final double height, final double angle) {
-        return this.supplier.createEntity(factory, type, shape, xCoord, yCoord, width, height, angle);
+    public Entity create(final EntityFactory factory, final EntityType type, final Pair<Double, Double> position,
+                         final double width, final double height, final double angle) {
+        switch (type) {
+            case LADDER:
+                return factory.createLadder(position, width, height);
+            case PLATFORM:
+                return factory.createPlatform(position, width, height, angle);
+            case WALKING_ENEMY:
+                return factory.createWalkingEnemy(position, width, height);
+            default:
+                return null;
+        }
     }
 
     /*
@@ -96,7 +101,7 @@ enum EntityCreator {
         /*
          * Creates an instance of a specific subtype of Entity given the EntityFactory and the parameters from which creating it.
          */
-        T createEntity(EntityFactory factory, EntityType type, EntityShape shape, double xCoord, double yCoord, double width,
-                       double height, double angle);
+        T createEntity(EntityFactory factory, EntityType type, Pair<Double, Double> position, double width, double height,
+                       double angle);
     }
 }

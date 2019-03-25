@@ -1,4 +1,6 @@
-package model;
+package model.entities;
+
+import model.physics.DynamicPhysicalBody;
 
 /**
  * a walking enemy inside the {@link World} of the game.
@@ -17,7 +19,7 @@ public class WalkingEnemy extends DynamicEntity {
     public WalkingEnemy(final DynamicPhysicalBody body) {
         super(body);
         this.body = body;
-        this.initialPosition = this.body.getPosition().getX();
+        this.initialPosition = this.body.getPosition().getLeft();
     }
 
     /**
@@ -40,7 +42,7 @@ public class WalkingEnemy extends DynamicEntity {
      * computes the backward-and-forward movement.
      */
     public void computeMovement() {
-        double x = this.body.getPosition().getX();
+        double x = this.body.getPosition().getLeft();
         if (x <= this.initialPosition) {
             body.applyMovement(MovementType.MOVE_RIGHT, WALKING_SPEED, 0);
         }

@@ -1,20 +1,23 @@
-package model;
+package model.physics;
 
-import utils.Pair;
+import model.entities.EntityShape;
+import model.entities.EntityType;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * a interface for a class used to produce {@link PhysicalWorld} and
- * {@link PhysicalBody}. The {@link PhysicalBody} must be created after the
- * {@link PhysicalWorld}.
+ * An interface representing the facade for the entire creation requested to the physical engine in order to create the
+ * {@link PhysicalWorld} and populate the levels through {@link PhysicalBody}s. These last must be created after the 
+ * {@link PhysicalWorld}. It creates other facades to maintain a degree of separation between the dyn4j library and the
+ * implementation.
  */
 public interface PhysicalFactory {
 
     /**
-     * @param width
-     *            the width of the physical world
-     * @param height
-     *            the height of the physical world
-     * @return the {@link PhysicalWorld} in which all the {@link PhysicalBody} lives
+     * Creates a facade for the {@link org.dyn4j.dynamics.World} as created by the dyn4j library so as to be used by the game
+     * {@link model.world.World} without the hassle of dealing with the library itself.
+     * @param width The width of the inner {@link org.dyn4j.dynamics.World}.
+     * @param height The height of the inner {@link org.dyn4j.dynamics.World}.
+     * @return The facade for the inner {@link org.dyn4j.dynamics.World}.
      */
     PhysicalWorld createPhysicalWorld(double width, double height);
 
@@ -32,7 +35,7 @@ public interface PhysicalFactory {
      * @param height
      *            the height of the physical body
      * @param type
-     *            the {@link EntityType} of the {@link Entity} that will use the
+     *            the {@link EntityType} of the {@link Number} that will use the
      *            created {@link StaticPhysicalBody}
      * @return a {@link StaticPhysicalBody} with the given characteristics
      */
@@ -53,7 +56,7 @@ public interface PhysicalFactory {
      * @param height
      *            the height of the physical body
      * @param type
-     *            the {@link EntityType} of the {@link Entity} that will use the
+     *            the {@link EntityType} of the {@link Number} that will use the
      *            created {@link DynamicPhysicalBody}
      * @return a {@link DynamicPhysicalBody} with the given characteristics
      */

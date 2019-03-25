@@ -1,8 +1,11 @@
-package model;
+package model.physics;
 
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.Vector2;
+
+import model.entities.State;
+import model.entities.MovementType;
 
 /**
  * a class representing a {@link PhysicalBody} that can move (players and
@@ -11,7 +14,7 @@ import org.dyn4j.geometry.Vector2;
 public class DynamicPhysicalBody extends AbstractPhysicalBody {
     private static final double MAXVELOCITY_X = 5, MAXVELOCITY_Y = 2;
 
-    private Body body;
+    private final Body body;
     private State currentState;
 
     /**
@@ -25,6 +28,7 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     public DynamicPhysicalBody(final Body body, final World world) {
         super(body, world);
         this.body = body;
+        this.currentState = State.IDLE;
     }
 
     /**
@@ -35,7 +39,7 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
         if (this.body.getLinearVelocity().equals(new Vector2(0, 0))) {
             return State.IDLE;
         } else {
-        return currentState;
+            return this.currentState;
         }
     }
 

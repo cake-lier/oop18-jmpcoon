@@ -1,4 +1,4 @@
-package model;
+package model.physics;
 
 import java.util.Objects;
 
@@ -6,10 +6,12 @@ import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.Rectangle;
-import org.dyn4j.dynamics.World;
 
-import utils.Pair;
-import utils.PairImpl;
+import model.entities.State;
+
+import org.dyn4j.dynamics.World;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * a class implementing {@link PhysicalBody}.
@@ -32,7 +34,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      */
     @Override
     public Pair<Double, Double> getPosition() {
-        return new PairImpl<Double, Double>(this.body.getWorldCenter().x, this.body.getWorldCenter().y);
+        return new ImmutablePair<>(this.body.getWorldCenter().x, this.body.getWorldCenter().y);
     }
 
     /**
@@ -62,7 +64,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      */
     @Override
     public Pair<Double, Double> getVelocity() {
-        return new PairImpl<Double, Double>((double) this.body.getLinearVelocity().x, (double) this.body.getLinearVelocity().y);
+        return new ImmutablePair<>((double) this.body.getLinearVelocity().x, (double) this.body.getLinearVelocity().y);
     }
 
     /**
@@ -85,7 +87,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
         } else {
             // TODO: what can we do here?
         }
-        return new PairImpl<Double, Double>(width, height);
+        return new ImmutablePair<>(width, height);
     }
 
     /**
@@ -93,8 +95,8 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      */
     @Override
     public String toString() {
-        return "Position: (" + this.getPosition().getX() + ", " + this.getPosition().getY()
-                + "); Dimensions: " + this.getDimensions().getX() + "x" + this.getDimensions().getY()
+        return "Position: (" + this.getPosition().getLeft() + ", " + this.getPosition().getRight()
+                + "); Dimensions: " + this.getDimensions().getLeft() + "x" + this.getDimensions().getRight()
                 + "; Angle: " + this.getAngle();
     }
 

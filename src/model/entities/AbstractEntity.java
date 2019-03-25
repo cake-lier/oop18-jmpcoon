@@ -1,11 +1,12 @@
-package model;
+package model.entities;
 
 import java.util.Objects;
 
-import utils.Pair;
+import model.physics.PhysicalBody;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * abstract class from which all the {@link Entity} of the {@link World} derives.
+ * abstract class from which all the {@link Number} of the {@link World} derives.
  */
 public abstract class AbstractEntity implements Entity {
 
@@ -78,11 +79,19 @@ public abstract class AbstractEntity implements Entity {
      * {@inheritDoc}
      */
     @Override
+    public PhysicalBody getPhysicalBody() {
+        return this.body;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String toString() {
         return "Type: " + this.getType()
                 + "; Shape: " + this.getShape()
-                + "; Position: (" + this.getPosition().getX() + ", " + this.getPosition().getY()
-                + "); Dimensions: " + this.getDimensions().getX() + "x" + this.getDimensions().getY()
+                + "; Position: (" + this.getPosition().getLeft() + ", " + this.getPosition().getRight()
+                + "); Dimensions: " + this.getDimensions().getLeft() + "x" + this.getDimensions().getRight()
                 + "; Angle: " + this.getAngle();
     }
 

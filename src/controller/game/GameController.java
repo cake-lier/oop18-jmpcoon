@@ -2,8 +2,8 @@ package controller.game;
 
 import java.util.Collection;
 
-import model.Entity;
-import utils.Pair;
+import model.entities.Entity;
+import org.apache.commons.lang3.tuple.Pair;
 
 
 /**

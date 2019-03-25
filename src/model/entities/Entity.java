@@ -1,9 +1,7 @@
 package model.entities;
 
-import model.State;
 import model.physics.PhysicalBody;
-import model.world.World;
-import utils.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * an interface representing an Entity inside a {@link World}.

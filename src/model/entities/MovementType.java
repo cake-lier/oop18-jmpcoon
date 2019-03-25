@@ -1,4 +1,4 @@
-package model;
+package model.entities;
 
 /**
  * The types of movement the player can do.

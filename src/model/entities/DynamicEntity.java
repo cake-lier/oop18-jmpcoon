@@ -1,7 +1,9 @@
-package model;
+package model.entities;
+
+import model.physics.DynamicPhysicalBody;
 
 /**
- * a class representing an movable {@link Entity}.
+ * a class representing an movable {@link Number}.
  */
 public abstract class DynamicEntity extends AbstractEntity {
 

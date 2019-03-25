@@ -1,4 +1,6 @@
-package model;
+package model.entities;
+
+import model.physics.DynamicPhysicalBody;
 
 /**
  * TODO: add a non-linear velocity movement

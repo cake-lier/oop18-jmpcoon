@@ -7,16 +7,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import model.Entity;
-import model.Ladder;
-import model.Platform;
-import model.Player;
-import model.RollingEnemy;
-import model.WalkingEnemy;
-import utils.Pair;
+import model.entities.Entity;
+import model.entities.Ladder;
+import model.entities.Platform;
+import model.entities.Player;
+import model.entities.RollingEnemy;
+import model.entities.WalkingEnemy;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * a class that converts {@link Entity} to {@link DrawableEntity}.
+ * a class that converts {@link Number} to {@link DrawableEntity}.
  */
 public class EntityConverter {
 
@@ -32,7 +32,7 @@ public class EntityConverter {
 
     /**
      * builds a new {@link EntityConverter}.
-     * @param worldDimensions the dimensions of the world in which the {@link Entity} to convert lives
+     * @param worldDimensions the dimensions of the world in which the {@link Number} to convert lives
      * @param sceneDimensions the dimensions of the scene in which the {@link DrawableEntity} produced will be put
      */
     public EntityConverter(final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
@@ -41,7 +41,7 @@ public class EntityConverter {
     }
 
     /**
-     * @param entity the {@link Entity} to convert
+     * @param entity the {@link Number} to convert
      * @return the converted {@link DrawableEntity}
      */
     public DrawableEntity getDrawableEntity(final Entity entity) {
@@ -98,7 +98,7 @@ public class EntityConverter {
     private DrawableEntity convertLadder(final Ladder ladder) {
         /* how many times should the sprite be replicated multiplied for the sprite size,
          *  (along the y axis, because it's a ladder */
-        final Double timesPerModule = this.sceneDimensions.getY() * ladder.getDimensions().getY() / this.worldDimensions.getY();
+        final Double timesPerModule = this.sceneDimensions.getRight() * ladder.getDimensions().getRight() / this.worldDimensions.getRight();
         try {
             return new StaticDrawableEntity(replicateSprite(MODULE_LADDER_SPRITE, timesPerModule, false), ladder, this.worldDimensions, this.sceneDimensions);
         } catch (FileNotFoundException e) {
@@ -110,7 +110,7 @@ public class EntityConverter {
     private DrawableEntity convertPlatform(final Platform platform) {
         /* how many times should the sprite be replicated multiplied for the sprite size,
          * (along the x axis, because it's a platform */
-        final Double timesPerModule = this.sceneDimensions.getX() * platform.getDimensions().getX() / this.worldDimensions.getX();
+        final Double timesPerModule = this.sceneDimensions.getLeft() * platform.getDimensions().getLeft() / this.worldDimensions.getLeft();
         try {
             return new StaticDrawableEntity(replicateSprite(MODULE_PLATFORM_SPRITE, timesPerModule, true), platform, this.worldDimensions, this.sceneDimensions);
         } catch (FileNotFoundException e) {

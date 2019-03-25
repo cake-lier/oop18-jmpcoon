@@ -8,10 +8,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import utils.PairImpl;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import controller.game.InputType;
 import controller.app.AppController;
@@ -50,7 +51,7 @@ public class GameViewImpl implements GameView {
      */
     public void update() {
         final EntityConverter entityConverter = new EntityConverter(this.gameController.getWorldDimensions(),
-                                                                    new PairImpl<>(this.scene.getWidth(), this.scene.getHeight()));
+                                                                    new ImmutablePair<>(this.scene.getWidth(), this.scene.getHeight()));
         final Collection<DrawableEntity> drawableEntities = this.gameController.getEntities()
                                                                                .parallelStream()
                                                                                .map(entity -> entityConverter

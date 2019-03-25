@@ -2,7 +2,7 @@ package model.world;
 
 import java.util.Collection;
 
-import model.MovementType;
+import model.entities.MovementType;
 import model.entities.Entity;
 import model.entities.EntityProperties;
 import org.apache.commons.lang3.tuple.Pair;
@@ -53,7 +53,7 @@ public interface World {
     /**
      * Produces all the entities which populate this world, divided by group depending of their type, as specified in the
      * {@link EntityType} enum.
-     * @return An {@link Map} from the {@link Entity} class to the collection of {@link Entity}s of this type.
+     * @return An {@link Map} from the {@link Number} class to the collection of {@link Number}s of this type.
      */
     Collection<Entity> getEntities();
 }

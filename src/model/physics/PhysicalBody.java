@@ -1,10 +1,11 @@
 package model.physics;
 
-import model.entities.EntityShape;
+import model.entities.State;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * an interface representing the physical body of an {@link Entity}.
+ * an interface representing the physical body of an {@link Number}.
  */
 public interface PhysicalBody {
 

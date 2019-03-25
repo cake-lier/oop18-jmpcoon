@@ -20,13 +20,13 @@ public final class EntityPropertiesImpl implements EntityProperties {
     private final double angle;
 
     /**
-     * Collects the properties of the associated {@link Entity}.
-     * @param type The {@link EntityType} of the associated {@link Entity}.
-     * @param shape The {@link EntityShape} of the associated {@link Entity}.
-     * @param xCoord The x coordinate of the associated {@link Entity}.
-     * @param yCoord The y coordinate of the associated {@link Entity}.
-     * @param width The width of the associated {@link Entity}.
-     * @param height The height of the associated {@link Entity}.
+     * Collects the properties of the associated {@link Number}.
+     * @param type The {@link EntityType} of the associated {@link Number}.
+     * @param shape The {@link EntityShape} of the associated {@link Number}.
+     * @param xCoord The x coordinate of the associated {@link Number}.
+     * @param yCoord The y coordinate of the associated {@link Number}.
+     * @param width The width of the associated {@link Number}.
+     * @param height The height of the associated {@link Number}.
      * @param angle The angle of the associated entity.
      */
     public EntityPropertiesImpl(final EntityType type, final EntityShape shape, final double xCoord, final double yCoord,

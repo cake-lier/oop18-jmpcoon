@@ -1,7 +1,9 @@
-package model;
+package model.entities;
+
+import model.physics.StaticPhysicalBody;
 
 /**
- * a class representing an immovable {@link Entity}.
+ * a class representing an immovable {@link Number}.
  */
 public abstract class StaticEntity extends AbstractEntity {
 

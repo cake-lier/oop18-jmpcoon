@@ -1,6 +1,6 @@
-package model;
+package model.physics;
 
-import utils.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Optional;
 
@@ -13,10 +13,14 @@ import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 
+import model.entities.EntityShape;
+import model.entities.EntityType;
+
 /**
  * a class that implements {@link PhysicalFactory}.
  */
 public class PhysicalFactoryImpl implements PhysicalFactory {
+    private static final String NO_TWO_WORLDS_MSG = "You can't create two worlds for this game";
 
     private static final long CATEGORY_WALKING_ENEMY = 1; // 000001
     private static final long CATEGORY_ROLLING_ENEMY = 2; // 000010
@@ -40,13 +44,13 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     // TODO: consider a static method and a private constructor
 
-    private Optional<World> world;
+    private Optional<WholePhysicalWorld> physicalWorld;
 
     /**
      * builds a new {@link PhysicalFactoryImpl}.
      */
     public PhysicalFactoryImpl() {
-        this.world = Optional.empty();
+        this.physicalWorld = Optional.empty();
     }
 
     /**
@@ -54,8 +58,11 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
      */
     @Override
     public PhysicalWorld createPhysicalWorld(final double width, final double height) {
-        this.world = Optional.of(new World(new AxisAlignedBounds(width * 2, height * 2)));
-        return new PhysicalWorldImpl(this.world.get());
+        if (this.physicalWorld.isPresent()) {
+            throw new IllegalStateException(NO_TWO_WORLDS_MSG);
+        }
+        this.physicalWorld = Optional.of(new WholePhysicalWorldImpl(new World(new AxisAlignedBounds(width, height))));
+        return this.physicalWorld.get();
     }
 
     /**
@@ -66,7 +73,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
             final Pair<Double, Double> position, final double angle, final EntityShape shape,
                 final double width, final double height, final EntityType type) {
         // TODO: repetitive code
-        if (!this.world.isPresent()) {
+        if (!this.physicalWorld.isPresent()) {
             throw new IllegalStateException("A PhysicalWorld has yet to be created!");
         }
         if (isStaticBodyAllowed(shape, type)) {
@@ -85,8 +92,10 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
             }
             body.setMass(MassType.INFINITE);
             body.setUserData(type);
-            this.world.get().addBody(body);
-            return new StaticPhysicalBody(body, this.world.get());
+            this.physicalWorld.get().getWorld().addBody(body);
+            final StaticPhysicalBody physicalBody = new StaticPhysicalBody(body, this.physicalWorld.get().getWorld());
+            this.physicalWorld.get().addContainerAssociation(physicalBody, body, type);
+            return physicalBody;
         } else {
             throw new IllegalArgumentException("No such Entity can be created");
         }
@@ -100,7 +109,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private Body createRectangleBody(final Pair<Double, Double> position, final double angle, final double width, final double height) {
         final Body body = new Body();
         body.addFixture(Geometry.createRectangle(width, height));
-        final Vector2 center = new Vector2(position.getX(), position.getY());
+        final Vector2 center = new Vector2(position.getLeft(), position.getRight());
         body.translate(center);
         body.rotate(angle, center);
         return body;
@@ -109,7 +118,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private Body createCircleBody(final Pair<Double, Double> position, final double radius) {
         final Body body = new Body();
         body.addFixture(Geometry.createCircle(radius));
-        final Vector2 center = new Vector2(position.getX() + radius / 2, position.getY() - radius / 2);
+        final Vector2 center = new Vector2(position.getLeft() + radius / 2, position.getRight() - radius / 2);
         body.translate(center);
         return body;
     }
@@ -124,8 +133,10 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
             final double width, final double height, final EntityType type) {
         final Body body = createRectangleBody(position, angle, width, height);
         body.setMass(MassType.NORMAL);
-        this.world.get().addBody(body);
-        return new DynamicPhysicalBody(body, this.world.get());
+        this.physicalWorld.get().getWorld().addBody(body);
+        final DynamicPhysicalBody physicalBody = new DynamicPhysicalBody(body, this.physicalWorld.get().getWorld());
+        this.physicalWorld.get().addContainerAssociation(physicalBody, body, type);
+        return physicalBody;
     }
 
 }
