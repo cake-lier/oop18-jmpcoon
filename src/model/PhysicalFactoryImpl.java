@@ -18,7 +18,6 @@ import org.dyn4j.geometry.Vector2;
  */
 public class PhysicalFactoryImpl implements PhysicalFactory {
 
-    private static final long CATEGORY_EMPTY = 0; // 000000
     private static final long CATEGORY_WALKING_ENEMY = 1; // 000001
     private static final long CATEGORY_ROLLING_ENEMY = 2; // 000010
     private static final long CATEGORY_PLATFORM = 4; // 000100

@@ -1,10 +1,7 @@
 package view.game;
 
-import java.util.Objects;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import model.Entity;
 import model.StaticEntity;
 import utils.Pair;
 import utils.PairImpl;

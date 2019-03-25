@@ -31,9 +31,13 @@ public interface World {
      */
     boolean isGameOver();
 
+    void update();
+
     /**
      * @return the entities populating the {@link World}
      */
     Collection<Entity> getEntities();
+
+    boolean hasPlayerWon();
 
 }

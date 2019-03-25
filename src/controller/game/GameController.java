@@ -2,15 +2,15 @@ package controller.game;
 
 import java.util.Collection;
 
-import controller.InputType;
-import view.game.DrawableEntity;
+import model.Entity;
+import utils.Pair;
+
 
 /**
  * a controller for the game playing.
  */
 public interface GameController {
 
-    // TODO: control if this methods are necessary, comment them
     void startGame();
 
     void pauseGame();
@@ -28,6 +28,11 @@ public interface GameController {
     /**
      * @return the entities of the {@link World}, in such a way that they can be drawn
      */
-    Collection<DrawableEntity> getDrawableEntities();
+    Collection<Entity> getEntities();
 
+    /**
+     * 
+     * @return the dimensions (width and height) of the {@link World} in which the game is playing
+     */
+    Pair<Double, Double> getWorldDimensions();
 }

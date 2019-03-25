@@ -2,8 +2,6 @@ package model;
 
 import java.util.Objects;
 
-import com.google.common.base.MoreObjects;
-
 import utils.Pair;
 
 /**
