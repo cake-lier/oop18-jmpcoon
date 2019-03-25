@@ -5,6 +5,8 @@ import controller.app.AppControllerImpl;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import view.game.GameView;
+import view.game.GameViewImpl;
 import view.menu.Menu;
 import view.menu.MenuImpl;
 
@@ -68,6 +70,7 @@ public final class ViewImpl implements View {
      */
     @Override
     public void displayGame() {
-        //TODO: add creation of gameView
+        final GameView gameView = new GameViewImpl(this.controller, this.stage);
+        gameView.update();
     }
 }

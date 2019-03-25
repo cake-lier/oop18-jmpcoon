@@ -1,5 +1,6 @@
 package view.game;
 
+<<<<<<< HEAD
 
 public interface GameView {
 
@@ -8,5 +9,26 @@ public interface GameView {
     void showGameOver();
 
     void showPlayerWin();    
+=======
+/**
+ * Visual component of the game.
+ */
+public interface GameView {
+
+    /**
+     * Uses all current entities stored in {@link GameController} to update the game scene.
+     */
+    void update();
+
+    /**
+     * Shows game over screen.
+     */
+    void showGameOver();
+
+    /**
+     * Shows win screen.
+     */
+    void showPlayerWin();
+>>>>>>> feature-game-view
 
 }
