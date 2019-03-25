@@ -36,7 +36,7 @@ public final class MenuImpl implements Menu {
      */
     @FXML
     private void startGame() {
-        this.controller.startGameController();
+        this.controller.startGame();
     }
     /**
      * Wrapper method to delegate to the application controller the job of exiting from
