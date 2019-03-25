@@ -8,17 +8,33 @@ import utils.Pair;
 public interface PhysicalBody {
 
     /**
-     * @return the position of the {@link PhysicalBody}, as a {@link Pair} where the first element is the x coordinate and the second element is the y one
+     * @return the center of the {@link PhysicalBody}, as a {@link Pair} where the first element is the x coordinate and the second element is the y one
      */
     Pair<Double, Double> getPosition();
 
     /**
-     * @return the shape of this {@link PhysicalBody}
+     * @return the angle of this {@link PhysicalBody}
      */
-    EntityShape getShape();
+    double getAngle();
+
+    /**
+     * @return the {@link State} this {@link PhysicalBody} is in
+     */
+    State getState();
 
     /**
      * @return whether this {@link PhysicalBody} exists or not
      */
     boolean exist();
+
+    /**
+     * @return the dimensions (width and height) of this {@link PhysicalBody}
+     */
+    Pair<Double, Double> getDimensions();
+
+    /**
+     * @return the velocity of this {@link PhysicalBody}, divided in its x and y components.
+     */
+    Pair<Double, Double> getVelocity();
+
 }
