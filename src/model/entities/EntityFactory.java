@@ -7,7 +7,7 @@ import model.physics.PhysicalFactory;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * a class used to produce instances of {@link Number} whose {@link PhysicalBody} is inside a specific {@link PhysicalWorld}.
+ * a class used to produce instances of {@link Entity} whose {@link PhysicalBody} is inside a specific {@link PhysicalWorld}.
  */
 public class EntityFactory {
 
@@ -15,7 +15,7 @@ public class EntityFactory {
 
     /**
      * builds a new {@link EntityFactory}.
-     * @param factory the factory that will produce the {@link PhysicalBody} for the {@link Number}
+     * @param factory the factory that will produce the {@link PhysicalBody} for the {@link Entity}
      */
     public EntityFactory(final PhysicalFactory factory) {
         this.factory = Objects.requireNonNull(factory);

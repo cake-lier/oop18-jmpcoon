@@ -12,8 +12,8 @@ import model.entities.RollingEnemy;
 import model.entities.WalkingEnemy;
 
 /**
- * An enum collecting all the possible creators of all possible {@link Number}s. Its scope is package protected because it should
- * be used by the sole {@link World} which is the one who should create new {@link Number}s.
+ * An enum collecting all the possible creators of all possible {@link Entity}s. Its scope is package protected because it should
+ * be used by the sole {@link World} which is the one who should create new {@link Entity}s.
  */
 enum EntityCreator {
     /**
@@ -58,25 +58,25 @@ enum EntityCreator {
     }
 
     /**
-     * Gets the class of the {@link Number} associated with this element.
-     * @return The associated {@link Number} subtype.
+     * Gets the class of the {@link Entity} associated with this element.
+     * @return The associated {@link Entity} subtype.
      */
     public Class<? extends Entity> getAssociatedClass() {
         return this.associatedClass;
     }
 
     /**
-      * Creates an instance of a specific subtype of {@link Number} given the {@link EntityFactory} from which creating it and
+      * Creates an instance of a specific subtype of {@link Entity} given the {@link EntityFactory} from which creating it and
       * the parameters from which creating it.
-      * @param factory The instance of {@link EntityFactory} from which create {@link Number}s.
-      * @param type The {@link EntityType} of the {@link Number} being created.
-      * @param shape The {@link EntityShape} of the {@link Number} being created.
-      * @param xCoord The x coordinate of the {@link Number} being created in meters in world coordinates.
-      * @param yCoord The y coordinate of the {@link Number} being created in meters in world coordinates.
-      * @param width The width of the {@link Number} being created in meters.
-      * @param height The height of the {@link Number} being created in meters.
-      * @param angle The {@link EntityType} of the {@link Number} being created in radians from the x axis.
-      * @return The {@link Number} created in this way.
+      * @param factory The instance of {@link EntityFactory} from which create {@link Entity}s.
+      * @param type The {@link EntityType} of the {@link Entity} being created.
+      * @param shape The {@link EntityShape} of the {@link Entity} being created.
+      * @param xCoord The x coordinate of the {@link Entity} being created in meters in world coordinates.
+      * @param yCoord The y coordinate of the {@link Entity} being created in meters in world coordinates.
+      * @param width The width of the {@link Entity} being created in meters.
+      * @param height The height of the {@link Entity} being created in meters.
+      * @param angle The {@link EntityType} of the {@link Entity} being created in radians from the x axis.
+      * @return The {@link Entity} created in this way.
       */
     public Entity create(final EntityFactory factory, final EntityType type, final Pair<Double, Double> position,
                          final double width, final double height, final double angle) {

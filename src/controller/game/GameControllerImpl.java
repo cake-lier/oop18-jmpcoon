@@ -66,7 +66,7 @@ public class GameControllerImpl implements GameController {
             this.timer.get().setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
         }
         if (this.timer.isPresent()) {
-            this.timer.get().scheduleWithFixedDelay(() -> updateWorldAndView(), DELTA_UPDATE, DELTA_UPDATE, TimeUnit.MILLISECONDS);
+            this.timer.get().scheduleWithFixedDelay(() -> this.updateWorldAndView(), DELTA_UPDATE, DELTA_UPDATE, TimeUnit.MILLISECONDS);
         }
     }
 

@@ -6,7 +6,7 @@ import model.physics.PhysicalBody;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * abstract class from which all the {@link Number} of the {@link World} derives.
+ * abstract class from which all the {@link Entity} of the {@link World} derives.
  */
 public abstract class AbstractEntity implements Entity {
 

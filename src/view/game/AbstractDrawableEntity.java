@@ -12,7 +12,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- *  a {@link Number} that can be drawn.
+ *  a {@link Entity} that can be drawn.
  */
 public abstract class AbstractDrawableEntity implements DrawableEntity {
 
@@ -23,24 +23,9 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
 
     /**
      * builds a new {@link AbstractDrawableEntity}.
-     * @param spriteUrl the url of the image representing entity in the view
-     * @param entity the {@link AbstractEntity} represented by this {@link AbstractDrawableEntity}
-     * @param worldDimensions the dimensions of the {@link World} in which the {@link Number} lives
-     * @param sceneDimensions the dimensions of the view in which this {@link AbstractDrawableEntity} will be drawn
-     */
-    public AbstractDrawableEntity(final String spriteUrl, 
-                                    final AbstractEntity entity, 
-                                        final Pair<Double, Double> worldDimensions,
-                                            final Pair<Double, Double> sceneDimensions) {
-        // TODO: new Image() may not work
-        this(new Image(spriteUrl), entity, worldDimensions, sceneDimensions);
-    }
-
-    /**
-     * builds a new {@link AbstractDrawableEntity}.
      * @param image the {@link Image} representing the entity in the view
      * @param entity the {@link AbstractEntity} represented by this {@link AbstractDrawableEntity}
-     * @param worldDimensions the dimensions of the {@link World} in which the {@link Number} lives
+     * @param worldDimensions the dimensions of the {@link World} in which the {@link Entity} lives
      * @param sceneDimensions the dimensions of the view in which this {@link AbstractDrawableEntity} will be drawn
      */
     public AbstractDrawableEntity(final Image image, 
@@ -51,7 +36,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
         this.entity = Objects.requireNonNull(entity);
         this.worldDimensions = Objects.requireNonNull(worldDimensions);
         this.sceneDimensions = Objects.requireNonNull(sceneDimensions);
-        Platform.runLater(() -> this.updateSpriteProperties());
+        this.updateSpriteProperties();
     }
 
     /**

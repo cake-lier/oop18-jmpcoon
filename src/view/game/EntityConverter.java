@@ -1,6 +1,5 @@
 package view.game;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import javafx.scene.image.Image;
@@ -16,23 +15,23 @@ import model.entities.WalkingEnemy;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * a class that converts {@link Number} to {@link DrawableEntity}.
+ * a class that converts {@link Entity} to {@link DrawableEntity}.
  */
 public class EntityConverter {
 
-    private static final String SPRITES_DIR = "res" + System.getProperty("file.separator");
+    private static final String SPRITES_DIR = "images/";
     private static final String MODULE_LADDER_SPRITE = SPRITES_DIR + "ladder.png";
     private static final String MODULE_PLATFORM_SPRITE = SPRITES_DIR + "platform.png";
-    private static final String MODULE_PLAYER_SPRITE = SPRITES_DIR + "raccoon.png";
-    private static final String MODULE_ROLLING_ENEMY_SPRITE = SPRITES_DIR + "rollingEnemy.png";
-    private static final String MODULE_WALKING_ENEMY_SPRITE = SPRITES_DIR + "walkingEnemy.png";
+    private static final String PLAYER_SPRITE = SPRITES_DIR + "raccoon.png";
+    private static final String ROLLING_ENEMY_SPRITE = SPRITES_DIR + "rollingEnemy.png";
+    private static final String WALKING_ENEMY_SPRITE = SPRITES_DIR + "walkingEnemy.png";
 
     private final Pair<Double, Double> worldDimensions;
     private final Pair<Double, Double> sceneDimensions;
 
     /**
      * builds a new {@link EntityConverter}.
-     * @param worldDimensions the dimensions of the world in which the {@link Number} to convert lives
+     * @param worldDimensions the dimensions of the world in which the {@link Entity} to convert lives
      * @param sceneDimensions the dimensions of the scene in which the {@link DrawableEntity} produced will be put
      */
     public EntityConverter(final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
@@ -41,7 +40,7 @@ public class EntityConverter {
     }
 
     /**
-     * @param entity the {@link Number} to convert
+     * @param entity the {@link Entity} to convert
      * @return the converted {@link DrawableEntity}
      */
     public DrawableEntity getDrawableEntity(final Entity entity) {
@@ -84,15 +83,15 @@ public class EntityConverter {
     }
 
     private DrawableEntity convertPlayer(final Player player) {
-        return new DynamicDrawableEntity(new Image(MODULE_PLAYER_SPRITE), player, this.worldDimensions, this.sceneDimensions);
+        return new DynamicDrawableEntity(new Image(PLAYER_SPRITE), player, this.worldDimensions, this.sceneDimensions);
     }
 
     private DrawableEntity convertRollingEnemy(final RollingEnemy enemy) {
-        return new DynamicDrawableEntity(new Image(MODULE_ROLLING_ENEMY_SPRITE), enemy, this.worldDimensions, this.sceneDimensions);
+        return new DynamicDrawableEntity(new Image(ROLLING_ENEMY_SPRITE), enemy, this.worldDimensions, this.sceneDimensions);
     }
 
     private DrawableEntity convertWalkingEnemy(final WalkingEnemy enemy) {
-        return new DynamicDrawableEntity(new Image(MODULE_WALKING_ENEMY_SPRITE), enemy, this.worldDimensions, this.sceneDimensions);
+        return new DynamicDrawableEntity(new Image(WALKING_ENEMY_SPRITE), enemy, this.worldDimensions, this.sceneDimensions);
     }
 
     private DrawableEntity convertLadder(final Ladder ladder) {
@@ -121,11 +120,11 @@ public class EntityConverter {
 
     /* axis should be true to replicate a sprite along the x axis, and it should be false to replicate it along the y axis */
     private Image replicateSprite(final String moduleUrl, final double timesPerModule, final boolean axis) throws FileNotFoundException {
-        final Image module = new Image(new FileInputStream(moduleUrl));
+        final Image module = new Image(moduleUrl);
         /* width and height of the sprite */
         final int width = ((Double) module.getWidth()).intValue();
         final int height = ((Double) module.getHeight()).intValue();
-        final int times = ((Double) (timesPerModule / (axis ? width : height))).intValue();
+        final int times = ((Double) (timesPerModule / (axis ? width : height))).intValue() + 1;
         /* PixelReader to read pixel per pixel the module of the sprite */
         final PixelReader pixelReader = module.getPixelReader();
         final WritableImage image = new WritableImage(axis ? times * width : width, !axis ? times * height : height);
@@ -134,7 +133,7 @@ public class EntityConverter {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 for (int k = 0; k < times; k++) {
-                    pixelWriter.setColor(axis ? i + k * height : i, !axis ? j + k * height : j, pixelReader.getColor(i, j));
+                    pixelWriter.setColor(axis ? i + k * width : i, !axis ? j + k * height : j, pixelReader.getColor(i, j));
                 }
             }
         }

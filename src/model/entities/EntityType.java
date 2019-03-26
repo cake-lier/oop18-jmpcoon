@@ -1,7 +1,7 @@
 package model.entities;
 
 /**
- * an enumeration representing the possible types of an {@link Number}.
+ * an enumeration representing the possible types of an {@link Entity}.
  */
 public enum EntityType {
 

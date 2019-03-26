@@ -5,7 +5,7 @@ import model.entities.State;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * an interface representing the physical body of an {@link Number}.
+ * an interface representing the physical body of an {@link Entity}.
  */
 public interface PhysicalBody {
 

@@ -15,29 +15,12 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
     /**
      * builds a new {@link StaticDrawableEntity}.
      * 
-     * @param spriteUrl
-     *            the url of the image representing entity in the view
-     * @param entity
-     *            the {@link DynamicEntity} represented by this {@link DynamicDrawableEntity}
-     * @param worldDimensions
-     *            the dimensions of the {@link World} in which the {@link Number} lives
-     * @param sceneDimensions
-     *            the dimensions of the view in which this {@link DynamicDrawableEntity} will be drawn
-     */
-    public DynamicDrawableEntity(final String spriteUrl, final DynamicEntity entity,
-            final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
-        super(spriteUrl, entity, worldDimensions, sceneDimensions);
-    }
-
-    /**
-     * builds a new {@link StaticDrawableEntity}.
-     * 
      * @param image
      *            the image representing entity in the view
      * @param entity
      *            the {@link StaticEntity} represented by this {@link DynamicDrawableEntity}
      * @param worldDimensions
-     *            the dimensions of the {@link World} in which the {@link Number} lives
+     *            the dimensions of the {@link World} in which the {@link Entity} lives
      * @param sceneDimensions
      *            the dimensions of the view in which this {@link DynamicDrawableEntity} will be drawn
      */

@@ -35,7 +35,7 @@ public interface PhysicalFactory {
      * @param height
      *            the height of the physical body
      * @param type
-     *            the {@link EntityType} of the {@link Number} that will use the
+     *            the {@link EntityType} of the {@link Entity} that will use the
      *            created {@link StaticPhysicalBody}
      * @return a {@link StaticPhysicalBody} with the given characteristics
      */
@@ -56,7 +56,7 @@ public interface PhysicalFactory {
      * @param height
      *            the height of the physical body
      * @param type
-     *            the {@link EntityType} of the {@link Number} that will use the
+     *            the {@link EntityType} of the {@link Entity} that will use the
      *            created {@link DynamicPhysicalBody}
      * @return a {@link DynamicPhysicalBody} with the given characteristics
      */

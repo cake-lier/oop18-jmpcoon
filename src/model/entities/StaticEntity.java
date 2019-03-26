@@ -3,7 +3,7 @@ package model.entities;
 import model.physics.StaticPhysicalBody;
 
 /**
- * a class representing an immovable {@link Number}.
+ * a class representing an immovable {@link Entity}.
  */
 public abstract class StaticEntity extends AbstractEntity {
 

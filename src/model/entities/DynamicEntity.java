@@ -3,7 +3,7 @@ package model.entities;
 import model.physics.DynamicPhysicalBody;
 
 /**
- * a class representing an movable {@link Number}.
+ * a class representing an movable {@link Entity}.
  */
 public abstract class DynamicEntity extends AbstractEntity {
 

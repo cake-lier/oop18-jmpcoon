@@ -1,6 +1,6 @@
 package model.entities;
 /**
- * an enumeration representing the possible states an {@link Number} can be in.
+ * an enumeration representing the possible states an {@link Entity} can be in.
  */
 public enum State {
 

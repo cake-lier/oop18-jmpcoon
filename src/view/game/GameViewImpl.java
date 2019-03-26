@@ -9,9 +9,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import controller.game.InputType;
@@ -41,57 +38,63 @@ public class GameViewImpl implements GameView {
         this.appController = appController;
         this.gameController = new GameControllerImpl(this, this.appController);
         this.stage = stage;
-        this.scene = new Scene(new Group(), stage.getHeight(), stage.getWidth(), Color.GREEN);
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> getInput(key.getCode()));
-        stage.setScene(scene);
-        }
+        this.scene = new Scene(new Group(), stage.getHeight(), stage.getWidth(), Color.WHITE);
+        this.scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> getInput(key.getCode()));
+        this.stage.setScene(this.scene);
+    }
 
     /**
      *{@inheritDoc}
      */
     public void update() {
         final EntityConverter entityConverter = new EntityConverter(this.gameController.getWorldDimensions(),
-                                                                    new ImmutablePair<>(this.scene.getWidth(), this.scene.getHeight()));
-        final Collection<DrawableEntity> drawableEntities = this.gameController.getEntities()
-                                                                               .parallelStream()
-                                                                               .map(entity -> entityConverter
-                                                                                                   .getDrawableEntity(entity))
-                                                                               .collect(Collectors.toSet());
+                                                                    new ImmutablePair<>(this.stage.getWidth(), this.stage.getHeight()));
         final Group root = new Group();
-        drawableEntities.forEach(e -> {
-            root.getChildren().add(e.getImageView());
-        });
-        scene.setRoot(root);
+        this.gameController.getEntities()
+                           .stream()
+                           .map(entity -> entityConverter.getDrawableEntity(entity))
+                           .forEach(e -> root.getChildren().add(e.getImageView()));
+        this.scene.setRoot(root);
     }
 
     /**
      * {@inheritDoc}
      */
     public void showGameOver() {
-        final Text text = new Text(450, stage.getHeight() / 2, "Game Over");
+        final Text text = new Text(450, this.stage.getHeight() / 2, "Game Over");
         text.setFont(new Font(FONTSIZE));
-        final Scene gameOver = new Scene(new Group(text), stage.getHeight(), stage.getWidth(), Color.DARKRED);
-        stage.setScene(gameOver);
+        final Scene gameOver = new Scene(new Group(text), this.stage.getWidth(), this.stage.getHeight(), Color.DARKRED);
+        this.stage.setScene(gameOver);
     }
 
     /**
      * {@inheritDoc}
      */
     public void showPlayerWin() {
-        final Text text = new Text(450, stage.getHeight() / 2, "You won!"); 
+        final Text text = new Text(450, this.stage.getHeight() / 2, "You won!"); 
         text.setFont(new Font(FONTSIZE));
-        final Scene win = new Scene(new Group(text), stage.getHeight(), stage.getWidth(), Color.DARKRED);
-        stage.setScene(win);
+        final Scene win = new Scene(new Group(text), this.stage.getHeight(), this.stage.getWidth(), Color.DARKRED);
+        this.stage.setScene(win);
     }
 
     private void getInput(final KeyCode key) {
         InputType it;
         switch (key) {
-            case W: it = InputType.CLIMB; break;
-            case A: it = InputType.LEFT; break;
-            case D: it = InputType.RIGHT; break;
-            case SPACE: it = InputType.UP; break;
-            default: it = InputType.RIGHT; break;
+            case W:
+                it = InputType.CLIMB; 
+                break;
+            case A: 
+                it = InputType.LEFT;
+                break;
+            case D: 
+                it = InputType.RIGHT;
+                break;
+            case SPACE: 
+                it = InputType.UP;
+                break;
+            default:
+                it = null;
+                break;
         }
         gameController.processInput(it);
     }

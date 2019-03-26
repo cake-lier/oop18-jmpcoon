@@ -16,7 +16,6 @@ import model.entities.EntityType;
 import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
-import model.entities.RollingEnemy;
 import model.physics.PhysicalBody;
 import model.physics.PhysicalWorld;
 import model.physics.PhysicalFactory;
@@ -87,7 +86,7 @@ public final class WorldImpl implements World {
     /**
      * {@inheritDoc}
      * For first, it checks if the game has currently ended or not by checking if during this step the player is no longer alive
-     * and has lost or if she has reached the "end level trigger" and has consequently won. Then it removes all {@link Number}s
+     * and has lost or if she has reached the "end level trigger" and has consequently won. Then it removes all {@link Entity}s
      * no longer alive and signaling to all {@link GeneratorEnemy}s that a lapse of time has passed and asking if they have
      * created any new {@link RollingEnemy}.
      */

@@ -9,7 +9,7 @@ public class Ladder extends StaticEntity {
 
     /**
      * builds a new {@link Ladder}.
-     * @param body the {@link PhysicalBody} of this {@link Double}
+     * @param body the {@link PhysicalBody} of this {@link Ladder}
      */
     public Ladder(final StaticPhysicalBody body) {
         super(body);
