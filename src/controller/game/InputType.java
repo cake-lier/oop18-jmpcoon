@@ -9,10 +9,10 @@ public enum InputType {
 
     // TODO: comment the types
     CLIMB_DOWN(MovementType.CLIMB_DOWN),
-    CLIMB_UP(MovementType.CLIMB_DOWN),
-    LEFT(MovementType.CLIMB_DOWN),
-    RIGHT(MovementType.CLIMB_DOWN),
-    UP(MovementType.CLIMB_DOWN);
+    CLIMB_UP(MovementType.CLIMB_UP),
+    LEFT(MovementType.MOVE_LEFT),
+    RIGHT(MovementType.MOVE_RIGHT),
+    UP(MovementType.JUMP);
 
     private final MovementType associatedMovementType;
 
