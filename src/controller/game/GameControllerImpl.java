@@ -36,6 +36,7 @@ public class GameControllerImpl implements GameController {
     private final GameView gameView;
     private final AppController appController;
     private Optional<ScheduledThreadPoolExecutor> timer;
+    private boolean running;
 
     /**
      * builds a new {@link GameControllerImpl}.
@@ -53,6 +54,7 @@ public class GameControllerImpl implements GameController {
         // Runtime.getRuntime().availableProcessors() + 1 is the size of the pool of threads 
         this.timer = Optional.of(new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors() + 1));
         this.timer.get().setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+        this.running = false;
     }
 
     /**
@@ -65,8 +67,9 @@ public class GameControllerImpl implements GameController {
             this.timer = Optional.of(new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors() + 1));
             this.timer.get().setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
         }
-        if (this.timer.isPresent()) {
+        if (this.timer.isPresent() && !this.running) {
             this.timer.get().scheduleWithFixedDelay(() -> this.updateWorldAndView(), DELTA_UPDATE, DELTA_UPDATE, TimeUnit.MILLISECONDS);
+            this.running = true;
         }
     }
 
@@ -75,9 +78,10 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public void pauseGame() {
-        if (this.timer.isPresent()) {
+        if (this.timer.isPresent() && this.running) {
             this.timer.get().shutdown();
             this.timer = Optional.empty();
+            this.running = false;
         }
     }
 
@@ -103,7 +107,9 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public void processInput(final InputType input) {
-        this.gameWorld.movePlayer(input.getAssociatedMovementType());
+        if (this.running) {
+            this.gameWorld.movePlayer(input.getAssociatedMovementType());
+        }
     }
 
     /**
