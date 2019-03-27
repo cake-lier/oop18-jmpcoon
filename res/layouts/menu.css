@@ -7,7 +7,7 @@
 }
 
 #container {
-    -fx-background-image: url("../images/background.jpg");
+    -fx-background-image: url("../images/bg_menu.jpg");
     -fx-background-repeat: round;
     -fx-background-size: cover;
     -fx-background-position: center center;
