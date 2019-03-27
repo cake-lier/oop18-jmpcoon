@@ -54,7 +54,7 @@ public class EntityFactory {
     }
 
     /**
-     * 
+     * creates a {@link RollingEnemy}.
      * @param position the center of the {@link RollingEnemy} created
      * @param width the width of the {@link RollingEnemy} created
      * @param height the height of the {@link RollingEnemy} created
@@ -62,5 +62,17 @@ public class EntityFactory {
      */
     public RollingEnemy createRollingEnemy(final Pair<Double, Double> position, final double width, final double height) {
         return new RollingEnemy(this.factory.createDynamicPhysicalBody(position, 0, EntityShape.CIRCLE, width, height, EntityType.ROLLING_ENEMY));
+    }
+
+    /**
+     * creates a {@link Player}.
+     * @param position the center of the {@link Player} created
+     * @param width the width of the {@link Player} created
+     * @param height the height of the {@link Player} created
+     * @return the {@link Player} created
+     */
+    public Player createPlayer(final Pair<Double, Double> position, final double width, final double height) {
+        return new Player(this.factory.createDynamicPhysicalBody(position, 0, EntityShape.RECTANGLE,
+                width, height, EntityType.PLAYER));
     }
 }

@@ -87,6 +87,10 @@ enum EntityCreator {
                 return factory.createPlatform(position, width, height, angle);
             case WALKING_ENEMY:
                 return factory.createWalkingEnemy(position, width, height);
+            case ROLLING_ENEMY:
+                return factory.createRollingEnemy(position, width, height);
+            case PLAYER:
+                return factory.createPlayer(position, width, height);
             default:
                 return null;
         }
