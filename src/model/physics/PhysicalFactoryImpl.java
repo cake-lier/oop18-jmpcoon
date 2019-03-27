@@ -61,7 +61,10 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     @Override
     public PhysicalWorld createPhysicalWorld(final double width, final double height) {
         throwException(this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_TWO_WORLDS_MSG));
-        this.physicalWorld = Optional.of(new WholePhysicalWorldImpl(new World(new AxisAlignedBounds(width, height))));
+        /* model.world.World considers a reference system with only positive coordinates, from 0 to width on the x axis
+         * and from 0 to height on the y axis. dyn4j.dynamics.World uses a reference system where (0,0) is in the middle,
+         * so to have a positive area with dimensions width * height it needs to be created double as big */
+        this.physicalWorld = Optional.of(new WholePhysicalWorldImpl(new World(new AxisAlignedBounds(width * 2, height * 2))));
         return this.physicalWorld.get();
     }
 
