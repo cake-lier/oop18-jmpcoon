@@ -1,5 +1,6 @@
 package view.game;
 
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -11,15 +12,15 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.stream.Stream;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-import controller.game.InputType;
 import controller.app.AppController;
 import controller.game.GameController;
 import controller.game.GameControllerImpl;
@@ -69,56 +70,50 @@ public class GameViewImpl implements GameView {
      *{@inheritDoc}
      */
     public void update() {
-        final EntityConverter entityConverter = new EntityConverter(this.gameController.getWorldDimensions(),
-                                                                    new ImmutablePair<>(this.scene.getWidth(), this.scene.getHeight()));
-        final Pane root = new Pane();
-        this.addBackgroundImage(root);
-        this.gameController.getEntities()
-                           .stream()
-                           .map(entity -> entityConverter.getDrawableEntity(entity))
-                           .forEach(e -> root.getChildren().add(e.getImageView()));
-        this.scene.setRoot(root);
+        Platform.runLater(() -> {
+            final EntityConverter entityConverter = new EntityConverter(this.gameController.getWorldDimensions(),
+                    new ImmutablePair<>(this.scene.getWidth(), this.scene.getHeight()));
+            final Pane root = new Pane();
+            this.addBackgroundImage(root);
+            this.gameController.getEntities()
+            .stream()
+            .map(entity -> entityConverter.getDrawableEntity(entity))
+            .forEach(e -> root.getChildren().add(e.getImageView()));
+            this.scene.setRoot(root);
+        });
     }
 
     /**
      * {@inheritDoc}
      */
     public void showGameOver() {
-        final Text text = new Text(450, this.stage.getHeight() / 2, "Game Over");
-        text.setFont(new Font(FONTSIZE));
-        final Scene gameOver = new Scene(new Group(text), this.stage.getWidth(), this.stage.getHeight(), Color.DARKRED);
-        this.stage.setScene(gameOver);
+        Platform.runLater(() -> {
+            final Text text = new Text(450, this.stage.getHeight() / 2, "Game Over");
+            text.setFont(new Font(FONTSIZE));
+            final Scene gameOver = new Scene(new Group(text), this.stage.getWidth(), this.stage.getHeight(), Color.DARKRED);
+            this.stage.setScene(gameOver);
+        });
     }
 
     /**
      * {@inheritDoc}
      */
     public void showPlayerWin() {
-        final Text text = new Text(450, this.stage.getHeight() / 2, "You won!"); 
-        text.setFont(new Font(FONTSIZE));
-        final Scene win = new Scene(new Group(text), this.stage.getHeight(), this.stage.getWidth(), Color.DARKRED);
-        this.stage.setScene(win);
+        Platform.runLater(() -> {
+            final Text text = new Text(450, this.stage.getHeight() / 2, "You won!"); 
+            text.setFont(new Font(FONTSIZE));
+            final Scene win = new Scene(new Group(text), this.stage.getHeight(), this.stage.getWidth(), Color.DARKRED);
+            this.stage.setScene(win);
+        });
     }
 
+    /*
+     * Finds the key's correspondent in InputKey which has a method that converts it into InputType,
+     * which is passed to the gameController
+     */
     private void getInput(final KeyCode key) {
-        InputType it;
-        switch (key) {
-            case W:
-                it = InputType.CLIMB; 
-                break;
-            case A: 
-                it = InputType.LEFT;
-                break;
-            case D: 
-                it = InputType.RIGHT;
-                break;
-            case SPACE: 
-                it = InputType.UP;
-                break;
-            default:
-                it = null;
-                break;
-        }
-        gameController.processInput(it);
+        gameController.processInput(
+                            Stream.of(InputKey.values()).filter(input -> input.name().equals(key.name()))
+                            .findAny().get().convert());
     }
 }

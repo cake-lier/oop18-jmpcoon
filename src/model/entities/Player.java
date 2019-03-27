@@ -7,6 +7,7 @@ import model.physics.DynamicPhysicalBody;
  */
 public class Player extends DynamicEntity {
     private static final double WALKIMPULSE = 0.05;
+    private static final double CLIMBIMPULSE = 0.5;
     private static final double JUMPIMPULSE = 0.175;
 
     private final DynamicPhysicalBody body;
@@ -42,7 +43,8 @@ public class Player extends DynamicEntity {
     public void move(final MovementType movement) {
         switch (movement) {
             case JUMP: this.body.applyMovement(MovementType.JUMP, 0, JUMPIMPULSE); break;
-            case CLIMB: this.body.applyMovement(MovementType.CLIMB, 0, 0.5); break;
+            case CLIMB_UP: this.body.applyMovement(MovementType.CLIMB_UP, 0, CLIMBIMPULSE); break;
+            case CLIMB_DOWN: this.body.applyMovement(MovementType.CLIMB_DOWN, 0, -CLIMBIMPULSE); break;
             case MOVE_RIGHT: this.body.applyMovement(MovementType.MOVE_RIGHT, WALKIMPULSE,  0); break;
             case MOVE_LEFT: this.body.applyMovement(MovementType.MOVE_LEFT, -WALKIMPULSE,  0); break;
             default: 

@@ -153,8 +153,8 @@ public final class WorldImpl implements World {
     @Override
     public void movePlayer(final MovementType movement) {
         if (this.currentState == GameState.IS_GOING  && ((movement == MovementType.JUMP && this.isPlayerStanding()) 
-                                                         || (movement == MovementType.CLIMB && this.isPlayerInFrontLadder())
-                                                         || (movement != MovementType.JUMP && movement != MovementType.CLIMB))) {
+                                                         || (movement == MovementType.CLIMB_UP && this.isPlayerInFrontLadder())
+                                                         || (movement != MovementType.JUMP && movement != MovementType.CLIMB_UP))) {
             this.player.move(movement);
         }
     }
