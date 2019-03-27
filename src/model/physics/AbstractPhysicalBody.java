@@ -19,6 +19,7 @@ import org.apache.commons.lang3.tuple.Pair;
 public abstract class AbstractPhysicalBody implements PhysicalBody {
 
     private final Body body;
+    private double angle;
 
     /**
      * builds a new {@link AbstractPhysicalBody}.
@@ -27,6 +28,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      */
     public AbstractPhysicalBody(final Body body, final World world) {
         this.body = Objects.requireNonNull(body);
+        this.angle = 0;
     }
 
     /**
@@ -42,7 +44,8 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      */
     @Override
     public double getAngle() {
-        return this.body.getChangeInOrientation();
+        this.angle = this.angle + this.body.getChangeInOrientation();
+        return this.angle;
     }
 
     /**
