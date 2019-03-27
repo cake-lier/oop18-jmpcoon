@@ -17,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -112,8 +113,9 @@ public class GameViewImpl implements GameView {
      * which is passed to the gameController
      */
     private void getInput(final KeyCode key) {
-        gameController.processInput(
-                            Stream.of(InputKey.values()).filter(input -> input.name().equals(key.name()))
-                            .findAny().get().convert());
+        final Optional<InputKey> inputKey = Stream.of(InputKey.values()).filter(input -> input.name().equals(key.name())).findAny();
+        if (inputKey.isPresent()) {
+            gameController.processInput(inputKey.get().convert());
+        }
     }
 }

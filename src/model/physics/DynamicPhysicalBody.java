@@ -7,6 +7,8 @@ import org.dyn4j.geometry.Vector2;
 import model.entities.State;
 import model.entities.MovementType;
 
+import java.math.*;
+
 /**
  * a class representing a {@link PhysicalBody} that can move (players and
  * enemies).
@@ -52,11 +54,11 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     public void applyMovement(final MovementType movement, final double x, final double y) {
         this.currentState = movement.convert();
         this.body.applyImpulse(new Vector2(x, y));
-        if (this.body.getLinearVelocity().x > MAXVELOCITY_X) {
-            this.body.setLinearVelocity(new Vector2(MAXVELOCITY_X, this.body.getLinearVelocity().y));
+        if (Math.abs(this.body.getLinearVelocity().x) > MAXVELOCITY_X) {
+            this.body.setLinearVelocity(new Vector2(Math.signum(this.body.getLinearVelocity().x) * MAXVELOCITY_X, this.body.getLinearVelocity().y));
         }
-        if (this.body.getLinearVelocity().y > MAXVELOCITY_Y) {
-            this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, MAXVELOCITY_Y));
+        if (Math.abs(this.body.getLinearVelocity().y) > MAXVELOCITY_Y) {
+            this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, Math.signum(this.body.getLinearVelocity().y) * MAXVELOCITY_Y));
         }
     }
 }
