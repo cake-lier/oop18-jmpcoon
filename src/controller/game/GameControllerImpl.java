@@ -103,7 +103,7 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public void processInput(final InputType input) {
-        this.gameWorld.movePlayer(inputToMovement(input));
+        this.gameWorld.movePlayer(input.getAssociatedMovementType());
     }
 
     /**
@@ -121,21 +121,6 @@ public class GameControllerImpl implements GameController {
     @Override
     public Pair<Double, Double> getWorldDimensions() {
         return this.gameWorld.getDimensions();
-    }
-
-    private MovementType inputToMovement(final InputType input) {
-        switch (input) {
-            case CLIMB:
-                return MovementType.CLIMB;
-            case LEFT:
-                return MovementType.MOVE_LEFT;
-            case RIGHT:
-                return MovementType.MOVE_RIGHT;
-            case UP:
-                return MovementType.JUMP;
-            default:
-                throw new IllegalArgumentException();
-        }
     }
 
     private void updateWorldAndView() {

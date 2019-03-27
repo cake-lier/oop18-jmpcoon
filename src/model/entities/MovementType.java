@@ -5,9 +5,13 @@ package model.entities;
  */
 public enum MovementType {
     /**
-     * Player climbs a ladder.
+     * Player climbs down a ladder.
      */
-    CLIMB,
+    CLIMB_DOWN,
+    /**
+     * Player climbs up a ladder.
+     */
+    CLIMB_UP,
     /**
      * Player jumps.
      */
@@ -24,7 +28,8 @@ public enum MovementType {
     private State conversion;
 
     static {
-        CLIMB.conversion = State.CLIMBING;
+        CLIMB_DOWN.conversion = State.CLIMBING_DOWN;
+        CLIMB_UP.conversion = State.CLIMBING_UP;
         JUMP.conversion = State.JUMPING;
         MOVE_RIGHT.conversion = State.MOVING_RIGHT;
         MOVE_LEFT.conversion = State.MOVING_LEFT;

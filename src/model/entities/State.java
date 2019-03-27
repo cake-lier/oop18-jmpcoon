@@ -5,7 +5,8 @@ package model.entities;
 public enum State {
 
     // TODO: comment the various states
-    CLIMBING,
+    CLIMBING_DOWN,
+    CLIMBING_UP,
     JUMPING,
     MOVING_LEFT,
     MOVING_RIGHT,
