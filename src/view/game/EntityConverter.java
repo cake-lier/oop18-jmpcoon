@@ -1,6 +1,7 @@
 package view.game;
 
 import java.io.FileNotFoundException;
+import java.util.Collection;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -37,6 +38,14 @@ public class EntityConverter {
     public EntityConverter(final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
         this.worldDimensions = worldDimensions;
         this.sceneDimensions = sceneDimensions;
+    }
+
+    /**
+     * 
+     * @param entities SGDSD
+     */
+    public void removeUnusedEntities(final Collection<Entity> entities) {
+        //TODO
     }
 
     /**
