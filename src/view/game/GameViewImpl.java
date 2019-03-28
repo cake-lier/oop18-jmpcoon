@@ -34,7 +34,6 @@ public class GameViewImpl implements GameView {
     private static final String BG_SOURCE = "images/bg_game.png";
 
     private final GameController gameController;
-    private final AppController appController;
     private final EntityConverter entityConverter;
     private final Stage stage;
     private final Scene scene;
@@ -47,8 +46,7 @@ public class GameViewImpl implements GameView {
      * @param stage The stage in which to draw the game scene.
      */
     public GameViewImpl(final AppController appController, final Stage stage) {
-        this.appController = appController;
-        this.gameController = new GameControllerImpl(this, this.appController);
+        this.gameController = new GameControllerImpl(this, appController);
         this.stage = stage;
         final Pane root = new Pane();
         this.addBackgroundImage(root);
