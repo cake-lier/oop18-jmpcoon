@@ -34,7 +34,7 @@ public class GameViewImpl implements GameView {
     private static final String BG_SOURCE = "images/bg_game.png";
 
     private final GameController gameController;
-    private final EntityConverter entityConverter;
+    private final EntityConverterImpl entityConverter;
     private final Stage stage;
     private final Scene scene;
 
@@ -52,7 +52,7 @@ public class GameViewImpl implements GameView {
         this.addBackgroundImage(root);
         this.scene = new Scene(root, this.stage.getScene().getWidth(), this.stage.getScene().getHeight());
         this.scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> getInput(key.getCode()));
-        this.entityConverter = new EntityConverter(this.gameController.getWorldDimensions(), 
+        this.entityConverter = new EntityConverterImpl(this.gameController.getWorldDimensions(), 
                                 new ImmutablePair<>(this.scene.getWidth(), this.scene.getHeight()));
         this.stage.setScene(this.scene);
         this.stage.sizeToScene();
