@@ -18,7 +18,6 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -36,6 +35,7 @@ public class GameViewImpl implements GameView {
 
     private final GameController gameController;
     private final AppController appController;
+    private final EntityConverter entityConverter;
     private final Stage stage;
     private final Scene scene;
 
@@ -54,7 +54,10 @@ public class GameViewImpl implements GameView {
         this.addBackgroundImage(root);
         this.scene = new Scene(root, this.stage.getScene().getWidth(), this.stage.getScene().getHeight());
         this.scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> getInput(key.getCode()));
+        this.entityConverter = new EntityConverter(this.gameController.getWorldDimensions(), 
+                                new ImmutablePair<>(this.scene.getWidth(), this.scene.getHeight()));
         this.stage.setScene(this.scene);
+        this.stage.sizeToScene();
     }
 
     /*
@@ -73,16 +76,26 @@ public class GameViewImpl implements GameView {
      */
     public void update() {
         Platform.runLater(() -> {
-            final EntityConverter entityConverter = new EntityConverter(this.gameController.getWorldDimensions(),
-                    new ImmutablePair<>(this.scene.getWidth(), this.scene.getHeight()));
-            final Pane root = new Pane();
-            this.addBackgroundImage(root);
-            this.gameController.getEntities()
-            .stream()
-            .map(entity -> entityConverter.getDrawableEntity(entity))
-            .forEach(e -> root.getChildren().add(e.getImageView()));
-            this.scene.setRoot(root);
+            entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
+            this.drawAliveEntities();
         });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void init() {
+        this.drawAliveEntities();
+    }
+
+    private void drawAliveEntities() {
+        final Pane root = new Pane();
+        this.gameController.getAliveEntities()
+                            .stream()
+                            .map(entity -> entityConverter.getDrawableEntity(entity))
+                            .forEach(e -> root.getChildren().add(e.getImageView()));
+        this.addBackgroundImage(root);
+        this.scene.setRoot(root);
     }
 
     /**
@@ -116,15 +129,17 @@ public class GameViewImpl implements GameView {
      * which is passed to the gameController
      */
     private void getInput(final KeyCode key) {
-        final Optional<InputKey> inputKey = Stream.of(InputKey.values()).filter(input -> input.name().equals(key.name())).findAny();
-        if (inputKey.isPresent()) {
-            if (key.name().equals("P")) {
-                this.gameController.pauseGame();
-            } else if (key.name().equals("R")) {
-                this.gameController.startGame();
-            } else {
-                gameController.processInput(inputKey.get().convert());
-            }
-        }
+        Stream.of(InputKey.values())
+              .filter(input -> input.name().equals(key.name()))
+              .findAny()
+              .ifPresent(input -> {
+                  if (input == InputKey.ESCAPE) {
+                      this.gameController.pauseGame();
+                  } else if (input == InputKey.R) {
+                      this.gameController.startGame();
+                  } else {
+                      this.gameController.processInput(input.convert().get());
+                  }
+              });
     }
 }

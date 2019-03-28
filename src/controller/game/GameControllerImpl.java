@@ -163,4 +163,20 @@ public class GameControllerImpl implements GameController {
         }
         return entities;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Collection<Entity> getAliveEntities() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Collection<Entity> getDeadEntities() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

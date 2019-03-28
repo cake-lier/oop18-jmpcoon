@@ -6,9 +6,14 @@ package view.game;
 public interface GameView {
 
     /**
-     * Uses all current entities stored in {@link GameController} to update the game scene.
+     * Updates the game scene.
      */
     void update();
+
+    /**
+     * Initializes the game scene.
+     */
+    void init();
 
     /**
      * Shows game over screen.
@@ -19,5 +24,4 @@ public interface GameView {
      * Shows win screen.
      */
     void showPlayerWin();
-
 }

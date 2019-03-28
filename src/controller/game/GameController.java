@@ -35,4 +35,16 @@ public interface GameController {
      * @return the dimensions (width and height) of the {@link World} in which the game is playing
      */
     Pair<Double, Double> getWorldDimensions();
+
+    /**
+     * 
+     * @return alive entities.
+     */
+    Collection<Entity> getAliveEntities();
+
+    /**
+     * 
+     * @return dead entities.
+     */
+    Collection<Entity> getDeadEntities();
 }
