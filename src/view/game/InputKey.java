@@ -1,5 +1,7 @@
 package view.game;
 
+import java.util.Optional;
+
 import controller.game.InputType;
 
 /**
@@ -7,49 +9,45 @@ import controller.game.InputType;
  */
 public enum InputKey {
     /**
-     * Player jumps.
+     * Player climbs up.
      */
-    W, 
+    W(Optional.of(InputType.CLIMB_UP)), 
     /**
      * Player goes left.
      */
-    A, 
+    A(Optional.of(InputType.LEFT)), 
     /**
      * Player goes right.
      */
-    D, 
-    /**
-     * Player climbs up a {@link Ladder}.
-     */
-    E,
+    D(Optional.of(InputType.RIGHT)), 
     /**
      * Player climbs down a {@link Ladder}.
      */
-    S,
+    S(Optional.of(InputType.CLIMB_DOWN)),
+    /**
+     * Player climbs up a {@link Ladder}.
+     */
+    SPACE(Optional.of(InputType.UP)),
     /**
      * Pause the game.
      */
-    P,
+    ESCAPE(Optional.empty()),
     /**
      * Restart the game.
      */
-    R;
+    R(Optional.empty());
 
-    private InputType conversion;
+    private final Optional<InputType> correspondingInputType;
 
-    static {
-        W.conversion = InputType.UP;
-        A.conversion = InputType.LEFT;
-        D.conversion = InputType.RIGHT;
-        E.conversion = InputType.CLIMB_UP;
-        S.conversion = InputType.CLIMB_DOWN;
+    InputKey(final Optional<InputType> correspondingInputType) {
+        this.correspondingInputType = correspondingInputType;
     }
 
     /**
      * Converts the {@link InputKey} on which it's called to a {@link InputType}.
      * @return the corresponding {@link InputType}.
      */
-    public InputType convert() {
-        return conversion;
+    public Optional<InputType> convert() {
+        return this.correspondingInputType;
     }
 }

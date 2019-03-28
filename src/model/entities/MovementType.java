@@ -7,39 +7,36 @@ public enum MovementType {
     /**
      * Player climbs down a ladder.
      */
-    CLIMB_DOWN,
+    CLIMB_DOWN(State.CLIMBING_DOWN),
     /**
      * Player climbs up a ladder.
      */
-    CLIMB_UP,
+    CLIMB_UP(State.CLIMBING_UP),
     /**
      * Player jumps.
      */
-    JUMP,
+    JUMP(State.JUMPING),
     /**
      * Player walks to the right.
      */
-    MOVE_RIGHT,
+    MOVE_RIGHT(State.MOVING_RIGHT),
     /**
      * Player walks to the left.
      */
-    MOVE_LEFT;
+    MOVE_LEFT(State.MOVING_LEFT);
 
-    private State conversion;
+    private State correspondingState;
 
-    static {
-        CLIMB_DOWN.conversion = State.CLIMBING_DOWN;
-        CLIMB_UP.conversion = State.CLIMBING_UP;
-        JUMP.conversion = State.JUMPING;
-        MOVE_RIGHT.conversion = State.MOVING_RIGHT;
-        MOVE_LEFT.conversion = State.MOVING_LEFT;
+    MovementType(final State state) {
+        this.correspondingState = state;
     }
+
     /**
      * Converts the {@link MovementType} on which it's called to a {@link State}.
      * @return the corresponding {@link State}.
      */
     public State convert() {
-        return conversion;
+        return this.correspondingState;
     }
 
 }

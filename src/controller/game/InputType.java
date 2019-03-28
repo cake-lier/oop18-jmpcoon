@@ -16,7 +16,11 @@ public enum InputType {
 
     private final MovementType associatedMovementType;
 
-    private InputType(final MovementType associatedMovementType) {
+    /**
+     * 
+     * @param associatedMovementType hk
+     */
+     InputType(final MovementType associatedMovementType) {
         this.associatedMovementType = associatedMovementType;
     }
 
