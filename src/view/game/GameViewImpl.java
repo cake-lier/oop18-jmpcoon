@@ -14,6 +14,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -89,9 +90,10 @@ public class GameViewImpl implements GameView {
      */
     public void showGameOver() {
         Platform.runLater(() -> {
-            final Text text = new Text(450, this.stage.getHeight() / 2, "Game Over");
-            text.setFont(new Font(FONTSIZE));
-            final Scene gameOver = new Scene(new Group(text), this.stage.getWidth(), this.stage.getHeight(), Color.DARKRED);
+            final Text text = new Text(150, this.stage.getHeight() / 2, "Game Over");
+            text.setFont(Font.font("Helvetica", FontPosture.ITALIC, FONTSIZE));
+            text.setFill(Color.RED);
+            final Scene gameOver = new Scene(new Group(text), this.stage.getWidth(), this.stage.getHeight(), Color.BLACK);
             this.stage.setScene(gameOver);
         });
     }
@@ -101,9 +103,10 @@ public class GameViewImpl implements GameView {
      */
     public void showPlayerWin() {
         Platform.runLater(() -> {
-            final Text text = new Text(450, this.stage.getHeight() / 2, "You won!"); 
-            text.setFont(new Font(FONTSIZE));
-            final Scene win = new Scene(new Group(text), this.stage.getHeight(), this.stage.getWidth(), Color.DARKRED);
+            final Text text = new Text(150, this.stage.getHeight() / 2, "You win!"); 
+            text.setFont(Font.font("Helvetica", FontPosture.ITALIC, FONTSIZE));
+            text.setFill(Color.LIGHTBLUE);
+            final Scene win = new Scene(new Group(text), this.stage.getHeight(), this.stage.getWidth(), Color.BLACK);
             this.stage.setScene(win);
         });
     }
@@ -115,7 +118,13 @@ public class GameViewImpl implements GameView {
     private void getInput(final KeyCode key) {
         final Optional<InputKey> inputKey = Stream.of(InputKey.values()).filter(input -> input.name().equals(key.name())).findAny();
         if (inputKey.isPresent()) {
-            gameController.processInput(inputKey.get().convert());
+            if (key.name().equals("P")) {
+                this.gameController.pauseGame();
+            } else if (key.name().equals("R")) {
+                this.gameController.startGame();
+            } else {
+                gameController.processInput(inputKey.get().convert());
+            }
         }
     }
 }

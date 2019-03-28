@@ -25,7 +25,15 @@ public enum InputKey {
     /**
      * Player climbs down a {@link Ladder}.
      */
-    S;
+    S,
+    /**
+     * Pause the game.
+     */
+    P,
+    /**
+     * Restart the game.
+     */
+    R;
 
     private InputType conversion;
 

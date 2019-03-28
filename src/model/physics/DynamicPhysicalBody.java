@@ -7,8 +7,6 @@ import org.dyn4j.geometry.Vector2;
 import model.entities.State;
 import model.entities.MovementType;
 
-import java.math.*;
-
 /**
  * a class representing a {@link PhysicalBody} that can move (players and
  * enemies).
