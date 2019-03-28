@@ -2,6 +2,8 @@ package model.world;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -38,7 +40,8 @@ public final class WorldImpl implements World {
     private final EntityFactory entityFactory;
     private final PhysicalWorld innerWorld;
     private final Pair<Double, Double> worldDimensions;
-    private final ClassToInstanceMultimap<Entity> entities;
+    private final ClassToInstanceMultimap<Entity> aliveEntities;
+    private final Set<Entity> deadEntities;
     private Player player;
     private GameState currentState;
 
@@ -51,7 +54,8 @@ public final class WorldImpl implements World {
         this.entityFactory = new EntityFactory(physicsFactory);
         this.worldDimensions = new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT);
         this.innerWorld = physicsFactory.createPhysicalWorld(this.worldDimensions.getLeft(), this.worldDimensions.getRight());
-        this.entities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
+        this.aliveEntities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
+        this.deadEntities = new LinkedHashSet<>();
         this.currentState = GameState.IS_GOING;
     }
 
@@ -71,24 +75,24 @@ public final class WorldImpl implements World {
         entities.forEach(entity -> {
             final EntityCreator creator = EntityCreator.valueOf(entity.getEntityType().name());
             final Class<? extends Entity> entityClass = creator.getAssociatedClass();
-            this.entities.put(entityClass, creator.create(this.entityFactory,
+            this.aliveEntities.put(entityClass, creator.create(this.entityFactory,
                                                           entity.getEntityType(),
                                                           entity.getPosition(),
                                                           entity.getDimensions().getLeft(), 
                                                           entity.getDimensions().getRight(),
                                                           entity.getAngle()));
             if (entity.getEntityType() == EntityType.PLAYER) {
-                this.player = this.entities.getInstances(Player.class).stream().findFirst().get();
+                this.player = this.aliveEntities.getInstances(Player.class).stream().findFirst().get();
             }
         });
     }
 
     /**
      * {@inheritDoc}
-     * For first, it checks if the game has currently ended or not by checking if during this step the player is no longer alive
-     * and has lost or if she has reached the "end level trigger" and has consequently won. Then it removes all {@link Entity}s
-     * no longer alive and signaling to all {@link GeneratorEnemy}s that a lapse of time has passed and asking if they have
-     * created any new {@link RollingEnemy}.
+     * For first, it checks if the game has currently ended or not by checking if during this step the {@link Player} is no longer
+     * alive and has lost or if the "end level trigger" was reached and has consequently won. Then it separates all
+     * {@link Entity}s no longer alive from the others and for last it signals to all {@link GeneratorEnemy}s that a lapse of time
+     * has passed and asking if they have created any new {@link RollingEnemy}.
      */
     public void update() {
         this.innerWorld.update();
@@ -100,10 +104,12 @@ public final class WorldImpl implements World {
                 this.currentState = GameState.PLAYER_WON;
             }
         }
-        final Iterator<Entity> iterator = this.entities.values().iterator();
+        this.deadEntities.clear();
+        final Iterator<Entity> iterator = this.aliveEntities.values().iterator();
         while (iterator.hasNext()) {
             final Entity current = iterator.next();
             if (!current.isAlive()) {
+                this.deadEntities.add(current);
                 iterator.remove();
                 this.innerWorld.removeBody(current.getPhysicalBody());
             }
@@ -118,7 +124,7 @@ public final class WorldImpl implements World {
      */
     private boolean isPlayerStanding() {
         final PhysicalBody innerPlayer = this.player.getPhysicalBody();
-        final Collection<PhysicalBody> platformsBodies = this.entities.getInstances(Platform.class)
+        final Collection<PhysicalBody> platformsBodies = this.aliveEntities.getInstances(Platform.class)
                                                                       .parallelStream()
                                                                       .map(platform -> platform.getPhysicalBody())
                                                                       .collect(Collectors.toSet());
@@ -139,7 +145,7 @@ public final class WorldImpl implements World {
      * one of them.
      */
     private boolean isPlayerInFrontLadder() {
-        return this.entities.getInstances(Ladder.class).parallelStream()
+        return this.aliveEntities.getInstances(Ladder.class).parallelStream()
                                                        .map(ladder -> ladder.getPhysicalBody())
                                                        .anyMatch(ladderBody -> 
                                                                  this.innerWorld
@@ -179,7 +185,15 @@ public final class WorldImpl implements World {
      * {@inheritDoc}
      */
     @Override
-    public Collection<Entity> getEntities() {
-        return this.entities.values();
+    public Collection<Entity> getAliveEntities() {
+        return this.aliveEntities.values();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Collection<Entity> getDeadEntities() {
+        return this.deadEntities;
     }
 }

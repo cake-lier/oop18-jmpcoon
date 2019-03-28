@@ -51,9 +51,14 @@ public interface World {
     boolean hasPlayerWon();
 
     /**
-     * Produces all the entities which populate this world, divided by group depending of their type, as specified in the
-     * {@link EntityType} enum.
-     * @return An {@link Map} from the {@link Entity} class to the collection of {@link Entity}s of this type.
+     * Produces all the entities which populate this world which are still alive since the last {@link #update()} method call.
+     * @return A {@link Collection} of the alive {@link Entity}s.
      */
-    Collection<Entity> getEntities();
+    Collection<Entity> getAliveEntities();
+
+    /**
+     * Produces all the entities which have died since the last {@link #update()} method call.
+     * @return A {@link Collection} of the {@link Entity}s which have died across last {@link World} update.
+     */
+    Collection<Entity> getDeadEntities();
 }

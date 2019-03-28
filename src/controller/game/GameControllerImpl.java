@@ -16,7 +16,6 @@ import model.entities.EntityPropertiesImpl;
 import model.entities.EntityShape;
 import model.entities.EntityType;
 import model.entities.Entity;
-import model.entities.MovementType;
 import model.world.World;
 import model.world.WorldImpl;
 import org.apache.commons.lang3.tuple.Pair;
@@ -117,7 +116,7 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public Collection<Entity> getEntities() {
-        return this.gameWorld.getEntities();
+        return this.gameWorld.getAliveEntities();
     }
 
 

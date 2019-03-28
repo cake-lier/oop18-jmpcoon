@@ -17,6 +17,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import model.entities.EntityType;
+import model.entities.State;
 
 /**
  * The class implementation of {@link PhysicalWorld}. It's package protected so the only class which can build it is the 
@@ -62,6 +63,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                     final Body otherBody = firstBodyType != EntityType.PLAYER ? firstBody : secondBody;
                     final PhysicalBody otherPhysicalBody = WholePhysicalWorldImpl.this.containers.inverse().get(otherBody);
                     final Vector2 collisionPoint = contactConstraint.getContacts().get(0).getPoint();
+                    final State playerState = playerPhysicalBody.getState();
                     if ((otherType == EntityType.WALKING_ENEMY
                          && (playerPhysicalBody.getPosition().getRight() - playerPhysicalBody.getDimensions().getRight() / 2)
                              - collisionPoint.y < PRECISION
@@ -72,11 +74,21 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                                 - collisionPoint.y < PRECISION
                             && collisionPoint.y > otherPhysicalBody.getPosition().getRight())) {
                         otherBody.setActive(false);
-                    } else {
+                    } else if (otherType == EntityType.WALKING_ENEMY || otherType == EntityType.ROLLING_ENEMY) {
                         playerBody.setActive(false);
+                    } else if (otherType == EntityType.PLATFORM
+                               && (playerState == State.CLIMBING_DOWN || playerState == State.CLIMBING_UP)) {
+                        if ((playerPhysicalBody.getPosition().getRight() - playerPhysicalBody.getDimensions().getRight() / 2)
+                            - collisionPoint.y < PRECISION
+                            && collisionPoint.y - (otherPhysicalBody.getPosition().getRight() 
+                                                   + otherPhysicalBody.getDimensions().getRight() / 2) < PRECISION) {
+                            //playerPhysicalBody.unClimb();
+                        } else {
+                            return false;
+                        }
                     }
                 }
-                return super.collision(contactConstraint);
+                return true;
             }
         });
     }
