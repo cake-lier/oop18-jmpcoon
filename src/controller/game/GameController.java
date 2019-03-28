@@ -11,12 +11,24 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public interface GameController {
 
+    /**
+     * Starts the game.
+     */
     void startGame();
 
+    /**
+     * Pause the game so that it can be restarted later.
+     */
     void pauseGame();
 
+    /**
+     * Saves the current game.
+     */
     void saveGame();
 
+    /**
+     * Stops definitely the current game.
+     */
     void stopGame();
 
     /**
@@ -24,11 +36,6 @@ public interface GameController {
      * @param input the input received
      */
     void processInput(InputType input);
-
-    /**
-     * @return the entities of the {@link World}, in such a way that they can be drawn
-     */
-    Collection<Entity> getEntities();
 
     /**
      * 

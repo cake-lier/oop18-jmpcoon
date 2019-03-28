@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -34,7 +33,7 @@ public class GameControllerImpl implements GameController {
     private final World gameWorld;
     private final GameView gameView;
     private final AppController appController;
-    private Optional<ScheduledThreadPoolExecutor> timer;
+    private ScheduledThreadPoolExecutor timer;
     private boolean running;
 
     /**
@@ -47,13 +46,16 @@ public class GameControllerImpl implements GameController {
         this.gameWorld.initLevel(loadLevel());
         this.gameView = Objects.requireNonNull(view);
         this.appController = Objects.requireNonNull(appController);
-        // TODO: could just initialize timer to empty, and then at first run() call it would be created,
-        // but in previous tests that caused problems. So, consider leaving it like this or creating a private
-        // function to recall every time necessary
-        // Runtime.getRuntime().availableProcessors() + 1 is the size of the pool of threads 
-        this.timer = Optional.of(new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors() + 1));
-        this.timer.get().setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+        this.timer = this.createTimer();
         this.running = false;
+    }
+
+    private ScheduledThreadPoolExecutor createTimer() {
+        // Runtime.getRuntime().availableProcessors() + 1 is the size of the pool of threads
+        final int threadPoolSize = Runtime.getRuntime().availableProcessors() + 1;
+        final ScheduledThreadPoolExecutor t = new ScheduledThreadPoolExecutor(threadPoolSize);
+        t.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+        return t;
     }
 
     /**
@@ -61,13 +63,8 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public void startGame() {
-        if (!this.timer.isPresent()) {
-            // Runtime.getRuntime().availableProcessors() + 1 is the size of the pool of threads 
-            this.timer = Optional.of(new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors() + 1));
-            this.timer.get().setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
-        }
-        if (this.timer.isPresent() && !this.running) {
-            this.timer.get().scheduleWithFixedDelay(() -> this.updateWorldAndView(), DELTA_UPDATE, DELTA_UPDATE, TimeUnit.MILLISECONDS);
+        if (!this.running) {
+            this.timer.scheduleWithFixedDelay(() -> updateWorldAndView(), DELTA_UPDATE, DELTA_UPDATE, TimeUnit.MILLISECONDS);
             this.running = true;
         }
     }
@@ -77,9 +74,10 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public void pauseGame() {
-        if (this.timer.isPresent() && this.running) {
-            this.timer.get().shutdown();
-            this.timer = Optional.empty();
+        if (this.running) {
+            this.timer.shutdown();
+            /* prepares a new timer for when the game will be restarted */
+            this.timer = this.createTimer();
             this.running = false;
         }
     }
@@ -106,19 +104,22 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public void processInput(final InputType input) {
-        if (this.running) {
-            this.gameWorld.movePlayer(input.getAssociatedMovementType());
-        }
+        this.gameWorld.movePlayer(input.getAssociatedMovementType());
     }
 
     /**
      * {@inheritDoc}
      */
-    @Override
-    public Collection<Entity> getEntities() {
+    public Collection<Entity> getAliveEntities() {
         return this.gameWorld.getAliveEntities();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public Collection<Entity> getDeadEntities() {
+        return this.gameWorld.getDeadEntities();
+    }
 
     /**
      * {@inheritDoc}
@@ -161,21 +162,5 @@ public class GameControllerImpl implements GameController {
             System.out.println(e.getMessage());
         }
         return entities;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Collection<Entity> getAliveEntities() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Collection<Entity> getDeadEntities() {
-        // TODO Auto-generated method stub
-        return null;
     }
 }
