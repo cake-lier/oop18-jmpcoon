@@ -44,13 +44,27 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     }
 
     /**
-     * Applies given movement to this {@link Body}.
+     * Sets entity's {@link State} to idle.
+     */
+    public void setIdle() {
+        this.currentState = State.IDLE;
+        this.body.setGravityScale(1);
+        //TODO: set velocity to 0 might have to be removed
+        this.body.setLinearVelocity(new Vector2(0, 0));
+    }
+
+    /**
+     * Applies given movement to this {@link Body},
+     * sets corresponding {@link State}, sets body's gravity to 0 if climbing.
      * @param movement The kind of movement
      * @param x The horizontal component of the movement
      * @param y The vertical component of the movement
      */
     public void applyMovement(final MovementType movement, final double x, final double y) {
         this.currentState = movement.convert();
+        if (this.currentState.equals(State.CLIMBING_UP) || this.currentState.equals(State.CLIMBING_DOWN)) {
+            this.body.setGravityScale(0);
+        }
         this.body.applyImpulse(new Vector2(x, y));
         if (Math.abs(this.body.getLinearVelocity().x) > MAXVELOCITY_X) {
             this.body.setLinearVelocity(new Vector2(Math.signum(this.body.getLinearVelocity().x) * MAXVELOCITY_X, this.body.getLinearVelocity().y));
