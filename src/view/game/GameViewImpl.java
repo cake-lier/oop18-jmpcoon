@@ -50,7 +50,7 @@ public class GameViewImpl implements GameView {
     public GameViewImpl(final AppController appController, final Stage stage) {
         this.appController = Objects.requireNonNull(appController);
         this.gameController = new GameControllerImpl(this);
-        this.stage = stage;
+        this.stage = Objects.requireNonNull(stage);
         final Pane root = new Pane();
         this.addBackgroundImage(root);
         this.scene = new Scene(root, this.stage.getScene().getWidth(), this.stage.getScene().getHeight());
@@ -70,7 +70,8 @@ public class GameViewImpl implements GameView {
     private void addBackgroundImage(final Pane root) {
         final Image bgImage = new Image(BG_SOURCE);
         final BackgroundSize bgSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true); 
-        final BackgroundImage bgImagePositioned = new BackgroundImage(bgImage, BackgroundRepeat.ROUND, BackgroundRepeat.ROUND, BackgroundPosition.CENTER, bgSize);
+        final BackgroundImage bgImagePositioned = new BackgroundImage(bgImage, BackgroundRepeat.ROUND, BackgroundRepeat.ROUND,
+                                                                      BackgroundPosition.CENTER, bgSize);
         root.setBackground(new Background(bgImagePositioned));
     }
 
@@ -79,7 +80,7 @@ public class GameViewImpl implements GameView {
      */
     public void update() {
         Platform.runLater(() -> {
-            entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
+            this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
             this.drawAliveEntities();
         });
     }
@@ -94,9 +95,9 @@ public class GameViewImpl implements GameView {
     private void drawAliveEntities() {
         final Pane root = new Pane();
         this.gameController.getAliveEntities()
-                            .stream()
-                            .map(entity -> entityConverter.getDrawableEntity(entity))
-                            .forEach(e -> root.getChildren().add(e.getImageView()));
+                           .stream()
+                           .map(entity -> this.entityConverter.getDrawableEntity(entity))
+                           .forEach(e -> root.getChildren().add(e.getImageView()));
         this.addBackgroundImage(root);
         this.scene.setRoot(root);
     }
@@ -109,8 +110,9 @@ public class GameViewImpl implements GameView {
             final Text text = new Text(150, this.stage.getHeight() / 2, "Game Over");
             text.setFont(Font.font("Helvetica", FontPosture.ITALIC, FONTSIZE));
             text.setFill(Color.RED);
-            final Scene gameOver = new Scene(new Group(text), this.stage.getWidth(), this.stage.getHeight(), Color.BLACK);
+            final Scene gameOver = new Scene(new Group(text), this.stage.getScene().getWidth(), this.stage.getScene().getHeight(), Color.BLACK);
             this.stage.setScene(gameOver);
+            this.stage.sizeToScene();
         });
     }
 
@@ -122,8 +124,9 @@ public class GameViewImpl implements GameView {
             final Text text = new Text(150, this.stage.getHeight() / 2, "You win!"); 
             text.setFont(Font.font("Helvetica", FontPosture.ITALIC, FONTSIZE));
             text.setFill(Color.LIGHTBLUE);
-            final Scene win = new Scene(new Group(text), this.stage.getHeight(), this.stage.getWidth(), Color.BLACK);
+            final Scene win = new Scene(new Group(text), this.stage.getScene().getWidth(), this.stage.getScene().getHeight(), Color.BLACK);
             this.stage.setScene(win);
+            this.stage.sizeToScene();
         });
     }
 
@@ -138,9 +141,10 @@ public class GameViewImpl implements GameView {
               .ifPresent(input -> {
                   if (input == InputKey.ESCAPE) {
                       this.gameController.togglePauseGame();
-                      // this.appController.startApp();
+                      //TODO: In-game menu
+                      this.appController.startApp();
                   } else {
-                      this.gameController.processInput(input.convert().get());
+                      input.convert().ifPresent(moveInput -> this.gameController.processInput(moveInput));
                   }
               });
     }

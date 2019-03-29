@@ -21,7 +21,7 @@ import model.ClassToInstanceMultimap;
  * Test for checking he correctness of a {@link ClassToInstanceMultimap}.
  */
 public class ClassToInstanceMultimapTest {
-    private final Integer integer = new Integer(0);
+    private final Integer integer = Integer.valueOf(0);
     private final Double firstDouble = new Double(0);
     private final Double secondDouble = new Double(1);
     private final ClassToInstanceMultimap<Number> testMultimap = new ClassToInstanceMultimapImpl<>();
@@ -90,7 +90,7 @@ public class ClassToInstanceMultimapTest {
         multimap.putAll(Float.class, Arrays.asList(new Float(0), new Float(1)));
         assertEquals("There should be two instances of Float in the multimap", 2, multimap.get(Float.class).size());
         final ClassToInstanceMultimap<Integer> extMultimap = new ClassToInstanceMultimapImpl<>();
-        extMultimap.put(Integer.class, new Integer(1));
+        extMultimap.put(Integer.class, Integer.valueOf(1));
         multimap.putAll(extMultimap);
         assertEquals("There should be two Integer instances now", 2, multimap.get(Integer.class).size());
     }
@@ -101,7 +101,7 @@ public class ClassToInstanceMultimapTest {
      */
     @Test(expected = ClassCastException.class)
     public void wrongTypeInsertionTest() {
-        this.testMultimap.put(Double.class, new Integer(0));
+        this.testMultimap.put(Double.class, Integer.valueOf(0));
     }
 
     /**
@@ -136,7 +136,7 @@ public class ClassToInstanceMultimapTest {
         assertEquals("There aren't only two elements in the multimap now", 2, this.testMultimap.size());
         assertTrue("The two elements left aren't the two Double instances inserted before", 
                    this.testMultimap.values().containsAll(Arrays.asList(this.firstDouble, this.secondDouble)));
-        this.testMultimap.putInstance(Integer.class, new Integer(-1));
+        this.testMultimap.putInstance(Integer.class, Integer.valueOf(-1));
         this.testMultimap.removeAll(Double.class);
         assertTrue("No Double instance should be left inside the multimap",
                    this.testMultimap.getInstances(Double.class).isEmpty());
@@ -213,13 +213,13 @@ public class ClassToInstanceMultimapTest {
         assertTrue("The multimap should contain the Double instance previously inserted",
                    this.testMultimap.containsValue(this.firstDouble));
         assertFalse("The multimap shouldn't contain a Player instance newly generated",
-                    this.testMultimap.containsValue(new Integer(-1)));
+                    this.testMultimap.containsValue(Integer.valueOf(-1)));
         this.testMultimap.entries().forEach(entry -> {
             assertTrue("The multimap should contain every entry which already contains",
                        this.testMultimap.containsEntry(entry.getKey(), entry.getValue()));
         });
         assertFalse("The multimap shouldn't contain an entry made with a never inserted value",
-                    this.testMultimap.containsEntry(Integer.class, new Integer(-1)));
+                    this.testMultimap.containsEntry(Integer.class, Integer.valueOf(-1)));
     }
 
     /**
@@ -233,6 +233,6 @@ public class ClassToInstanceMultimapTest {
         assertEquals("There aren't two values in the multimap as it should be", 2, this.testMultimap.size());
         assertTrue("There isn't the newly replaced Double instance inside the multimap",
                    this.testMultimap.containsValue(newDouble));
-        this.testMultimap.replaceValues(Double.class, Arrays.asList(new Integer(0)));
+        this.testMultimap.replaceValues(Double.class, Arrays.asList(Integer.valueOf(0)));
     }
 }

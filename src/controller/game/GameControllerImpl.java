@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import controller.app.AppController;
 import model.entities.EntityProperties;
 import model.entities.EntityPropertiesImpl;
 import model.entities.EntityShape;
@@ -41,7 +40,7 @@ public class GameControllerImpl implements GameController {
      */
     public GameControllerImpl(final GameView view) {
         this.gameWorld = new WorldImpl();
-        this.gameWorld.initLevel(loadLevel());
+        this.gameWorld.initLevel(this.loadLevel());
         this.gameView = Objects.requireNonNull(view);
         this.timer = this.createTimer();
         this.running = false;
@@ -61,7 +60,7 @@ public class GameControllerImpl implements GameController {
     @Override
     public void startGame() {
         if (!this.running) {
-            this.timer.scheduleWithFixedDelay(() -> updateWorldAndView(), DELTA_UPDATE, DELTA_UPDATE, TimeUnit.MILLISECONDS);
+            this.timer.scheduleWithFixedDelay(() -> this.updateWorldAndView(), DELTA_UPDATE, DELTA_UPDATE, TimeUnit.MILLISECONDS);
             this.running = true;
         }
     }

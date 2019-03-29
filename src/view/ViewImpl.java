@@ -71,6 +71,6 @@ public final class ViewImpl implements View {
     @Override
     public void displayGame() {
         final GameView gameView = new GameViewImpl(this.controller, this.stage);
-        gameView.update();
+        gameView.init();
     }
 }

@@ -26,7 +26,7 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
      *            the {@link World} in which the given {@link Body} lives
      */
     public DynamicPhysicalBody(final Body body, final World world) {
-        super(body, world);
+        super(body);
         this.body = body;
         this.currentState = State.IDLE;
     }

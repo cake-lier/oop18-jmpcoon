@@ -9,7 +9,6 @@ import org.dyn4j.geometry.Rectangle;
 
 import model.entities.State;
 
-import org.dyn4j.dynamics.World;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -24,11 +23,10 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
     /**
      * builds a new {@link AbstractPhysicalBody}.
      * @param body the {@link Body} encapsulated by this {@link AbstractPhysicalBody}
-     * @param world the {@link World} in which the given {@link Body} lives
      */
-    public AbstractPhysicalBody(final Body body, final World world) {
+    public AbstractPhysicalBody(final Body body) {
         this.body = Objects.requireNonNull(body);
-        this.angle = 0;
+        this.angle = this.body.getChangeInOrientation();
     }
 
     /**

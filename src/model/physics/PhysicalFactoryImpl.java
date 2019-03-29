@@ -20,7 +20,6 @@ import model.entities.EntityType;
  * a class that implements {@link PhysicalFactory}.
  */
 public class PhysicalFactoryImpl implements PhysicalFactory {
-
     private static final String NO_TWO_WORLDS_MSG = "You can't create two worlds for this game";
 
     private static final long CATEGORY_WALKING_ENEMY = 1; // 000001
@@ -94,7 +93,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         body.setMass(MassType.INFINITE);
         body.setUserData(type);
         this.physicalWorld.get().getWorld().addBody(body);
-        final StaticPhysicalBody physicalBody = new StaticPhysicalBody(body, this.physicalWorld.get().getWorld());
+        final StaticPhysicalBody physicalBody = new StaticPhysicalBody(body);
         this.physicalWorld.get().addContainerAssociation(physicalBody, body, type);
         return physicalBody;
 
@@ -162,8 +161,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         return physicalBody;
     }
 
-    private void throwException(final boolean b, final Supplier<RuntimeException> supplier) {
-        if (b) {
+    private void throwException(final boolean condition, final Supplier<RuntimeException> supplier) {
+        if (condition) {
             throw supplier.get();
         }
     }
