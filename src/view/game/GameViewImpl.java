@@ -56,6 +56,8 @@ public class GameViewImpl implements GameView {
                                 new ImmutablePair<>(this.scene.getWidth(), this.scene.getHeight()));
         this.stage.setScene(this.scene);
         this.stage.sizeToScene();
+        this.stage.setOnCloseRequest(e -> this.gameController.pauseGame());
+        this.gameController.startGame();
     }
 
     /*
@@ -132,9 +134,7 @@ public class GameViewImpl implements GameView {
               .findAny()
               .ifPresent(input -> {
                   if (input == InputKey.ESCAPE) {
-                      this.gameController.pauseGame();
-                  } else if (input == InputKey.R) {
-                      this.gameController.startGame();
+                      //this.gameController.togglePauseGame();
                   } else {
                       this.gameController.processInput(input.convert().get());
                   }

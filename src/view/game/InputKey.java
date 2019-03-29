@@ -31,11 +31,7 @@ public enum InputKey {
     /**
      * Pause the game.
      */
-    ESCAPE(Optional.empty()),
-    /**
-     * Restart the game.
-     */
-    R(Optional.empty());
+    ESCAPE(Optional.empty());
 
     private final Optional<InputType> correspondingInputType;
 
