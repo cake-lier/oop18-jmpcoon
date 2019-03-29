@@ -42,7 +42,7 @@ public class WalkingEnemy extends DynamicEntity {
      * computes the backward-and-forward movement.
      */
     public void computeMovement() {
-        double x = this.body.getPosition().getLeft();
+        final double x = this.body.getPosition().getLeft();
         if (x <= this.initialPosition) {
             body.applyMovement(MovementType.MOVE_RIGHT, WALKING_SPEED, 0);
         }

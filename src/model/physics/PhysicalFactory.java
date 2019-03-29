@@ -14,7 +14,10 @@ public interface PhysicalFactory {
 
     /**
      * Creates a facade for the {@link org.dyn4j.dynamics.World} as created by the dyn4j library so as to be used by the game
-     * {@link model.world.World} without the hassle of dealing with the library itself.
+     * {@link model.world.World} without the hassle of dealing with the library itself. The {@link model.world.World} considers a
+     * reference system with only positive coordinates, from 0 to "width" on the x axis and from 0 to "height" on the y axis.
+     * The {@link dyn4j.dynamics.World} uses a reference system where the origin is in the middle, so to have a positive area
+     * with dimensions "width * height" it is needed to be created double as big.
      * @param width The width of the inner {@link org.dyn4j.dynamics.World}.
      * @param height The height of the inner {@link org.dyn4j.dynamics.World}.
      * @return The facade for the inner {@link org.dyn4j.dynamics.World}.

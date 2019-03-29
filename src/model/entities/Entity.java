@@ -4,7 +4,8 @@ import model.physics.PhysicalBody;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * an interface representing an Entity inside a {@link World}.
+ * Represents an entity, a physical object with an extension, a position, mass and a particular behavior which
+ * depends on its {@link EntityType} and {@link State}, inside the {@link World}.
  */
 public interface Entity {
 
@@ -19,9 +20,9 @@ public interface Entity {
      */
     EntityShape getShape();
 
-    // TODO: better phrase this comment
     /**
-     * @return the angle in radians of this {@link Entity}
+     * @return the angle of rotation around the center of the {@link Entity} from its position aligned
+     * with the coordinate system of the world calculated in radians counterclockwise
      */
     double getAngle();
 

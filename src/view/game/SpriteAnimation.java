@@ -35,6 +35,7 @@ public class SpriteAnimation extends Transition {
      */
     public SpriteAnimation(final ImageView imageView, final Duration duration, final int frame, final int width,
             final int height) {
+        super();
         this.imageView = imageView;
         this.frame = frame;
         this.width = width;

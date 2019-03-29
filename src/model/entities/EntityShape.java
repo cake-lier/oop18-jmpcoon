@@ -1,13 +1,16 @@
 package model.entities;
 
 /**
- * an enumeration representing the possible shapes of an {@link Entity}.
+ * Collects all the possible shapes of an {@link Entity}.
  */
 public enum EntityShape {
 
-    // TODO: comment the various shapes, consider if other shapes are necessary, consider if info for every shape can be added (radius, dimensions)
-    // can every enum have its own constructor?
+    /**
+     * A circular shape with a radius.
+     */
     CIRCLE,
-    RECTANGLE,
-
+    /**
+     * A rectangular shape with a width and an height.
+     */
+    RECTANGLE;
 }

@@ -27,7 +27,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final long CATEGORY_PLATFORM = 4; // 000100
     private static final long CATEGORY_PLAYER = 8; // 001000
     private static final long CATEGORY_LADDER = 16; // 010000
-    private static final long CATEGORY_GENERATOR_ENEMY = 32; // 100000
+    //private static final long CATEGORY_GENERATOR_ENEMY = 32; // 100000
 
     // TODO: indent correctly the lines that are too long
     private static final CategoryFilter LADDER_FILTER = new CategoryFilter(CATEGORY_LADDER, CATEGORY_PLAYER);
@@ -39,9 +39,9 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
             CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
     private static final CategoryFilter WALKING_ENEMY_FILTER = new CategoryFilter(CATEGORY_WALKING_ENEMY,
             CATEGORY_WALKING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
-    private static final CategoryFilter GENERATOR_ENEMY_FILTER = new CategoryFilter(CATEGORY_GENERATOR_ENEMY,
+    /*private static final CategoryFilter GENERATOR_ENEMY_FILTER = new CategoryFilter(CATEGORY_GENERATOR_ENEMY,
             CATEGORY_GENERATOR_ENEMY | CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM
-                    | CATEGORY_PLAYER);
+                    | CATEGORY_PLAYER);*/
 
     // TODO: consider a static method and a private constructor
 
@@ -60,9 +60,6 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     @Override
     public PhysicalWorld createPhysicalWorld(final double width, final double height) {
         throwException(this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_TWO_WORLDS_MSG));
-        /* model.world.World considers a reference system with only positive coordinates, from 0 to width on the x axis
-         * and from 0 to height on the y axis. dyn4j.dynamics.World uses a reference system where (0,0) is in the middle,
-         * so to have a positive area with dimensions width * height it needs to be created double as big */
         this.physicalWorld = Optional.of(new WholePhysicalWorldImpl(new World(new AxisAlignedBounds(width * 2, height * 2))));
         return this.physicalWorld.get();
     }

@@ -45,6 +45,7 @@ public final class ViewImpl implements View {
         final Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         stage.setX(primaryScreenBounds.getMinX());
         stage.setY(primaryScreenBounds.getMinY());
+        stage.centerOnScreen();
         final double unitaryHeight = primaryScreenBounds.getHeight() / HEIGHT_RATIO;
         final double unitaryWidth = primaryScreenBounds.getWidth() / WIDTH_RATIO;
         if (primaryScreenBounds.getWidth() < unitaryHeight * WIDTH_RATIO) {
