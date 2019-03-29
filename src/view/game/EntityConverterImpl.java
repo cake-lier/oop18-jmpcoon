@@ -27,6 +27,9 @@ public class EntityConverterImpl implements EntityConverter {
     private static final String ROLLING_ENEMY_SPRITE_URL = SPRITES_DIR + "rollingEnemy.png";
     private static final String WALKING_ENEMY_SPRITE_URL = SPRITES_DIR + "walkingEnemy.png";
 
+    private static final double LADDER_RATIO = 0.5; // one ladder sprite is about 0.5m (height) in the world
+    private static final double PLATFORM_RATIO = 0.9; // one platform sprite is about 0.9m (width) in the world
+
     private final Pair<Double, Double> worldDimensions;
     private final Pair<Double, Double> sceneDimensions;
     private final Map<EntityType, Image> images;
@@ -59,13 +62,13 @@ public class EntityConverterImpl implements EntityConverter {
             } else if (entity instanceof StaticEntity) {
                 final Image image;
                 if (entity.getType() == EntityType.LADDER) {
-                    final Double timesPerModule =
-                            this.sceneDimensions.getLeft() * entity.getDimensions().getLeft() / this.worldDimensions.getLeft();
-                    image = replicateSprite(this.images.get(EntityType.LADDER), timesPerModule, false);
+                    image = replicateSprite(this.images.get(EntityType.LADDER), 
+                                            entity.getDimensions().getRight() / LADDER_RATIO,
+                                            false);
                 } else if (entity.getType() == EntityType.PLATFORM) {
-                    final Double timesPerModule =
-                            this.sceneDimensions.getRight() * entity.getDimensions().getRight() / this.worldDimensions.getRight();
-                    image = replicateSprite(this.images.get(EntityType.PLATFORM), timesPerModule, true);
+                    image = replicateSprite(this.images.get(EntityType.PLATFORM), 
+                                            entity.getDimensions().getLeft() / PLATFORM_RATIO, 
+                                            true);
                 } else {
                     image = this.images.get(entity.getType());
                 }
@@ -99,19 +102,19 @@ public class EntityConverterImpl implements EntityConverter {
     }
 
     /* axis should be true to replicate a sprite along the x axis, and it should be false to replicate it along the y axis */
-    private Image replicateSprite(final Image module, final double timesPerModule, final boolean axis) {
+    private Image replicateSprite(final Image module, final double times, final boolean axis) {
         /* width and height of the sprite */
         final int width = ((Double) module.getWidth()).intValue();
         final int height = ((Double) module.getHeight()).intValue();
-        final int times = ((Double) (timesPerModule / (axis ? width : height))).intValue() + 1;
+        final int nRepetitions = ((Double) times).intValue() + 1;
         /* PixelReader to read pixel per pixel the module of the sprite */
         final PixelReader pixelReader = module.getPixelReader();
-        final WritableImage image = new WritableImage(axis ? times * width : width, !axis ? times * height : height);
+        final WritableImage image = new WritableImage(axis ? nRepetitions * width : width, !axis ? nRepetitions * height : height);
         /* PixelWriter to write pixel per pixel the sprite */
         final PixelWriter pixelWriter = image.getPixelWriter();
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                for (int k = 0; k < times; k++) {
+                for (int k = 0; k < nRepetitions; k++) {
                     pixelWriter.setColor(axis ? i + k * width : i, !axis ? j + k * height : j, pixelReader.getColor(i, j));
                 }
             }
