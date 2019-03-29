@@ -18,6 +18,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -35,6 +36,7 @@ public class GameViewImpl implements GameView {
 
     private final GameController gameController;
     private final EntityConverterImpl entityConverter;
+    private final AppController appController;
     private final Stage stage;
     private final Scene scene;
 
@@ -46,7 +48,8 @@ public class GameViewImpl implements GameView {
      * @param stage The stage in which to draw the game scene.
      */
     public GameViewImpl(final AppController appController, final Stage stage) {
-        this.gameController = new GameControllerImpl(this, appController);
+        this.appController = Objects.requireNonNull(appController);
+        this.gameController = new GameControllerImpl(this);
         this.stage = stage;
         final Pane root = new Pane();
         this.addBackgroundImage(root);
@@ -56,7 +59,7 @@ public class GameViewImpl implements GameView {
                                 new ImmutablePair<>(this.scene.getWidth(), this.scene.getHeight()));
         this.stage.setScene(this.scene);
         this.stage.sizeToScene();
-        this.stage.setOnCloseRequest(e -> this.gameController.pauseGame());
+        this.stage.setOnCloseRequest(e -> this.gameController.stopGame());
         this.gameController.startGame();
     }
 
@@ -134,7 +137,8 @@ public class GameViewImpl implements GameView {
               .findAny()
               .ifPresent(input -> {
                   if (input == InputKey.ESCAPE) {
-                      //this.gameController.togglePauseGame();
+                      this.gameController.togglePauseGame();
+                      // this.appController.startApp();
                   } else {
                       this.gameController.processInput(input.convert().get());
                   }

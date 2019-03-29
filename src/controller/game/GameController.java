@@ -17,9 +17,9 @@ public interface GameController {
     void startGame();
 
     /**
-     * Pause the game so that it can be restarted later.
+     * Pause the game so that it can be restarted later, or restart a game that is paused.
      */
-    void pauseGame();
+    void togglePauseGame();
 
     /**
      * Saves the current game.
@@ -30,6 +30,11 @@ public interface GameController {
      * Stops definitely the current game.
      */
     void stopGame();
+
+    /**
+     * @return the current score of the game
+     */
+    int getCurrentScore();
 
     /**
      * gives to the {@link World} in which the game is playing the input received from the view.
@@ -54,4 +59,5 @@ public interface GameController {
      * @return dead entities.
      */
     Collection<Entity> getDeadEntities();
+
 }

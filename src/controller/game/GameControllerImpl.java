@@ -32,20 +32,17 @@ public class GameControllerImpl implements GameController {
 
     private final World gameWorld;
     private final GameView gameView;
-    private final AppController appController;
     private ScheduledThreadPoolExecutor timer;
     private boolean running;
 
     /**
      * builds a new {@link GameControllerImpl}.
      * @param view the {@link GameView} relative to the game controlled by this {@link GameController}
-     * @param appController the {@link AppController} relative to the app in which the game is shown
      */
-    public GameControllerImpl(final GameView view, final AppController appController) {
+    public GameControllerImpl(final GameView view) {
         this.gameWorld = new WorldImpl();
         this.gameWorld.initLevel(loadLevel());
         this.gameView = Objects.requireNonNull(view);
-        this.appController = Objects.requireNonNull(appController);
         this.timer = this.createTimer();
         this.running = false;
     }
@@ -73,12 +70,13 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public void pauseGame() {
+    public void togglePauseGame() {
         if (this.running) {
-            this.timer.shutdown();
+            this.stopGame();
             /* prepares a new timer for when the game will be restarted */
             this.timer = this.createTimer();
-            this.running = false;
+        } else {
+            this.startGame();
         }
     }
 
@@ -95,8 +93,10 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public void stopGame() {
-        this.pauseGame();
-        this.appController.startApp();
+        if (this.running) {
+            this.timer.shutdown();
+            this.running = false;
+        }
     }
 
     /**
@@ -104,7 +104,17 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public void processInput(final InputType input) {
-        this.gameWorld.movePlayer(input.getAssociatedMovementType());
+        if (this.running) {
+            this.gameWorld.movePlayer(input.getAssociatedMovementType());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getCurrentScore() {
+        return this.gameWorld.getCurrentScore();
     }
 
     /**
@@ -132,10 +142,10 @@ public class GameControllerImpl implements GameController {
     private void updateWorldAndView() {
         if (this.gameWorld.isGameOver()) {
             this.gameView.showGameOver();
-            this.pauseGame();
+            this.stopGame();
         } else if (this.gameWorld.hasPlayerWon()) {
             this.gameView.showPlayerWin();
-            this.pauseGame();
+            this.stopGame();
         } else {
             this.gameWorld.update();
             this.gameView.update();

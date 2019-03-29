@@ -196,4 +196,10 @@ public final class WorldImpl implements World {
     public Collection<Entity> getDeadEntities() {
         return this.deadEntities;
     }
+
+    @Override
+    public int getCurrentScore() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

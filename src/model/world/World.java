@@ -61,4 +61,9 @@ public interface World {
      * @return A {@link Collection} of the {@link Entity}s which have died across last {@link World} update.
      */
     Collection<Entity> getDeadEntities();
+
+    /**
+     * @return the current score of the game
+     */
+    int getCurrentScore();
 }
