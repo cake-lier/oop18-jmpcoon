@@ -1,5 +1,8 @@
 package controller.game;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -26,7 +29,7 @@ import view.game.GameView;
 public class GameControllerImpl implements GameController {
 
     private static final long DELTA_UPDATE = 15;
-    private static final String LEVEL_FILE = "res" + System.getProperty("file.separator") + "level1.txt";
+    private static final String LEVEL_FILE = "res" + System.getProperty("file.separator") + "level1.lev";
     private static final int N_PROPERTIES = 7;
 
     private final World gameWorld;
@@ -151,24 +154,20 @@ public class GameControllerImpl implements GameController {
         }
     }
 
-    private Collection<EntityProperties> loadLevel() {
+    private List<EntityProperties> loadLevel() {
         final List<EntityProperties> entities = new LinkedList<>();
-        try {
-            final List<String> lines = Files.readAllLines(Paths.get(LEVEL_FILE));
-            lines.stream()
-                 .filter(s -> !s.startsWith("%"))
-                 .map(s -> s.split(":"))
-                 .filter(v -> v.length == N_PROPERTIES)
-                 .map(v -> new EntityPropertiesImpl(EntityType.valueOf(v[0]), 
-                                                    EntityShape.valueOf(v[1]), 
-                                                    Double.valueOf(v[2]), 
-                                                    Double.valueOf(v[3]),
-                                                    Double.valueOf(v[4]),
-                                                    Double.valueOf(v[5]),
-                                                    Double.valueOf(v[6])))
-                 .forEach(entities::add);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(LEVEL_FILE))) {
+            final int n = in.readInt();
+            for (int i = 0; i < n; i++) {
+                final Object obj = in.readObject();
+                if (obj instanceof EntityProperties) {
+                    entities.add((EntityProperties) obj);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
         return entities;
     }
