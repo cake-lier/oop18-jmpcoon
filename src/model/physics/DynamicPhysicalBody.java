@@ -1,7 +1,6 @@
 package model.physics;
 
 import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.Vector2;
 
 import model.entities.State;
@@ -12,20 +11,18 @@ import model.entities.MovementType;
  * enemies).
  */
 public class DynamicPhysicalBody extends AbstractPhysicalBody {
-    private static final double MAXVELOCITY_X = 5, MAXVELOCITY_Y = 2;
+    private static final double MAXVELOCITY_X = 1;
+    private static final double MAXVELOCITY_Y = 0.5;
+    private static final double CLIMB_DAMPING = 2;
 
     private final Body body;
     private State currentState;
 
     /**
      * builds a new {@link DynamicPhysicalBody}.
-     * 
-     * @param body
-     *            the {@link Body} encapsulated by this {@link DynamicPhysicalBody}
-     * @param world
-     *            the {@link World} in which the given {@link Body} lives
+     * @param body the {@link Body} encapsulated by this {@link DynamicPhysicalBody}
      */
-    public DynamicPhysicalBody(final Body body, final World world) {
+    public DynamicPhysicalBody(final Body body) {
         super(body);
         this.body = body;
         this.currentState = State.IDLE;
@@ -38,9 +35,8 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     public State getState() {
         if (this.body.getLinearVelocity().equals(new Vector2(0, 0))) {
             return State.IDLE;
-        } else {
-            return this.currentState;
         }
+        return this.currentState;
     }
 
     /**
@@ -49,7 +45,7 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     public void setIdle() {
         this.currentState = State.IDLE;
         this.body.setGravityScale(1);
-        //TODO: set velocity to 0 might have to be removed
+        this.body.setLinearDamping(Body.DEFAULT_LINEAR_DAMPING);
         this.body.setLinearVelocity(new Vector2(0, 0));
     }
 
@@ -61,15 +57,19 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
      * @param y The vertical component of the movement
      */
     public void applyMovement(final MovementType movement, final double x, final double y) {
-        this.currentState = movement.convert();
-        if (this.currentState.equals(State.CLIMBING_UP) || this.currentState.equals(State.CLIMBING_DOWN)) {
+        if ((this.currentState != State.CLIMBING_UP && this.currentState != State.CLIMBING_DOWN)
+            && (movement == MovementType.CLIMB_UP || movement == MovementType.CLIMB_DOWN)) {
             this.body.setGravityScale(0);
+            this.body.setLinearDamping(CLIMB_DAMPING);
+            this.body.setLinearVelocity(0, 0);
         }
+        this.currentState = movement.convert();
         this.body.applyImpulse(new Vector2(x, y));
         if (Math.abs(this.body.getLinearVelocity().x) > MAXVELOCITY_X) {
             this.body.setLinearVelocity(new Vector2(Math.signum(this.body.getLinearVelocity().x) * MAXVELOCITY_X, this.body.getLinearVelocity().y));
         }
-        if (Math.abs(this.body.getLinearVelocity().y) > MAXVELOCITY_Y) {
+        if (Math.abs(this.body.getLinearVelocity().y) > MAXVELOCITY_Y
+            && (movement == MovementType.CLIMB_DOWN || movement == MovementType.CLIMB_UP)) {
             this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, Math.signum(this.body.getLinearVelocity().y) * MAXVELOCITY_Y));
         }
     }

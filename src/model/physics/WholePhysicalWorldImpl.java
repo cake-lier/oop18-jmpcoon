@@ -2,15 +2,22 @@ package model.physics;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.CollisionAdapter;
+import org.dyn4j.dynamics.Step;
+import org.dyn4j.dynamics.StepAdapter;
 import org.dyn4j.dynamics.World;
+import org.dyn4j.dynamics.contact.ContactAdapter;
 import org.dyn4j.dynamics.contact.ContactConstraint;
+import org.dyn4j.dynamics.contact.ContactPoint;
 import org.dyn4j.geometry.Vector2;
 
 import com.google.common.collect.BiMap;
@@ -21,14 +28,14 @@ import model.entities.State;
 
 /**
  * The class implementation of {@link PhysicalWorld}. It's package protected so the only class which can build it is the 
- * {@link PhysicsFactory}, the factory class for each one of the physical entities of this game.
+ * {@link PhysicalFactory}, the factory class for each one of the physical entities of this game.
  */
 final class WholePhysicalWorldImpl implements WholePhysicalWorld {
-    private static final double PRECISION = 0.001;
-
     private final World world;
     private final BiMap<PhysicalBody, Body> containers;
-    private final Map<Body, EntityType> types;
+    private final Map<PhysicalBody, EntityType> types;
+    private Optional<DynamicPhysicalBody> player;
+    private Optional<PhysicalBody> collidingLadder;
 
     /**
      * Binds the current instance of {@link WholePhysicalWorldImpl} with the instance of {@link World} which will be wrapped and 
@@ -39,6 +46,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.world = world;
         this.containers = HashBiMap.create();
         this.types = new LinkedHashMap<>();
+        this.collidingLadder = Optional.empty();
+        this.player = Optional.empty();
         this.addCollisionRules();
     }
 
@@ -49,42 +58,89 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
      * on the "head" of the enemy, the player is destroyed.
      */
     private void addCollisionRules() {
+        this.world.addListener(new StepAdapter() {
+            @Override
+            public void begin(final Step step, final World world) {
+                WholePhysicalWorldImpl.this.collidingLadder 
+                    = WholePhysicalWorldImpl.this.types
+                                                 .entrySet()
+                                                 .parallelStream()
+                                                 .filter(e -> e.getValue() == EntityType.LADDER)
+                                                 .filter(l -> WholePhysicalWorldImpl.this
+                                                                                    .areBodiesInContact(
+                                                                                            WholePhysicalWorldImpl.this.player
+                                                                                                                       .get(),
+                                                                                            l.getKey()))
+                                                 .findFirst()
+                                                 .map(cl -> cl.getKey());
+            }
+        });
+        this.world.addListener(new ContactAdapter() {
+            @Override
+            public boolean preSolve(final ContactPoint point) {
+                final Body firstBody = point.getBody1();
+                final PhysicalBody firstPhysicalBody = WholePhysicalWorldImpl.this.containers.inverse().get(firstBody);
+                final EntityType firstType = WholePhysicalWorldImpl.this.types.get(firstPhysicalBody);
+                final Body secondBody = point.getBody2();
+                final PhysicalBody secondPhysicalBody = WholePhysicalWorldImpl.this.containers.inverse().get(secondBody);
+                final EntityType secondType = WholePhysicalWorldImpl.this.types.get(secondPhysicalBody);
+                if (firstType == EntityType.PLAYER || secondType == EntityType.PLAYER) {
+                    final EntityType otherType = firstType != EntityType.PLAYER ? firstType : secondType;
+                    final PhysicalBody otherBody = firstType != EntityType.PLAYER ? firstPhysicalBody : secondPhysicalBody;
+                    final DynamicPhysicalBody playerBody = WholePhysicalWorldImpl.this.player.get();
+                    final Vector2 coordinates = point.getPoint();
+                    final State playerState = playerBody.getState();
+                    if (otherType == EntityType.PLATFORM && (playerState == State.CLIMBING_DOWN || playerState == State.CLIMBING_UP)
+                        && WholePhysicalWorldImpl.this.collidingLadder.isPresent()) {
+                        final PhysicalBody collidingLadder = WholePhysicalWorldImpl.this.collidingLadder.get();
+                        if (!PhysicsUtils.isBodyOnTop(playerBody, otherBody, new ImmutablePair<>(coordinates.x, coordinates.y))
+                            || ((playerState == State.CLIMBING_DOWN 
+                                 && !PhysicsUtils.isBodyAtBottomHalf(playerBody, collidingLadder))
+                                || (playerState == State.CLIMBING_UP 
+                                    && PhysicsUtils.isBodyAtBottomHalf(playerBody, collidingLadder)))) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        });
         this.world.addListener(new CollisionAdapter() {
             @Override
             public boolean collision(final ContactConstraint contactConstraint) {
                 final Body firstBody = contactConstraint.getBody1();
-                final EntityType firstBodyType = WholePhysicalWorldImpl.this.types.get(firstBody);
+                final PhysicalBody firstPhysicalBody = WholePhysicalWorldImpl.this.containers.inverse().get(firstBody);
+                final Triple<Body, PhysicalBody, EntityType> firstTriple = new ImmutableTriple<>(firstBody,
+                        firstPhysicalBody, WholePhysicalWorldImpl.this.types.get(firstPhysicalBody));
                 final Body secondBody = contactConstraint.getBody2();
-                final EntityType secondBodyType = WholePhysicalWorldImpl.this.types.get(secondBody);
-                if (firstBodyType == EntityType.PLAYER || secondBodyType == EntityType.PLAYER) {
-                    final Body playerBody = firstBodyType == EntityType.PLAYER ? firstBody : secondBody;
-                    final PhysicalBody playerPhysicalBody = WholePhysicalWorldImpl.this.containers.inverse().get(playerBody);
-                    final EntityType otherType = firstBodyType != EntityType.PLAYER ? firstBodyType : secondBodyType;
-                    final Body otherBody = firstBodyType != EntityType.PLAYER ? firstBody : secondBody;
-                    final PhysicalBody otherPhysicalBody = WholePhysicalWorldImpl.this.containers.inverse().get(otherBody);
-                    final Vector2 collisionPoint = contactConstraint.getContacts().get(0).getPoint();
-                    final State playerState = playerPhysicalBody.getState();
-                    if ((otherType == EntityType.WALKING_ENEMY
-                         && (playerPhysicalBody.getPosition().getRight() - playerPhysicalBody.getDimensions().getRight() / 2)
-                             - collisionPoint.y < PRECISION
-                         && collisionPoint.y - (otherPhysicalBody.getPosition().getRight() 
-                                                + otherPhysicalBody.getDimensions().getRight() / 2) < PRECISION) 
-                        || (otherType == EntityType.ROLLING_ENEMY
-                            && (playerPhysicalBody.getPosition().getRight() - playerPhysicalBody.getDimensions().getRight() / 2)
-                                - collisionPoint.y < PRECISION
-                            && collisionPoint.y > otherPhysicalBody.getPosition().getRight())) {
-                        otherBody.setActive(false);
-                    } else if (otherType == EntityType.WALKING_ENEMY || otherType == EntityType.ROLLING_ENEMY) {
-                        playerBody.setActive(false);
-                    } else if (otherType == EntityType.PLATFORM
-                               && (playerState == State.CLIMBING_DOWN || playerState == State.CLIMBING_UP)) {
-                        if ((playerPhysicalBody.getPosition().getRight() - playerPhysicalBody.getDimensions().getRight() / 2)
-                            - collisionPoint.y < PRECISION
-                            && collisionPoint.y - (otherPhysicalBody.getPosition().getRight() 
-                                                   + otherPhysicalBody.getDimensions().getRight() / 2) < PRECISION) {
-                            //playerPhysicalBody.unClimb();
-                        } else {
-                            return false;
+                final PhysicalBody secondPhysicalBody = WholePhysicalWorldImpl.this.containers.inverse().get(secondBody);
+                final Triple<Body, PhysicalBody, EntityType> secondTriple = new ImmutableTriple<>(secondBody,
+                        secondPhysicalBody, WholePhysicalWorldImpl.this.types.get(secondPhysicalBody));
+                if (firstTriple.getRight() == EntityType.PLAYER || secondTriple.getRight() == EntityType.PLAYER) {
+                    final Triple<Body, PhysicalBody, EntityType> playerTriple = firstTriple.getRight() == EntityType.PLAYER
+                                                                                ? firstTriple : secondTriple;
+                    final Triple<Body, PhysicalBody, EntityType> otherTriple = firstTriple.getRight() != EntityType.PLAYER
+                                                                               ? firstTriple : secondTriple;
+                    final Vector2 point = contactConstraint.getContacts().get(0).getPoint();
+                    final Pair<Double, Double> collisionPoint = new ImmutablePair<>(point.x, point.y);
+                    final State playerState = playerTriple.getMiddle().getState();
+                    if ((otherTriple.getRight() == EntityType.WALKING_ENEMY
+                         && PhysicsUtils.isBodyOnTop(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint))
+                        || (otherTriple.getRight() == EntityType.ROLLING_ENEMY
+                            && PhysicsUtils.isBodyAbove(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint.getRight()))) {
+                        otherTriple.getLeft().setActive(false);
+                    } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
+                        playerTriple.getLeft().setActive(false);
+                    } else if (otherTriple.getRight() == EntityType.PLATFORM
+                               && (playerState == State.CLIMBING_DOWN || playerState == State.CLIMBING_UP)
+                               && WholePhysicalWorldImpl.this.collidingLadder.isPresent()) {
+                        final PhysicalBody collidingLadder = WholePhysicalWorldImpl.this.collidingLadder.get();
+                        if (PhysicsUtils.isBodyOnTop(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint)
+                            && ((playerState == State.CLIMBING_DOWN && PhysicsUtils.isBodyAtBottomHalf(playerTriple.getMiddle(),
+                                                                                                       collidingLadder))
+                                || (playerState == State.CLIMBING_UP && !PhysicsUtils.isBodyAtBottomHalf(playerTriple.getMiddle(),
+                                                                                                         collidingLadder)))) {
+                            WholePhysicalWorldImpl.this.player.ifPresent(p -> p.setIdle());
                         }
                     }
                 }
@@ -99,7 +155,10 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
     @Override
     public void addContainerAssociation(final PhysicalBody container, final Body contained, final EntityType type) {
         this.containers.putIfAbsent(container, contained);
-        this.types.putIfAbsent(contained, type);
+        this.types.putIfAbsent(container, type);
+        if (type == EntityType.PLAYER) {
+            this.player = Optional.of(DynamicPhysicalBody.class.cast(container));
+        }
     }
 
     /**

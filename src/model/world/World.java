@@ -63,7 +63,8 @@ public interface World {
     Collection<Entity> getDeadEntities();
 
     /**
-     * @return the current score of the game
+     * Calculates the score currently totaled by the user.
+     * @return The current game score.
      */
     int getCurrentScore();
 }

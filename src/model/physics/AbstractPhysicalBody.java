@@ -6,6 +6,7 @@ import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.Rectangle;
+import org.dyn4j.geometry.Vector2;
 
 import model.entities.State;
 
@@ -18,7 +19,6 @@ import org.apache.commons.lang3.tuple.Pair;
 public abstract class AbstractPhysicalBody implements PhysicalBody {
 
     private final Body body;
-    private double angle;
 
     /**
      * builds a new {@link AbstractPhysicalBody}.
@@ -26,7 +26,6 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      */
     public AbstractPhysicalBody(final Body body) {
         this.body = Objects.requireNonNull(body);
-        this.angle = this.body.getChangeInOrientation();
     }
 
     /**
@@ -42,8 +41,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      */
     @Override
     public double getAngle() {
-        this.angle = this.angle + this.body.getChangeInOrientation();
-        return this.angle;
+        return this.body.getLocalPoint(this.body.getWorldCenter().add(1, 0)).getAngleBetween(new Vector2(1, 0));
     }
 
     /**
@@ -65,7 +63,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      */
     @Override
     public Pair<Double, Double> getVelocity() {
-        return new ImmutablePair<>((double) this.body.getLinearVelocity().x, (double) this.body.getLinearVelocity().y);
+        return new ImmutablePair<>(this.body.getLinearVelocity().x, this.body.getLinearVelocity().y);
     }
 
     /**
@@ -74,7 +72,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
     @Override
     public Pair<Double, Double> getDimensions() {
         if (this.body.getFixtureCount() > 1 || this.body.getFixtureCount() <= 0) {
-            throw new IllegalStateException(); // TODO: can we do this?
+            throw new IllegalArgumentException("The only bodies allowed are the ones with only one fixture");
         }
         final Convex shape = this.body.getFixture(0).getShape();
         double width = 0;
@@ -86,7 +84,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
             width = ((Rectangle) shape).getWidth();
             height = ((Rectangle) shape).getHeight();
         } else {
-            // TODO: what can we do here?
+            throw new IllegalArgumentException("The only bodies allowed are the ones which shape is present in EntityShape");
         }
         return new ImmutablePair<>(width, height);
     }

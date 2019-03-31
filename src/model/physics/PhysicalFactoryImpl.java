@@ -86,6 +86,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
             body.getFixture(0).setSensor(true);
         } else if (type.equals(EntityType.PLATFORM)) {
             body.getFixture(0).setFilter(PLATFORM_FILTER);
+            body.getFixture(0).setFriction(0.5);
         }
         body.setMass(MassType.INFINITE);
         body.setUserData(type);
@@ -102,7 +103,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     }
 
     private Body createRectangleBody(final Pair<Double, Double> position, final double angle, final double width,
-            final double height) {
+                                     final double height) {
         final Body body = new Body();
         body.addFixture(Geometry.createRectangle(width, height));
         final Vector2 center = new Vector2(position.getLeft(), position.getRight());
@@ -143,17 +144,18 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
             body = createRectangleBody(position, angle, width, height);
         }
 
+        body.setMass(MassType.NORMAL);
         if (type.equals(EntityType.PLAYER)) {
             body.getFixture(0).setFilter(PLAYER_FILTER);
+            body.setMass(MassType.FIXED_ANGULAR_VELOCITY);
         } else if (type.equals(EntityType.ROLLING_ENEMY)) {
             body.getFixture(0).setFilter(ROLLING_ENEMY_FILTER);
         } else if (type.equals(EntityType.WALKING_ENEMY)) {
             body.getFixture(0).setFilter(WALKING_ENEMY_FILTER);
         }
 
-        body.setMass(MassType.NORMAL);
         this.physicalWorld.get().getWorld().addBody(body);
-        final DynamicPhysicalBody physicalBody = new DynamicPhysicalBody(body, this.physicalWorld.get().getWorld());
+        final DynamicPhysicalBody physicalBody = new DynamicPhysicalBody(body);
         this.physicalWorld.get().addContainerAssociation(physicalBody, body, type);
         return physicalBody;
     }

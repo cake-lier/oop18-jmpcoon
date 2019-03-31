@@ -18,13 +18,16 @@ import model.entities.EntityType;
 import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
+import model.entities.State;
 import model.physics.PhysicalBody;
 import model.physics.PhysicalWorld;
+import model.physics.PhysicsUtils;
 import model.physics.PhysicalFactory;
 import model.physics.PhysicalFactoryImpl;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.MultimapBuilder;
 
 /**
@@ -35,7 +38,8 @@ public final class WorldImpl implements World {
     private static final double WORLD_HEIGHT = 4.5;
     private static final double WIN_ZONE_X = 0.37;
     private static final double WIN_ZONE_Y = 3.71;
-    private static final double PRECISION = 0.001;
+    private static final int ROLLING_POINTS = 50;
+    private static final int WALKING_POINTS = 100;
 
     private final EntityFactory entityFactory;
     private final PhysicalWorld innerWorld;
@@ -44,10 +48,10 @@ public final class WorldImpl implements World {
     private final Set<Entity> deadEntities;
     private Player player;
     private GameState currentState;
+    private int score;
 
     /**
-     * Default constructor, delegates the job of managing the physics of the game to the library underneath and decides the size
-     * of itself in meters.
+     * Default constructor, delegates the job of managing the physics of the game to the library underneath.
      */
     public WorldImpl() {
         final PhysicalFactory physicsFactory = new PhysicalFactoryImpl();
@@ -57,6 +61,7 @@ public final class WorldImpl implements World {
         this.aliveEntities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
         this.deadEntities = new LinkedHashSet<>();
         this.currentState = GameState.IS_GOING;
+        this.score = 0;
     }
 
     /**
@@ -93,8 +98,10 @@ public final class WorldImpl implements World {
      * alive and has lost or if the "end level trigger" was reached and has consequently won. Then it separates all
      * {@link Entity}s no longer alive from the others and for last it signals to all {@link GeneratorEnemy}s that a lapse of time
      * has passed and asking if they have created any new {@link RollingEnemy}.
+     * The synchronization is required because an update of the {@link World} cannot be interleaved with a user movement,
+     * otherwise these two operations could interfere and make the state of the {@link Player} entity inconsistent.
      */
-    public void update() {
+    public synchronized void update() {
         this.innerWorld.update();
         if (this.currentState == GameState.IS_GOING) {
             if (!this.player.isAlive()) {
@@ -110,6 +117,12 @@ public final class WorldImpl implements World {
             final Entity current = iterator.next();
             if (!current.isAlive()) {
                 this.deadEntities.add(current);
+                final EntityType currentType = current.getType();
+                if (currentType == EntityType.WALKING_ENEMY) {
+                    this.score += WALKING_POINTS;
+                } else if (currentType == EntityType.ROLLING_ENEMY) {
+                    this.score += ROLLING_POINTS;
+                }
                 iterator.remove();
                 this.innerWorld.removeBody(current.getPhysicalBody());
             }
@@ -120,47 +133,66 @@ public final class WorldImpl implements World {
 
     /*
      * Gets if the Player is currently standing on a platform or not. This is true only if is currently in contact with
-     * a Platform and the contact point is at the bottom of the Player bounding box and at the top of the Platform bounding box.
+     * a Platform and the contact point is at the bottom of the player bounding box and at the top of the platform bounding box.
      */
     private boolean isPlayerStanding() {
         final PhysicalBody innerPlayer = this.player.getPhysicalBody();
         final Collection<PhysicalBody> platformsBodies = this.aliveEntities.getInstances(Platform.class)
-                                                                      .parallelStream()
-                                                                      .map(platform -> platform.getPhysicalBody())
-                                                                      .collect(Collectors.toSet());
+                                                                           .parallelStream()
+                                                                           .map(platform -> platform.getPhysicalBody())
+                                                                           .collect(Collectors.toSet());
         return this.innerWorld.getCollidingBodies(innerPlayer)
                               .parallelStream()
                               .filter(collision -> platformsBodies.contains(collision.getLeft()))
-                              .anyMatch(platformStand -> (innerPlayer.getPosition().getRight()
-                                                          - innerPlayer.getDimensions().getRight() / 2)
-                                                         - platformStand.getRight().getRight() < PRECISION
-                                                         && platformStand.getRight().getRight()
-                                                            - (platformStand.getLeft().getPosition().getRight()
-                                                               + platformStand.getLeft().getDimensions().getRight() / 2)
-                                                            < PRECISION);
+                              .anyMatch(platformStand -> PhysicsUtils.isBodyOnTop(innerPlayer,
+                                                                                  platformStand.getLeft(),
+                                                                                  platformStand.getRight()));
     }
 
     /*
-     * Gets if the Player is currently standing in front of a ladder or not, and this is true only if is currently in contact with
-     * one of them.
+     * Gets if the Player is currently standing in front of a ladder and it could be specified where to check the player is
+     * with respect to the ladder.
      */
-    private boolean isPlayerInFrontLadder() {
+    private boolean isPlayerinFrontLadder(final Predicate<PhysicalBody> where) {
         return this.aliveEntities.getInstances(Ladder.class).parallelStream()
-                                                       .map(ladder -> ladder.getPhysicalBody())
-                                                       .anyMatch(ladderBody -> 
-                                                                 this.innerWorld
-                                                                     .areBodiesInContact(this.player.getPhysicalBody(), 
-                                                                                         ladderBody));
+                                                            .map(ladder -> ladder.getPhysicalBody())
+                                                            .anyMatch(ladderBody -> 
+                                                                      this.innerWorld
+                                                                          .areBodiesInContact(this.player.getPhysicalBody(),
+                                                                                              ladderBody)
+                                                                      && where.apply(ladderBody));
+    }
+
+    /*
+     * Gets if the Player is currently standing in front of a ladder at its bottom or not.
+     */
+    private boolean isPlayerAtBottomLadder() {
+        return this.isPlayerinFrontLadder(ladderBody -> PhysicsUtils.isBodyAtBottomHalf(this.player.getPhysicalBody(), ladderBody));
+    }
+
+    /*
+     * Gets if the Player is currently standing in front of a ladder at its top or not.
+     */
+    private boolean isPlayerAtTopLadder() {
+        return this.isPlayerinFrontLadder(ladderBody -> !PhysicsUtils.isBodyAtBottomHalf(this.player.getPhysicalBody(), ladderBody));
     }
 
     /**
      * {@inheritDoc}
+     * The synchronization is required because an update of the {@link World} cannot be interleaved with a user movement,
+     * otherwise these two operations could interfere and make the state of the {@link Player} entity inconsistent.
      */
     @Override
-    public void movePlayer(final MovementType movement) {
-        if (this.currentState == GameState.IS_GOING  && ((movement == MovementType.JUMP && this.isPlayerStanding()) 
-                                                         || (movement == MovementType.CLIMB_UP && this.isPlayerInFrontLadder())
-                                                         || (movement != MovementType.JUMP && movement != MovementType.CLIMB_UP))) {
+    public synchronized void movePlayer(final MovementType movement) {
+        final State playerState = this.player.getPhysicalBody().getState();
+        if (this.currentState == GameState.IS_GOING 
+            && ((movement == MovementType.JUMP && this.isPlayerStanding()) 
+                || (movement == MovementType.CLIMB_UP 
+                    && (this.isPlayerAtBottomLadder() || (playerState == State.CLIMBING_UP || playerState == State.CLIMBING_DOWN)))
+                || (movement == MovementType.CLIMB_DOWN
+                    && (this.isPlayerAtTopLadder() || (playerState == State.CLIMBING_UP || playerState == State.CLIMBING_DOWN)))
+                || ((movement == MovementType.MOVE_LEFT || movement == MovementType.MOVE_RIGHT)
+                    && (playerState != State.CLIMBING_DOWN && playerState != State.CLIMBING_UP)))) {
             this.player.move(movement);
         }
     }
@@ -199,7 +231,6 @@ public final class WorldImpl implements World {
 
     @Override
     public int getCurrentScore() {
-        // TODO Auto-generated method stub
-        return 0;
+        return this.score;
     }
 }
