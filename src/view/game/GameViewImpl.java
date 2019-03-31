@@ -32,13 +32,13 @@ import controller.game.GameControllerImpl;
  */
 public class GameViewImpl implements GameView {
     private static final int FONTSIZE = 150;
-    private static final String BG_SOURCE = "images/bg_game.png";
 
     private final GameController gameController;
     private final EntityConverterImpl entityConverter;
     private final AppController appController;
     private final Stage stage;
     private final Scene scene;
+    private final BackgroundImage bgImage;
 
     /**
      * Binds this game view to the instance of the {@link AppController},
@@ -51,6 +51,9 @@ public class GameViewImpl implements GameView {
         this.appController = Objects.requireNonNull(appController);
         this.gameController = new GameControllerImpl(this);
         this.stage = Objects.requireNonNull(stage);
+        final BackgroundSize bgSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true); 
+        this.bgImage = new BackgroundImage(new Image("images/bg_game.png"), BackgroundRepeat.ROUND, BackgroundRepeat.ROUND,
+                                           BackgroundPosition.CENTER, bgSize);
         final Pane root = new Pane();
         this.addBackgroundImage(root);
         this.scene = new Scene(root, this.stage.getScene().getWidth(), this.stage.getScene().getHeight());
@@ -68,11 +71,7 @@ public class GameViewImpl implements GameView {
      * stretched to cover the whole scene.
      */
     private void addBackgroundImage(final Pane root) {
-        final Image bgImage = new Image(BG_SOURCE);
-        final BackgroundSize bgSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true); 
-        final BackgroundImage bgImagePositioned = new BackgroundImage(bgImage, BackgroundRepeat.ROUND, BackgroundRepeat.ROUND,
-                                                                      BackgroundPosition.CENTER, bgSize);
-        root.setBackground(new Background(bgImagePositioned));
+        root.setBackground(new Background(this.bgImage));
     }
 
     /**
