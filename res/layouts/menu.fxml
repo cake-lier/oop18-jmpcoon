@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8" 
@@ -15,18 +14,19 @@
         <Label id="title"
               BorderPane.alignment="CENTER"
               text="Jumping Raccoon Adventures">
-            <BorderPane.margin>
-                <Insets top="100" bottom="0" left="0" right="0" />
-            </BorderPane.margin>
         </Label>
     </top>
     <center>
-        <VBox alignment="CENTER"
-              spacing="25">
-            <Button styleClass="buttons"
-                    onMouseClicked="#startGame">Start Game</Button>
-            <Button styleClass="buttons"
-                    onMouseClicked="#exitApp">Quit</Button>
+        <VBox id="buttonList"
+              alignment="CENTER">
+                <Button styleClass="buttons"
+                        onMouseClicked="#startGame">Start Game</Button>
+                <Button styleClass="buttons"
+                        onMouseClicked="#openFileChooser">Load Game</Button>
+                <Button styleClass="buttons"
+                        onMouseClicked="#openSettings">Settings</Button>
+                <Button styleClass="buttons"
+                        onMouseClicked="#exitApp">Quit</Button>          
         </VBox>
     </center>
     <stylesheets>

@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-    <classpathentry kind="src" path="src"/>
-    <classpathentry kind="src" path="res"/>
-    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-    <classpathentry kind="lib" path="lib/dyn4j-3.3.0.jar">
-        <attributes>
-            <attribute name="javadoc_location" value="jar:platform:/resource/jmpcoon/doc/dyn4j-3.3.0-javadoc.jar!/"/>
-        </attributes>
-    </classpathentry>
-    <classpathentry kind="lib" path="lib/guava-27.1-jre.jar">
-        <attributes>
-            <attribute name="javadoc_location" value="jar:platform:/resource/jmpcoon/doc/guava-27.1-jre-javadoc.jar!/"/>
-        </attributes>
-    </classpathentry>
-    <classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-    <classpathentry kind="lib" path="lib/commons-lang3-3.8.1.jar">
-        <attributes>
-            <attribute name="javadoc_location" value="jar:platform:/resource/jmpcoon/doc/commons-lang3-3.8.1-javadoc.jar!/"/>
-        </attributes>
-    </classpathentry>
-    <classpathentry kind="output" path="bin"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="res"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/dyn4j-3.3.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/jmpcoon/doc/dyn4j-3.3.0-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/guava-27.1-jre.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/jmpcoon/doc/guava-27.1-jre-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.8.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/jmpcoon/doc/commons-lang3-3.8.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

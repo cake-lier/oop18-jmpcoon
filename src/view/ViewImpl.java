@@ -66,8 +66,8 @@ public final class ViewImpl implements View {
     @Override
     public void displayMenu() {
         final Menu menu = new MenuImpl(this.controller, this.stage);
-        menu.drawMenu();
-        menu.showMenu();
+        menu.draw();
+        menu.show();
     }
 
     /**

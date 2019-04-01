@@ -13,18 +13,24 @@
     -fx-background-position: center center;
 }
 
+#buttonList {
+    -fx-spacing: 3em;
+    -fx-padding: 0 37.5em 0 37.5em;
+}
+
 #title {
     -fx-font-family: "FOREST THING";
-    -fx-font-size: 7em;
+    -fx-font-size: 9em;
     -fx-text-fill: rgb(143,89,2);
+    -fx-padding: 7em 0 0 0;
 }
 
 .buttons {
     -fx-font-family: "dark forest";
     -fx-font-size: 5em;
-    -fx-pref-width: 50em;
     -fx-background-color: rgb(233,185,110);
     -fx-text-fill: rgb(143,89,2);
+    -fx-max-width: infinity;
 }
 
 .buttons:hover {

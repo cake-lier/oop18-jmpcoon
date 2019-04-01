@@ -1,6 +1,7 @@
 package view.menu;
 
 import java.io.IOException;
+import java.net.URL;
 
 import controller.app.AppController;
 import javafx.fxml.FXML;
@@ -14,6 +15,10 @@ import javafx.stage.Stage;
  */
 public final class MenuImpl implements Menu {
     private static final String MUSIC_PATH = ClassLoader.getSystemResource("sounds/goldenrod.mp3").toString();
+    private static final String LAYOUT_PATH = "layouts/";
+    private static final URL MENU_LAYOUT = ClassLoader.getSystemResource(LAYOUT_PATH + "menu.fxml");
+    private static final URL SETTINGS_LAYOUT = ClassLoader.getSystemResource(LAYOUT_PATH + "settings.fxml");
+    private static final URL LOADER_LAYOUT = ClassLoader.getSystemResource(LAYOUT_PATH + "fileChooser.fxml");
 
     private final AppController controller;
     private final Stage stage;
@@ -36,7 +41,7 @@ public final class MenuImpl implements Menu {
         this.showed = false;
     }
 
-    /**
+    /*
      * Wrapper method to delegate to the application controller the job of starting the
      * game. This is made because every FXML file use only one controller and the
      * application controller couldn't be weigh down with other functionalities which are
@@ -48,7 +53,7 @@ public final class MenuImpl implements Menu {
         this.controller.startGame();
     }
 
-    /**
+    /*
      * Wrapper method to delegate to the application controller the job of exiting from
      * the app. This is made because every FXML file use only one controller and the
      * application controller couldn't be weigh down with functionalities which are view's
@@ -59,16 +64,10 @@ public final class MenuImpl implements Menu {
         this.controller.exitApp();
     }
 
-    /**
-     * {@inheritDoc}
-     * It loads the ".fxml" associated file and sets as JavaFX controller this specific
-     * instance of menu, then draws it.
-     */
-    @Override
-    public void drawMenu() {
+    private void drawFromURL(final URL drawableResource) {
         final FXMLLoader loader = new FXMLLoader();
         loader.setController(this);
-        loader.setLocation(ClassLoader.getSystemResource("layouts/menu.fxml"));
+        loader.setLocation(drawableResource);
         try {
             this.stage.setScene(new Scene(loader.load()));
         } catch (final IOException ex) {
@@ -79,26 +78,33 @@ public final class MenuImpl implements Menu {
 
     /**
      * {@inheritDoc}
+     * It loads the ".fxml" associated file and sets as JavaFX controller this specific
+     * instance of menu, then draws it.
      */
     @Override
-    public void showMenu() {
-        if (this.drawn && !this.showed) {
-            this.stage.show();
-            this.showed = true;
-            this.music.play();
-        }
+    public void draw() {
+        this.drawFromURL(MENU_LAYOUT);
+    }
+
+    @FXML
+    private void openSettings() {
+        this.drawFromURL(SETTINGS_LAYOUT);
+    }
+
+    @FXML
+    private void openFileChooser() {
+        this.drawFromURL(LOADER_LAYOUT);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void hideMenu() {
-        if (this.showed) {
-            this.stage.hide();
-            this.drawn = false;
-            this.showed = false;
-            this.music.stop();
+    public void show() {
+        if (this.drawn && !this.showed) {
+            this.stage.show();
+            this.showed = true;
+            this.music.play();
         }
     }
 }

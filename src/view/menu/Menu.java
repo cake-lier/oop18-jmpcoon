@@ -7,13 +7,9 @@ public interface Menu {
     /**
      * Draws the menu of the game.
      */
-    void drawMenu();
+    void draw();
     /**
      * Shows the previously drawn menu.
      */
-    void showMenu();
-    /**
-     * Hides the currently shown menu.
-     */
-    void hideMenu();
+    void show();
 }
