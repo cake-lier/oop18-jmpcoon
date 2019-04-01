@@ -12,12 +12,14 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -32,6 +34,7 @@ import controller.game.GameControllerImpl;
  */
 public class GameViewImpl implements GameView {
     private static final int FONTSIZE = 150;
+    private static final String MUSIC_PATH = Paths.get("bin/sounds/pixelland.mp3").toUri().toString();
 
     private final GameController gameController;
     private final EntityConverterImpl entityConverter;
@@ -39,6 +42,7 @@ public class GameViewImpl implements GameView {
     private final Stage stage;
     private final Scene scene;
     private final BackgroundImage bgImage;
+    private final AudioClip music;
 
     /**
      * Binds this game view to the instance of the {@link AppController},
@@ -54,6 +58,8 @@ public class GameViewImpl implements GameView {
         final BackgroundSize bgSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true); 
         this.bgImage = new BackgroundImage(new Image("images/bg_game.png"), BackgroundRepeat.ROUND, BackgroundRepeat.ROUND,
                                            BackgroundPosition.CENTER, bgSize);
+        this.music = new AudioClip(MUSIC_PATH);
+        this.music.setCycleCount(AudioClip.INDEFINITE);
         final Pane root = new Pane();
         this.addBackgroundImage(root);
         this.scene = new Scene(root, this.stage.getScene().getWidth(), this.stage.getScene().getHeight());
@@ -63,6 +69,7 @@ public class GameViewImpl implements GameView {
         this.stage.setScene(this.scene);
         this.stage.sizeToScene();
         this.stage.setOnCloseRequest(e -> this.gameController.stopGame());
+        this.music.play();
         this.gameController.startGame();
     }
 
@@ -112,6 +119,7 @@ public class GameViewImpl implements GameView {
             final Scene gameOver = new Scene(new Group(text), this.stage.getScene().getWidth(), this.stage.getScene().getHeight(), Color.BLACK);
             this.stage.setScene(gameOver);
             this.stage.sizeToScene();
+            this.music.stop();
         });
     }
 
@@ -126,6 +134,7 @@ public class GameViewImpl implements GameView {
             final Scene win = new Scene(new Group(text), this.stage.getScene().getWidth(), this.stage.getScene().getHeight(), Color.BLACK);
             this.stage.setScene(win);
             this.stage.sizeToScene();
+            this.music.stop();
         });
     }
 

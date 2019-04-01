@@ -20,6 +20,7 @@ public final class ViewImpl implements View {
 
     private final AppController controller;
     private final Stage stage;
+
     /**
      * Acquires the {@link Stage} in which to draw all the visual elements of this
      * application and it initializes it appropriately. Constructs the controller of this
@@ -35,6 +36,7 @@ public final class ViewImpl implements View {
         this.setScreenSize(this.stage);
         this.controller.startApp();
     }
+
     /**
      * Sets the stage size to the appropriate values, so as to make it always the
      * biggest possible and with an aspect ratio of 16:9. It is also unresizable, so
@@ -57,6 +59,7 @@ public final class ViewImpl implements View {
         }
         stage.setResizable(false);
     }
+
     /**
      * {@inheritDoc}
      */
@@ -66,6 +69,7 @@ public final class ViewImpl implements View {
         menu.drawMenu();
         menu.showMenu();
     }
+
     /**
      * {@inheritDoc}
      */

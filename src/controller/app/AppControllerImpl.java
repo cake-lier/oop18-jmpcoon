@@ -7,6 +7,7 @@ import view.View;
  */
 public final class AppControllerImpl implements AppController {
     private final View view;
+
     /**
      * Acquires a new {@link View} to call when it's needed to display something.
      * @param view The view element responsible for the application.
@@ -14,6 +15,7 @@ public final class AppControllerImpl implements AppController {
     public AppControllerImpl(final View view) {
         this.view = view;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -21,6 +23,7 @@ public final class AppControllerImpl implements AppController {
     public void startApp() {
         this.view.displayMenu();
     }
+
     /**
      * {@inheritDoc}
      */
@@ -28,6 +31,7 @@ public final class AppControllerImpl implements AppController {
     public void exitApp() {
         System.exit(0);
     }
+
     /**
      * {@inheritDoc}
      */
