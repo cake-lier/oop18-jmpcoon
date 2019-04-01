@@ -19,7 +19,6 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -34,7 +33,7 @@ import controller.game.GameControllerImpl;
  */
 public class GameViewImpl implements GameView {
     private static final int FONTSIZE = 150;
-    private static final String MUSIC_PATH = Paths.get("bin/sounds/pixelland.mp3").toUri().toString();
+    private static final String MUSIC_PATH = ClassLoader.getSystemResource("sounds/pixelland.mp3").toString();
 
     private final GameController gameController;
     private final EntityConverterImpl entityConverter;

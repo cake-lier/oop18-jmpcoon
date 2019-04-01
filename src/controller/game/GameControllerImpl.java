@@ -1,13 +1,19 @@
 package controller.game;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Spliterator;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.stream.StreamSupport;
 
 import model.entities.EntityProperties;
 import model.entities.EntityPropertiesImpl;
@@ -26,7 +32,7 @@ import view.game.GameView;
 public class GameControllerImpl implements GameController {
 
     private static final long DELTA_UPDATE = 15;
-    private static final String LEVEL_FILE = "res" + System.getProperty("file.separator") + "level1.txt";
+    private static final URL LEVEL_FILE = ClassLoader.getSystemResource("level1.txt");
     private static final int N_PROPERTIES = 7;
 
     private final World gameWorld;
@@ -153,9 +159,8 @@ public class GameControllerImpl implements GameController {
 
     private Collection<EntityProperties> loadLevel() {
         final List<EntityProperties> entities = new LinkedList<>();
-        try {
-            final List<String> lines = Files.readAllLines(Paths.get(LEVEL_FILE));
-            lines.stream()
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(LEVEL_FILE.openStream()))) {
+           reader.lines()
                  .filter(s -> !s.startsWith("%"))
                  .map(s -> s.split(":"))
                  .filter(v -> v.length == N_PROPERTIES)
@@ -167,8 +172,8 @@ public class GameControllerImpl implements GameController {
                                                     Double.valueOf(v[5]),
                                                     Double.valueOf(v[6])))
                  .forEach(entities::add);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (final IOException e) {
+            e.printStackTrace();
         }
         return entities;
     }

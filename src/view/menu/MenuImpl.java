@@ -1,7 +1,6 @@
 package view.menu;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 
 import controller.app.AppController;
 import javafx.fxml.FXML;
@@ -14,11 +13,11 @@ import javafx.stage.Stage;
  * The class implementation of the {@link Menu} interface.
  */
 public final class MenuImpl implements Menu {
-    private static final String MUSIC_PATH = Paths.get("bin/sounds/goldenrod.mp3").toUri().toString();
+    private static final String MUSIC_PATH = ClassLoader.getSystemResource("sounds/goldenrod.mp3").toString();
 
     private final AppController controller;
     private final Stage stage;
-    private final AudioClip music;
+    private AudioClip music;
     private boolean drawn;
     private boolean showed;
 
