@@ -4,6 +4,7 @@ import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Vector2;
 
 import model.entities.State;
+import model.serializable.SerializableBody;
 import model.entities.MovementType;
 
 /**
@@ -11,18 +12,19 @@ import model.entities.MovementType;
  * enemies).
  */
 public class DynamicPhysicalBody extends AbstractPhysicalBody {
+    private static final long serialVersionUID = -3108712528358435170L;
     private static final double MAXVELOCITY_X = 1;
     private static final double MAXVELOCITY_Y = 0.5;
     private static final double CLIMB_DAMPING = 2;
 
-    private final Body body;
+    private final SerializableBody body;
     private State currentState;
 
     /**
      * builds a new {@link DynamicPhysicalBody}.
-     * @param body the {@link Body} encapsulated by this {@link DynamicPhysicalBody}
+     * @param body the {@link SerializableBody} encapsulated by this {@link DynamicPhysicalBody}
      */
-    public DynamicPhysicalBody(final Body body) {
+    public DynamicPhysicalBody(final SerializableBody body) {
         super(body);
         this.body = body;
         this.currentState = State.IDLE;

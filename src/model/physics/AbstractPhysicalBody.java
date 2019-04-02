@@ -2,13 +2,13 @@ package model.physics;
 
 import java.util.Objects;
 
-import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Vector2;
 
 import model.entities.State;
+import model.serializable.SerializableBody;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,13 +19,13 @@ import org.apache.commons.lang3.tuple.Pair;
 public abstract class AbstractPhysicalBody implements PhysicalBody {
     private static final long serialVersionUID = 8007445555444017586L;
 
-    private final Body body;
+    private final SerializableBody body;
 
     /**
      * builds a new {@link AbstractPhysicalBody}.
-     * @param body the {@link Body} encapsulated by this {@link AbstractPhysicalBody}
+     * @param body the {@link SerializableBody} encapsulated by this {@link AbstractPhysicalBody}
      */
-    public AbstractPhysicalBody(final Body body) {
+    public AbstractPhysicalBody(final SerializableBody body) {
         this.body = Objects.requireNonNull(body);
     }
 

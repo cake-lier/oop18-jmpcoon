@@ -8,6 +8,8 @@ import model.physics.DynamicPhysicalBody;
  */
 public class RollingEnemy extends DynamicEntity {
 
+    private static final long serialVersionUID = -6624661835399417683L;
+
     /**
      * builds a new {@link RollingEnemy}.
      * @param body the {@link PhysicalBody} of this {@link RollingEnemy}

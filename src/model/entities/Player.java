@@ -6,6 +6,8 @@ import model.physics.DynamicPhysicalBody;
  * The player inside the {@link World} of the game.
  */
 public class Player extends DynamicEntity {
+
+    private static final long serialVersionUID = 7632362148460378676L;
     private static final double WALKIMPULSE = 1;
     private static final double CLIMBIMPULSE = 0.5;
     private static final double JUMPIMPULSE = 0.25;

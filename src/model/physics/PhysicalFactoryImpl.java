@@ -80,7 +80,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         throwException(!this.physicalWorld.isPresent(), () -> new IllegalStateException("A PhysicalWorld has yet to be created!"));
         throwException(!isStaticBodyAllowed(shape, type), () -> new IllegalArgumentException("No such Entity can be created"));
 
-        final Body body;
+        final SerializableBody body;
         if (shape.equals(EntityShape.RECTANGLE)) {
             body = createRectangleBody(position, angle, width, height);
         } else {
@@ -108,9 +108,9 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         return shape.equals(EntityShape.RECTANGLE) && (type.equals(EntityType.PLATFORM) || type.equals(EntityType.LADDER));
     }
 
-    private Body createRectangleBody(final Pair<Double, Double> position, final double angle, final double width,
+    private SerializableBody createRectangleBody(final Pair<Double, Double> position, final double angle, final double width,
                                      final double height) {
-        final Body body = new SerializableBody();
+        final SerializableBody body = new SerializableBody();
         body.addFixture(Geometry.createRectangle(width, height));
         final Vector2 center = new Vector2(position.getLeft(), position.getRight());
         body.translate(center);
@@ -118,8 +118,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         return body;
     }
 
-    private Body createCircleBody(final Pair<Double, Double> position, final double radius) {
-        final Body body = new SerializableBody();
+    private SerializableBody createCircleBody(final Pair<Double, Double> position, final double radius) {
+        final SerializableBody body = new SerializableBody();
         body.addFixture(Geometry.createCircle(radius));
         final Vector2 center = new Vector2(position.getLeft(), position.getRight());
         body.translate(center);
@@ -143,7 +143,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         throwException(!this.physicalWorld.isPresent(), () -> new IllegalStateException("A PhysicalWorld has yet to be created!"));
         throwException(!isDynamicBodyAllowed(shape, type), () -> new IllegalArgumentException("No such Entity can be created"));
 
-        final Body body;
+        final SerializableBody body;
         if (shape.equals(EntityShape.CIRCLE)) {
             body = createCircleBody(position, width);
         } else {
