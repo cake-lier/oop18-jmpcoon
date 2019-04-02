@@ -1,11 +1,11 @@
 package model.serializable;
 
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import org.apache.commons.lang3.SerializationException;
 import org.dyn4j.collision.AxisAlignedBounds;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.World;
@@ -40,7 +40,7 @@ public class SerializableWorld extends World implements Serializable {
                 out.writeObject((Serializable) body);
             }
         } else {
-            throw new SerializationException("Not all the bodies contained in this World are serializable");
+            throw new NotSerializableException("Not all the bodies contained in this World are serializable");
         }
     }
 

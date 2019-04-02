@@ -3,6 +3,7 @@ package model.physics;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -10,7 +11,6 @@ import java.util.function.Supplier;
 import org.dyn4j.collision.AxisAlignedBounds;
 import org.dyn4j.collision.CategoryFilter;
 import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
@@ -159,6 +159,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         } else if (type.equals(EntityType.WALKING_ENEMY)) {
             body.getFixture(0).setFilter(WALKING_ENEMY_FILTER);
         }
+        body.setUserData(type);
 
         this.physicalWorld.get().getWorld().addBody(body);
         final DynamicPhysicalBody physicalBody = new DynamicPhysicalBody(body);
@@ -179,6 +180,13 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
             out.writeObject(this.physicalWorld.get());
         } else {
             out.writeBoolean(false);
+        }
+    }
+
+    private void readObject(final ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        if (in.readBoolean()) {
+            this.physicalWorld = Optional.of((WholePhysicalWorld) in.readObject());
         }
     }
 }

@@ -43,12 +43,12 @@ public final class WorldImpl implements World {
     private static final int ROLLING_POINTS = 50;
     private static final int WALKING_POINTS = 100;
 
-    private transient EntityFactory entityFactory;
+    private final EntityFactory entityFactory;
     private final PhysicalWorld innerWorld;
     private final Pair<Double, Double> worldDimensions;
-    private transient ClassToInstanceMultimap<Entity> aliveEntities;
-    private transient Set<Entity> deadEntities;
-    private transient Player player;
+    private final ClassToInstanceMultimap<Entity> aliveEntities;
+    private final Set<Entity> deadEntities;
+    private Player player;
     private GameState currentState;
     private int score;
 

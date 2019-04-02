@@ -1,12 +1,11 @@
 package model.serializable;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import org.apache.commons.lang3.SerializationException;
 import org.dyn4j.collision.CategoryFilter;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
@@ -48,7 +47,7 @@ public class SerializableBody extends Body implements Serializable {
                 out.writeObject(EntityShape.CIRCLE);
                 out.writeDouble(circle.getRadius());
             } else {
-                throw new SerializationException("This body is in an illegal state, so it isn't serializable");
+                throw new NotSerializableException("This body is in an illegal state, so it isn't serializable");
             }
             /* writing filters */
             if (fixture.getFilter() instanceof CategoryFilter) {
@@ -58,7 +57,7 @@ public class SerializableBody extends Body implements Serializable {
                 /* writing mask */
                 out.writeLong(filter.getMask());
             } else {
-                throw new SerializationException("This body is in an illegal state, so it isn't serializable");
+                throw new NotSerializableException("This body is in an illegal state, so it isn't serializable");
             }
             /* writing if the fixture is a sensor */
             out.writeBoolean(fixture.isSensor());
@@ -74,15 +73,15 @@ public class SerializableBody extends Body implements Serializable {
         out.writeDouble(this.getLinearVelocity().y);
         /* writing angular velocity */
         out.writeDouble(this.getAngularVelocity());
-        /* writing whether the body is static or not */
-        out.writeBoolean(this.isStatic());
+        /* writing whether the body has infinite mass or not */
+        out.writeBoolean(this.getMass().getType() == MassType.INFINITE);
         /* writing whether the body can rotate or not */
         out.writeBoolean(this.getMass().getType() == MassType.FIXED_ANGULAR_VELOCITY);
         /* writing type */
         if (this.getUserData() instanceof EntityType) {
             out.writeObject(this.getUserData());
         } else {
-            throw new SerializationException("This body is in an illegal state, so it isn't serializable");
+            throw new NotSerializableException("This body is in an illegal state, so it isn't serializable");
         }
     }
 
@@ -101,7 +100,7 @@ public class SerializableBody extends Body implements Serializable {
                 final double radius = in.readDouble();
                 fixture = this.addFixture(Geometry.createCircle(radius));
             } else {
-                throw new SerializationException("This body is illegal, so it can't be read");
+                throw new IllegalStateException("This body is can't exist");
             }
             /* reading filters */
             final long category = in.readLong();
@@ -124,11 +123,13 @@ public class SerializableBody extends Body implements Serializable {
         this.setAngularVelocity(in.readDouble());
         /* reading information about mass */
         // TODO: look if this conditions are correct
-        final boolean isStatic = in.readBoolean();
-        final boolean canNotRotate = in.readBoolean();
-        if (isStatic && canNotRotate) {
+        final boolean isInfinite = in.readBoolean();
+        final boolean hasFixedAngularVelocity = in.readBoolean();
+        if (isInfinite && hasFixedAngularVelocity) {
+            throw new IllegalStateException("This body is can't exist");
+        } else if (isInfinite) {
             this.setMass(MassType.INFINITE);
-        } else if (!isStatic && canNotRotate) {
+        } else if (hasFixedAngularVelocity) {
             this.setMass(MassType.FIXED_ANGULAR_VELOCITY);
         } else {
             this.setMass(MassType.NORMAL);
