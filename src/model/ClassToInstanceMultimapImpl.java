@@ -18,6 +18,8 @@ import com.google.common.primitives.Primitives;
  */
 public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Class<? extends B>, B> 
                                                   implements ClassToInstanceMultimap<B> {
+    private static final long serialVersionUID = -9047286057610567233L;
+
     private final Multimap<Class<? extends B>, B> backingMap;
 
     /**

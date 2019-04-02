@@ -34,6 +34,8 @@ import com.google.common.collect.MultimapBuilder;
  * The class implementation of {@link World}.
  */
 public final class WorldImpl implements World {
+    private static final long serialVersionUID = 7726647485392503914L;
+
     private static final double WORLD_WIDTH = 8;
     private static final double WORLD_HEIGHT = 4.5;
     private static final double WIN_ZONE_X = 0.37;
@@ -41,12 +43,12 @@ public final class WorldImpl implements World {
     private static final int ROLLING_POINTS = 50;
     private static final int WALKING_POINTS = 100;
 
-    private final EntityFactory entityFactory;
+    private transient EntityFactory entityFactory;
     private final PhysicalWorld innerWorld;
     private final Pair<Double, Double> worldDimensions;
-    private final ClassToInstanceMultimap<Entity> aliveEntities;
-    private final Set<Entity> deadEntities;
-    private Player player;
+    private transient ClassToInstanceMultimap<Entity> aliveEntities;
+    private transient Set<Entity> deadEntities;
+    private transient Player player;
     private GameState currentState;
     private int score;
 

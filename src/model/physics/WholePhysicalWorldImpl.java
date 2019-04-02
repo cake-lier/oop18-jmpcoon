@@ -31,6 +31,8 @@ import model.entities.State;
  * {@link PhysicalFactory}, the factory class for each one of the physical entities of this game.
  */
 final class WholePhysicalWorldImpl implements WholePhysicalWorld {
+    private static final long serialVersionUID = 2313605798676279728L;
+
     private final World world;
     private final BiMap<PhysicalBody, Body> containers;
     private final Map<PhysicalBody, EntityType> types;

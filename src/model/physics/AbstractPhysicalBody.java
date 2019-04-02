@@ -17,6 +17,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * a class implementing {@link PhysicalBody}.
  */
 public abstract class AbstractPhysicalBody implements PhysicalBody {
+    private static final long serialVersionUID = 8007445555444017586L;
 
     private final Body body;
 

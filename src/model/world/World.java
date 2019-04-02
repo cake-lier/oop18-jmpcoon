@@ -1,5 +1,6 @@
 package model.world;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import model.entities.MovementType;
@@ -11,7 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * The World in which the game takes place. It creates, initializes, destroys and passes around all the entities which populate
  * the game world.
  */
-public interface World {
+public interface World extends Serializable {
 
     /**
      * Gets the dimensions of the world.

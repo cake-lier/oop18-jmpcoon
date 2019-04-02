@@ -9,6 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * abstract class from which all the {@link Entity} of the {@link World} derives.
  */
 public abstract class AbstractEntity implements Entity {
+    private static final long serialVersionUID = -7374912841474322755L;
 
     private final PhysicalBody body;
 

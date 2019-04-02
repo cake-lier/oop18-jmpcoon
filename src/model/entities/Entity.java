@@ -1,13 +1,16 @@
 package model.entities;
 
 import model.physics.PhysicalBody;
+
+import java.io.Serializable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Represents an entity, a physical object with an extension, a position, mass and a particular behavior which
  * depends on its {@link EntityType} and {@link State}, inside the {@link World}.
  */
-public interface Entity {
+public interface Entity extends Serializable {
 
     /**
      * @return the position of the entity, as a {@link Pair} where the first element is the x coordinate

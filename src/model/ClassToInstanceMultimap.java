@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import com.google.common.collect.Multimap;
@@ -12,7 +13,7 @@ import com.google.common.collect.Multimap;
  * {@link ClassToInstanceMultimap#getInstances(Class)} returns a {@link Collection} instead of a simple value.
  * @param <B> An upper bound supertype shared by all the instances in the multimap.
  */
-public interface ClassToInstanceMultimap<B> extends Multimap<Class<? extends B>, B> {
+public interface ClassToInstanceMultimap<B> extends Multimap<Class<? extends B>, B>, Serializable {
 
     /**
      * Gets the {@link Collection} of instances contained within this multimap with the given type T.

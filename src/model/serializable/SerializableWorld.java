@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.SerializationException;
 import org.dyn4j.collision.AxisAlignedBounds;
@@ -37,14 +36,9 @@ public class SerializableWorld extends World implements Serializable {
         /* writing bodies */
         /* need to be sure all the bodies are serializable */
         if (this.getBodies().stream().allMatch(b -> (b instanceof Serializable))) {
-            this.getBodies().forEach(b -> {
-                try {
-                    out.writeObject(b);
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            });
+            for (final Body body: this.getBodies()) {
+                out.writeObject((Serializable) body);
+            }
         } else {
             throw new SerializationException("Not all the bodies contained in this World are serializable");
         }
