@@ -2,13 +2,6 @@
     src: url("../fonts/darkforest.ttf");
 }
 
-#container {
-    -fx-background-image: url("../images/bg_menu.jpg");
-    -fx-background-repeat: round;
-    -fx-background-size: cover;
-    -fx-background-position: center center;
-}
-
 .texts {
     -fx-font-family: "dark forest";
     -fx-background-color: rgb(233,185,110);
@@ -21,9 +14,4 @@
 
 #backButton {
     -fx-font-size: 3em;
-    -fx-effect: dropshadow(one-pass-box, black, 10, 0, 5, 5);
-}
-
-#backButton:hover {
-    -fx-background-color: derive(rgb(233,185,110), 20%);
 }

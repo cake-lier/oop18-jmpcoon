@@ -1,0 +1,14 @@
+@font-face {
+    src: url("../fonts/darkforest.ttf");
+}
+
+.buttons {
+    -fx-font-family: "dark forest";   
+    -fx-background-color: rgb(233,185,110);
+    -fx-text-fill: rgb(143,89,2);   
+    -fx-effect: dropshadow(one-pass-box, #2D2926, 20, 0, 5, 5);
+}
+
+.buttons:hover {
+    -fx-background-color: derive(rgb(233,185,110), 20%);
+}

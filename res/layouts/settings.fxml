@@ -11,14 +11,14 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
-            id="container">
+            id="root">
     <center>
         <GridPane alignment="center">
 	    <AnchorPane styleClass="cells"
 	                GridPane.columnIndex="0"
 	                GridPane.rowIndex="0"
 	                GridPane.hgrow="ALWAYS">
-	        <Label styleClass="descriptions, texts"
+	        <Label styleClass="descriptions"
 	               AnchorPane.leftAnchor="0"
 	               AnchorPane.rightAnchor="0">Volume</Label>
 	    </AnchorPane>
@@ -34,13 +34,15 @@
     <bottom>
         <FlowPane id="buttonContainer"
                   BorderPane.alignment="TOP_LEFT">
-            <Button styleClass="texts"
+            <Button styleClass="buttons"
                     id="backButton"
                     alignment="CENTER"
                     onMouseClicked="#draw">Back to main menu</Button>
         </FlowPane>
     </bottom>
     <stylesheets>
-        <URL value="@settings.css"/>
+        <URL value="@settings.css" />
+        <URL value="@background.css" />
+        <URL value="@buttons.css" />
     </stylesheets>
 </BorderPane>

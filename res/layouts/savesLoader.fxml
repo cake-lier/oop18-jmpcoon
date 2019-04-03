@@ -8,7 +8,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
-            id="container">
+            id="root">
     <center>
         <GridPane alignment="center">
         </GridPane>
@@ -16,7 +16,7 @@
     <bottom>
         <FlowPane id="buttonContainer"
                   BorderPane.alignment="TOP_LEFT">
-            <Button styleClass="texts"
+            <Button styleClass="buttons"
                     id="backButton"
                     alignment="CENTER"
                     onMouseClicked="#draw">Back to main menu</Button>
@@ -24,5 +24,7 @@
     </bottom>
     <stylesheets>
       <URL value="@savesLoader.css" />
+      <URL value="@background.css" />
+      <URL value="@buttons.css" />
    </stylesheets>
 </BorderPane>

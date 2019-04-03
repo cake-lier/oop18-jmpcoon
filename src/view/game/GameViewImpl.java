@@ -2,8 +2,11 @@ package view.game;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -15,14 +18,15 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.AudioClip;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.entities.EntityType;
@@ -45,24 +49,25 @@ import controller.game.GameControllerImpl;
  * The class implementation of the {@link GameView} interface.
  */
 public class GameViewImpl implements GameView {
-    private static final int BIGFONTSIZE = 100;
-    private static final int SCOREFONTSIZE = 24;
-    private static final double OPACITY = 0.75;
-    private static final String MUSIC_PATH = ClassLoader.getSystemResource("sounds/pixelland.mp3").toString();
+    private static final BackgroundImage BG_IMAGE = new BackgroundImage(new Image("images/bg_game.png"), BackgroundRepeat.ROUND, 
+                                                                        BackgroundRepeat.ROUND, BackgroundPosition.CENTER,
+                                                                        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, 
+                                                                                           true, true, false, true));
+    private static final String FONT_URL = ClassLoader.getSystemResource("fonts/darkforest.ttf").toExternalForm();
+    private static final int SCORE_SIZE_RATIO = 20;
+    private static final int MESSAGE_SIZE_RATIO = 4;
+    private static final double OVERLAY_OPACITY = 0.75;
 
     private final GameController gameController;
     private final EntityConverterImpl entityConverter;
     private final AppController appController;
     private final Stage stage;
     private final StackPane root;
-    private final Pane entities = new Pane();
-    private final Text score = new Text();
-    private final BorderPane menu = new BorderPane();
-
-    private boolean isMenuVisible = false;
-
-    private final BackgroundImage bgImage;
-    private final AudioClip music;
+    private final Pane entities;
+    private final Text score;
+    private final BorderPane menu;
+    private boolean isMenuVisible;
+    private final MediaPlayer music;
 
     /**
      * Binds this game view to the instance of the {@link AppController},
@@ -75,27 +80,16 @@ public class GameViewImpl implements GameView {
     public GameViewImpl(final AppController appController, final Stage stage, final MediaPlayer music) {
         this.appController = Objects.requireNonNull(appController);
         this.gameController = new GameControllerImpl(this);
-
-        final BackgroundSize bgSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true); 
-        this.bgImage = new BackgroundImage(new Image("images/bg_game.png"), BackgroundRepeat.ROUND, BackgroundRepeat.ROUND,
-                                           BackgroundPosition.CENTER, bgSize);
-
-        this.music = new AudioClip(MUSIC_PATH);
-        this.music.setCycleCount(AudioClip.INDEFINITE);
-
+        this.music = Objects.requireNonNull(music);
         this.stage = Objects.requireNonNull(stage);
         this.root = new StackPane();
-        final Scene scene = new Scene(this.root, this.stage.getScene().getWidth(), this.stage.getScene().getHeight());
-        this.addBackgroundImage(this.root);
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> getInput(key.getCode()));
-
-        this.entityConverter = new EntityConverterImpl(this.gameController.getWorldDimensions(), 
-                                new ImmutablePair<>(scene.getWidth(), scene.getHeight()));
-
-        this.stage.setScene(scene);
-        this.stage.sizeToScene();
-        this.stage.setOnCloseRequest(e -> this.gameController.stopGame());
-        this.music.play();
+        this.entities = new Pane();
+        this.score = new Text();
+        this.menu = new BorderPane();
+        this.isMenuVisible = false;
+        this.entityConverter = new EntityConverterImpl(this.gameController.getWorldDimensions(),
+                                                       new ImmutablePair<>(stage.getScene().getWidth(),
+                                                                           stage.getScene().getHeight()));
         this.gameController.startGame();
     }
 
@@ -104,7 +98,7 @@ public class GameViewImpl implements GameView {
      * stretched to cover the whole scene.
      */
     private void addBackgroundImage(final Pane root) {
-        root.setBackground(new Background(this.bgImage));
+        root.setBackground(new Background(BG_IMAGE));
     }
 
     /**
@@ -114,7 +108,7 @@ public class GameViewImpl implements GameView {
         Platform.runLater(() -> {
             this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
             this.drawAliveEntities();
-            this.score.setText("Player score: " + this.gameController.getCurrentScore());
+            this.score.setText("Score: " + this.gameController.getCurrentScore());
         });
     }
 
@@ -122,25 +116,41 @@ public class GameViewImpl implements GameView {
      * {@inheritDoc}
      */
     public void init() {
-        this.setupRoot();
+        this.setupStage();
         this.setupMenu();
         this.drawAliveEntities();
     }
 
     /*
-     * sets up the root's children ordered by layer (platforms, ladders, entities, score)
+     * sets up the stage and the scene in it by also setting up root's children ordered by layer (from bottom to top: platforms,
+     * ladders, entities, score)
      */
-    private void setupRoot() {
-        final Pane platforms = new Pane(), ladders = new Pane(); 
+    private void setupStage() {
+        final Pane platforms = new Pane();
+        final Pane ladders = new Pane();
         final BorderPane hud = new BorderPane();
 
-        this.score.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, SCOREFONTSIZE));
-        this.score.setStroke(Color.RED);
-        hud.setTop(this.score);
+        final double scoreSize = this.stage.getScene().getHeight() / SCORE_SIZE_RATIO;
+        this.score.setFont(Font.loadFont(FONT_URL, scoreSize));
+        this.score.setFill(Color.FLORALWHITE);
+        final double shadowSize = scoreSize / 10;
+        this.score.setEffect(new DropShadow(0, shadowSize, shadowSize, Color.web("#2D2926")));
+        final FlowPane scorePane = new FlowPane(this.score);
+        final double paddingSize = scoreSize / 4;
+        scorePane.setPadding(new Insets(paddingSize, 0, 0, paddingSize));
+        hud.setTop(scorePane);
 
-        this.root.getChildren().addAll(platforms, ladders, entities, hud);
         platforms.getChildren().addAll(this.getNodes(EntityType.PLATFORM));
         ladders.getChildren().addAll(this.getNodes(EntityType.LADDER));
+        this.root.getChildren().addAll(platforms, ladders, this.entities, hud);
+        this.addBackgroundImage(this.root);
+
+        final Scene scene = new Scene(this.root, this.stage.getScene().getWidth(), this.stage.getScene().getHeight());
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> this.getInput(key.getCode()));
+        this.stage.setScene(scene);
+        this.stage.sizeToScene();
+        this.stage.setOnCloseRequest(e -> this.gameController.stopGame());
+        this.music.play();
     }
 
     private void drawAliveEntities() {
@@ -173,12 +183,14 @@ public class GameViewImpl implements GameView {
               .ifPresent(input -> {
                   if (input == InputKey.ESCAPE) {
                       this.gameController.togglePauseGame();
-                      if (isMenuVisible) {
+                      if (this.isMenuVisible) {
                           this.menu.setVisible(false);
                           this.isMenuVisible = false;
+                          this.music.play();
                       } else {
                           this.menu.setVisible(true);
                           this.isMenuVisible = true;
+                          this.music.pause();
                       }
                   } else {
                       input.convert().ifPresent(moveInput -> this.gameController.processInput(moveInput));
@@ -207,28 +219,61 @@ public class GameViewImpl implements GameView {
     }
 
     private void setupMenu() {
-        this.menu.setBackground(new Background(new BackgroundFill(new Color(0, 0, 0, OPACITY), CornerRadii.EMPTY, Insets.EMPTY)));
-
-        final Text text = new Text("THIS WILL BE A MENU");
-        text.setFont(Font.font("Gill Sans Ultra Bold Condensed", BIGFONTSIZE));
-        text.setFill(Color.RED);
-        text.setStrokeWidth(2);
-        text.setStroke(Color.WHITE);
-        this.menu.setCenter(text);
+        this.menu.setBackground(new Background(new BackgroundFill(new Color(0, 0, 0, OVERLAY_OPACITY), CornerRadii.EMPTY, Insets.EMPTY)));
+        this.menu.getStylesheets().add("layouts/buttons.css");
+        final VBox buttons = new VBox();
+        buttons.setPadding(new Insets(0, 0, 100, 0));
+        buttons.setAlignment(Pos.CENTER);
+        buttons.setSpacing(20);
+        buttons.setFillWidth(true);
+        final Button backButton = new Button("Back to menu");
+        backButton.getStyleClass().add("buttons");
+        backButton.setStyle("-fx-font-size: 5em");
+        buttons.getChildren().add(backButton);
+        final Button exitButton = new Button("Quit game");
+        exitButton.getStyleClass().add("buttons");
+        exitButton.setStyle("-fx-font-size: 5em");
+        buttons.getChildren().add(exitButton);
+        this.menu.setCenter(buttons);
         this.menu.setVisible(false);
         this.root.getChildren().add(menu);
+        backButton.setOnMouseClicked(e -> {
+            this.appController.startApp();
+        });
+        exitButton.setOnMouseClicked(e -> {
+            this.appController.exitApp();
+        });
     }
 
     private void showMessage(final String msg) {
         final BorderPane pane = new BorderPane();
-        pane.setBackground(new Background(new BackgroundFill(new Color(0, 0, 0, OPACITY), CornerRadii.EMPTY, Insets.EMPTY)));
-
+        pane.setBackground(new Background(new BackgroundFill(new Color(0, 0, 0, OVERLAY_OPACITY), CornerRadii.EMPTY, Insets.EMPTY)));
         final Text text = new Text(msg);
-        text.setFont(Font.font("Gill Sans Ultra Bold Condensed", BIGFONTSIZE));
+        text.setFont(Font.loadFont(FONT_URL, this.stage.getScene().getHeight() / MESSAGE_SIZE_RATIO));
         text.setFill(Color.RED);
-        text.setStrokeWidth(2);
-        text.setStroke(Color.WHITE);
         pane.setCenter(text);
+        final HBox buttons = new HBox();
+        buttons.setPadding(new Insets(0, 0, 100, 0));
+        buttons.setAlignment(Pos.CENTER);
+        buttons.setSpacing(20);
+        buttons.getStylesheets().add("layouts/buttons.css");
+        final Button backButton = new Button("Back to menu");
+        backButton.getStyleClass().add("buttons");
+        backButton.setStyle("-fx-font-size: 5em");
+        HBox.setHgrow(backButton, Priority.ALWAYS);
+        buttons.getChildren().add(backButton);
+        final Button exitButton = new Button("Quit game");
+        exitButton.getStyleClass().add("buttons");
+        exitButton.setStyle("-fx-font-size: 5em");
+        HBox.setHgrow(exitButton, Priority.ALWAYS);
+        buttons.getChildren().add(exitButton);
+        pane.setBottom(buttons);
         this.root.getChildren().add(pane);
+        backButton.setOnMouseClicked(e -> {
+            this.appController.startApp();
+        });
+        exitButton.setOnMouseClicked(e -> {
+            this.appController.exitApp();
+        });
     }
 }

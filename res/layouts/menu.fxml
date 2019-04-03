@@ -9,7 +9,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8" 
             xmlns:fx="http://javafx.com/fxml/1"
-            id="container">
+            id="root">
     <top>
         <Label id="title"
               BorderPane.alignment="CENTER"
@@ -31,5 +31,7 @@
     </center>
     <stylesheets>
       <URL value="@menu.css" />
+      <URL value="@background.css" />
+      <URL value="@buttons.css" />
    </stylesheets>
 </BorderPane>
