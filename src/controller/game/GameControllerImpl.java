@@ -1,10 +1,14 @@
 package controller.game;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.ObjectOutputStream;
+import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,9 +17,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import model.entities.EntityProperties;
-import model.entities.EntityPropertiesImpl;
-import model.entities.EntityShape;
-import model.entities.EntityType;
 import model.entities.Entity;
 import model.world.World;
 import model.world.WorldImpl;
@@ -30,9 +31,8 @@ public class GameControllerImpl implements GameController {
 
     private static final long DELTA_UPDATE = 15;
     private static final String LEVEL_FILE = "res" + System.getProperty("file.separator") + "level1.lev";
-    private static final int N_PROPERTIES = 7;
 
-    private final World gameWorld;
+    private World gameWorld;
     private final GameView gameView;
     private ScheduledThreadPoolExecutor timer;
     private boolean running;
@@ -86,8 +86,27 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public void saveGame() {
-        throw new UnsupportedOperationException("Game saving functionalities have not been implemented yet"); 
+    public void saveGame(final URL saveFileUrl) throws FileNotFoundException, IOException {
+        try (ObjectOutputStream out = new ObjectOutputStream(
+                                        new BufferedOutputStream(
+                                            new FileOutputStream(saveFileUrl.toExternalForm())))) {
+            out.writeObject(this.gameWorld);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void loadGame(final URL saveFileUrl) throws IOException, IllegalArgumentException {
+        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(saveFileUrl.openStream()))) {
+            this.gameWorld = (World) in.readObject();
+        } catch (ClassNotFoundException e) {
+            // TODO: do these exceptions makes sense?
+            throw new IllegalArgumentException("The file read isn't compatible");
+        } catch (IOException e1) {
+            throw e1;
+        }
     }
 
     /**
