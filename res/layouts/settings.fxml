@@ -2,10 +2,45 @@
 
 <?import javafx.scene.layout.GridPane?>
 <?import java.net.URL?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.FlowPane?>
 
-<GridPane xmlns="http://javafx.com/javafx/8" 
-          xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            id="container">
+    <center>
+        <GridPane alignment="center">
+	    <AnchorPane styleClass="cells"
+	                GridPane.columnIndex="0"
+	                GridPane.rowIndex="0"
+	                GridPane.hgrow="ALWAYS">
+	        <Label styleClass="descriptions, texts"
+	               AnchorPane.leftAnchor="0"
+	               AnchorPane.rightAnchor="0">Volume</Label>
+	    </AnchorPane>
+	    <Slider fx:id="volumeControl"
+	            id="slider"
+	            styleClass="cells"
+	            GridPane.columnIndex="1"
+	            GridPane.rowIndex="0"
+	            GridPane.hgrow="ALWAYS">
+	    </Slider>
+	    </GridPane>
+    </center>
+    <bottom>
+        <FlowPane id="buttonContainer"
+                  BorderPane.alignment="TOP_LEFT">
+            <Button styleClass="texts"
+                    id="backButton"
+                    alignment="CENTER"
+                    onMouseClicked="#draw">Back to main menu</Button>
+        </FlowPane>
+    </bottom>
     <stylesheets>
-      <URL value="@settings.css" />
-   </stylesheets>
-</GridPane>
+        <URL value="@settings.css"/>
+    </stylesheets>
+</BorderPane>

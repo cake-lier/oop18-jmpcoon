@@ -12,7 +12,8 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.AudioClip;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -24,6 +25,8 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
+import com.sun.media.jfxmedia.MediaError;
+
 import controller.app.AppController;
 import controller.game.GameController;
 import controller.game.GameControllerImpl;
@@ -33,7 +36,6 @@ import controller.game.GameControllerImpl;
  */
 public class GameViewImpl implements GameView {
     private static final int FONTSIZE = 150;
-    private static final String MUSIC_PATH = ClassLoader.getSystemResource("sounds/pixelland.mp3").toString();
 
     private final GameController gameController;
     private final EntityConverterImpl entityConverter;
@@ -41,7 +43,7 @@ public class GameViewImpl implements GameView {
     private final Stage stage;
     private final Scene scene;
     private final BackgroundImage bgImage;
-    private final AudioClip music;
+    private final MediaPlayer music;
 
     /**
      * Binds this game view to the instance of the {@link AppController},
@@ -49,16 +51,16 @@ public class GameViewImpl implements GameView {
      * creates an instance of the {@link GameController}.
      * @param appController The application controller.
      * @param stage The stage in which to draw the game scene.
+     * @param music The {@link MediaPlayer} for playing an audio track during the game.
      */
-    public GameViewImpl(final AppController appController, final Stage stage) {
+    public GameViewImpl(final AppController appController, final Stage stage, final MediaPlayer music) {
         this.appController = Objects.requireNonNull(appController);
         this.gameController = new GameControllerImpl(this);
         this.stage = Objects.requireNonNull(stage);
         final BackgroundSize bgSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true); 
         this.bgImage = new BackgroundImage(new Image("images/bg_game.png"), BackgroundRepeat.ROUND, BackgroundRepeat.ROUND,
                                            BackgroundPosition.CENTER, bgSize);
-        this.music = new AudioClip(MUSIC_PATH);
-        this.music.setCycleCount(AudioClip.INDEFINITE);
+        this.music = music;
         final Pane root = new Pane();
         this.addBackgroundImage(root);
         this.scene = new Scene(root, this.stage.getScene().getWidth(), this.stage.getScene().getHeight());
@@ -148,6 +150,11 @@ public class GameViewImpl implements GameView {
               .ifPresent(input -> {
                   if (input == InputKey.ESCAPE) {
                       this.gameController.togglePauseGame();
+                      if (this.music.getStatus() == Status.PLAYING) {
+                          this.music.pause();
+                      } else if (this.music.getStatus() == Status.PAUSED) {
+                          this.music.play();
+                      }
                       //TODO: In-game menu
                       this.appController.startApp();
                   } else {

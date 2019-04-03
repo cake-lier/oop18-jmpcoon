@@ -1,0 +1,66 @@
+@font-face {
+    src: url("../fonts/darkforest.ttf");
+}
+
+#container {
+    -fx-background-image: url("../images/bg_menu.jpg");
+    -fx-background-repeat: round;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
+
+.cells {
+    -fx-font-size: 5em;
+    -fx-alignment: center;
+    -fx-padding: 0.5em 4em 0.5em 4em;
+}
+
+.texts {
+    -fx-font-family: "dark forest";
+    -fx-background-color: rgb(233,185,110);
+    -fx-text-fill: rgb(143,89,2);
+}
+
+.descriptions {
+    -fx-border-insets: 0.5em 0 0.5em 0;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+#slider {
+    -fx-block-increment: 5;
+    -fx-snap-to-ticks: true;
+    -fx-show-tick-labels: true;
+    -fx-minor-tick-count: 0;
+    -fx-major-tick-unit: 5;
+    -fx-tick-label-font: 1.5em "dark forest";
+    -fx-tick-label-fill: whitesmoke;
+}
+
+.slider .track {
+    -fx-background-color: rgb(233,185,110);
+    -fx-effect: innershadow(one-pass-box, rgb(143,89,2), 10, 0, 0, -2.5);
+}
+
+.slider .axis {
+    -fx-tick-label-fill: white;
+    -fx-effect: dropshadow(one-pass-box, black, 10, 0, 1, 1);
+}
+
+.slider .thumb {
+    -fx-background-color: rgb(233,185,110);
+    -fx-effect: dropshadow(one-pass-box, black, 5, 0, 1, 1);
+}
+
+#buttonContainer {
+    -fx-padding: 1em;
+}
+
+#backButton {
+    -fx-font-size: 3em;
+    -fx-effect: dropshadow(one-pass-box, black, 10, 0, 5, 5);
+}
+
+#backButton:hover {
+    -fx-background-color: derive(rgb(233,185,110), 20%);
+}

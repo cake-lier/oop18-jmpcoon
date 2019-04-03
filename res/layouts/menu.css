@@ -31,6 +31,7 @@
     -fx-background-color: rgb(233,185,110);
     -fx-text-fill: rgb(143,89,2);
     -fx-max-width: infinity;
+    -fx-effect: dropshadow(one-pass-box, black, 20, 0, 5, 5);
 }
 
 .buttons:hover {

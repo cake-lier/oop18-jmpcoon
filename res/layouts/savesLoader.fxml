@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.control.Button?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            id="container">
+    <center>
+        <GridPane alignment="center">
+        </GridPane>
+    </center>
+    <bottom>
+        <FlowPane id="buttonContainer"
+                  BorderPane.alignment="TOP_LEFT">
+            <Button styleClass="texts"
+                    id="backButton"
+                    alignment="CENTER"
+                    onMouseClicked="#draw">Back to main menu</Button>
+        </FlowPane>
+    </bottom>
+    <stylesheets>
+      <URL value="@savesLoader.css" />
+   </stylesheets>
+</BorderPane>

@@ -22,7 +22,7 @@
                 <Button styleClass="buttons"
                         onMouseClicked="#startGame">Start Game</Button>
                 <Button styleClass="buttons"
-                        onMouseClicked="#openFileChooser">Load Game</Button>
+                        onMouseClicked="#openSavesLoader">Load Game</Button>
                 <Button styleClass="buttons"
                         onMouseClicked="#openSettings">Settings</Button>
                 <Button styleClass="buttons"

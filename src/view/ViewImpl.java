@@ -3,6 +3,8 @@ package view;
 import controller.app.AppController;
 import controller.app.AppControllerImpl;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import view.game.GameView;
@@ -15,11 +17,15 @@ import view.menu.MenuImpl;
  */
 public final class ViewImpl implements View {
     private static final String TITLE = "Jumping Raccoon Adventures";
+    private static final String MENU_MUSIC = ClassLoader.getSystemResource("sounds/stillalive.mp3").toString();
+    private static final String GAME_MUSIC = ClassLoader.getSystemResource("sounds/pixelland.mp3").toString();
     private static final int HEIGHT_RATIO = 9;
     private static final int WIDTH_RATIO = 16;
+    private static final double INIT_VOLUME = 0.5;
 
     private final AppController controller;
     private final Stage stage;
+    private MediaPlayer player;
 
     /**
      * Acquires the {@link Stage} in which to draw all the visual elements of this
@@ -34,6 +40,8 @@ public final class ViewImpl implements View {
         this.stage = stage;
         this.stage.setTitle(TITLE);
         this.setScreenSize(this.stage);
+        this.player = new MediaPlayer(new Media(MENU_MUSIC));
+        this.player.setVolume(INIT_VOLUME);
         this.controller.startApp();
     }
 
@@ -60,12 +68,24 @@ public final class ViewImpl implements View {
         stage.setResizable(false);
     }
 
+    /*
+     * Creates a new player for the audio track which source is passed and then sets the volume as the same one of the preceding
+     * player, so as to maintain consistency between volume levels in tracks.
+     */
+    private void createNewTrack(final String source) {
+        final MediaPlayer music = new MediaPlayer(new Media(source));
+        music.setVolume(this.player.getVolume());
+        music.setCycleCount(MediaPlayer.INDEFINITE);
+        this.player = music;
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void displayMenu() {
-        final Menu menu = new MenuImpl(this.controller, this.stage);
+        this.createNewTrack(MENU_MUSIC);
+        final Menu menu = new MenuImpl(this.controller, this.stage, this.player);
         menu.draw();
         menu.show();
     }
@@ -75,7 +95,8 @@ public final class ViewImpl implements View {
      */
     @Override
     public void displayGame() {
-        final GameView gameView = new GameViewImpl(this.controller, this.stage);
+        this.createNewTrack(GAME_MUSIC);
+        final GameView gameView = new GameViewImpl(this.controller, this.stage, this.player);
         gameView.init();
     }
 }
