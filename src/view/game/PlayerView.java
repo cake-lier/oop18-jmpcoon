@@ -14,7 +14,7 @@ import model.entities.DynamicEntity;
 import model.entities.Entity;
 import model.entities.State;
 
-public class PlayerView extends AbstractDrawableEntity {
+public class PlayerView extends DynamicDrawableEntity {
     
     private static final Image WALKING = new Image("images/raccoon_walking.png");
     private static final int WALKING_FRAMES = 7;
