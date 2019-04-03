@@ -1,6 +1,7 @@
 package view.game;
 
 import javafx.scene.image.ImageView;
+import model.entities.EntityType;
 
 /**
  * an interface representing an {@link Entity} that can be drawn.
@@ -18,4 +19,8 @@ public interface DrawableEntity {
      */
     ImageView getImageView();
 
+    /**
+     * @return the {@link EntityType} of this {@link Entity}
+     */
+    EntityType getEntityType();
 }

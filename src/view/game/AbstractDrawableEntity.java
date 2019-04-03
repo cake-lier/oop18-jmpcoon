@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.entities.Entity;
+import model.entities.EntityType;
 import model.entities.AbstractEntity;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -89,5 +90,12 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      */
     protected double getYRatio() {
         return this.sceneDimensions.getRight() / this.worldDimensions.getRight();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EntityType getEntityType() {
+        return this.entity.getType();
     }
 }
