@@ -17,7 +17,6 @@ import org.apache.commons.lang3.tuple.Pair;
  * a {@link DynamicEntity} that can be drawn.
  */
 public class DynamicDrawableEntity extends AbstractDrawableEntity {
-    
 
     private final Map<State, SpriteAnimation> map = new HashMap<>();
     private Animation currentAnimation;
@@ -39,9 +38,14 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
             final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
         super(image, entity, worldDimensions, sceneDimensions);
     }
+
+    @Override
+    protected void updateSpritePosition() {
+        this.changeAnimation(this.getEntity().getState());
+        this.getImageView().setImage(this.map.get(this.getEntity().getState()).getImage());
+        this.updateSpriteProperties();
+    }
  
-
-
     /**
      * {@inheritDoc}
      */
@@ -53,8 +57,6 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
         final double y = entity.getPosition().getRight();
         final double width = entity.getDimensions().getLeft();
         final double height = entity.getDimensions().getRight();
-        this.changeAnimation(this.getEntity().getState());
-        this.getImageView().setImage(this.map.get(this.getEntity().getState()).getImage());
         this.getImageView().setScaleX((width * this.getXRatio() / this.getImageView().getImage().getWidth()));
         this.getImageView().setScaleY(height * this.getYRatio() / this.getImageView().getImage().getHeight());
 
