@@ -45,4 +45,9 @@ public class StaticDrawableEntity extends AbstractDrawableEntity {
         this.getImageView().setY(sceneCoordinates.getRight() - diffY / 2);
     }
 
+    @Override
+    protected void updateSpritePosition() {
+
+    }
+
 }
