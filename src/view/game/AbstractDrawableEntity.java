@@ -44,7 +44,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      */
     @Override
     public void updatePosition() {
-        Platform.runLater(() -> this.updateSpriteProperties());
+        Platform.runLater(() -> this.updateSpritePosition());
     }
 
     /**
@@ -59,6 +59,8 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      * method used to update properties like position, rotation, ... of the {@link ImageView} of this {@link DrawableEntity}
      */
     protected abstract void updateSpriteProperties();
+    
+    protected abstract void updateSpritePosition();
 
     /**
      * @return the {@link Entity} represented by this {@link DrawableEntity}
