@@ -12,7 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 /**
  * a {@link DynamicEntity} that can be drawn.
  */
-public class DynamicDrawableEntity extends AbstractDrawableEntity {
+public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
 
     private final Map<State, SpriteAnimation> map = new HashMap<>();
     private Animation currentAnimation;
