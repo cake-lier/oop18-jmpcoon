@@ -7,6 +7,8 @@ import model.physics.StaticPhysicalBody;
  */
 public class Ladder extends StaticEntity {
 
+    private static final long serialVersionUID = -1338548627689639626L;
+
     /**
      * builds a new {@link Ladder}.
      * @param body the {@link PhysicalBody} of this {@link Ladder}

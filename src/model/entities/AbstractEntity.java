@@ -5,10 +5,13 @@ import java.util.Objects;
 import model.physics.PhysicalBody;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.hash.Hashing;
+
 /**
  * abstract class from which all the {@link Entity} of the {@link World} derives.
  */
 public abstract class AbstractEntity implements Entity {
+    private static final long serialVersionUID = -7374912841474322755L;
 
     private final PhysicalBody body;
 
@@ -99,21 +102,21 @@ public abstract class AbstractEntity implements Entity {
      * {@inheritDoc}
      */
     @Override
-    public int hashCode() {
-        return Objects.hash(this.body, this.getType());
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        return obj != null
+                && this.getClass().equals(obj.getClass())
+                && this.body.equals(((AbstractEntity) obj).body);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(final Object obj) {
-        if (obj instanceof AbstractEntity) {
-            final AbstractEntity otherEntity = (AbstractEntity) obj;
-            return this.body.equals(otherEntity.body) && this.getType().equals(otherEntity.getType());
-        } else {
-            return false;
-        }
+    public int hashCode() {
+        return Hashing.murmur3_128().hashInt(this.body.hashCode()).asInt();
     }
 
 }

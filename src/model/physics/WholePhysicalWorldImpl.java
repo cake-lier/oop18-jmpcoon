@@ -1,7 +1,11 @@
 package model.physics;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,24 +29,27 @@ import com.google.common.collect.HashBiMap;
 
 import model.entities.EntityType;
 import model.entities.State;
+import model.serializable.SerializableWorld;
 
 /**
  * The class implementation of {@link PhysicalWorld}. It's package protected so the only class which can build it is the 
  * {@link PhysicalFactory}, the factory class for each one of the physical entities of this game.
  */
 final class WholePhysicalWorldImpl implements WholePhysicalWorld {
-    private final World world;
-    private final BiMap<PhysicalBody, Body> containers;
+    private static final long serialVersionUID = 2313605798676279728L;
+
+    private final SerializableWorld world;
+    private transient BiMap<PhysicalBody, Body> containers;
     private final Map<PhysicalBody, EntityType> types;
-    private Optional<DynamicPhysicalBody> player;
-    private Optional<PhysicalBody> collidingLadder;
+    private transient Optional<DynamicPhysicalBody> player;
+    private transient Optional<PhysicalBody> collidingLadder;
 
     /**
      * Binds the current instance of {@link WholePhysicalWorldImpl} with the instance of {@link World} which will be wrapped and 
      * used.
      * @param world The {@link World} to wrap.
      */
-    WholePhysicalWorldImpl(final World world) {
+    WholePhysicalWorldImpl(final SerializableWorld world) {
         this.world = world;
         this.containers = HashBiMap.create();
         this.types = new LinkedHashMap<>();
@@ -209,5 +216,41 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
     @Override
     public void update() {
         this.world.step(1);
+    }
+
+    private void writeObject(final ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeInt(this.containers.size());
+        for (final Entry<PhysicalBody, Body> entry: this.containers.entrySet()) {
+            out.writeObject(entry.getKey());
+            out.writeObject(entry.getValue());
+        }
+        out.writeBoolean(this.player.isPresent());
+        if (this.player.isPresent()) {
+            out.writeObject(this.player.get());
+        }
+        out.writeBoolean(this.collidingLadder.isPresent());
+        if (this.collidingLadder.isPresent()) {
+            out.writeObject(this.collidingLadder.get());
+        }
+    }
+
+    private void readObject(final ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        final int numEntries = in.readInt();
+        this.containers = HashBiMap.create();
+        for (int i = 0; i < numEntries; i++) {
+            final PhysicalBody key = (PhysicalBody) in.readObject();
+            final Body value = (Body) in.readObject();
+            this.containers.put(key, value);
+        }
+        if (in.readBoolean()) {
+            /* the player was present */
+            this.player = Optional.of((DynamicPhysicalBody) in.readObject());
+        }
+        if (in.readBoolean()) {
+            /* the colliding layer was present */
+            this.collidingLadder = Optional.of((PhysicalBody) in.readObject());
+        }
     }
 }

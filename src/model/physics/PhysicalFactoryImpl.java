@@ -3,24 +3,29 @@ package model.physics;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.dyn4j.collision.AxisAlignedBounds;
 import org.dyn4j.collision.CategoryFilter;
-import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 
 import model.entities.EntityShape;
 import model.entities.EntityType;
+import model.serializable.SerializableBody;
+import model.serializable.SerializableWorld;
 
 /**
  * a class that implements {@link PhysicalFactory}.
  */
 public class PhysicalFactoryImpl implements PhysicalFactory {
+    private static final long serialVersionUID = -3251686827966500039L;
+
     private static final String NO_TWO_WORLDS_MSG = "You can't create two worlds for this game";
 
     private static final long CATEGORY_WALKING_ENEMY = 1; // 000001
@@ -64,7 +69,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     public PhysicalWorld createPhysicalWorld(final double width, final double height) {
         throwException(this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_TWO_WORLDS_MSG));
         this.worldDimensions = new ImmutablePair<>(width, height);
-        this.physicalWorld = Optional.of(new WholePhysicalWorldImpl(new World(new AxisAlignedBounds(width * 2, height * 2))));
+        this.physicalWorld = Optional.of(new WholePhysicalWorldImpl(new SerializableWorld(new AxisAlignedBounds(width * 2, height * 2))));
         return this.physicalWorld.get();
     }
 
@@ -79,7 +84,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         throwException(!isStaticBodyAllowed(shape, type), () -> new IllegalArgumentException("No such Entity can be created"));
         throwException(!isPositionInsideWorld(position), () -> new IllegalArgumentException("The entity would be created outside the world"));
 
-        final Body body;
+        final SerializableBody body;
         if (shape.equals(EntityShape.RECTANGLE)) {
             body = createRectangleBody(position, angle, width, height);
         } else {
@@ -107,9 +112,9 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         return shape.equals(EntityShape.RECTANGLE) && (type.equals(EntityType.PLATFORM) || type.equals(EntityType.LADDER));
     }
 
-    private Body createRectangleBody(final Pair<Double, Double> position, final double angle, final double width,
+    private SerializableBody createRectangleBody(final Pair<Double, Double> position, final double angle, final double width,
                                      final double height) {
-        final Body body = new Body();
+        final SerializableBody body = new SerializableBody();
         body.addFixture(Geometry.createRectangle(width, height));
         final Vector2 center = new Vector2(position.getLeft(), position.getRight());
         body.translate(center);
@@ -117,10 +122,10 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         return body;
     }
 
-    private Body createCircleBody(final Pair<Double, Double> position, final double radius) {
-        final Body body = new Body();
+    private SerializableBody createCircleBody(final Pair<Double, Double> position, final double radius) {
+        final SerializableBody body = new SerializableBody();
         body.addFixture(Geometry.createCircle(radius));
-        final Vector2 center = new Vector2(position.getLeft() + radius / 2, position.getRight() - radius / 2);
+        final Vector2 center = new Vector2(position.getLeft(), position.getRight());
         body.translate(center);
         return body;
     }
@@ -150,7 +155,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         throwException(!isDynamicBodyAllowed(shape, type), () -> new IllegalArgumentException("No such Entity can be created"));
         throwException(!isPositionInsideWorld(position), () -> new IllegalArgumentException("The entity would be created outside the world"));
 
-        final Body body;
+        final SerializableBody body;
         if (shape.equals(EntityShape.CIRCLE)) {
             body = createCircleBody(position, width);
         } else {
@@ -166,6 +171,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         } else if (type.equals(EntityType.WALKING_ENEMY)) {
             body.getFixture(0).setFilter(WALKING_ENEMY_FILTER);
         }
+        body.setUserData(type);
 
         this.physicalWorld.get().getWorld().addBody(body);
         final DynamicPhysicalBody physicalBody = new DynamicPhysicalBody(body);
@@ -176,6 +182,23 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private void throwException(final boolean condition, final Supplier<RuntimeException> supplier) {
         if (condition) {
             throw supplier.get();
+        }
+    }
+
+    private void writeObject(final ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        if (this.physicalWorld.isPresent()) {
+            out.writeBoolean(true);
+            out.writeObject(this.physicalWorld.get());
+        } else {
+            out.writeBoolean(false);
+        }
+    }
+
+    private void readObject(final ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        if (in.readBoolean()) {
+            this.physicalWorld = Optional.of((WholePhysicalWorld) in.readObject());
         }
     }
 }

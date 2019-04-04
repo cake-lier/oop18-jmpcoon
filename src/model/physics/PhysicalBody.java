@@ -2,12 +2,14 @@ package model.physics;
 
 import model.entities.State;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * an interface representing the physical body of an {@link Entity}.
  */
-public interface PhysicalBody {
+public interface PhysicalBody extends Serializable {
 
     /**
      * @return the center of the {@link PhysicalBody}, as a {@link Pair} where the first element is the x coordinate and the second element is the y one

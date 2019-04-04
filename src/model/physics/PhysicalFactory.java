@@ -2,6 +2,9 @@ package model.physics;
 
 import model.entities.EntityShape;
 import model.entities.EntityType;
+
+import java.io.Serializable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -10,7 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * {@link PhysicalWorld}. It creates other facades to maintain a degree of separation between the dyn4j library and the
  * implementation.
  */
-public interface PhysicalFactory {
+public interface PhysicalFactory extends Serializable {
 
     /**
      * Creates a facade for the {@link org.dyn4j.dynamics.World} as created by the dyn4j library so as to be used by the game

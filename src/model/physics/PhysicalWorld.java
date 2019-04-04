@@ -1,5 +1,6 @@
 package model.physics;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -7,7 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 /**
  * The facade for the dyn4j {@link org.dyn4j.dynamics.World} and all the collision mechanics provided by the library.
  */
-public interface PhysicalWorld {
+public interface PhysicalWorld extends Serializable {
 
     /**
      * Checks if two {@link PhysicalBody}s are currently colliding.

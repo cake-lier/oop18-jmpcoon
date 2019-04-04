@@ -7,6 +7,8 @@ import model.physics.StaticPhysicalBody;
  */
 public abstract class StaticEntity extends AbstractEntity {
 
+    private static final long serialVersionUID = 9104210526680101510L;
+
     /**
      * builds a new {@link StaticEntity}.
      * @param body the {@link PhysicalBody} of this {@link StaticEntity}

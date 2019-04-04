@@ -1,8 +1,13 @@
 package controller.game;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -12,9 +17,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import model.entities.EntityProperties;
-import model.entities.EntityPropertiesImpl;
-import model.entities.EntityShape;
-import model.entities.EntityType;
 import model.entities.Entity;
 import model.world.World;
 import model.world.WorldImpl;
@@ -28,10 +30,9 @@ import view.game.GameView;
 public class GameControllerImpl implements GameController {
 
     private static final long DELTA_UPDATE = 15;
-    private static final URL LEVEL_FILE = ClassLoader.getSystemResource("level1.txt");
-    private static final int N_PROPERTIES = 7;
+    private static final String LEVEL_FILE = ClassLoader.getSystemResource("level1.txt").toExternalForm();
 
-    private final World gameWorld;
+    private World gameWorld;
     private final GameView gameView;
     private ScheduledThreadPoolExecutor timer;
     private boolean running;
@@ -85,8 +86,24 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public void saveGame() {
-        throw new UnsupportedOperationException("Game saving functionalities have not been implemented yet"); 
+    public void saveGame(final URL saveFileUrl) throws FileNotFoundException, IOException {
+        try (ObjectOutputStream out = new ObjectOutputStream(
+                                        new BufferedOutputStream(
+                                            new FileOutputStream(saveFileUrl.toExternalForm())))) {
+            out.writeObject(this.gameWorld);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void loadGame(final URL saveFileUrl) throws IOException, IllegalArgumentException {
+        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(saveFileUrl.openStream()))) {
+            this.gameWorld = (World) in.readObject();
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("The file read isn't compatible");
+        }
     }
 
     /**
@@ -153,22 +170,19 @@ public class GameControllerImpl implements GameController {
         }
     }
 
-    private Collection<EntityProperties> loadLevel() {
+    private List<EntityProperties> loadLevel() {
         final List<EntityProperties> entities = new LinkedList<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(LEVEL_FILE.openStream()))) {
-           reader.lines()
-                 .filter(s -> !s.startsWith("%"))
-                 .map(s -> s.split(":"))
-                 .filter(v -> v.length == N_PROPERTIES)
-                 .map(v -> new EntityPropertiesImpl(EntityType.valueOf(v[0]), 
-                                                    EntityShape.valueOf(v[1]), 
-                                                    Double.valueOf(v[2]), 
-                                                    Double.valueOf(v[3]),
-                                                    Double.valueOf(v[4]),
-                                                    Double.valueOf(v[5]),
-                                                    Double.valueOf(v[6])))
-                 .forEach(entities::add);
-        } catch (final IOException e) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(LEVEL_FILE))) {
+            final int n = in.readInt();
+            for (int i = 0; i < n; i++) {
+                final Object obj = in.readObject();
+                if (obj instanceof EntityProperties) {
+                    entities.add((EntityProperties) obj);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return entities;

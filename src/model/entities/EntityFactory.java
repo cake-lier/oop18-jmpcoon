@@ -1,5 +1,6 @@
 package model.entities;
 
+import java.io.Serializable;
 import java.util.Objects;
 import model.physics.PhysicalFactory;
 import org.apache.commons.lang3.tuple.Pair;
@@ -7,7 +8,8 @@ import org.apache.commons.lang3.tuple.Pair;
 /**
  * a class used to produce instances of {@link Entity} whose {@link PhysicalBody} is inside a specific {@link PhysicalWorld}.
  */
-public class EntityFactory {
+public class EntityFactory implements Serializable {
+    private static final long serialVersionUID = -5367717476177255746L;
 
     private final PhysicalFactory factory;
 

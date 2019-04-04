@@ -7,6 +7,8 @@ import model.physics.StaticPhysicalBody;
  */
 public class Platform extends StaticEntity {
 
+    private static final long serialVersionUID = 2006372527364015609L;
+
     /**
      * builds a new {@link Platform}.
      * @param body the {@link PhysicalBody} of this {@link Platform}
