@@ -52,28 +52,6 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
     }
  
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void updateSpriteProperties() {
-        final Entity entity = this.getEntity();
-        final ImageView imageView = this.getImageView();
-        final double x = entity.getPosition().getLeft();
-        final double y = entity.getPosition().getRight();
-        final double width = entity.getDimensions().getLeft();
-        final double height = entity.getDimensions().getRight();
-        this.getImageView().setScaleX((width * this.getXRatio() / this.getImageView().getImage().getWidth()));
-        this.getImageView().setScaleY(height * this.getYRatio() / this.getImageView().getImage().getHeight());
-
-        final double diffX = this.getImageView().getImage().getWidth() - width * this.getXRatio();
-        final double diffY = this.getImageView().getImage().getHeight() - height * this.getYRatio();
-        final Pair<Double, Double> sceneCoordinates = this
-                .getConvertedCoordinates(new ImmutablePair<>(x - width / 2, y - height / 2));
-        imageView.setX(sceneCoordinates.getLeft() - diffX / 2);
-        imageView.setY(sceneCoordinates.getRight() - diffY);
-    }
-
-    /**
      * @param state
      *            state
      * @param animation
