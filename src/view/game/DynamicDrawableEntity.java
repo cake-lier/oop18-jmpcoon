@@ -1,16 +1,12 @@
 package view.game;
 
 import javafx.animation.Animation;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import model.entities.DynamicEntity;
-import model.entities.Entity;
 import model.entities.State;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -41,16 +37,16 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
 
 
     /**
-     * {@inheritDoc}
+     * updates the image view.
      */
-    @Override
     protected void updateSpritePosition() {
-        this.changeAnimation(this.getEntity().getState());
-        this.getImageView().setImage(this.map.get(this.getEntity().getState()).getImage());
-        this.updateSpriteProperties();
-        this.getImageView().setScaleX(this.getImageView().getScaleX() * direction());
+        Platform.runLater(() -> {
+            this.changeAnimation(this.getEntity().getState());
+            this.getImageView().setImage(this.map.get(this.getEntity().getState()).getImage());
+            this.getImageView().setScaleX(this.getImageView().getScaleX() * direction());
+        });
     }
- 
+
     /**
      * @param state
      *            state
