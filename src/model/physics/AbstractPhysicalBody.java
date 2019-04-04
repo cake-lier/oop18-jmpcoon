@@ -7,6 +7,8 @@ import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Vector2;
 
+import com.google.common.hash.Hashing;
+
 import model.entities.State;
 import model.serializable.SerializableBody;
 
@@ -104,20 +106,23 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      * {@inheritDoc}
      */
     @Override
-    public int hashCode() {
-        return Objects.hash(this.body);
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj != null) {
+            if (this.getClass().equals(obj.getClass())) {
+                return this.body.equals(((AbstractPhysicalBody) obj).body);
+            }
+        }
+        return false;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(final Object obj) {
-        if (obj instanceof AbstractPhysicalBody) {
-            final AbstractPhysicalBody otherBody = (AbstractPhysicalBody) obj;
-            return this.body.equals(otherBody.body);
-        } else {
-            return false;
-        }
+    public int hashCode() {
+        return Hashing.murmur3_128().hashInt(this.body.hashCode()).asInt();
     }
 }

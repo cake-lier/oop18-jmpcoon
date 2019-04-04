@@ -15,6 +15,8 @@ import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Vector2;
 
+import com.google.common.hash.Hashing;
+
 import model.entities.EntityShape;
 import model.entities.EntityType;
 
@@ -24,13 +26,6 @@ import model.entities.EntityType;
 public class SerializableBody extends Body implements Serializable {
 
     private static final long serialVersionUID = 8243356758623109937L;
-
-    /**
-     * builds a new {@link SerializableBody}.
-     */
-    public SerializableBody() {
-        super();
-    }
 
     private void writeObject(final ObjectOutputStream out) throws IOException {
         /* writing number of fixtures */
@@ -137,5 +132,29 @@ public class SerializableBody extends Body implements Serializable {
         /* reading type */
         final EntityType type = (EntityType) in.readObject();
         this.setUserData(type);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj != null) {
+            if (this.getClass().equals(obj.getClass())) {
+                return this.getId().equals(((SerializableBody) obj).getId());
+            }
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Hashing.murmur3_128().hashInt(this.getId().hashCode()).asInt();
     }
 }
