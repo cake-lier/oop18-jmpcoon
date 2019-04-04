@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import java.net.URL?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            id="background">
+    <center>
+        <VBox id="buttonList"
+              alignment="CENTER"
+              BorderPane.alignment="CENTER">
+	       <Button fx:id="saveButton"
+	               styleClass="buttons"
+	               AnchorPane.leftAnchor="0"
+	               AnchorPane.rightAnchor="0"
+	               alignment="CENTER">Save game</Button>
+	       <Button fx:id="backButton"
+	               styleClass="buttons"
+	               AnchorPane.leftAnchor="0"
+                   AnchorPane.rightAnchor="0"
+                   alignment="CENTER">Back to menu</Button>
+	       <Button fx:id="quitButton"
+	               styleClass="buttons"
+	               AnchorPane.leftAnchor="0"
+                   AnchorPane.rightAnchor="0"
+                   alignment="CENTER">Quit game</Button>
+        </VBox>
+    </center>
+    <stylesheets>
+      <URL value="@gameMenu.css" />
+      <URL value="@buttons.css" />
+   </stylesheets>
+</BorderPane>

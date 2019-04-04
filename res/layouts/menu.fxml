@@ -18,15 +18,16 @@
     </top>
     <center>
         <VBox id="buttonList"
+              BorderPane.alignment="CENTER"
               alignment="CENTER">
-                <Button styleClass="buttons"
-                        onMouseClicked="#startGame">Start Game</Button>
-                <Button styleClass="buttons"
-                        onMouseClicked="#openSavesLoader">Load Game</Button>
-                <Button styleClass="buttons"
-                        onMouseClicked="#openSettings">Settings</Button>
-                <Button styleClass="buttons"
-                        onMouseClicked="#exitApp">Quit</Button>          
+                <Button fx:id="startButton"
+                        styleClass="buttons">Start Game</Button>
+                <Button fx:id="savesButton"
+                        styleClass="buttons">Load Game</Button>
+                <Button fx:id="settingsButton"
+                        styleClass="buttons">Settings</Button>
+                <Button fx:id="quitButton"
+                        styleClass="buttons">Quit</Button>          
         </VBox>
     </center>
     <stylesheets>

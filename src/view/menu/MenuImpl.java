@@ -7,6 +7,7 @@ import controller.app.AppController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
@@ -29,6 +30,14 @@ public final class MenuImpl implements Menu {
 
     @FXML
     private Slider volumeControl;
+    @FXML
+    private Button startButton;
+    @FXML
+    private Button savesButton;
+    @FXML
+    private Button settingsButton;
+    @FXML
+    private Button quitButton;
 
     /**
      * Binds this menu to the instance who has to be the controller of the menu, which is the controller of the application.
@@ -45,64 +54,36 @@ public final class MenuImpl implements Menu {
         this.showed = false;
     }
 
-    /*
-     * Wrapper method to delegate to the application controller the job of starting the
-     * game. This is made because every FXML file use only one controller and the
-     * application controller couldn't be weigh down with other functionalities which are
-     * view's relevance.
-     */
-    @FXML
-    private void startGame() {
-        this.music.stop();
-        this.controller.startGame();
-    }
-
-    /*
-     * Wrapper method to delegate to the application controller the job of exiting from
-     * the app. This is made because every FXML file use only one controller and the
-     * application controller couldn't be weigh down with functionalities which are view's
-     * relevance.
-     */
-    @FXML
-    private void exitApp() {
-        this.controller.exitApp();
-    }
-
     private void drawFromURL(final URL drawableResource) {
-        final FXMLLoader loader = new FXMLLoader();
+        final FXMLLoader loader = new FXMLLoader(drawableResource);
         loader.setController(this);
-        loader.setLocation(drawableResource);
         try {
             this.stage.setScene(new Scene(loader.load()));
+            this.drawn = true;
         } catch (final IOException ex) {
             ex.printStackTrace();
         }
-        this.drawn = true;
     }
 
     /**
      * {@inheritDoc}
-     * It loads the ".fxml" associated file and sets as JavaFX controller this specific
-     * instance of menu, then draws it.
      */
     @Override
-    @FXML
     public void draw() {
         this.drawFromURL(MENU_LAYOUT);
-    }
-
-    @FXML
-    private void openSettings() {
-        this.drawFromURL(SETTINGS_LAYOUT);
-        this.volumeControl.setValue(this.music.getVolume() * VOLUME_RATIO);
-        this.volumeControl.valueProperty().addListener(e -> {
-            this.music.setVolume(this.volumeControl.getValue() / VOLUME_RATIO);
+        this.startButton.setOnMouseClicked(e -> {
+            this.music.stop();
+            this.controller.startGame();
         });
-    }
-
-    @FXML
-    private void openSavesLoader() {
-        this.drawFromURL(LOADER_LAYOUT);
+        this.quitButton.setOnMouseClicked(e -> this.controller.exitApp());
+        this.savesButton.setOnMouseClicked(e -> this.drawFromURL(LOADER_LAYOUT));
+        this.settingsButton.setOnMouseClicked(e -> {
+            this.drawFromURL(SETTINGS_LAYOUT);
+            this.volumeControl.setValue(this.music.getVolume() * VOLUME_RATIO);
+            this.volumeControl.valueProperty().addListener(c -> {
+                this.music.setVolume(this.volumeControl.getValue() / VOLUME_RATIO);
+            });
+        });
     }
 
     /**

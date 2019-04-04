@@ -35,7 +35,7 @@ public interface GameController {
     /**
      * Load a previously saved game.
      * @param saveFileUrl the {@link URL} of the file where the information about the game to be loaded is saved
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      * @throws IllegalArgumentException if the file referenced by the {@link URL} isn't compatible with this application
      */
     void loadGame(URL saveFileUrl) throws IOException;
