@@ -1,5 +1,6 @@
 package model.physics;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Optional;
@@ -45,13 +46,15 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     // TODO: consider a static method and a private constructor
 
-    private Optional<WholePhysicalWorld> physicalWorld;
+    private transient Optional<WholePhysicalWorld> physicalWorld;
+    private Pair<Double, Double> worldDimensions;
 
     /**
      * builds a new {@link PhysicalFactoryImpl}.
      */
     public PhysicalFactoryImpl() {
         this.physicalWorld = Optional.empty();
+        this.worldDimensions = new ImmutablePair<>(0.0, 0.0);
     }
 
     /**
@@ -60,6 +63,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     @Override
     public PhysicalWorld createPhysicalWorld(final double width, final double height) {
         throwException(this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_TWO_WORLDS_MSG));
+        this.worldDimensions = new ImmutablePair<>(width, height);
         this.physicalWorld = Optional.of(new WholePhysicalWorldImpl(new World(new AxisAlignedBounds(width * 2, height * 2))));
         return this.physicalWorld.get();
     }
@@ -73,6 +77,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         // TODO: repetitive code
         throwException(!this.physicalWorld.isPresent(), () -> new IllegalStateException("A PhysicalWorld has yet to be created!"));
         throwException(!isStaticBodyAllowed(shape, type), () -> new IllegalArgumentException("No such Entity can be created"));
+        throwException(!isPositionInsideWorld(position), () -> new IllegalArgumentException("The entity would be created outside the world"));
 
         final Body body;
         if (shape.equals(EntityShape.RECTANGLE)) {
@@ -125,6 +130,13 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                 || shape.equals(EntityShape.RECTANGLE) && (type.equals(EntityType.WALKING_ENEMY) || type.equals(EntityType.PLAYER));
     }
 
+    private boolean isPositionInsideWorld(final Pair<Double, Double> position) {
+        return position.getLeft() >= 0
+                && position.getRight() >= 0
+                && position.getLeft() <= this.worldDimensions.getLeft()
+                && position.getRight() <= this.worldDimensions.getRight();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -136,6 +148,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
         throwException(!this.physicalWorld.isPresent(), () -> new IllegalStateException("A PhysicalWorld has yet to be created!"));
         throwException(!isDynamicBodyAllowed(shape, type), () -> new IllegalArgumentException("No such Entity can be created"));
+        throwException(!isPositionInsideWorld(position), () -> new IllegalArgumentException("The entity would be created outside the world"));
 
         final Body body;
         if (shape.equals(EntityShape.CIRCLE)) {
