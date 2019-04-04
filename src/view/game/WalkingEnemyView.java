@@ -13,7 +13,7 @@ import model.entities.State;
 public class WalkingEnemyView extends DynamicDrawableEntity {
 
     private static final Image WALKING = new Image("images/walkingEnemy_walking.png");
-    private static final int WALKING_FRAMES = 7;
+    private static final int WALKING_FRAMES = 2;
     private static final Image IDLE = new Image("images/walkingEnemy.png");
     private static final int IDLE_FRAMES = 1;
     private static final int WIDTH = 128;
