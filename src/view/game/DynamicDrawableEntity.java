@@ -39,11 +39,16 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
         super(image, entity, worldDimensions, sceneDimensions);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateSpritePosition() {
         this.changeAnimation(this.getEntity().getState());
         this.getImageView().setImage(this.map.get(this.getEntity().getState()).getImage());
         this.updateSpriteProperties();
+        this.getImageView().setScaleX(this.getImageView().getScaleX() * direction());
     }
  
     /**
@@ -89,5 +94,9 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
             this.currentAnimation.play();
             this.lastState = state;
         }
+    }
+
+    private int direction() {
+        return this.lastState.equals(State.MOVING_LEFT) ? -1 : 1;
     }
 }
