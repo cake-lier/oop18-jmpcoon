@@ -30,7 +30,7 @@ import view.game.GameView;
 public class GameControllerImpl implements GameController {
 
     private static final long DELTA_UPDATE = 15;
-    private static final String LEVEL_FILE = ClassLoader.getSystemResource("level1.txt").toExternalForm();
+    private static final URL LEVEL_FILE = ClassLoader.getSystemResource("level1.lev");
 
     private World gameWorld;
     private final GameView gameView;
@@ -172,7 +172,7 @@ public class GameControllerImpl implements GameController {
 
     private List<EntityProperties> loadLevel() {
         final List<EntityProperties> entities = new LinkedList<>();
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(LEVEL_FILE))) {
+        try (ObjectInputStream in = new ObjectInputStream(LEVEL_FILE.openStream())) {
             final int n = in.readInt();
             for (int i = 0; i < n; i++) {
                 final Object obj = in.readObject();
