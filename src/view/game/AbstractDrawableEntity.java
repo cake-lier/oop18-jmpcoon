@@ -1,8 +1,6 @@
 package view.game;
 
 import java.util.Objects;
-
-import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.entities.Entity;
@@ -43,14 +41,6 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      * {@inheritDoc}
      */
     @Override
-    public void updatePosition() {
-        Platform.runLater(() -> this.updateSpritePosition());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public ImageView getImageView() {
         return this.sprite;
     }
@@ -59,8 +49,6 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      * method used to update properties like position, rotation, ... of the {@link ImageView} of this {@link DrawableEntity}
      */
     protected abstract void updateSpriteProperties();
-    
-    protected abstract void updateSpritePosition();
 
     /**
      * @return the {@link Entity} represented by this {@link DrawableEntity}
