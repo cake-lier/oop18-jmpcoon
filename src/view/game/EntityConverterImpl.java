@@ -55,33 +55,41 @@ public class EntityConverterImpl implements EntityConverter {
      * {@inheritDoc}
      */
     public DrawableEntity getDrawableEntity(final Entity entity) {
-        if (this.convertedEntities.containsKey(entity)) {
-            this.convertedEntities.get(entity).updatePosition();
-            return this.convertedEntities.get(entity);
-        } else {
-            final DrawableEntity drawableEntity;
+        if (!this.convertedEntities.containsKey(entity)) {
             if (entity instanceof DynamicEntity) {
-                drawableEntity = new DynamicDrawableEntity(this.images.get(entity.getType()), (DynamicEntity) entity, this.worldDimensions, this.sceneDimensions);
+                if (entity.getType() == EntityType.PLAYER) {
+                    return getAbstractDrawableEntity(entity, new PlayerView((DynamicEntity) entity, this.worldDimensions, this.sceneDimensions));
+                } else if (entity.getType() == EntityType.WALKING_ENEMY) {
+                    return getAbstractDrawableEntity(entity, new PlayerView((DynamicEntity) entity, this.worldDimensions, this.sceneDimensions));
+                } else if (entity.getType() == EntityType.ROLLING_ENEMY) {
+                    return getAbstractDrawableEntity(entity, new RollingEnemyView((DynamicEntity) entity, worldDimensions, sceneDimensions));
+                }
             } else if (entity instanceof StaticEntity) {
                 final Image image;
                 if (entity.getType() == EntityType.LADDER) {
-                    final Double timesPerModule =
-                            this.sceneDimensions.getLeft() * entity.getDimensions().getLeft() / this.worldDimensions.getLeft();
+                    final Double timesPerModule = this.sceneDimensions.getLeft() * entity.getDimensions().getLeft()
+                            / this.worldDimensions.getLeft();
                     image = replicateSprite(this.images.get(EntityType.LADDER), timesPerModule, false);
                 } else if (entity.getType() == EntityType.PLATFORM) {
-                    final Double timesPerModule =
-                            this.sceneDimensions.getRight() * entity.getDimensions().getRight() / this.worldDimensions.getRight();
+                    final Double timesPerModule = this.sceneDimensions.getRight() * entity.getDimensions().getRight()
+                            / this.worldDimensions.getRight();
                     image = replicateSprite(this.images.get(EntityType.PLATFORM), timesPerModule, true);
                 } else {
                     image = this.images.get(entity.getType());
                 }
-                drawableEntity = new StaticDrawableEntity(image, (StaticEntity) entity, this.worldDimensions, this.sceneDimensions);
+                return this.getAbstractDrawableEntity(entity, new StaticDrawableEntity(image, (StaticEntity) entity, this.worldDimensions,
+                        this.sceneDimensions));
             } else {
                 throw new IllegalArgumentException("Not supported entity");
             }
-            this.convertedEntities.put(entity, drawableEntity);
-            return drawableEntity;
         }
+
+        if (entity instanceof DynamicEntity) {
+            final DynamicDrawableEntity dynamicDrawableEntity = (DynamicDrawableEntity) this.convertedEntities
+                    .get(entity);
+            dynamicDrawableEntity.updateSpritePosition();
+        }
+        return this.convertedEntities.get(entity);
     }
 
     /**
