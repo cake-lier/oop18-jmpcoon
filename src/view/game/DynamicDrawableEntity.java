@@ -44,6 +44,7 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
             this.changeAnimation(this.getEntity().getState());
             this.getImageView().setImage(this.map.get(this.getEntity().getState()).getImage());
             this.getImageView().setScaleX(this.getImageView().getScaleX() * direction());
+            super.updateSpriteProperties();
         });
     }
 
