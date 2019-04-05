@@ -15,8 +15,9 @@ import model.entities.StaticEntity;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * An implementation of {@link EntityConverter} that maintains the {@link DrawableEntity} converted in the past,
- * so that if requested again it does not need to create them again.
+ * An implementation of {@link EntityConverter} that maintains the
+ * {@link DrawableEntity} converted in the past, so that if requested again it
+ * does not need to create them again.
  */
 public class EntityConverterImpl implements EntityConverter {
 
@@ -34,8 +35,13 @@ public class EntityConverterImpl implements EntityConverter {
 
     /**
      * builds a new {@link EntityConverterImpl}.
-     * @param worldDimensions the dimensions of the world in which the {@link Entity} to convert lives
-     * @param sceneDimensions the dimensions of the scene in which the {@link DrawableEntity} produced will be put
+     * 
+     * @param worldDimensions
+     *            the dimensions of the world in which the {@link Entity} to convert
+     *            lives
+     * @param sceneDimensions
+     *            the dimensions of the scene in which the {@link DrawableEntity}
+     *            produced will be put
      */
     public EntityConverterImpl(final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
         this.worldDimensions = worldDimensions;
@@ -79,11 +85,19 @@ public class EntityConverterImpl implements EntityConverter {
     }
 
     /**
-     * removes the {@link DrawableEntity}, saved  converted in the past that are now unused.
-     * @param entities the {@link Entity} that will never be used in the future again
+     * removes the {@link DrawableEntity}, saved converted in the past that are now
+     * unused.
+     * 
+     * @param entities
+     *            the {@link Entity} that will never be used in the future again
      */
     public void removeUnusedEntities(final Collection<Entity> entities) {
         entities.forEach(e -> this.convertedEntities.remove(e));
+    }
+
+    private AbstractDrawableEntity getAbstractDrawableEntity(final Entity entity, final AbstractDrawableEntity drawableEntity) {
+        this.convertedEntities.put(entity, drawableEntity);
+        return drawableEntity;
     }
 
     private void fillImagesMap() {
@@ -98,7 +112,10 @@ public class EntityConverterImpl implements EntityConverter {
         return new Image(imageUrl);
     }
 
-    /* axis should be true to replicate a sprite along the x axis, and it should be false to replicate it along the y axis */
+    /*
+     * axis should be true to replicate a sprite along the x axis, and it should be
+     * false to replicate it along the y axis
+     */
     private Image replicateSprite(final Image module, final double timesPerModule, final boolean axis) {
         /* width and height of the sprite */
         final int width = ((Double) module.getWidth()).intValue();
@@ -112,7 +129,8 @@ public class EntityConverterImpl implements EntityConverter {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 for (int k = 0; k < times; k++) {
-                    pixelWriter.setColor(axis ? i + k * width : i, !axis ? j + k * height : j, pixelReader.getColor(i, j));
+                    pixelWriter.setColor(axis ? i + k * width : i, !axis ? j + k * height : j,
+                            pixelReader.getColor(i, j));
                 }
             }
         }
