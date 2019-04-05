@@ -1,12 +1,14 @@
 package view.game;
 
 import org.apache.commons.lang3.tuple.Pair;
-
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 import model.entities.DynamicEntity;
 import model.entities.State;
 
+/**
+ * Models a view for the player.
+ */
 public class PlayerView extends DynamicDrawableEntity {
 
     private static final Image WALKING = new Image("images/raccoon_walking.png");
@@ -18,6 +20,12 @@ public class PlayerView extends DynamicDrawableEntity {
     private static final int DURATION = 700;
 
     /**
+     * @param entity
+     *            the {@link Player}
+     * @param worldDimensions
+     *            the dimensions of the {@link World}
+     * @param sceneDimensions
+     *            the dimensions of the view in which this {@link Player} will be drawn
      */
     public PlayerView(final DynamicEntity entity,
             final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
