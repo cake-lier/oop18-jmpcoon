@@ -7,6 +7,9 @@ import javafx.util.Duration;
 import model.entities.DynamicEntity;
 import model.entities.State;
 
+/**
+ * Models a view for the rolling enemy.
+ */
 public class RollingEnemyView extends DynamicDrawableEntity {
 
     private static final Image SPRITE = new Image("images/images/rollingEnemy.png");
@@ -15,11 +18,13 @@ public class RollingEnemyView extends DynamicDrawableEntity {
     private static final int HEIGHT = 128;
     private static final int DURATION = 500;
 
-
     /**
-     * @param entity b
-     * @param worldDimensions c
-     * @param sceneDimensions d
+     * @param entity
+     *            the {@link RollingEnemy} entity
+     * @param worldDimensions
+     *            the dimensions of the {@link World}
+     * @param sceneDimensions
+     *            the dimensions of the view in which this {@link RollingEnemy} will be drawn
      */
     public RollingEnemyView(final DynamicEntity entity, final Pair<Double, Double> worldDimensions,
             final Pair<Double, Double> sceneDimensions) {
