@@ -1,5 +1,8 @@
 package view;
 
+import java.net.URL;
+import java.util.Optional;
+
 import controller.app.AppController;
 import controller.app.AppControllerImpl;
 import javafx.geometry.Rectangle2D;
@@ -95,9 +98,9 @@ public final class ViewImpl implements View {
      * {@inheritDoc}
      */
     @Override
-    public void displayGame() {
+    public void displayGame(final Optional<URL> saveFile) {
         this.createNewTrack(GAME_MUSIC);
-        final GameView gameView = new GameViewImpl(this.controller, this, this.stage, this.player);
+        final GameView gameView = new GameViewImpl(this.controller, this, this.stage, this.player, saveFile);
         gameView.init();
     }
 }

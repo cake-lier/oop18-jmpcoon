@@ -29,11 +29,13 @@ import model.entities.EntityType;
 import view.View;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -92,8 +94,10 @@ public class GameViewImpl implements GameView {
      * @param view The application view.
      * @param stage The stage in which to draw the game scene.
      * @param music The music to play in the background.
+     * @param saveFile The file from which to load the game and display it, if present.
      */
-    public GameViewImpl(final AppController appController, final View view, final Stage stage, final MediaPlayer music) {
+    public GameViewImpl(final AppController appController, final View view, final Stage stage, final MediaPlayer music,
+                        final Optional<URL> saveFile) {
         this.appController = Objects.requireNonNull(appController);
         this.gameController = new GameControllerImpl(this);
         this.appView = Objects.requireNonNull(view);
@@ -107,7 +111,15 @@ public class GameViewImpl implements GameView {
         this.entityConverter = new EntityConverterImpl(this.gameController.getWorldDimensions(),
                                                        new ImmutablePair<>(stage.getScene().getWidth(),
                                                                            stage.getScene().getHeight()));
-        this.gameController.startGame();
+        if (saveFile.isPresent()) {
+            try {
+                this.gameController.loadGame(saveFile.get());
+            } catch (final IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            this.gameController.startGame();
+        }
     }
 
     /*

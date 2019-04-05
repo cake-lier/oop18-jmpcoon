@@ -1,5 +1,8 @@
 package controller.app;
 
+import java.net.URL;
+import java.util.Optional;
+
 import view.View;
 
 /**
@@ -36,7 +39,7 @@ public final class AppControllerImpl implements AppController {
      * {@inheritDoc}
      */
     @Override
-    public void startGame() {
-        this.view.displayGame();
+    public void startGame(final Optional<URL> saveFile) {
+        this.view.displayGame(saveFile);
     }
 }

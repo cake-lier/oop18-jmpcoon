@@ -1,17 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.control.Button?>
 <?import java.net.URL?>
+<?import javafx.scene.layout.Pane?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
             id="root">
     <center>
-        <GridPane alignment="center">
-        </GridPane>
+        <VBox alignment="CENTER"
+              BorderPane.alignment="CENTER"
+              id="pageContainer">
+            <BorderPane>
+                <center>
+                    <Button fx:id="firstSave"
+                            styleClass="buttons, loadButtons"
+                            BorderPane.alignment="CENTER"
+                            alignment="CENTER_LEFT"></Button>
+                </center>
+                <bottom>
+                    <FlowPane styleClass="deleteButtonsContainers"
+                              alignment="BOTTOM_RIGHT">
+	                    <Button fx:id="firstDelete"
+	                            styleClass="deleteButtons"
+	                            alignment="CENTER">Delete</Button>
+                    </FlowPane>
+                </bottom>
+            </BorderPane>
+            <BorderPane>
+                <center>
+                    <Button fx:id="secondSave"
+                            styleClass="buttons, loadButtons"
+                            BorderPane.alignment="CENTER"
+                            alignment="CENTER_LEFT"></Button>
+                </center>
+                <bottom>
+                    <FlowPane styleClass="deleteButtonsContainers"
+                              alignment="BOTTOM_RIGHT">
+	                    <Button fx:id="secondDelete"
+	                            styleClass="deleteButtons"
+	                            alignment="CENTER">Delete</Button>
+	                </FlowPane>
+                </bottom>
+            </BorderPane>
+            <BorderPane>
+                <center>
+                    <Button fx:id="thirdSave"
+                            styleClass="buttons, loadButtons"
+                            BorderPane.alignment="CENTER"
+                            alignment="CENTER_LEFT"></Button>
+                </center>
+                <bottom>
+                    <FlowPane styleClass="deleteButtonsContainers"
+                              alignment="BOTTOM_RIGHT">
+	                    <Button fx:id="thirdDelete"
+	                            styleClass="deleteButtons"
+	                            alignment="CENTER">Delete</Button>
+	               </FlowPane>
+                </bottom>
+            </BorderPane>
+        </VBox>
     </center>
     <bottom>
         <FlowPane id="buttonContainer"
