@@ -17,6 +17,7 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
     private final Map<State, SpriteAnimation> map = new HashMap<>();
     private Animation currentAnimation;
     private State lastState = State.IDLE;
+    private State currentState = State.IDLE;
 
     /**
      * builds a new {@link StaticDrawableEntity}.
@@ -41,10 +42,10 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
      */
     protected void updateSpritePosition() {
         Platform.runLater(() -> {
+            super.updateSpriteProperties();
             this.changeAnimation(this.getEntity().getState());
             this.getImageView().setImage(this.map.get(this.getEntity().getState()).getImage());
             this.getImageView().setScaleX(this.getImageView().getScaleX() * direction());
-            super.updateSpriteProperties();
         });
     }
 
@@ -62,16 +63,18 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
     }
 
     private void changeAnimation(final State state) {
-        if (!this.lastState.equals(state)) {
+        if (!this.currentState.equals(state)) {
             this.currentAnimation.stop();
             this.currentAnimation = this.map.get(state);
             this.currentAnimation.setCycleCount(Animation.INDEFINITE);
             this.currentAnimation.play();
-            this.lastState = state;
+            this.lastState = this.currentState;
+            this.currentState = state;
         }
     }
 
     private int direction() {
-        return this.lastState.equals(State.MOVING_LEFT) ? -1 : 1;
+        return this.currentState.equals(State.MOVING_LEFT) ? -1
+                : (this.lastState.equals(State.MOVING_LEFT) && this.currentState.equals(State.IDLE)) ? -1 : 1;
     }
 }
