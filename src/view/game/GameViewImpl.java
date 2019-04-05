@@ -6,7 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -28,8 +31,14 @@ import javafx.stage.Stage;
 import model.entities.EntityType;
 import view.View;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -53,6 +62,13 @@ public class GameViewImpl implements GameView {
                                                                         BackgroundRepeat.ROUND, BackgroundPosition.CENTER,
                                                                         new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, 
                                                                                            true, true, false, true));
+    private static final String SAVES_PATH = "saves/";
+    private static final String TIME_FORMAT = "d MMMM yyyy H:m";
+    private static final String NO_SAVE_MSG = "No save game in this slot";
+    private static final String DEL_ERR_MSG = " was not correctly deleted!";
+    private static final String FIRST_SAVE_FILE = "save1.sav";
+    private static final String SECOND_SAVE_FILE = "save2.sav";
+    private static final String THIRD_SAVE_FILE = "save3.sav";
     private static final String FONT_URL = ClassLoader.getSystemResource("fonts/darkforest.ttf").toExternalForm();
     private static final String SHADOW_COLOR = "#2D2926";
     private static final String WIN_COLOR = "#FFB100";
@@ -73,18 +89,27 @@ public class GameViewImpl implements GameView {
     private final Pane entities;
     private final Text score;
     private BorderPane menu;
+    private BorderPane saveMenu;
     private boolean isMenuVisible;
     private boolean isGameEnded;
     private final MediaPlayer music;
 
     @FXML
-    private Button backButton;
+    private Button backMenuButton;
     @FXML
     private Button quitButton;
     @FXML
     private Button saveButton;
     @FXML
     private Text message;
+    @FXML
+    private Button firstSave;
+    @FXML
+    private Button secondSave;
+    @FXML
+    private Button thirdSave;
+    @FXML
+    private Button backButton;
 
     /**
      * Binds this game view to the instance of the {@link AppController},
@@ -114,12 +139,11 @@ public class GameViewImpl implements GameView {
         if (saveFile.isPresent()) {
             try {
                 this.gameController.loadGame(saveFile.get());
-            } catch (final IOException e) {
-                e.printStackTrace();
+            } catch (final IOException ex) {
+                new Alert(AlertType.ERROR, ex.getLocalizedMessage());
             }
-        } else {
-            this.gameController.startGame();
         }
+        this.gameController.startGame();
     }
 
     /*
@@ -215,6 +239,7 @@ public class GameViewImpl implements GameView {
                           this.gameController.togglePauseGame();
                           if (this.isMenuVisible) {
                               this.menu.setVisible(false);
+                              this.saveMenu.setVisible(false);
                               this.isMenuVisible = false;
                               this.music.play();
                           } else {
@@ -247,24 +272,101 @@ public class GameViewImpl implements GameView {
         });
     }
 
+    private void initSaveButton(final Button save, final String fileName) {
+        final URL fileURL = ClassLoader.getSystemResource(SAVES_PATH + fileName);
+        if (fileURL != null) {
+            final File file = new File(fileURL.getFile());
+            final String created = LocalDateTime.ofEpochSecond(file.lastModified() / 1000, 0, 
+                                                               ZoneOffset.of(ZoneOffset.systemDefault()
+                                                                                       .getRules()
+                                                                                       .getOffset(Instant.now())
+                                                                                       .getId()))
+                                                .format(DateTimeFormatter.ofPattern(TIME_FORMAT));
+            save.setText(created);
+            save.setOnMouseClicked(e -> {
+                final Optional<ButtonType> choice = new Alert(AlertType.CONFIRMATION, "Are you sure you want to overwrite this saved game?").showAndWait();
+                choice.ifPresent(b -> {
+                    if (b.equals(ButtonType.OK)) {
+                        if (file.delete()) {
+                            try {
+                                this.gameController.saveGame(fileURL);
+                                final File newFile = new File(fileURL.getFile());
+                                final String newCreated = LocalDateTime.ofEpochSecond(newFile.lastModified() / 1000, 0, 
+                                                                                   ZoneOffset.of(ZoneOffset.systemDefault()
+                                                                                                           .getRules()
+                                                                                                           .getOffset(Instant.now())
+                                                                                                           .getId()))
+                                                                       .format(DateTimeFormatter.ofPattern(TIME_FORMAT));
+                                save.setText(newCreated);
+                            } catch (IOException ex) {
+                                new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
+                            }
+                        } else {
+                            new Alert(AlertType.ERROR, file.getName() + DEL_ERR_MSG).show();
+                        }
+                    }
+                });
+            });
+        } else {
+            save.setText(NO_SAVE_MSG);
+            try {
+                final URL saveURL = new URL(ClassLoader.getSystemResource(SAVES_PATH).toExternalForm() + fileName);
+                save.setOnMouseClicked(e -> {
+                    try {
+                        this.gameController.saveGame(saveURL);
+                        final File newFile = new File(saveURL.getFile());
+                        final String newCreated = LocalDateTime.ofEpochSecond(newFile.lastModified() / 1000, 0, 
+                                                                           ZoneOffset.of(ZoneOffset.systemDefault()
+                                                                                                   .getRules()
+                                                                                                   .getOffset(Instant.now())
+                                                                                                   .getId()))
+                                                               .format(DateTimeFormatter.ofPattern(TIME_FORMAT));
+                        save.setText(newCreated);
+                    } catch (IOException ex) {
+                        new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
+                    }
+                });
+            } catch (MalformedURLException ex) {
+                new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
+            }
+        }
+    }
+
     private void setupMenu() {
-        final FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("layouts/gameMenu.fxml"));
-        loader.setController(this);
+        final FXMLLoader menuLoader = new FXMLLoader(ClassLoader.getSystemResource("layouts/gameMenu.fxml"));
+        menuLoader.setController(this);
         try {
-            this.menu = loader.load();
+            this.menu = menuLoader.load();
             this.menu.setVisible(false);
             this.root.getChildren().add(this.menu);
-            this.backButton.setOnMouseClicked(e -> {
+            this.backMenuButton.setOnMouseClicked(e -> {
                 this.appView.displayMenu();
             });
             this.quitButton.setOnMouseClicked(e -> {
                 this.appController.exitApp();
             });
             this.saveButton.setOnMouseClicked(e -> {
-                //no-op
+                this.menu.setVisible(false);
+                this.saveMenu.setVisible(true);
             });
-        } catch (final IOException e) {
-            e.printStackTrace();
+        } catch (final IOException ex) {
+            new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
+        }
+        final FXMLLoader saveLoader = new FXMLLoader(ClassLoader.getSystemResource("layouts/saveGameMenu.fxml"));
+        saveLoader.setController(this);
+        try {
+            this.saveMenu = saveLoader.load();
+            this.saveMenu.setVisible(false);
+            this.root.getChildren().add(this.saveMenu);
+            this.backButton.setOnMouseClicked(ev -> {
+                this.saveMenu.setVisible(false);
+                this.menu.setVisible(true);
+            });
+            this.initSaveButton(this.firstSave, FIRST_SAVE_FILE);
+            this.initSaveButton(this.secondSave, SECOND_SAVE_FILE);
+            this.initSaveButton(this.thirdSave, THIRD_SAVE_FILE);
+        } catch (final IOException ex) {
+            new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
         }
     }
 
@@ -281,14 +383,14 @@ public class GameViewImpl implements GameView {
             } else if (msg.equals(LOSE_MSG)) {
                 this.message.setFill(Color.web(LOSE_COLOR));
             }
-            this.backButton.setOnMouseClicked(e -> {
+            this.backMenuButton.setOnMouseClicked(e -> {
                 this.appView.displayMenu();
             });
             this.quitButton.setOnMouseClicked(e -> {
                 this.appController.exitApp();
             });
         } catch (final IOException ex) {
-            ex.printStackTrace();
+            new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
         }
     }
 }

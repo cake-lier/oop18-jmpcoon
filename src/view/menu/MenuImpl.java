@@ -33,8 +33,8 @@ public final class MenuImpl implements Menu {
     private static final String MENU_LAYOUT = LAYOUT_PATH + "menu.fxml";
     private static final String SETTINGS_LAYOUT = LAYOUT_PATH + "settings.fxml";
     private static final String LOADER_LAYOUT = LAYOUT_PATH + "savesLoader.fxml";
-    private static final String TIME_FORMAT = "d MMMM yyyy H:m";
-    private static final String DEL_MSG = "Are you sure you want to delete this savegame?";
+    private static final String TIME_FORMAT = "d MMMM yyyy HH:mm";
+    private static final String DEL_MSG = "Are you sure you want to delete this game save?";
     private static final String DEL_ERR_MSG = " was not correctly deleted!";
     private static final String NO_SAVE_MSG = "No save game in this slot";
     private static final int VOLUME_RATIO = 100;
@@ -106,11 +106,11 @@ public final class MenuImpl implements Menu {
                                                 .format(DateTimeFormatter.ofPattern(TIME_FORMAT));
             save.setText(created);
             save.setOnMouseClicked(e -> {
+                this.music.stop();
                 this.controller.startGame(Optional.of(fileURL));
             });
             delete.setOnMouseClicked(e -> {
-                final Alert alert = new Alert(AlertType.CONFIRMATION, DEL_MSG);
-                final Optional<ButtonType> choice = alert.showAndWait();
+                final Optional<ButtonType> choice = new Alert(AlertType.CONFIRMATION, DEL_MSG).showAndWait();
                 choice.ifPresent(b -> {
                     if (b.equals(ButtonType.OK)) {
                         if (!file.delete()) {

@@ -1,0 +1,27 @@
+#background {
+    -fx-background-color: rgba(45, 41, 38, 0.75);
+}
+
+#pageContainer {
+    -fx-padding: 0 5em 0 5em;
+    -fx-spacing: 1em;
+}
+
+.buttons {
+    -fx-font-size: 5em;
+    -fx-max-width: infinity;
+}
+
+.loadButtons {
+    -fx-font-size: 7em;
+    -fx-max-width: infinity;
+    -fx-padding: 2em 0 2em 1em;
+}
+
+#buttonContainer {
+    -fx-padding: 1em;
+}
+
+#backButton {
+    -fx-font-size: 3em;
+}

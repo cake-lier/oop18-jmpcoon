@@ -18,7 +18,7 @@
 	               AnchorPane.leftAnchor="0"
 	               AnchorPane.rightAnchor="0"
 	               alignment="CENTER">Save game</Button>
-	       <Button fx:id="backButton"
+	       <Button fx:id="backMenuButton"
 	               styleClass="buttons"
 	               AnchorPane.leftAnchor="0"
                    AnchorPane.rightAnchor="0"

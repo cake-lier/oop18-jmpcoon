@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.control.Button?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            id="background">
+    <center>
+        <VBox alignment="CENTER"
+              BorderPane.alignment="CENTER"
+              id="pageContainer">
+            <Button fx:id="firstSave"
+                    styleClass="buttons, loadButtons"
+                    BorderPane.alignment="CENTER"
+                    alignment="CENTER_LEFT"></Button>
+            <Button fx:id="secondSave"
+                    styleClass="buttons, loadButtons"
+                    BorderPane.alignment="CENTER"
+                    alignment="CENTER_LEFT"></Button>
+            <Button fx:id="thirdSave"
+                    styleClass="buttons, loadButtons"
+                    BorderPane.alignment="CENTER"
+                    alignment="CENTER_LEFT"></Button>
+        </VBox>
+    </center>
+    <bottom>
+        <FlowPane id="buttonContainer"
+                  BorderPane.alignment="TOP_LEFT">
+            <Button fx:id="backButton"
+                    styleClass="buttons"
+                    id="backButton"
+                    alignment="CENTER">Back</Button>
+        </FlowPane>
+    </bottom>
+    <stylesheets>
+      <URL value="@saveGameMenu.css" />
+      <URL value="@buttons.css" />
+   </stylesheets>
+</BorderPane>

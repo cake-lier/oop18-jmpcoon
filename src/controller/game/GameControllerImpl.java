@@ -88,7 +88,7 @@ public class GameControllerImpl implements GameController {
     public void saveGame(final URL saveFileUrl) throws FileNotFoundException, IOException {
         try (ObjectOutputStream out = new ObjectOutputStream(
                                         new BufferedOutputStream(
-                                            new FileOutputStream(saveFileUrl.toExternalForm())))) {
+                                            new FileOutputStream(saveFileUrl.getFile())))) {
             out.writeObject(this.gameWorld);
         }
     }
