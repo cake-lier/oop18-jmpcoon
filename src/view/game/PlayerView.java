@@ -11,12 +11,19 @@ import model.entities.State;
  */
 public class PlayerView extends DynamicDrawableEntity {
 
-    private static final Image WALKING = new Image("images/raccoon_walking.png");
-    private static final int WALKING_FRAMES = 7;
-    private static final Image IDLE = new Image("images/raccoon_idle.png");
+    private static final String SPRITES_DIR = "images/";
+    private static final Image WALKING = new Image(SPRITES_DIR + "raccoon_walking.png");
+    private static final Image IDLE = new Image(SPRITES_DIR + "raccoon_idle.png");
+    private static final Image CLIMB = new Image(SPRITES_DIR + "raccoon_climb.png");
+    private static final Image JUMP = new Image(SPRITES_DIR + "raccoon_jump.png");
+
     private static final int IDLE_FRAMES = 1;
-    private static final int WIDTH = 128;
-    private static final int HEIGHT = 128;
+    private static final int WALKING_FRAMES = 8;
+    private static final int CLIMB_FRAMES = 2;
+    private static final int JUMP_FRAMES = 3;
+
+    private static final int WIDTH = 512;
+    private static final int HEIGHT = 512;
     private static final int DURATION = 700;
 
     /**
@@ -33,5 +40,8 @@ public class PlayerView extends DynamicDrawableEntity {
         this.mapAnimation(State.IDLE, new SpriteAnimation(IDLE, Duration.millis(DURATION), IDLE_FRAMES, WIDTH, HEIGHT));
         this.mapAnimation(State.MOVING_RIGHT, new SpriteAnimation(WALKING, Duration.millis(DURATION), WALKING_FRAMES, WIDTH, HEIGHT));
         this.mapAnimation(State.MOVING_LEFT, new SpriteAnimation(WALKING, Duration.millis(DURATION), WALKING_FRAMES, WIDTH, HEIGHT));
+        this.mapAnimation(State.CLIMBING_UP, new SpriteAnimation(CLIMB, Duration.millis(DURATION), CLIMB_FRAMES, WIDTH, HEIGHT));
+        this.mapAnimation(State.CLIMBING_DOWN, new SpriteAnimation(CLIMB, Duration.millis(DURATION), CLIMB_FRAMES, WIDTH, HEIGHT));
+        this.mapAnimation(State.JUMPING, new SpriteAnimation(JUMP, Duration.millis(DURATION), JUMP_FRAMES, WIDTH, HEIGHT));
     }
 }
