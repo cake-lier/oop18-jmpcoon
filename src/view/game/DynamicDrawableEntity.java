@@ -77,7 +77,8 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
 
     private int direction() {
         return this.currentState.equals(State.MOVING_LEFT) ? -1
-                : (this.lastState.equals(State.MOVING_LEFT) && this.currentState.equals(State.IDLE)) ? -1 : 1;
+                : (this.lastState.equals(State.MOVING_LEFT)
+                        && (this.currentState.equals(State.IDLE) || this.currentState.equals(State.JUMPING))) ? -1 : 1;
     }
 
     private boolean checkClimb() {
