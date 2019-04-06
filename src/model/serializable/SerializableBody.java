@@ -142,10 +142,8 @@ public class SerializableBody extends Body implements Serializable {
         if (obj == this) {
             return true;
         }
-        if (obj != null) {
-            if (this.getClass().equals(obj.getClass())) {
-                return this.getId().equals(((SerializableBody) obj).getId());
-            }
+        if (obj != null && this.getClass().equals(obj.getClass())) {
+            return this.getId().equals(((SerializableBody) obj).getId());
         }
         return false;
     }

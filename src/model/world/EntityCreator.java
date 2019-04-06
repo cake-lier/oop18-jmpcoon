@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import model.entities.Entity;
 import model.entities.EntityBuilder;
+import model.entities.EntityBuilderUtils;
 import model.entities.GeneratorEnemy;
 import model.entities.Ladder;
 import model.entities.Player;
@@ -20,31 +21,31 @@ enum EntityCreator {
     /**
      * A {@link Ladder} creator.
      */
-    LADDER(Ladder.class, EntityBuilder::getLadderBuilder),
+    LADDER(Ladder.class, EntityBuilderUtils::getLadderBuilder),
     /**
      * A {@link Player} creator.
      */
-    PLAYER(Player.class, EntityBuilder::getPlayerBuilder),
+    PLAYER(Player.class, EntityBuilderUtils::getPlayerBuilder),
     /**
      * A {@link Platform} creator.
      */
-    PLATFORM(Platform.class, EntityBuilder::getPlatformBuilder),
+    PLATFORM(Platform.class, EntityBuilderUtils::getPlatformBuilder),
     /**
      * A {@link PowerUp} creator.
      */
-    POWERUP(PowerUp.class, EntityBuilder::getPowerUpBuilder),
+    POWERUP(PowerUp.class, EntityBuilderUtils::getPowerUpBuilder),
     /**
      * A {@link RollingEnemy} creator.
      */
-    ROLLING_ENEMY(RollingEnemy.class, EntityBuilder::getRollingEnemyBuilder),
+    ROLLING_ENEMY(RollingEnemy.class, EntityBuilderUtils::getRollingEnemyBuilder),
     /**
      * A {@link WalkingEnemy} creator.
      */
-    WALKING_ENEMY(WalkingEnemy.class, EntityBuilder::getWalkingEnemyBuilder),
+    WALKING_ENEMY(WalkingEnemy.class, EntityBuilderUtils::getWalkingEnemyBuilder),
     /**
      * A {@link GeneratorEnemy} creator.
      */
-    GENERATOR_ENEMY(GeneratorEnemy.class, EntityBuilder::getGeneratorEnemyBuilder);
+    GENERATOR_ENEMY(GeneratorEnemy.class, EntityBuilderUtils::getGeneratorEnemyBuilder);
 
 
     private final Supplier<EntityBuilder> supplier;

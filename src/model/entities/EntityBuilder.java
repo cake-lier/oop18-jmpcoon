@@ -9,94 +9,9 @@ import model.physics.PhysicalFactory;
 import model.physics.StaticPhysicalBody;
 
 /**
- * a class used to build various types of {@link Entity}.
+ * A class used to create builders for building all types of {@link Entity}.
  */
 public abstract class EntityBuilder {
-
-    /**
-     * @return a {@link EntityBuilder} for creating a {@link GeneratorEnemy}.
-     */
-    public static final EntityBuilder getGeneratorEnemyBuilder() {
-        return new EntityBuilder() {
-            @Override
-            public Entity buildEntity() {
-                return new GeneratorEnemy(super.createStaticPhysicalBody(EntityType.GENERATOR_ENEMY));
-            }
-        };
-    }
-
-    /**
-     * @return a {@link EntityBuilder} for creating a {@link Ladder}.
-     */
-    public static final EntityBuilder getLadderBuilder() {
-        return new EntityBuilder() {
-            @Override
-            public Entity buildEntity() {
-                return new Ladder(super.createStaticPhysicalBody(EntityType.LADDER));
-            }
-        };
-    }
-
-    /**
-     * @return a {@link EntityBuilder} for creating a {@link Player}.
-     */
-    public static final EntityBuilder getPlayerBuilder() {
-        return new EntityBuilder() {
-            @Override
-            public Entity buildEntity() {
-                return new Player(super.createDynamicPhysicalBody(EntityType.PLAYER));
-            }
-        };
-    }
-
-    /**
-     * @return a {@link EntityBuilder} for creating a {@link Platform}.
-     */
-    public static final EntityBuilder getPlatformBuilder() {
-        return new EntityBuilder() {
-            @Override
-            public Entity buildEntity() {
-                return new Platform(super.createStaticPhysicalBody(EntityType.PLATFORM));
-            }
-        };
-    }
-
-    /**
-     * @return a {@link EntityBuilder} for creating a {@link PowerUp}.
-     */
-    public static final EntityBuilder getPowerUpBuilder() {
-        return new EntityBuilder() {
-            @Override
-            public Entity buildEntity() {
-                return new PowerUp(super.createStaticPhysicalBody(EntityType.POWERUP));
-            }
-        };
-    }
-
-    /**
-     * @return a {@link EntityBuilder} for creating a {@link RollingEnemy}.
-     */
-    public static final EntityBuilder getRollingEnemyBuilder() {
-        return new EntityBuilder() {
-            @Override
-            public Entity buildEntity() {
-                return new RollingEnemy(super.createDynamicPhysicalBody(EntityType.ROLLING_ENEMY));
-            }
-        };
-    }
-
-    /**
-     * @return a {@link EntityBuilder} for creating a {@link WalkingEnemy}.
-     */
-    public static final EntityBuilder getWalkingEnemyBuilder() {
-        return new EntityBuilder() {
-            @Override
-            public Entity buildEntity() {
-                return new WalkingEnemy(super.createDynamicPhysicalBody(EntityType.WALKING_ENEMY));
-            }
-        };
-    }
-
     private Optional<Pair<Double, Double>> center;
     private Optional<Pair<Double, Double>> dimensions;
     private Optional<EntityShape> shape;
@@ -104,7 +19,10 @@ public abstract class EntityBuilder {
     private Optional<PhysicalFactory> factory;
     private boolean built;
 
-    private EntityBuilder() {
+    /**
+     * The default constructor. Initializes as empty all parameters of this builder.
+     */
+    protected EntityBuilder() {
         this.center = Optional.empty();
         this.dimensions = Optional.empty();
         this.shape = Optional.empty();
@@ -167,8 +85,9 @@ public abstract class EntityBuilder {
 
     // TODO: improve this comment
     /**
-     * Builds the {@link Entity} as previously set.
-     * @return the {@link Entity}
+     * Builds the {@link Entity} with parameters as previously set. All the parameters are needed and, as a builder, once the
+     * build has happened this builder won't produce any other copies of the produced {@link Entity}.
+     * @return The {@link Entity} with parameters specified with the others methods.
      * @throws IllegalStateException if not every field has been initialized or if this {@link EntityBuilder} has already been
      *  built
      */
@@ -202,7 +121,12 @@ public abstract class EntityBuilder {
                 && this.factory.isPresent();
     }
 
-    private StaticPhysicalBody createStaticPhysicalBody(final EntityType type) {
+    /**
+     * 
+     * @param type
+     * @return
+     */
+    protected StaticPhysicalBody createStaticPhysicalBody(final EntityType type) {
         return this.factory.get().createStaticPhysicalBody(this.center.get(), 
                                                             this.angle.get(), 
                                                             this.shape.get(), 
@@ -211,7 +135,12 @@ public abstract class EntityBuilder {
                                                             type);
     }
 
-    private DynamicPhysicalBody createDynamicPhysicalBody(final EntityType type) {
+    /**
+     * 
+     * @param type
+     * @return
+     */
+    protected DynamicPhysicalBody createDynamicPhysicalBody(final EntityType type) {
         return this.factory.get().createDynamicPhysicalBody(this.center.get(), 
                                                             this.angle.get(), 
                                                             this.shape.get(), 

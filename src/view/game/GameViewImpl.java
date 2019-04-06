@@ -7,7 +7,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -17,7 +16,6 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
@@ -26,15 +24,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.entities.EntityType;
 import view.View;
+import view.menu.GameMenu;
+import view.menu.GameMenuImpl;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -53,31 +47,25 @@ import controller.game.GameControllerImpl;
 /**
  * The class implementation of the {@link GameView} interface.
  */
-public class GameViewImpl implements GameView {
+public final class GameViewImpl implements GameView {
     private static final String BG_IMAGE = "images/bg_game.png";
-    private static final String SCORE_SRC = "layouts/score.fxml";
-    private static final String SAVES_PATH = "saves/";
-    private static final String TIME_FORMAT = "d MMMM yyyy H:m";
-    private static final String NO_SAVE_MSG = "No save game in this slot";
-    private static final String DEL_ERR_MSG = " was not correctly deleted!";
-    private static final String FIRST_SAVE_FILE = "save1.sav";
-    private static final String SECOND_SAVE_FILE = "save2.sav";
-    private static final String THIRD_SAVE_FILE = "save3.sav";
+    private static final String LAYOUT_PATH = "layouts/";
+    private static final String SCORE_SRC = LAYOUT_PATH + "score.fxml";
+    private static final String END_MSG_SRC = LAYOUT_PATH + "endMessage.fxml";
     private static final String WIN_COLOR = "#FFB100";
     private static final String LOSE_COLOR = "#BB29BB";
     private static final String SCORE_STR = "Score: ";
     private static final String WIN_MSG = "YOU WON";
     private static final String LOSE_MSG = "GAME OVER";
 
-    private final GameController gameController;
-    private final EntityConverterImpl entityConverter;
     private final AppController appController;
     private final View appView;
+    private final GameController gameController;
+    private final EntityConverterImpl entityConverter;
+    private final GameMenu gameMenu;
     private final Stage stage;
     private final StackPane root;
     private final Pane entities;
-    private BorderPane menu;
-    private BorderPane saveMenu;
     private boolean isMenuVisible;
     private boolean isGameEnded;
     private final MediaPlayer music;
@@ -85,21 +73,7 @@ public class GameViewImpl implements GameView {
     @FXML
     private Text score;
     @FXML
-    private Button backMenuButton;
-    @FXML
-    private Button quitButton;
-    @FXML
-    private Button saveButton;
-    @FXML
     private Text message;
-    @FXML
-    private Button firstSave;
-    @FXML
-    private Button secondSave;
-    @FXML
-    private Button thirdSave;
-    @FXML
-    private Button backButton;
     @FXML
     private Button finalBackMenuButton;
     @FXML
@@ -118,12 +92,13 @@ public class GameViewImpl implements GameView {
     public GameViewImpl(final AppController appController, final View view, final Stage stage, final MediaPlayer music,
                         final Optional<URL> saveFile) {
         this.appController = Objects.requireNonNull(appController);
-        this.gameController = new GameControllerImpl(this);
         this.appView = Objects.requireNonNull(view);
+        this.gameController = new GameControllerImpl(this);
         this.music = Objects.requireNonNull(music);
         this.stage = Objects.requireNonNull(stage);
         this.root = new StackPane();
         this.entities = new Pane();
+        this.gameMenu = new GameMenuImpl(this.root, this.appController, this.appView, this.gameController);
         this.isMenuVisible = false;
         this.isGameEnded = false;
         this.entityConverter = new EntityConverterImpl(this.gameController.getWorldDimensions(),
@@ -133,7 +108,7 @@ public class GameViewImpl implements GameView {
             try {
                 this.gameController.loadGame(saveFile.get());
             } catch (final IOException ex) {
-                new Alert(AlertType.ERROR, ex.getLocalizedMessage());
+                new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
             }
         }
         this.gameController.startGame();
@@ -155,7 +130,7 @@ public class GameViewImpl implements GameView {
      */
     public void init() {
         this.setupStage();
-        this.setupMenu();
+        this.gameMenu.draw();
         this.drawAliveEntities();
     }
 
@@ -189,7 +164,7 @@ public class GameViewImpl implements GameView {
     }
 
     private void drawAliveEntities() {
-        List<Node> nodes = new ArrayList<>();
+        final List<Node> nodes = new ArrayList<>();
         Arrays.asList(EntityType.PLAYER, EntityType.ROLLING_ENEMY, EntityType.WALKING_ENEMY)
               .forEach(type -> nodes.addAll(this.getNodes(type)));
         this.entities.getChildren().setAll(nodes);
@@ -220,12 +195,11 @@ public class GameViewImpl implements GameView {
                       if (!this.isGameEnded) {
                           this.gameController.togglePauseGame();
                           if (this.isMenuVisible) {
-                              this.menu.setVisible(false);
-                              this.saveMenu.setVisible(false);
+                              this.gameMenu.hide();
                               this.isMenuVisible = false;
                               this.music.play();
                           } else {
-                              this.menu.setVisible(true);
+                              this.gameMenu.show();
                               this.isMenuVisible = true;
                               this.music.pause();
                           }
@@ -254,108 +228,10 @@ public class GameViewImpl implements GameView {
         });
     }
 
-    private void initSaveButton(final Button save, final String fileName) {
-        final URL fileURL = ClassLoader.getSystemResource(SAVES_PATH + fileName);
-        if (fileURL != null) {
-            final File file = new File(fileURL.getFile());
-            final String created = LocalDateTime.ofEpochSecond(file.lastModified() / 1000, 0, 
-                                                               ZoneOffset.of(ZoneOffset.systemDefault()
-                                                                                       .getRules()
-                                                                                       .getOffset(Instant.now())
-                                                                                       .getId()))
-                                                .format(DateTimeFormatter.ofPattern(TIME_FORMAT));
-            save.setText(created);
-            save.setOnMouseClicked(e -> {
-                final Optional<ButtonType> choice = new Alert(AlertType.CONFIRMATION, "Are you sure you want to overwrite this saved game?").showAndWait();
-                choice.ifPresent(b -> {
-                    if (b.equals(ButtonType.OK)) {
-                        if (file.delete()) {
-                            try {
-                                this.gameController.saveGame(fileURL);
-                                final File newFile = new File(fileURL.getFile());
-                                final String newCreated = LocalDateTime.ofEpochSecond(newFile.lastModified() / 1000, 0, 
-                                                                                   ZoneOffset.of(ZoneOffset.systemDefault()
-                                                                                                           .getRules()
-                                                                                                           .getOffset(Instant.now())
-                                                                                                           .getId()))
-                                                                       .format(DateTimeFormatter.ofPattern(TIME_FORMAT));
-                                save.setText(newCreated);
-                            } catch (IOException ex) {
-                                new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
-                            }
-                        } else {
-                            new Alert(AlertType.ERROR, file.getName() + DEL_ERR_MSG).show();
-                        }
-                    }
-                });
-            });
-        } else {
-            save.setText(NO_SAVE_MSG);
-            try {
-                final URL saveURL = new URL(ClassLoader.getSystemResource(SAVES_PATH).toExternalForm() + fileName);
-                save.setOnMouseClicked(e -> {
-                    try {
-                        this.gameController.saveGame(saveURL);
-                        final File newFile = new File(saveURL.getFile());
-                        final String newCreated = LocalDateTime.ofEpochSecond(newFile.lastModified() / 1000, 0, 
-                                                                           ZoneOffset.of(ZoneOffset.systemDefault()
-                                                                                                   .getRules()
-                                                                                                   .getOffset(Instant.now())
-                                                                                                   .getId()))
-                                                               .format(DateTimeFormatter.ofPattern(TIME_FORMAT));
-                        save.setText(newCreated);
-                    } catch (IOException ex) {
-                        new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
-                    }
-                });
-            } catch (MalformedURLException ex) {
-                new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
-            }
-        }
-    }
-
-    private void setupMenu() {
-        final FXMLLoader menuLoader = new FXMLLoader(ClassLoader.getSystemResource("layouts/gameMenu.fxml"));
-        menuLoader.setController(this);
-        try {
-            this.menu = menuLoader.load();
-            this.menu.setVisible(false);
-            this.root.getChildren().add(this.menu);
-            this.backMenuButton.setOnMouseClicked(e -> {
-                this.appView.displayMenu();
-            });
-            this.quitButton.setOnMouseClicked(e -> {
-                this.appController.exitApp();
-            });
-            this.saveButton.setOnMouseClicked(e -> {
-                this.menu.setVisible(false);
-                this.saveMenu.setVisible(true);
-            });
-        } catch (final IOException ex) {
-            new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
-        }
-        final FXMLLoader saveLoader = new FXMLLoader(ClassLoader.getSystemResource("layouts/saveGameMenu.fxml"));
-        saveLoader.setController(this);
-        try {
-            this.saveMenu = saveLoader.load();
-            this.saveMenu.setVisible(false);
-            this.root.getChildren().add(this.saveMenu);
-            this.backButton.setOnMouseClicked(ev -> {
-                this.saveMenu.setVisible(false);
-                this.menu.setVisible(true);
-            });
-            this.initSaveButton(this.firstSave, FIRST_SAVE_FILE);
-            this.initSaveButton(this.secondSave, SECOND_SAVE_FILE);
-            this.initSaveButton(this.thirdSave, THIRD_SAVE_FILE);
-        } catch (final IOException ex) {
-            new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
-        }
-    }
-
     private void showMessage(final String msg) {
         this.isGameEnded = true;
         this.music.stop();
-        final FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("layouts/endMessage.fxml"));
+        final FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource(END_MSG_SRC));
         loader.setController(this);
         try {
             this.root.getChildren().add(loader.load());
