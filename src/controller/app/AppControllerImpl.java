@@ -1,6 +1,8 @@
 package controller.app;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -32,9 +34,9 @@ public final class AppControllerImpl implements AppController {
     public void startApp() {
         if (ClassLoader.getSystemResource(SAVE_FOLDER) == null) {
             try {
-                Files.createDirectory(Paths.get(ClassLoader.getSystemResource(CUR_FOLDER).getFile() + SAVE_FOLDER));
-            } catch (final IOException e) {
-                e.printStackTrace();
+                Files.createDirectory(Paths.get(new URI(ClassLoader.getSystemResource(CUR_FOLDER).toURI().toString() + SAVE_FOLDER)));
+            } catch (final IOException | URISyntaxException ex) {
+                ex.printStackTrace();
             }
         }
         this.view.displayMenu();
