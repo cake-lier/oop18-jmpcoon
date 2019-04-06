@@ -44,7 +44,9 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
         Platform.runLater(() -> {
             super.updateSpriteProperties();
             this.changeAnimation(this.getEntity().getState());
-            this.getImageView().setImage(this.map.get(this.getEntity().getState()).getImage());
+            if (!checkClimb()) {
+                this.getImageView().setImage(this.map.get(this.getEntity().getState()).getImage());
+            }
             this.getImageView().setScaleX(this.getImageView().getScaleX() * direction());
         });
     }
@@ -76,5 +78,9 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
     private int direction() {
         return this.currentState.equals(State.MOVING_LEFT) ? -1
                 : (this.lastState.equals(State.MOVING_LEFT) && this.currentState.equals(State.IDLE)) ? -1 : 1;
+    }
+
+    private boolean checkClimb() {
+        return this.currentState.equals(State.IDLE) && (this.lastState.equals(State.CLIMBING_UP) || this.lastState.equals(State.CLIMBING_DOWN));
     }
 }
