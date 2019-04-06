@@ -1,13 +1,14 @@
 package model.world;
 
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.function.Supplier;
 
 import model.entities.Entity;
-import model.entities.EntityFactory;
-import model.entities.EntityType;
+import model.entities.EntityBuilder;
+import model.entities.GeneratorEnemy;
 import model.entities.Ladder;
-import model.entities.Platform;
 import model.entities.Player;
+import model.entities.Platform;
+import model.entities.PowerUp;
 import model.entities.RollingEnemy;
 import model.entities.WalkingEnemy;
 
@@ -19,93 +20,46 @@ enum EntityCreator {
     /**
      * A {@link Ladder} creator.
      */
-    LADDER(Ladder.class),
+    LADDER(Ladder.class, EntityBuilder::getLadderBuilder),
     /**
      * A {@link Player} creator.
      */
-    PLAYER(Player.class),
+    PLAYER(Player.class, EntityBuilder::getPlayerBuilder),
     /**
      * A {@link Platform} creator.
      */
-    PLATFORM(Platform.class),
+    PLATFORM(Platform.class, EntityBuilder::getPlatformBuilder),
     /**
      * A {@link PowerUp} creator.
      */
-    //POWERUP(PowerUp.class),
+    POWERUP(PowerUp.class, EntityBuilder::getPowerUpBuilder),
     /**
      * A {@link RollingEnemy} creator.
      */
-    ROLLING_ENEMY(RollingEnemy.class),
+    ROLLING_ENEMY(RollingEnemy.class, EntityBuilder::getRollingEnemyBuilder),
     /**
      * A {@link WalkingEnemy} creator.
      */
-    WALKING_ENEMY(WalkingEnemy.class);
+    WALKING_ENEMY(WalkingEnemy.class, EntityBuilder::getWalkingEnemyBuilder),
     /**
      * A {@link GeneratorEnemy} creator.
      */
-    //GENERATOR_ENEMY(GeneratorEnemy.class);
+    GENERATOR_ENEMY(GeneratorEnemy.class, EntityBuilder::getGeneratorEnemyBuilder);
 
+
+    private final Supplier<EntityBuilder> supplier;
     private final Class<? extends Entity> associatedClass;
 
-    /**
-     * Creates a new element of this enum by registering the type, its associated class and its name.
-     * @param <T> The type 
-     * @param type The {@link EntityType} of the element.
-     * @param associatedClass The class associated with the element.
-     */
-    <T extends Entity> EntityCreator(final Class<T> associatedClass) {
+    EntityCreator(final Class<? extends Entity> associatedClass, final Supplier<EntityBuilder> supplier) {
+        this.supplier = supplier;
         this.associatedClass = associatedClass;
     }
 
-    /**
-     * Gets the class of the {@link Entity} associated with this element.
-     * @return The associated {@link Entity} subtype.
-     */
+    public EntityBuilder getEntityBuilder() {
+        return this.supplier.get();
+    }
+
     public Class<? extends Entity> getAssociatedClass() {
         return this.associatedClass;
-    }
-
-    /**
-      * Creates an instance of a specific subtype of {@link Entity} given the {@link EntityFactory} from which creating it and
-      * the parameters from which creating it.
-      * @param factory The instance of {@link EntityFactory} from which create {@link Entity}s.
-      * @param type The {@link EntityType} of the {@link Entity} being created.
-      * @param shape The {@link EntityShape} of the {@link Entity} being created.
-      * @param xCoord The x coordinate of the {@link Entity} being created in meters in world coordinates.
-      * @param yCoord The y coordinate of the {@link Entity} being created in meters in world coordinates.
-      * @param width The width of the {@link Entity} being created in meters.
-      * @param height The height of the {@link Entity} being created in meters.
-      * @param angle The {@link EntityType} of the {@link Entity} being created in radians from the x axis.
-      * @return The {@link Entity} created in this way.
-      */
-    public Entity create(final EntityFactory factory, final EntityType type, final Pair<Double, Double> position,
-                         final double width, final double height, final double angle) {
-        switch (type) {
-            case LADDER:
-                return factory.createLadder(position, width, height);
-            case PLATFORM:
-                return factory.createPlatform(position, width, height, angle);
-            case WALKING_ENEMY:
-                return factory.createWalkingEnemy(position, width, height);
-            case ROLLING_ENEMY:
-                return factory.createRollingEnemy(position, width, height);
-            case PLAYER:
-                return factory.createPlayer(position, width, height);
-            default:
-                return null;
-        }
-    }
-
-    /*
-     * An interface used only in this enum for describing the type of a supplier of entities. It should create an instance
-     * of the specified Entity provided the EntityFactory from which creating it.
-     */
-    @FunctionalInterface
-    private interface EntitySupplier<T extends Entity> {
-        /*
-         * Creates an instance of a specific subtype of Entity given the EntityFactory and the parameters from which creating it.
-         */
-        T createEntity(EntityFactory factory, EntityType type, Pair<Double, Double> position, double width, double height,
-                       double angle);
     }
 }

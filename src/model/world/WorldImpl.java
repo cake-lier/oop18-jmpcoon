@@ -12,7 +12,6 @@ import model.ClassToInstanceMultimap;
 import model.ClassToInstanceMultimapImpl;
 import model.entities.MovementType;
 import model.entities.Entity;
-import model.entities.EntityFactory;
 import model.entities.EntityProperties;
 import model.entities.EntityType;
 import model.entities.Ladder;
@@ -34,8 +33,6 @@ import com.google.common.collect.MultimapBuilder;
  * The class implementation of {@link World}.
  */
 public final class WorldImpl implements World {
-    private static final long serialVersionUID = 7726647485392503914L;
-
     private static final double WORLD_WIDTH = 8;
     private static final double WORLD_HEIGHT = 4.5;
     private static final double WIN_ZONE_X = 0.37;
@@ -43,7 +40,7 @@ public final class WorldImpl implements World {
     private static final int ROLLING_POINTS = 50;
     private static final int WALKING_POINTS = 100;
 
-    private final EntityFactory entityFactory;
+    private final PhysicalFactory physicsFactory;
     private final PhysicalWorld innerWorld;
     private final Pair<Double, Double> worldDimensions;
     private final ClassToInstanceMultimap<Entity> aliveEntities;
@@ -56,8 +53,7 @@ public final class WorldImpl implements World {
      * Default constructor, delegates the job of managing the physics of the game to the library underneath.
      */
     public WorldImpl() {
-        final PhysicalFactory physicsFactory = new PhysicalFactoryImpl();
-        this.entityFactory = new EntityFactory(physicsFactory);
+        this.physicsFactory = new PhysicalFactoryImpl();
         this.worldDimensions = new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT);
         this.innerWorld = physicsFactory.createPhysicalWorld(this.worldDimensions.getLeft(), this.worldDimensions.getRight());
         this.aliveEntities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
@@ -82,12 +78,12 @@ public final class WorldImpl implements World {
         entities.forEach(entity -> {
             final EntityCreator creator = EntityCreator.valueOf(entity.getEntityType().name());
             final Class<? extends Entity> entityClass = creator.getAssociatedClass();
-            this.aliveEntities.put(entityClass, creator.create(this.entityFactory,
-                                                          entity.getEntityType(),
-                                                          entity.getPosition(),
-                                                          entity.getDimensions().getLeft(), 
-                                                          entity.getDimensions().getRight(),
-                                                          entity.getAngle()));
+            this.aliveEntities.put(entityClass, creator.getEntityBuilder().setFactory(this.physicsFactory)
+                                                                          .setDimensions(entity.getDimensions())
+                                                                          .setAngle(entity.getAngle())
+                                                                          .setPosition(entity.getPosition())
+                                                                          .setShape(entity.getEntityShape())
+                                                                          .build());
             if (entity.getEntityType() == EntityType.PLAYER) {
                 this.player = this.aliveEntities.getInstances(Player.class).stream().findFirst().get();
             }
