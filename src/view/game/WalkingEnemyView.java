@@ -8,7 +8,7 @@ import model.entities.State;
 import model.entities.WalkingEnemy;
 
 /**
- *
+ * Models a view for the {@link WalkingEnemy}.
  */
 public class WalkingEnemyView extends DynamicDrawableEntity {
 
@@ -20,11 +20,13 @@ public class WalkingEnemyView extends DynamicDrawableEntity {
     private static final int HEIGHT = 128;
     private static final int DURATION = 500;
 
-
     /**
-     * @param entity 
-     * @param worldDimensions c
-     * @param sceneDimensions d
+     * @param walkingEnemy
+     *            the {@link WalkingEnemy}
+     * @param worldDimensions
+     *            the dimensions of the {@link World}
+     * @param sceneDimensions
+     *            the dimensions of the view in which this {@link WalkingEnemy} will be drawn
      */
     public WalkingEnemyView(final WalkingEnemy walkingEnemy, final Pair<Double, Double> worldDimensions,
             final Pair<Double, Double> sceneDimensions) {
