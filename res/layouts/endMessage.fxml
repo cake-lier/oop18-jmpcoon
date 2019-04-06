@@ -18,12 +18,12 @@
         <HBox id="buttonList"
               alignment="CENTER"
               BorderPane.alignment="CENTER">
-           <Button fx:id="backButton"
+           <Button fx:id="finalBackMenuButton"
                    styleClass="buttons"
                    AnchorPane.leftAnchor="0"
                    AnchorPane.rightAnchor="0"
                    alignment="CENTER">Back to menu</Button>
-           <Button fx:id="quitButton"
+           <Button fx:id="finalQuitButton"
                    styleClass="buttons"
                    AnchorPane.leftAnchor="0"
                    AnchorPane.rightAnchor="0"

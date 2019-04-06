@@ -3,14 +3,12 @@ package view.game;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -20,12 +18,10 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.entities.EntityType;
@@ -58,10 +54,8 @@ import controller.game.GameControllerImpl;
  * The class implementation of the {@link GameView} interface.
  */
 public class GameViewImpl implements GameView {
-    private static final BackgroundImage BG_IMAGE = new BackgroundImage(new Image("images/bg_game.png"), BackgroundRepeat.ROUND, 
-                                                                        BackgroundRepeat.ROUND, BackgroundPosition.CENTER,
-                                                                        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, 
-                                                                                           true, true, false, true));
+    private static final String BG_IMAGE = "images/bg_game.png";
+    private static final String SCORE_SRC = "layouts/score.fxml";
     private static final String SAVES_PATH = "saves/";
     private static final String TIME_FORMAT = "d MMMM yyyy H:m";
     private static final String NO_SAVE_MSG = "No save game in this slot";
@@ -69,16 +63,11 @@ public class GameViewImpl implements GameView {
     private static final String FIRST_SAVE_FILE = "save1.sav";
     private static final String SECOND_SAVE_FILE = "save2.sav";
     private static final String THIRD_SAVE_FILE = "save3.sav";
-    private static final String FONT_URL = ClassLoader.getSystemResource("fonts/darkforest.ttf").toExternalForm();
-    private static final String SHADOW_COLOR = "#2D2926";
     private static final String WIN_COLOR = "#FFB100";
     private static final String LOSE_COLOR = "#BB29BB";
     private static final String SCORE_STR = "Score: ";
     private static final String WIN_MSG = "YOU WON";
     private static final String LOSE_MSG = "GAME OVER";
-    private static final int SCORE_SIZE_RATIO = 20;
-    private static final int SHADOW_TO_SIZE_RATIO = 10;
-    private static final int PADDING_TO_SIZE_RATIO = 4;
 
     private final GameController gameController;
     private final EntityConverterImpl entityConverter;
@@ -87,13 +76,14 @@ public class GameViewImpl implements GameView {
     private final Stage stage;
     private final StackPane root;
     private final Pane entities;
-    private final Text score;
     private BorderPane menu;
     private BorderPane saveMenu;
     private boolean isMenuVisible;
     private boolean isGameEnded;
     private final MediaPlayer music;
 
+    @FXML
+    private Text score;
     @FXML
     private Button backMenuButton;
     @FXML
@@ -110,6 +100,10 @@ public class GameViewImpl implements GameView {
     private Button thirdSave;
     @FXML
     private Button backButton;
+    @FXML
+    private Button finalBackMenuButton;
+    @FXML
+    private Button finalQuitButton;
 
     /**
      * Binds this game view to the instance of the {@link AppController},
@@ -130,7 +124,6 @@ public class GameViewImpl implements GameView {
         this.stage = Objects.requireNonNull(stage);
         this.root = new StackPane();
         this.entities = new Pane();
-        this.score = new Text();
         this.isMenuVisible = false;
         this.isGameEnded = false;
         this.entityConverter = new EntityConverterImpl(this.gameController.getWorldDimensions(),
@@ -144,14 +137,6 @@ public class GameViewImpl implements GameView {
             }
         }
         this.gameController.startGame();
-    }
-
-    /*
-     * Sets the background of the passed Pane with a chosen image. It's positioned at the center of the scene,
-     * stretched to cover the whole scene.
-     */
-    private void addBackgroundImage(final Pane root) {
-        root.setBackground(new Background(BG_IMAGE));
     }
 
     /**
@@ -181,23 +166,20 @@ public class GameViewImpl implements GameView {
     private void setupStage() {
         final Pane platforms = new Pane();
         final Pane ladders = new Pane();
-        final BorderPane hud = new BorderPane();
-
-        final double scoreSize = this.stage.getScene().getHeight() / SCORE_SIZE_RATIO;
-        this.score.setFont(Font.loadFont(FONT_URL, scoreSize));
-        this.score.setFill(Color.FLORALWHITE);
-        final double shadowSize = scoreSize / SHADOW_TO_SIZE_RATIO;
-        this.score.setEffect(new DropShadow(0, shadowSize, shadowSize, Color.web(SHADOW_COLOR)));
-        final FlowPane scorePane = new FlowPane(this.score);
-        final double paddingSize = scoreSize / PADDING_TO_SIZE_RATIO;
-        scorePane.setPadding(new Insets(paddingSize, 0, 0, paddingSize));
-        hud.setTop(scorePane);
-
         platforms.getChildren().addAll(this.getNodes(EntityType.PLATFORM));
         ladders.getChildren().addAll(this.getNodes(EntityType.LADDER));
-        this.root.getChildren().addAll(platforms, ladders, this.entities, hud);
-        this.addBackgroundImage(this.root);
-
+        this.root.getChildren().addAll(platforms, ladders, this.entities);
+        try {
+            final FXMLLoader scoreLoader = new FXMLLoader(ClassLoader.getSystemResource(SCORE_SRC));
+            scoreLoader.setController(this);
+            this.root.getChildren().add(scoreLoader.load());
+        } catch (final IOException ex) {
+            new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
+        }
+        this.root.setBackground(new Background(new BackgroundImage(new Image(BG_IMAGE), BackgroundRepeat.ROUND, 
+                                                                   BackgroundRepeat.ROUND, BackgroundPosition.CENTER,
+                                                                   new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, 
+                                                                                      true, true, false, true))));
         final Scene scene = new Scene(this.root, this.stage.getScene().getWidth(), this.stage.getScene().getHeight());
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> this.getInput(key.getCode()));
         this.stage.setScene(scene);
@@ -383,10 +365,10 @@ public class GameViewImpl implements GameView {
             } else if (msg.equals(LOSE_MSG)) {
                 this.message.setFill(Color.web(LOSE_COLOR));
             }
-            this.backMenuButton.setOnMouseClicked(e -> {
+            this.finalBackMenuButton.setOnMouseClicked(e -> {
                 this.appView.displayMenu();
             });
-            this.quitButton.setOnMouseClicked(e -> {
+            this.finalQuitButton.setOnMouseClicked(e -> {
                 this.appController.exitApp();
             });
         } catch (final IOException ex) {

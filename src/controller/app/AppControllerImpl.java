@@ -1,6 +1,9 @@
 package controller.app;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import view.View;
@@ -9,6 +12,9 @@ import view.View;
  * Class implementation of the {@link AppController}.
  */
 public final class AppControllerImpl implements AppController {
+    private static final String SAVE_FOLDER = "saves";
+    private static final String CUR_FOLDER = ".";
+
     private final View view;
 
     /**
@@ -24,6 +30,13 @@ public final class AppControllerImpl implements AppController {
      */
     @Override
     public void startApp() {
+        if (ClassLoader.getSystemResource(SAVE_FOLDER) == null) {
+            try {
+                Files.createDirectory(Paths.get(ClassLoader.getSystemResource(CUR_FOLDER).getFile() + SAVE_FOLDER));
+            } catch (final IOException e) {
+                e.printStackTrace();
+            }
+        }
         this.view.displayMenu();
     }
 
