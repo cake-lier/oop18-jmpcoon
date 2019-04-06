@@ -28,9 +28,6 @@ public class EntityConverterImpl implements EntityConverter {
     private static final String SPRITES_DIR = "images/";
     private static final String MODULE_LADDER_SPRITE_URL = SPRITES_DIR + "ladder.png";
     private static final String MODULE_PLATFORM_SPRITE_URL = SPRITES_DIR + "platform.png";
-    private static final String PLAYER_SPRITE_URL = SPRITES_DIR + "raccoon.png";
-    private static final String ROLLING_ENEMY_SPRITE_URL = SPRITES_DIR + "rollingEnemy.png";
-    private static final String WALKING_ENEMY_SPRITE_URL = SPRITES_DIR + "walkingEnemy.png";
 
     private final Pair<Double, Double> worldDimensions;
     private final Pair<Double, Double> sceneDimensions;
@@ -115,9 +112,6 @@ public class EntityConverterImpl implements EntityConverter {
     private void fillImagesMap() {
         this.images.put(EntityType.LADDER, loadImage(MODULE_LADDER_SPRITE_URL));
         this.images.put(EntityType.PLATFORM, loadImage(MODULE_PLATFORM_SPRITE_URL));
-        this.images.put(EntityType.PLAYER, loadImage(PLAYER_SPRITE_URL));
-        this.images.put(EntityType.ROLLING_ENEMY, loadImage(ROLLING_ENEMY_SPRITE_URL));
-        this.images.put(EntityType.WALKING_ENEMY, loadImage(WALKING_ENEMY_SPRITE_URL));
     }
 
     private Image loadImage(final String imageUrl) {
