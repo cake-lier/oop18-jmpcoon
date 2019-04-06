@@ -36,8 +36,7 @@ import model.serializable.SerializableWorld;
  * {@link PhysicalFactory}, the factory class for each one of the physical entities of this game.
  */
 final class WholePhysicalWorldImpl implements WholePhysicalWorld {
-    private static final long serialVersionUID = 2313605798676279728L;
-
+    private static final long serialVersionUID = -8486558535164534658L;
     private final SerializableWorld world;
     private transient BiMap<PhysicalBody, Body> containers;
     private final Map<PhysicalBody, EntityType> types;
@@ -237,6 +236,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
 
     private void readObject(final ObjectInputStream in) throws ClassNotFoundException, IOException {
         in.defaultReadObject();
+        this.addCollisionRules();
         final int numEntries = in.readInt();
         this.containers = HashBiMap.create();
         for (int i = 0; i < numEntries; i++) {
@@ -249,7 +249,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
             this.player = Optional.of((DynamicPhysicalBody) in.readObject());
         }
         if (in.readBoolean()) {
-            /* the colliding layer was present */
+            /* the colliding ladder was present */
             this.collidingLadder = Optional.of((PhysicalBody) in.readObject());
         }
     }

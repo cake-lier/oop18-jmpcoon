@@ -33,6 +33,7 @@ import com.google.common.collect.MultimapBuilder;
  * The class implementation of {@link World}.
  */
 public final class WorldImpl implements World {
+    private static final long serialVersionUID = 4663479513512261181L;
     private static final double WORLD_WIDTH = 8;
     private static final double WORLD_HEIGHT = 4.5;
     private static final double WIN_ZONE_X = 0.37;
