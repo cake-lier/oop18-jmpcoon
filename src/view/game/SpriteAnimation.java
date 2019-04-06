@@ -53,7 +53,7 @@ public class SpriteAnimation extends Transition {
      * {@inheritDoc}
      */
     protected void interpolate(final double k) {
-        if (frame > 0) {
+        if (frame > 1) {
             final int index = Math.min((int) (k * frame), frame - 1);
             if (index != lastIndex) {
                 lastIndex = index;
@@ -63,7 +63,7 @@ public class SpriteAnimation extends Transition {
     }
 
     private void createList() {
-        if (frame > 0) {
+        if (frame > 1) {
             for (int i = 0; i < frame; i++) {
                 final int x = i * width;
                 this.list.add(new WritableImage(this.pixelReader, x, 0, width, height));
@@ -72,7 +72,7 @@ public class SpriteAnimation extends Transition {
     }
 
     private void setImage(final Image image) {
-        if (frame == 0) {
+        if (frame == 1) {
             this.image = image;
         } else {
             this.image = new WritableImage(this.pixelReader, 0, 0, width, height);
