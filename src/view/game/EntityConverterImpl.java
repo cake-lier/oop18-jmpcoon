@@ -11,7 +11,11 @@ import javafx.scene.image.WritableImage;
 import model.entities.DynamicEntity;
 import model.entities.Entity;
 import model.entities.EntityType;
+import model.entities.Player;
+import model.entities.RollingEnemy;
 import model.entities.StaticEntity;
+import model.entities.WalkingEnemy;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -58,11 +62,11 @@ public class EntityConverterImpl implements EntityConverter {
         if (!this.convertedEntities.containsKey(entity)) {
             if (entity instanceof DynamicEntity) {
                 if (entity.getType() == EntityType.PLAYER) {
-                    return getAbstractDrawableEntity(entity, new PlayerView((DynamicEntity) entity, this.worldDimensions, this.sceneDimensions));
+                    return getAbstractDrawableEntity(entity, new PlayerView((Player) entity, this.worldDimensions, this.sceneDimensions));
                 } else if (entity.getType() == EntityType.WALKING_ENEMY) {
-                    return getAbstractDrawableEntity(entity, new PlayerView((DynamicEntity) entity, this.worldDimensions, this.sceneDimensions));
+                    return getAbstractDrawableEntity(entity, new WalkingEnemyView((WalkingEnemy) entity, this.worldDimensions, this.sceneDimensions));
                 } else if (entity.getType() == EntityType.ROLLING_ENEMY) {
-                    return getAbstractDrawableEntity(entity, new RollingEnemyView((DynamicEntity) entity, worldDimensions, sceneDimensions));
+                    return getAbstractDrawableEntity(entity, new RollingEnemyView((RollingEnemy) entity, worldDimensions, sceneDimensions));
                 }
             } else if (entity instanceof StaticEntity) {
                 final Image image;
