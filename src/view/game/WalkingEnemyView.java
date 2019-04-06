@@ -4,8 +4,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javafx.scene.image.Image;
 import javafx.util.Duration;
-import model.entities.DynamicEntity;
 import model.entities.State;
+import model.entities.WalkingEnemy;
 
 /**
  *
@@ -22,13 +22,13 @@ public class WalkingEnemyView extends DynamicDrawableEntity {
 
 
     /**
-     * @param entity b
+     * @param entity 
      * @param worldDimensions c
      * @param sceneDimensions d
      */
-    public WalkingEnemyView(final DynamicEntity entity, final Pair<Double, Double> worldDimensions,
+    public WalkingEnemyView(final WalkingEnemy walkingEnemy, final Pair<Double, Double> worldDimensions,
             final Pair<Double, Double> sceneDimensions) {
-        super(IDLE, entity, worldDimensions, sceneDimensions);
+        super(IDLE, walkingEnemy, worldDimensions, sceneDimensions);
         this.mapAnimation(State.IDLE, new SpriteAnimation(IDLE, Duration.millis(DURATION), IDLE_FRAMES, WIDTH, HEIGHT));
         this.mapAnimation(State.MOVING_RIGHT, new SpriteAnimation(WALKING, Duration.millis(DURATION), WALKING_FRAMES, WIDTH, HEIGHT));
         this.mapAnimation(State.MOVING_LEFT, new SpriteAnimation(WALKING, Duration.millis(DURATION), WALKING_FRAMES, WIDTH, HEIGHT));
