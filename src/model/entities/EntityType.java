@@ -9,7 +9,7 @@ public enum EntityType {
      * An {@link Entity} which tries to kill the {@link Player} by generating other enemies, specifically {@link RollingEnemy}.
      * It can't move by itself.
      */
-    GENERATOR_ENEMY,
+    ENEMY_GENERATOR,
     /**
      * An {@link Entity} which can be used by the {@link Player} for moving upwards through the platforms that can't
      * be reached with the sole jump.

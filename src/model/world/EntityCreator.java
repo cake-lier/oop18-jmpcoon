@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import model.entities.Entity;
 import model.entities.EntityBuilder;
 import model.entities.EntityBuilderUtils;
-import model.entities.GeneratorEnemy;
+import model.entities.EnemyGenerator;
 import model.entities.Ladder;
 import model.entities.Player;
 import model.entities.Platform;
@@ -45,7 +45,7 @@ enum EntityCreator {
     /**
      * A {@link GeneratorEnemy} creator.
      */
-    GENERATOR_ENEMY(GeneratorEnemy.class, EntityBuilderUtils::getGeneratorEnemyBuilder);
+    ENEMY_GENERATOR(EnemyGenerator.class, EntityBuilderUtils::getEnemyGeneratorBuilder);
 
 
     private final Supplier<EntityBuilder> supplier;

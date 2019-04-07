@@ -9,13 +9,13 @@ public final class EntityBuilderUtils {
     }
 
     /**
-     * @return a {@link EntityBuilder} for creating a {@link GeneratorEnemy}.
+     * @return a {@link EntityBuilder} for creating a {@link EnemyGenerator}.
      */
-    public static EntityBuilder getGeneratorEnemyBuilder() {
+    public static EntityBuilder getEnemyGeneratorBuilder() {
         return new EntityBuilder() {
             @Override
             public Entity buildEntity() {
-                return new GeneratorEnemy(super.createStaticPhysicalBody(EntityType.GENERATOR_ENEMY));
+                return new EnemyGenerator(super.createStaticPhysicalBody(EntityType.ENEMY_GENERATOR));
             }
         };
     }
