@@ -10,8 +10,9 @@ import model.physics.StaticPhysicalBody;
 
 /**
  * A class used to create builders for building all types of {@link Entity}.
+ * @param <E> the type of {@link Entity} to create, which should be a subclass of this type.
  */
-public abstract class EntityBuilder {
+public abstract class EntityBuilder<E extends Entity> {
     private Optional<Pair<Double, Double>> center;
     private Optional<Pair<Double, Double>> dimensions;
     private Optional<EntityShape> shape;
@@ -36,7 +37,7 @@ public abstract class EntityBuilder {
      * @param center the position of the {@link Entity} that will be created
      * @return a reference to this {@link EntityBuilder}
      */
-    public EntityBuilder setPosition(final Pair<Double, Double> center) {
+    public EntityBuilder<E> setPosition(final Pair<Double, Double> center) {
         this.center = Optional.of(center);
         return this;
     }
@@ -46,7 +47,7 @@ public abstract class EntityBuilder {
      * @param dimensions the dimensions (width and height) of the {@link Entity} that will be created
      * @return a reference to this {@link EntityBuilder}
      */
-    public EntityBuilder setDimensions(final Pair<Double, Double> dimensions) {
+    public EntityBuilder<E> setDimensions(final Pair<Double, Double> dimensions) {
         this.dimensions = Optional.of(dimensions);
         return this;
     }
@@ -56,7 +57,7 @@ public abstract class EntityBuilder {
      * @param shape the {@link EntityShape} of the {@link Entity} that will be created
      * @return a reference to this {@link EntityBuilder}
      */
-    public EntityBuilder setShape(final EntityShape shape) {
+    public EntityBuilder<E> setShape(final EntityShape shape) {
         this.shape = Optional.of(shape);
         return this;
     }
@@ -66,7 +67,7 @@ public abstract class EntityBuilder {
      * @param angle the angle of the {@link Entity} that will be created
      * @return a reference to this {@link EntityBuilder}
      */
-    public EntityBuilder setAngle(final double angle) {
+    public EntityBuilder<E> setAngle(final double angle) {
         this.angle = Optional.of(angle);
         return this;
     }
@@ -78,31 +79,29 @@ public abstract class EntityBuilder {
      *  will be created
      * @return a reference to this {@link EntityBuilder}
      */
-    public EntityBuilder setFactory(final PhysicalFactory factory) {
+    public EntityBuilder<E> setFactory(final PhysicalFactory factory) {
         this.factory = Optional.of(factory);
         return this;
     }
 
-    // TODO: improve this comment
     /**
      * Builds the {@link Entity} with parameters as previously set. All the parameters are needed and, as a builder, once the
      * build has happened this builder won't produce any other copies of the produced {@link Entity}.
      * @return The {@link Entity} with parameters specified with the others methods.
      * @throws IllegalStateException if not every field has been initialized or if this {@link EntityBuilder} has already been
-     *  built
+     * built.
      */
-    // TODO: is this a template method?
-    // TODO: is this the right exception to throw?
-    public Entity build() throws IllegalStateException {
+    public E build() throws IllegalStateException {
         this.checkIfbuildable();
         this.built = true;
         return this.buildEntity();
     }
 
     /**
-     * @return the {@link Entity} returned by {@link #build()}.
+     * The actual method the subclass of this class should implement to correctly create a new {@link Entity} of this type.
+     * @return The {@link Entity} that should be returned by the {@link #build()} method.
      */
-    protected abstract Entity buildEntity();
+    protected abstract E buildEntity();
 
     private void checkIfbuildable() {
         if (!this.areAllFieldsFull()) {
@@ -122,9 +121,9 @@ public abstract class EntityBuilder {
     }
 
     /**
-     * 
-     * @param type
-     * @return
+     * Creates a {@link StaticPhysicalBody} for this {@link Entity}.
+     * @param type The {@link EntityType} of this {@link Entity}.
+     * @return The {@link StaticPhysicalBody} that this {@link Entity} should contain.
      */
     protected StaticPhysicalBody createStaticPhysicalBody(final EntityType type) {
         return this.factory.get().createStaticPhysicalBody(this.center.get(), 
@@ -136,9 +135,9 @@ public abstract class EntityBuilder {
     }
 
     /**
-     * 
-     * @param type
-     * @return
+     * Creates a {@link DynamicPhysicalBody} for this {@link Entity}.
+     * @param type The {@link EntityType} of this {@link Entity}.
+     * @return The {@link DynamicPhysicalBody} that this {@link Entity} should contain.
      */
     protected DynamicPhysicalBody createDynamicPhysicalBody(final EntityType type) {
         return this.factory.get().createDynamicPhysicalBody(this.center.get(), 

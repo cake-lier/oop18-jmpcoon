@@ -47,16 +47,15 @@ enum EntityCreator {
      */
     ENEMY_GENERATOR(EnemyGenerator.class, EntityBuilderUtils::getEnemyGeneratorBuilder);
 
-
-    private final Supplier<EntityBuilder> supplier;
+    private final Supplier<EntityBuilder<? extends Entity>> supplier;
     private final Class<? extends Entity> associatedClass;
 
-    EntityCreator(final Class<? extends Entity> associatedClass, final Supplier<EntityBuilder> supplier) {
+    EntityCreator(final Class<? extends Entity> associatedClass, final Supplier<EntityBuilder<? extends Entity>> supplier) {
         this.supplier = supplier;
         this.associatedClass = associatedClass;
     }
 
-    public EntityBuilder getEntityBuilder() {
+    public EntityBuilder<? extends Entity> getEntityBuilder() {
         return this.supplier.get();
     }
 

@@ -3,19 +3,18 @@ package model.entities;
 import model.physics.StaticPhysicalBody;
 
 /**
- * an enemy generator inside the {@link World} of the game.
+ * An enemy generator inside the {@link World} of the game.
  */
-public class EnemyGenerator extends StaticEntity {
+public final class EnemyGenerator extends StaticEntity {
 
     private static final long serialVersionUID = -3160192139428572083L;
 
     /**
-     * builds a new {@link EnemyGenerator}.
-     * 
-     * @param body
-     *            the {@link PhysicalBody} of this {@link EnemyGenerator}
+     * Creates a new {@link EnemyGenerator} with the given {@link StaticPhysicalBody}. This constructor is package protected
+     * because it should be only invoked by the {@link EntityBuilder} when creating a new instance of it and no one else.
+     * @param body The {@link StaticPhysicalBody} that should be contained in this {@link EnemyGenerator}.
      */
-    public EnemyGenerator(final StaticPhysicalBody body) {
+    EnemyGenerator(final StaticPhysicalBody body) {
         super(body);
     }
 

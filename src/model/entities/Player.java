@@ -5,7 +5,7 @@ import model.physics.DynamicPhysicalBody;
 /**
  * The player inside the {@link World} of the game.
  */
-public class Player extends DynamicEntity {
+public final class Player extends DynamicEntity {
 
     private static final long serialVersionUID = 7632362148460378676L;
     private static final double WALKIMPULSE = 1;
@@ -13,11 +13,13 @@ public class Player extends DynamicEntity {
     private static final double JUMPIMPULSE = 0.25;
 
     private final DynamicPhysicalBody body;
+
     /**
-     * Builds the new {@link Player}.
-     * @param body The {@link PhysicalBody} of this {@link Player}
+     * Creates a new {@link Player} with the given {@link DynamicPhysicalBody}. This constructor is package protected
+     * because it should be only invoked by the {@link EntityBuilder} when creating a new instance of it and no one else.
+     * @param body The {@link DynamicPhysicalBody} that should be contained in this {@link Player}.
      */
-    public Player(final DynamicPhysicalBody body) {
+    Player(final DynamicPhysicalBody body) {
         super(body);
         this.body = body;
     }

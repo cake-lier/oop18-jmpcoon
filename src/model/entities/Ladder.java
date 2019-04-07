@@ -5,15 +5,16 @@ import model.physics.StaticPhysicalBody;
 /**
  * a ladder inside the {@link World} of the game.
  */
-public class Ladder extends StaticEntity {
+public final class Ladder extends StaticEntity {
 
     private static final long serialVersionUID = -1338548627689639626L;
 
     /**
-     * builds a new {@link Ladder}.
-     * @param body the {@link PhysicalBody} of this {@link Ladder}
+     * Creates a new {@link Ladder} with the given {@link StaticPhysicalBody}. This constructor is package protected
+     * because it should be only invoked by the {@link EntityBuilder} when creating a new instance of it and no one else.
+     * @param body The {@link StaticPhysicalBody} that should be contained in this {@link Ladder}.
      */
-    public Ladder(final StaticPhysicalBody body) {
+    Ladder(final StaticPhysicalBody body) {
         super(body);
     }
 

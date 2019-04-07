@@ -9,84 +9,91 @@ public final class EntityBuilderUtils {
     }
 
     /**
-     * @return a {@link EntityBuilder} for creating a {@link EnemyGenerator}.
+     * Produces a new {@link EntityBuilder} for creating a new {@link EnemyGenerator}.
+     * @return A {@link EntityBuilder} for creating a {@link EnemyGenerator}.
      */
-    public static EntityBuilder getEnemyGeneratorBuilder() {
-        return new EntityBuilder() {
+    public static EntityBuilder<EnemyGenerator> getEnemyGeneratorBuilder() {
+        return new EntityBuilder<EnemyGenerator>() {
             @Override
-            public Entity buildEntity() {
+            protected EnemyGenerator buildEntity() {
                 return new EnemyGenerator(super.createStaticPhysicalBody(EntityType.ENEMY_GENERATOR));
             }
         };
     }
 
     /**
+     * Produces a new {@link EntityBuilder} for creating a new {@link Ladder}.
      * @return a {@link EntityBuilder} for creating a {@link Ladder}.
      */
-    public static EntityBuilder getLadderBuilder() {
-        return new EntityBuilder() {
+    public static EntityBuilder<Ladder> getLadderBuilder() {
+        return new EntityBuilder<Ladder>() {
             @Override
-            public Entity buildEntity() {
+            protected Ladder buildEntity() {
                 return new Ladder(super.createStaticPhysicalBody(EntityType.LADDER));
             }
         };
     }
 
     /**
+     * Produces a new {@link EntityBuilder} for creating a new {@link Player}.
      * @return a {@link EntityBuilder} for creating a {@link Player}.
      */
-    public static EntityBuilder getPlayerBuilder() {
-        return new EntityBuilder() {
+    public static EntityBuilder<Player> getPlayerBuilder() {
+        return new EntityBuilder<Player>() {
             @Override
-            public Entity buildEntity() {
+            protected Player buildEntity() {
                 return new Player(super.createDynamicPhysicalBody(EntityType.PLAYER));
             }
         };
     }
 
     /**
+     * Produces a new {@link EntityBuilder} for creating a new {@link Platform}.
      * @return a {@link EntityBuilder} for creating a {@link Platform}.
      */
-    public static EntityBuilder getPlatformBuilder() {
-        return new EntityBuilder() {
+    public static EntityBuilder<Platform> getPlatformBuilder() {
+        return new EntityBuilder<Platform>() {
             @Override
-            public Entity buildEntity() {
+            protected Platform buildEntity() {
                 return new Platform(super.createStaticPhysicalBody(EntityType.PLATFORM));
             }
         };
     }
 
     /**
+     * Produces a new {@link EntityBuilder} for creating a new {@link PowerUp}.
      * @return a {@link EntityBuilder} for creating a {@link PowerUp}.
      */
-    public static EntityBuilder getPowerUpBuilder() {
-        return new EntityBuilder() {
+    public static EntityBuilder<PowerUp> getPowerUpBuilder() {
+        return new EntityBuilder<PowerUp>() {
             @Override
-            public Entity buildEntity() {
+            protected PowerUp buildEntity() {
                 return new PowerUp(super.createStaticPhysicalBody(EntityType.POWERUP));
             }
         };
     }
 
     /**
+     * Produces a new {@link EntityBuilder} for creating a new {@link RollingEnemy}.
      * @return a {@link EntityBuilder} for creating a {@link RollingEnemy}.
      */
-    public static EntityBuilder getRollingEnemyBuilder() {
-        return new EntityBuilder() {
+    public static EntityBuilder<RollingEnemy> getRollingEnemyBuilder() {
+        return new EntityBuilder<RollingEnemy>() {
             @Override
-            public Entity buildEntity() {
+            protected RollingEnemy buildEntity() {
                 return new RollingEnemy(super.createDynamicPhysicalBody(EntityType.ROLLING_ENEMY));
             }
         };
     }
 
     /**
+     * Produces a new {@link EntityBuilder} for creating a new {@link WalkingEnemy}.
      * @return a {@link EntityBuilder} for creating a {@link WalkingEnemy}.
      */
-    public static EntityBuilder getWalkingEnemyBuilder() {
-        return new EntityBuilder() {
+    public static EntityBuilder<WalkingEnemy> getWalkingEnemyBuilder() {
+        return new EntityBuilder<WalkingEnemy>() {
             @Override
-            public Entity buildEntity() {
+            protected WalkingEnemy buildEntity() {
                 return new WalkingEnemy(super.createDynamicPhysicalBody(EntityType.WALKING_ENEMY));
             }
         };

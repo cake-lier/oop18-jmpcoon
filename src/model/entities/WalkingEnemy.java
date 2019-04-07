@@ -5,7 +5,7 @@ import model.physics.DynamicPhysicalBody;
 /**
  * a walking enemy inside the {@link World} of the game.
  */
-public class WalkingEnemy extends DynamicEntity {
+public final class WalkingEnemy extends DynamicEntity {
     private static final long serialVersionUID = 5020187009003425168L;
     private static final double DISTANCE = 5;
     private static final double WALKING_SPEED = 4;
