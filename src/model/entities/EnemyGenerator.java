@@ -2,28 +2,37 @@ package model.entities;
 
 import model.physics.StaticPhysicalBody;
 
-public class GeneratorEnemy extends StaticEntity {
+/**
+ * an enemy generator inside the {@link World} of the game.
+ */
+public class EnemyGenerator extends StaticEntity {
 
-    public GeneratorEnemy(StaticPhysicalBody body) {
+    private static final long serialVersionUID = -3160192139428572083L;
+
+    /**
+     * builds a new {@link EnemyGenerator}.
+     * 
+     * @param body
+     *            the {@link PhysicalBody} of this {@link EnemyGenerator}
+     */
+    public EnemyGenerator(final StaticPhysicalBody body) {
         super(body);
-        // TODO Auto-generated constructor stub
     }
 
     /**
-     * 
+     * {@inheritDoc}
      */
-    private static final long serialVersionUID = -3160192139428572083L;
-
     @Override
     public EntityType getType() {
-        // TODO Auto-generated method stub
-        return null;
+        return EntityType.ENEMY_GENERATOR;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EntityShape getShape() {
-        // TODO Auto-generated method stub
-        return null;
+        return EntityShape.RECTANGLE;
     }
 
 }
