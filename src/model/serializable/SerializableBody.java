@@ -44,6 +44,10 @@ public class SerializableBody extends Body implements Serializable {
             } else {
                 throw new NotSerializableException("This body is in an illegal state, so it isn't serializable");
             }
+            /* writing physical properties */
+            out.writeDouble(fixture.getDensity());
+            out.writeDouble(fixture.getFriction());
+            out.writeDouble(fixture.getRestitution());
             /* writing filters */
             if (fixture.getFilter() instanceof CategoryFilter) {
                 final CategoryFilter filter = (CategoryFilter) fixture.getFilter();
@@ -97,6 +101,10 @@ public class SerializableBody extends Body implements Serializable {
             } else {
                 throw new IllegalStateException("This body is can't exist");
             }
+            /* reading physical properties */
+            fixture.setDensity(in.readDouble());
+            fixture.setFriction(in.readDouble());
+            fixture.setRestitution(in.readDouble());
             /* reading filters */
             final long category = in.readLong();
             final long mask = in.readLong();
@@ -117,7 +125,6 @@ public class SerializableBody extends Body implements Serializable {
         /* reading angular velocity */
         this.setAngularVelocity(in.readDouble());
         /* reading information about mass */
-        // TODO: look if this conditions are correct
         final boolean isInfinite = in.readBoolean();
         final boolean hasFixedAngularVelocity = in.readBoolean();
         if (isInfinite && hasFixedAngularVelocity) {
