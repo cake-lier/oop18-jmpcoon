@@ -11,8 +11,6 @@ import java.util.function.Supplier;
 
 import org.dyn4j.collision.AxisAlignedBounds;
 import org.dyn4j.collision.CategoryFilter;
-import org.dyn4j.collision.Fixture;
-import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
@@ -39,7 +37,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final long CATEGORY_PLAYER = 8; // 001000
     private static final long CATEGORY_LADDER = 16; // 010000
     private static final long CATEGORY_GENERATOR_ENEMY = 32; // 100000
-    private static final long CATEGORY_POWERUP = 64;
+    //private static final long CATEGORY_POWERUP = 64;
 
     private static final CategoryFilter LADDER_FILTER = new CategoryFilter(CATEGORY_LADDER, CATEGORY_PLAYER);
     private static final CategoryFilter PLATFORM_FILTER = new CategoryFilter(CATEGORY_PLATFORM, CATEGORY_WALKING_ENEMY
@@ -80,7 +78,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
      */
     @Override
     public PhysicalWorld createPhysicalWorld(final double width, final double height) {
-        throwException(this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_TWO_WORLDS_MSG));
+        this.throwException(this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_TWO_WORLDS_MSG));
         this.worldDimensions = new ImmutablePair<>(width, height);
         this.physicalWorld = Optional.of(new WholePhysicalWorldImpl(new SerializableWorld(new AxisAlignedBounds(width * 2, height * 2))));
         return this.physicalWorld.get();

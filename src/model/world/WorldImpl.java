@@ -1,6 +1,7 @@
 package model.world;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -128,7 +129,7 @@ public final class WorldImpl implements World {
             }
         }
 
-        this.aliveEntities.getInstances(WalkingEnemy.class).forEach(entity -> entity.computeMovement());
+        this.aliveEntities.getInstances(WalkingEnemy.class).forEach(WalkingEnemy::computeMovement);
         /*this.entities.getInstances(GeneratorEnemy.class).forEach(entity -> this.entities.putAll(RollingEnemy.class, 
                                                                                                 entity.onTimeAdvanced()));*/
     }
@@ -141,7 +142,7 @@ public final class WorldImpl implements World {
         final PhysicalBody innerPlayer = this.player.getPhysicalBody();
         final Collection<PhysicalBody> platformsBodies = this.aliveEntities.getInstances(Platform.class)
                                                                            .parallelStream()
-                                                                           .map(platform -> platform.getPhysicalBody())
+                                                                           .map(Platform::getPhysicalBody)
                                                                            .collect(Collectors.toSet());
         return this.innerWorld.getCollidingBodies(innerPlayer)
                               .parallelStream()
@@ -157,7 +158,7 @@ public final class WorldImpl implements World {
      */
     private boolean isPlayerinFrontLadder(final Predicate<PhysicalBody> where) {
         return this.aliveEntities.getInstances(Ladder.class).parallelStream()
-                                                            .map(ladder -> ladder.getPhysicalBody())
+                                                            .map(Ladder::getPhysicalBody)
                                                             .anyMatch(ladderBody -> 
                                                                       this.innerWorld
                                                                           .areBodiesInContact(this.player.getPhysicalBody(),
@@ -220,7 +221,7 @@ public final class WorldImpl implements World {
      */
     @Override
     public Collection<Entity> getAliveEntities() {
-        return this.aliveEntities.values();
+        return Collections.unmodifiableCollection(this.aliveEntities.values());
     }
 
     /**
@@ -228,7 +229,7 @@ public final class WorldImpl implements World {
      */
     @Override
     public Collection<Entity> getDeadEntities() {
-        return this.deadEntities;
+        return Collections.unmodifiableCollection(this.deadEntities);
     }
 
     @Override
