@@ -16,57 +16,45 @@ import org.apache.commons.lang3.tuple.Pair;
 public interface PhysicalFactory extends Serializable {
 
     /**
-     * Creates a facade for the {@link org.dyn4j.dynamics.World} as created by the dyn4j library so as to be used by the game
-     * {@link model.world.World} without the hassle of dealing with the library itself. The {@link model.world.World} considers a
-     * reference system with only positive coordinates, from 0 to "width" on the x axis and from 0 to "height" on the y axis.
-     * The {@link dyn4j.dynamics.World} uses a reference system where the origin is in the middle, so to have a positive area
-     * with dimensions "width * height" it is needed to be created double as big.
-     * @param width The width of the inner {@link org.dyn4j.dynamics.World}.
-     * @param height The height of the inner {@link org.dyn4j.dynamics.World}.
-     * @return The facade for the inner {@link org.dyn4j.dynamics.World}.
+     * A {@link PhysicalWorld} that manages the physics simulation needed by the {@link model.world.World}.
+     * It considers only positive coordinates.
+     * @param width The width of the {@link PhysicalWorld}.
+     * @param height The height of the {@link PhysicalWorld}.
+     * @return The {@link PhysicalWorld} with the given dimensions.
+     * @throws IllegalStateException if a {@link PhysicalWorld} has already been created.
      */
-    PhysicalWorld createPhysicalWorld(double width, double height);
+    PhysicalWorld createPhysicalWorld(double width, double height) throws IllegalStateException;
 
     /**
-     * creates {@link StaticPhysicalBody}.
-     * 
-     * @param position
-     *            the center of the {@link StaticPhysicalBody} created
-     * @param angle
-     *            the angle in radians of the created {@link StaticPhysicalBody}
-     * @param shape
-     *            the {@link EntityShape} of {@link StaticPhysicalBody} created
-     * @param width
-     *            the width of the physical body
-     * @param height
-     *            the height of the physical body
-     * @param type
-     *            the {@link EntityType} of the {@link Entity} that will use the
-     *            created {@link StaticPhysicalBody}
-     * @return a {@link StaticPhysicalBody} with the given characteristics
+     * Creates a {@link StaticPhysicalBody} living inside the {@link PhysicalWorld} created by the same {@link PhysicalFactory}.
+     * @param position The center of the {@link StaticPhysicalBody} created.
+     * @param angle The angle in radians of the created {@link StaticPhysicalBody}.
+     * @param shape The {@link EntityShape} of {@link StaticPhysicalBody} created.
+     * @param width The width of the {@link PhysicalBody}.
+     * @param height The height of the {@link PhysicalBody}.
+     * @param type The {@link EntityType} of the {@link Entity} that will use the created {@link StaticPhysicalBody}.
+     * @return A {@link StaticPhysicalBody} with the given characteristics.
+     * @throws IllegalStateException If a {@link PhysicalWorld} has yet to be created.
+     * @throws IllegalArgumentException If the given position is outside the {@link PhysicalWorld} bounds, or if the combination
+     * of {@link EntityType} and {@link EntityShape} is illegal. 
      */
     StaticPhysicalBody createStaticPhysicalBody(Pair<Double, Double> position, double angle, EntityShape shape,
-            double width, double height, EntityType type);
+            double width, double height, EntityType type) throws IllegalStateException, IllegalArgumentException;
 
     /**
-     * creates {@link DynamicPhysicalBody}.
-     * 
-     * @param position
-     *            the center of the {@link DynamicPhysicalBody} created
-     * @param angle
-     *            the angle in radians of the created {@link DynamicPhysicalBody}
-     * @param shape
-     *            the {@link EntityShape} of {@link DynamicPhysicalBody} created
-     * @param width
-     *            the width of the physical body
-     * @param height
-     *            the height of the physical body
-     * @param type
-     *            the {@link EntityType} of the {@link Entity} that will use the
-     *            created {@link DynamicPhysicalBody}
-     * @return a {@link DynamicPhysicalBody} with the given characteristics
+     * Creates {@link DynamicPhysicalBody} living inside the {@link PhysicalWorld} created by the same {@link PhysicalFactory}.
+     * @param position The center of the {@link DynamicPhysicalBody} created.
+     * @param angle The angle in radians of the created {@link DynamicPhysicalBody}.
+     * @param shape The {@link EntityShape} of {@link DynamicPhysicalBody} created.
+     *  @param width The width of the {@link PhysicalBody}.
+     * @param height The height of the {@link PhysicalBody}.
+     * @param type The {@link EntityType} of the {@link Entity} that will use the created {@link DynamicPhysicalBody}
+     * @return A {@link DynamicPhysicalBody} with the given characteristics.
+     * @throws IllegalStateException If a {@link PhysicalWorld} has yet to be created.
+     * @throws IllegalArgumentException If the given position is outside the {@link PhysicalWorld} bounds, or if the combination
+     * of {@link EntityType} and {@link EntityShape} is illegal. 
      */
     DynamicPhysicalBody createDynamicPhysicalBody(Pair<Double, Double> position, double angle, EntityShape shape,
-            double width, double height, EntityType type);
+            double width, double height, EntityType type)  throws IllegalStateException, IllegalArgumentException;
 
 }

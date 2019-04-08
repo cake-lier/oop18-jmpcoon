@@ -16,7 +16,8 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * a class implementing {@link PhysicalBody}.
+ * A class implementing {@link PhysicalBody}. It encapsulates a {@link SerializableBody} that must be either a circle or a 
+ * rectangle, and it must have only one {@link Fixture}.
  */
 public abstract class AbstractPhysicalBody implements PhysicalBody {
     private static final long serialVersionUID = 8007445555444017586L;
@@ -74,9 +75,6 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      */
     @Override
     public Pair<Double, Double> getDimensions() {
-        if (this.body.getFixtureCount() > 1 || this.body.getFixtureCount() <= 0) {
-            throw new IllegalArgumentException("The only bodies allowed are the ones with only one fixture");
-        }
         final Convex shape = this.body.getFixture(0).getShape();
         double width = 0;
         double height = 0;
@@ -86,8 +84,6 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
         } else if (shape instanceof Rectangle) {
             width = ((Rectangle) shape).getWidth();
             height = ((Rectangle) shape).getHeight();
-        } else {
-            throw new IllegalArgumentException("The only bodies allowed are the ones which shape is present in EntityShape");
         }
         return new ImmutablePair<>(width, height);
     }
