@@ -18,6 +18,7 @@ import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
 import model.entities.State;
+import model.entities.WalkingEnemy;
 import model.physics.PhysicalBody;
 import model.physics.PhysicalWorld;
 import model.physics.PhysicsUtils;
@@ -126,6 +127,8 @@ public final class WorldImpl implements World {
                 this.innerWorld.removeBody(current.getPhysicalBody());
             }
         }
+
+        this.aliveEntities.getInstances(WalkingEnemy.class).forEach(entity -> entity.computeMovement());
         /*this.entities.getInstances(GeneratorEnemy.class).forEach(entity -> this.entities.putAll(RollingEnemy.class, 
                                                                                                 entity.onTimeAdvanced()));*/
     }
