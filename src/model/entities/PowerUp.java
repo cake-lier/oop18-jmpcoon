@@ -3,23 +3,21 @@ package model.entities;
 import model.physics.StaticPhysicalBody;
 
 /**
- * 
- *
+ * A power-up.
  */
 public final class PowerUp extends StaticEntity {
-    /**
-     * 
-     */
     private static final long serialVersionUID = -6954816914217174592L;
+
+    private final PowerUpType powerUpType;
 
     /**
      * Creates a new {@link PowerUp} with the given {@link StaticPhysicalBody}. This constructor is package protected
      * because it should be only invoked by the {@link EntityBuilder} when creating a new instance of it and no one else.
      * @param body The {@link StaticPhysicalBody} that should be contained in this {@link PowerUp}.
      */
-    PowerUp(final StaticPhysicalBody body) {
+    PowerUp(final StaticPhysicalBody body, final PowerUpType powerUpType) {
         super(body);
-        // TODO Auto-generated constructor stub
+        this.powerUpType = powerUpType;
     }
 
     /**
@@ -27,8 +25,7 @@ public final class PowerUp extends StaticEntity {
      */
     @Override
     public EntityType getType() {
-        // TODO Auto-generated method stub
-        return null;
+        return EntityType.POWERUP;
     }
 
     /**
@@ -36,8 +33,13 @@ public final class PowerUp extends StaticEntity {
      */
     @Override
     public EntityShape getShape() {
-        // TODO Auto-generated method stub
-        return null;
+        return EntityShape.RECTANGLE;
     }
 
+    /**
+     * @return the {@link PowerUpType} of this {@link PowerUp}.
+     */
+    public PowerUpType getPowerUpType() {
+        return this.powerUpType;
+    }
 }
