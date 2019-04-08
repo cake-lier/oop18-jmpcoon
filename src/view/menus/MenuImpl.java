@@ -1,4 +1,4 @@
-package view.menu;
+package view.menus;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,9 +17,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.Stage;
 
 /**
  * The class implementation of the {@link Menu} interface.
@@ -40,13 +42,17 @@ public final class MenuImpl implements Menu {
     private static final int VOLUME_RATIO = 100;
 
     private final AppController controller;
-    private final Stage stage;
+    private final Scene scene;
     private final MediaPlayer music;
     private boolean drawn;
     private boolean showed;
 
     @FXML
-    private Slider volumeControl;
+    private BorderPane frontPage;
+    @FXML
+    private BorderPane savesPage;
+    @FXML
+    private BorderPane settingsPage;
     @FXML
     private Button startButton;
     @FXML
@@ -55,6 +61,10 @@ public final class MenuImpl implements Menu {
     private Button settingsButton;
     @FXML
     private Button quitButton;
+    @FXML
+    private Slider volumeControl;
+    @FXML
+    private Button backSettingsButton;
     @FXML
     private Button firstSave;
     @FXML
@@ -67,28 +77,31 @@ public final class MenuImpl implements Menu {
     private Button thirdSave;
     @FXML
     private Button thirdDelete;
+    @FXML
+    private Button backSavesButton;
 
     /**
      * Binds this menu to the instance who has to be the controller of the menu, which is the controller of the application.
      * Furthermore, it acquires the {@link Stage} in which to draw the menu.
      * @param controller The controller of this application.
-     * @param stage The {@link Stage} in which to draw the menu.
+     * @param scene The {@link Scene} in which adding this menu and all its pages.
      * @param music The {@link MediaPlayer} from which play music while the menu is showed.
      */
-    public MenuImpl(final AppController controller, final Stage stage, final MediaPlayer music) {
+    public MenuImpl(final AppController controller, final Scene scene, final MediaPlayer music) {
         this.controller = controller;
-        this.stage = stage;
+        this.scene = scene;
         this.music = music;
         this.drawn = false;
         this.showed = false;
     }
 
-    private void drawFromURL(final String drawableResource) {
+    private void drawFromURL(final String drawableResource, final StackPane root) {
         final FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource(drawableResource));
         loader.setController(this);
         try {
-            this.stage.setScene(new Scene(loader.load()));
-            this.drawn = true;
+            final Pane page = loader.load();
+            page.setVisible(false);
+            root.getChildren().add(page);
         } catch (final IOException ex) {
             new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
         }
@@ -134,25 +147,46 @@ public final class MenuImpl implements Menu {
      */
     @Override
     public void draw() {
-        this.drawFromURL(MENU_LAYOUT);
-        this.startButton.setOnMouseClicked(e -> {
-            this.music.stop();
-            this.controller.startGame(Optional.empty());
-        });
-        this.quitButton.setOnMouseClicked(e -> this.controller.exitApp());
-        this.savesButton.setOnMouseClicked(e -> {
-            this.drawFromURL(LOADER_LAYOUT);
+        if (!this.drawn) {
+            final StackPane root = new StackPane();
+            this.scene.setRoot(root);
+            this.drawFromURL(MENU_LAYOUT, root);
+            this.frontPage.setVisible(false);
+            this.startButton.setOnMouseClicked(e -> {
+                this.music.stop();
+                this.hide();
+                this.controller.startGame(Optional.empty());
+            });
+            this.quitButton.setOnMouseClicked(e -> this.controller.exitApp());
+            this.drawFromURL(LOADER_LAYOUT, root);
+            this.savesPage.setVisible(false);
             this.initSaveDeleteButton(this.firstSave, this.firstDelete, FIRST_SAVE_FILE);
             this.initSaveDeleteButton(this.secondSave, this.secondDelete, SECOND_SAVE_FILE);
             this.initSaveDeleteButton(this.thirdSave, this.thirdDelete, THIRD_SAVE_FILE);
-        });
-        this.settingsButton.setOnMouseClicked(e -> {
-            this.drawFromURL(SETTINGS_LAYOUT);
+            this.backSavesButton.setOnMouseClicked(e -> {
+                this.savesPage.setVisible(false);
+                this.frontPage.setVisible(true);
+            });
+            this.savesButton.setOnMouseClicked(e -> {
+                this.frontPage.setVisible(false);
+                this.savesPage.setVisible(true);
+            });
+            this.drawFromURL(SETTINGS_LAYOUT, root);
+            this.settingsPage.setVisible(false);
             this.volumeControl.setValue(this.music.getVolume() * VOLUME_RATIO);
             this.volumeControl.valueProperty().addListener(c -> {
                 this.music.setVolume(this.volumeControl.getValue() / VOLUME_RATIO);
             });
-        });
+            this.backSettingsButton.setOnMouseClicked(e -> {
+                this.settingsPage.setVisible(false);
+                this.frontPage.setVisible(true);
+            });
+            this.settingsButton.setOnMouseClicked(e -> {
+                this.frontPage.setVisible(false);
+                this.settingsPage.setVisible(true);
+            });
+            this.drawn = true;
+        }
     }
 
     /**
@@ -161,9 +195,22 @@ public final class MenuImpl implements Menu {
     @Override
     public void show() {
         if (this.drawn && !this.showed) {
-            this.stage.show();
+            this.frontPage.setVisible(true);
             this.showed = true;
             this.music.play();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void hide() {
+        if (this.showed) {
+            this.frontPage.setVisible(false);
+            this.settingsPage.setVisible(false);
+            this.savesPage.setVisible(false);
+            this.showed = false;
         }
     }
 }

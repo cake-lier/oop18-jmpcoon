@@ -1,5 +1,8 @@
 package view.game;
 
+import java.net.URL;
+import java.util.Optional;
+
 /**
  * Visual component of the game.
  */
@@ -11,9 +14,11 @@ public interface GameView {
     void update();
 
     /**
-     * Initializes the game scene.
+     * Initializes the game scene and starts the game by calling the {@link GameController} appropriately. If a file is specified,
+     * it means the game should started by loading data from the specified file, otherwise a new game should start.
+     * @param saveFile The file with the saved game from which starting the game, if present.
      */
-    void init();
+    void init(Optional<URL> saveFile);
 
     /**
      * Shows game over screen.

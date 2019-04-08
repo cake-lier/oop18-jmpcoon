@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Alert.AlertType;
@@ -24,8 +23,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.entities.EntityType;
 import view.View;
-import view.menu.GameMenu;
-import view.menu.GameMenuImpl;
+import view.menus.GameMenu;
+import view.menus.GameMenuImpl;
 
 import java.io.IOException;
 import java.net.URL;
@@ -87,10 +86,8 @@ public final class GameViewImpl implements GameView {
      * @param view The application view.
      * @param stage The stage in which to draw the game scene.
      * @param music The music to play in the background.
-     * @param saveFile The file from which to load the game and display it, if present.
      */
-    public GameViewImpl(final AppController appController, final View view, final Stage stage, final MediaPlayer music,
-                        final Optional<URL> saveFile) {
+    public GameViewImpl(final AppController appController, final View view, final Stage stage, final MediaPlayer music) {
         this.appController = Objects.requireNonNull(appController);
         this.appView = Objects.requireNonNull(view);
         this.gameController = new GameControllerImpl(this);
@@ -99,19 +96,11 @@ public final class GameViewImpl implements GameView {
         this.root = new StackPane();
         this.entities = new Pane();
         this.gameMenu = new GameMenuImpl(this.root, this.appController, this.appView, this.gameController);
+        this.entityConverter = new EntityConverterImpl(this.gameController.getWorldDimensions(),
+                                                       new ImmutablePair<>(this.stage.getScene().getWidth(),
+                                                                           this.stage.getScene().getHeight()));
         this.isMenuVisible = false;
         this.isGameEnded = false;
-        this.entityConverter = new EntityConverterImpl(this.gameController.getWorldDimensions(),
-                                                       new ImmutablePair<>(stage.getScene().getWidth(),
-                                                                           stage.getScene().getHeight()));
-        if (saveFile.isPresent()) {
-            try {
-                this.gameController.loadGame(saveFile.get());
-            } catch (final IOException ex) {
-                new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
-            }
-        }
-        this.gameController.startGame();
     }
 
     /**
@@ -128,10 +117,18 @@ public final class GameViewImpl implements GameView {
     /**
      * {@inheritDoc}
      */
-    public void init() {
+    public void init(final Optional<URL> saveFile) {
         this.setupStage();
         this.gameMenu.draw();
         this.drawAliveEntities();
+        if (saveFile.isPresent()) {
+            try {
+                this.gameController.loadGame(saveFile.get());
+            } catch (final IOException ex) {
+                new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
+            }
+        }
+        this.gameController.startGame();
     }
 
     /*
@@ -155,10 +152,8 @@ public final class GameViewImpl implements GameView {
                                                                    BackgroundRepeat.ROUND, BackgroundPosition.CENTER,
                                                                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, 
                                                                                       true, true, false, true))));
-        final Scene scene = new Scene(this.root, this.stage.getScene().getWidth(), this.stage.getScene().getHeight());
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> this.getInput(key.getCode()));
-        this.stage.setScene(scene);
-        this.stage.sizeToScene();
+        this.stage.getScene().setRoot(this.root);
+        this.stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, key -> this.getInput(key.getCode()));
         this.stage.setOnCloseRequest(e -> this.gameController.stopGame());
         this.music.play();
     }

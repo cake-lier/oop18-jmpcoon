@@ -6,14 +6,16 @@ import java.util.Optional;
 import controller.app.AppController;
 import controller.app.AppControllerImpl;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import view.game.GameView;
 import view.game.GameViewImpl;
-import view.menu.Menu;
-import view.menu.MenuImpl;
+import view.menus.Menu;
+import view.menus.MenuImpl;
 
 /**
  * The class implementation of {@link View}.
@@ -31,11 +33,9 @@ public final class ViewImpl implements View {
     private MediaPlayer player;
 
     /**
-     * Acquires the {@link Stage} in which to draw all the visual elements of this
-     * application and it initializes it appropriately. Constructs the controller of this
-     * application with this view, so as to let it call this view when the user instructs
-     * it to perform some operation, then starts the application via the
-     * {@link AppController}.
+     * Acquires the {@link Stage} in which to draw all the visual elements of this application and it initializes it appropriately.
+     * Constructs the controller of this application with this view, so as to let it call this view when the user instructs
+     * it to perform some operation, then starts the application via the {@link AppController}.
      * @param stage The {@link Stage} in which to draw all visual elements.
      */
     public ViewImpl(final Stage stage) {
@@ -43,15 +43,16 @@ public final class ViewImpl implements View {
         this.stage = stage;
         this.stage.setTitle(TITLE);
         this.setScreenSize(this.stage);
+        this.stage.setScene(new Scene(new Pane()));
         this.player = new MediaPlayer(new Media(MENU_MUSIC));
         this.player.setVolume(INIT_VOLUME);
         this.controller.startApp();
+        this.stage.show();
     }
 
     /**
-     * Sets the stage size to the appropriate values, so as to make it always the
-     * biggest possible and with an aspect ratio of 16:9. It is also unresizable, so
-     * the ratio cannot be changed in any way.
+     * Sets the stage size to the appropriate values, so as to make it always the biggest possible and with an aspect ratio of
+     * 16:9. It is also unresizable, so the ratio cannot be changed in any way.
      * @param stage The stage being used.
      */
     private void setScreenSize(final Stage stage) {
@@ -88,8 +89,7 @@ public final class ViewImpl implements View {
     @Override
     public void displayMenu() {
         this.createNewTrack(MENU_MUSIC);
-        final Menu menu = new MenuImpl(this.controller, this.stage, this.player);
-        this.setScreenSize(this.stage);
+        final Menu menu = new MenuImpl(this.controller, this.stage.getScene(), this.player);
         menu.draw();
         menu.show();
     }
@@ -100,7 +100,7 @@ public final class ViewImpl implements View {
     @Override
     public void displayGame(final Optional<URL> saveFile) {
         this.createNewTrack(GAME_MUSIC);
-        final GameView gameView = new GameViewImpl(this.controller, this, this.stage, this.player, saveFile);
-        gameView.init();
+        final GameView gameView = new GameViewImpl(this.controller, this, this.stage, this.player);
+        gameView.init(saveFile);
     }
 }

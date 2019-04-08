@@ -11,6 +11,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
+            fx:id="settingsPage"
             id="root">
     <center>
         <GridPane alignment="center">
@@ -35,9 +36,9 @@
         <FlowPane id="buttonContainer"
                   BorderPane.alignment="TOP_LEFT">
             <Button styleClass="buttons"
+                    fx:id="backSettingsButton"
                     id="backButton"
-                    alignment="CENTER"
-                    onMouseClicked="#draw">Back to main menu</Button>
+                    alignment="CENTER">Back to main menu</Button>
         </FlowPane>
     </bottom>
     <stylesheets>
