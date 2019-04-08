@@ -35,7 +35,9 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
      */
     @Override
     public State getState() {
-        if (this.body.getLinearVelocity().equals(new Vector2(0, 0))) {
+        if (this.body.getLinearVelocity().equals(new Vector2(0, 0))
+            && this.currentState != State.CLIMBING_DOWN
+            && this.currentState != State.CLIMBING_UP) {
             return State.IDLE;
         }
         return this.currentState;
