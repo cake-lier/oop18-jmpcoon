@@ -14,8 +14,9 @@ public final class PowerUp extends StaticEntity {
      * Creates a new {@link PowerUp} with the given {@link StaticPhysicalBody}. This constructor is package protected
      * because it should be only invoked by the {@link EntityBuilder} when creating a new instance of it and no one else.
      * @param body The {@link StaticPhysicalBody} that should be contained in this {@link PowerUp}.
+     * @param powerUpType The {@link PowerUpType} of this {@link PowerUp}.
      */
-    PowerUp(final StaticPhysicalBody body, final PowerUpType powerUpType) {
+    public PowerUp(final StaticPhysicalBody body, final PowerUpType powerUpType) {
         super(body);
         this.powerUpType = powerUpType;
     }

@@ -141,9 +141,11 @@ public final class GameViewImpl implements GameView {
     private void setupStage() {
         final Pane platforms = new Pane();
         final Pane ladders = new Pane();
+        final Pane powerups = new Pane();
         platforms.getChildren().addAll(this.getNodes(EntityType.PLATFORM));
         ladders.getChildren().addAll(this.getNodes(EntityType.LADDER));
-        this.root.getChildren().addAll(platforms, ladders, this.entities);
+        powerups.getChildren().addAll(this.getNodes(EntityType.POWERUP));
+        this.root.getChildren().addAll(platforms, ladders, powerups, this.entities);
         try {
             final FXMLLoader scoreLoader = new FXMLLoader(ClassLoader.getSystemResource(SCORE_SRC));
             scoreLoader.setController(this);

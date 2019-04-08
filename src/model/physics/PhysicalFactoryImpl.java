@@ -28,17 +28,20 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     private static final String NO_TWO_WORLDS_MSG = "You can't create two worlds for this game";
 
-    private static final long CATEGORY_WALKING_ENEMY = 1; // 000001
-    private static final long CATEGORY_ROLLING_ENEMY = 2; // 000010
-    private static final long CATEGORY_PLATFORM = 4; // 000100
-    private static final long CATEGORY_PLAYER = 8; // 001000
-    private static final long CATEGORY_LADDER = 16; // 010000
-    //private static final long CATEGORY_GENERATOR_ENEMY = 32; // 100000
+    private static final long CATEGORY_WALKING_ENEMY = 1; // 0000001
+    private static final long CATEGORY_ROLLING_ENEMY = 2; // 0000010
+    private static final long CATEGORY_PLATFORM = 4; // 0000100
+    private static final long CATEGORY_PLAYER = 8; // 0001000
+    private static final long CATEGORY_LADDER = 16; // 0010000
+    //private static final long CATEGORY_GENERATOR_ENEMY = 32; // 0100000
+    private static final long CATEGORY_POWERUP = 64; // 1000000
 
     // TODO: indent correctly the lines that are too long
     private static final CategoryFilter LADDER_FILTER = new CategoryFilter(CATEGORY_LADDER, CATEGORY_PLAYER);
     private static final CategoryFilter PLATFORM_FILTER = new CategoryFilter(CATEGORY_PLATFORM,
             CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
+    private static final CategoryFilter POWERUP_FILTER = new CategoryFilter(CATEGORY_POWERUP,
+            CATEGORY_PLATFORM | CATEGORY_PLAYER | CATEGORY_POWERUP);
     private static final CategoryFilter PLAYER_FILTER = new CategoryFilter(CATEGORY_PLAYER,
             CATEGORY_LADDER | CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
     private static final CategoryFilter ROLLING_ENEMY_FILTER = new CategoryFilter(CATEGORY_ROLLING_ENEMY,
@@ -97,6 +100,9 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         } else if (type.equals(EntityType.PLATFORM)) {
             body.getFixture(0).setFilter(PLATFORM_FILTER);
             body.getFixture(0).setFriction(0.5);
+        } else if (type.equals(EntityType.POWERUP)) {
+            body.getFixture(0).setFilter(POWERUP_FILTER);
+            body.getFixture(0).setFriction(0.5);
         }
         body.setMass(MassType.INFINITE);
         body.setUserData(type);
@@ -109,7 +115,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     private boolean isStaticBodyAllowed(final EntityShape shape, final EntityType type) {
         /* other allowed combinations could be added in the future */
-        return shape.equals(EntityShape.RECTANGLE) && (type.equals(EntityType.PLATFORM) || type.equals(EntityType.LADDER));
+        return shape.equals(EntityShape.RECTANGLE) && (type.equals(EntityType.PLATFORM) || type.equals(EntityType.LADDER) || type.equals(EntityType.POWERUP));
     }
 
     private SerializableBody createRectangleBody(final Pair<Double, Double> position, final double angle, final double width,

@@ -11,6 +11,8 @@ import javafx.scene.image.WritableImage;
 import model.entities.DynamicEntity;
 import model.entities.Entity;
 import model.entities.EntityType;
+import model.entities.PowerUp;
+import model.entities.PowerUpType;
 import model.entities.StaticEntity;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -23,6 +25,7 @@ public class EntityConverterImpl implements EntityConverter {
     private static final String SPRITES_DIR = "images/";
     private static final String MODULE_LADDER_SPRITE_URL = SPRITES_DIR + "ladder.png";
     private static final String MODULE_PLATFORM_SPRITE_URL = SPRITES_DIR + "platform.png";
+    private static final String GOAL_SPRITE_URL = SPRITES_DIR + "goal.png";
     private static final String PLAYER_SPRITE_URL = SPRITES_DIR + "raccoon.png";
     private static final String ROLLING_ENEMY_SPRITE_URL = SPRITES_DIR + "rollingEnemy.png";
     private static final String WALKING_ENEMY_SPRITE_URL = SPRITES_DIR + "walkingEnemy.png";
@@ -70,7 +73,7 @@ public class EntityConverterImpl implements EntityConverter {
                                             entity.getDimensions().getLeft() / PLATFORM_RATIO, 
                                             true);
                 } else {
-                    image = this.images.get(entity.getType());
+                    image = this.getPowerUpImage((PowerUp) entity);
                 }
                 drawableEntity = new StaticDrawableEntity(image, (StaticEntity) entity, this.worldDimensions, this.sceneDimensions);
             } else {
@@ -79,6 +82,14 @@ public class EntityConverterImpl implements EntityConverter {
             this.convertedEntities.put(entity, drawableEntity);
             return drawableEntity;
         }
+    }
+
+    private Image getPowerUpImage(final PowerUp powerUp) {
+        PowerUpType powerUpType = powerUp.getPowerUpType();
+        if (powerUpType == PowerUpType.GOAL) {
+            return this.loadImage(GOAL_SPRITE_URL);
+        } 
+        return null;
     }
 
     /**
@@ -92,6 +103,7 @@ public class EntityConverterImpl implements EntityConverter {
     private void fillImagesMap() {
         this.images.put(EntityType.LADDER, loadImage(MODULE_LADDER_SPRITE_URL));
         this.images.put(EntityType.PLATFORM, loadImage(MODULE_PLATFORM_SPRITE_URL));
+        this.images.put(EntityType.POWERUP, loadImage(GOAL_SPRITE_URL));
         this.images.put(EntityType.PLAYER, loadImage(PLAYER_SPRITE_URL));
         this.images.put(EntityType.ROLLING_ENEMY, loadImage(ROLLING_ENEMY_SPRITE_URL));
         this.images.put(EntityType.WALKING_ENEMY, loadImage(WALKING_ENEMY_SPRITE_URL));

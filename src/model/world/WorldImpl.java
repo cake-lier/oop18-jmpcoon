@@ -13,10 +13,13 @@ import model.ClassToInstanceMultimapImpl;
 import model.entities.MovementType;
 import model.entities.Entity;
 import model.entities.EntityProperties;
+import model.entities.EntityShape;
 import model.entities.EntityType;
 import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
+import model.entities.PowerUp;
+import model.entities.PowerUpType;
 import model.entities.State;
 import model.physics.PhysicalBody;
 import model.physics.PhysicalWorld;
@@ -89,6 +92,9 @@ public final class WorldImpl implements World {
                 this.player = this.aliveEntities.getInstances(Player.class).stream().findFirst().get();
             }
         });
+        this.aliveEntities.putInstance(PowerUp.class, 
+                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X, WIN_ZONE_Y+0.45),
+                        0, EntityShape.RECTANGLE, 0.50, 0.50, EntityType.POWERUP), PowerUpType.GOAL));
     }
 
     /**

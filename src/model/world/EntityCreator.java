@@ -33,7 +33,7 @@ enum EntityCreator {
     /**
      * A {@link PowerUp} creator.
      */
-    POWERUP(PowerUp.class, EntityBuilderUtils::getPowerUpBuilder),
+//    POWERUP(PowerUp.class, EntityBuilderUtils::getPowerUpBuilder),
     /**
      * A {@link RollingEnemy} creator.
      */

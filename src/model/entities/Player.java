@@ -1,5 +1,8 @@
 package model.entities;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import model.physics.DynamicPhysicalBody;
 
 /**
@@ -13,6 +16,14 @@ public final class Player extends DynamicEntity {
     private static final double JUMPIMPULSE = 0.25;
 
     private final DynamicPhysicalBody body;
+
+    private Map<PowerUpType, PowerUp> powerups = new EnumMap<>(PowerUpType.class);
+    /*
+     * but when u collect a powerup it disappears from the view
+     * the easiest way to do this is to say it's dead
+     * but then is the PowerUp deleted? 
+     * if so, the player could just retain the PowerUpType cause that's all that matters
+     */
 
     /**
      * Creates a new {@link Player} with the given {@link DynamicPhysicalBody}. This constructor is package protected
@@ -64,4 +75,12 @@ public final class Player extends DynamicEntity {
             default: 
         }
     }
+
+    /**
+     * gives a {@link PowerUp} to the {@link Player}.
+     * @param powerUp The {@link PowerUp}
+     */
+ //   public void givePowerUp(final PowerUp powerUp) {
+ //       this.powerups.put(powerUp.getPowerUpType(), powerUp);
+ //   }
 }
