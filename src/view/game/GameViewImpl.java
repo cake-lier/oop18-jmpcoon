@@ -167,7 +167,7 @@ public final class GameViewImpl implements GameView {
 
     private void drawAliveEntities() {
         final List<Node> nodes = new ArrayList<>();
-        Arrays.asList(EntityType.PLAYER, EntityType.ROLLING_ENEMY, EntityType.WALKING_ENEMY)
+        Arrays.asList(EntityType.PLAYER, EntityType.ROLLING_ENEMY, EntityType.WALKING_ENEMY, EntityType.POWERUP)
               .forEach(type -> nodes.addAll(this.getNodes(type)));
         this.entities.getChildren().setAll(nodes);
     }

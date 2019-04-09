@@ -80,7 +80,7 @@ public final class Player extends DynamicEntity {
      * gives a {@link PowerUp} to the {@link Player}.
      * @param powerUp The {@link PowerUp}
      */
- //   public void givePowerUp(final PowerUp powerUp) {
- //       this.powerups.put(powerUp.getPowerUpType(), powerUp);
- //   }
+    public void givePowerUp(final PowerUp powerUp) {
+        this.powerups.put(powerUp.getPowerUpType(), powerUp);
+    }
 }

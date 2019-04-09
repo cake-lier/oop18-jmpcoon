@@ -40,10 +40,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final CategoryFilter LADDER_FILTER = new CategoryFilter(CATEGORY_LADDER, CATEGORY_PLAYER);
     private static final CategoryFilter PLATFORM_FILTER = new CategoryFilter(CATEGORY_PLATFORM,
             CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
-    private static final CategoryFilter POWERUP_FILTER = new CategoryFilter(CATEGORY_POWERUP,
-            CATEGORY_PLATFORM | CATEGORY_PLAYER | CATEGORY_POWERUP);
     private static final CategoryFilter PLAYER_FILTER = new CategoryFilter(CATEGORY_PLAYER,
-            CATEGORY_LADDER | CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
+            CATEGORY_LADDER | CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER | CATEGORY_POWERUP);
     private static final CategoryFilter ROLLING_ENEMY_FILTER = new CategoryFilter(CATEGORY_ROLLING_ENEMY,
             CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM | CATEGORY_PLAYER);
     private static final CategoryFilter WALKING_ENEMY_FILTER = new CategoryFilter(CATEGORY_WALKING_ENEMY,
@@ -51,6 +49,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     /*private static final CategoryFilter GENERATOR_ENEMY_FILTER = new CategoryFilter(CATEGORY_GENERATOR_ENEMY,
             CATEGORY_GENERATOR_ENEMY | CATEGORY_WALKING_ENEMY | CATEGORY_ROLLING_ENEMY | CATEGORY_PLATFORM
                     | CATEGORY_PLAYER);*/
+    private static final CategoryFilter POWERUP_FILTER = new CategoryFilter(CATEGORY_POWERUP,
+            CATEGORY_PLATFORM | CATEGORY_PLAYER | CATEGORY_POWERUP);
 
     // TODO: consider a static method and a private constructor
 
