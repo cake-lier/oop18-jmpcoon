@@ -130,6 +130,9 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                     final Vector2 point = contactConstraint.getContacts().get(0).getPoint();
                     final Pair<Double, Double> collisionPoint = new ImmutablePair<>(point.x, point.y);
                     final State playerState = playerTriple.getMiddle().getState();
+                    if (otherTriple.getRight() == EntityType.POWERUP) {
+                         otherTriple.getLeft().setActive(false);
+                    }
                     if ((otherTriple.getRight() == EntityType.WALKING_ENEMY
                          && PhysicsUtils.isBodyOnTop(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint))
                         || (otherTriple.getRight() == EntityType.ROLLING_ENEMY

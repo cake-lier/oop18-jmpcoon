@@ -26,6 +26,8 @@ public class EntityConverterImpl implements EntityConverter {
     private static final String MODULE_LADDER_SPRITE_URL = SPRITES_DIR + "ladder.png";
     private static final String MODULE_PLATFORM_SPRITE_URL = SPRITES_DIR + "platform.png";
     private static final String GOAL_SPRITE_URL = SPRITES_DIR + "goal.png";
+    private static final String INVINCIBILITY_SPRITE_URL = SPRITES_DIR + "invincibility.png";
+    private static final String EXTRA_LIFE_SPRITE_URL = SPRITES_DIR + "extra_life.png";
     private static final String PLAYER_SPRITE_URL = SPRITES_DIR + "raccoon.png";
     private static final String ROLLING_ENEMY_SPRITE_URL = SPRITES_DIR + "rollingEnemy.png";
     private static final String WALKING_ENEMY_SPRITE_URL = SPRITES_DIR + "walkingEnemy.png";
@@ -85,11 +87,12 @@ public class EntityConverterImpl implements EntityConverter {
     }
 
     private Image getPowerUpImage(final PowerUp powerUp) {
-        PowerUpType powerUpType = powerUp.getPowerUpType();
-        if (powerUpType == PowerUpType.GOAL) {
-            return this.loadImage(GOAL_SPRITE_URL);
-        } 
-        return null;
+        switch (powerUp.getPowerUpType()) {
+            case GOAL: return this.loadImage(GOAL_SPRITE_URL);
+            case INVINCIBILITY: return this.loadImage(INVINCIBILITY_SPRITE_URL);
+            case EXTRA_LIFE: return this.loadImage(EXTRA_LIFE_SPRITE_URL);
+            default: return null;
+            }
     }
 
     /**
@@ -103,7 +106,6 @@ public class EntityConverterImpl implements EntityConverter {
     private void fillImagesMap() {
         this.images.put(EntityType.LADDER, loadImage(MODULE_LADDER_SPRITE_URL));
         this.images.put(EntityType.PLATFORM, loadImage(MODULE_PLATFORM_SPRITE_URL));
-        this.images.put(EntityType.POWERUP, loadImage(GOAL_SPRITE_URL));
         this.images.put(EntityType.PLAYER, loadImage(PLAYER_SPRITE_URL));
         this.images.put(EntityType.ROLLING_ENEMY, loadImage(ROLLING_ENEMY_SPRITE_URL));
         this.images.put(EntityType.WALKING_ENEMY, loadImage(WALKING_ENEMY_SPRITE_URL));

@@ -92,9 +92,21 @@ public final class WorldImpl implements World {
                 this.player = this.aliveEntities.getInstances(Player.class).stream().findFirst().get();
             }
         });
+        //GOAL
         this.aliveEntities.putInstance(PowerUp.class, 
                 new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X, WIN_ZONE_Y+0.45),
                         0, EntityShape.RECTANGLE, 0.50, 0.50, EntityType.POWERUP), PowerUpType.GOAL));
+        //INVINCIBILITY
+        this.aliveEntities.putInstance(PowerUp.class, 
+                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X+1.25, WIN_ZONE_Y+0.45),
+                        0, EntityShape.RECTANGLE, 0.35, 0.35, EntityType.POWERUP), PowerUpType.INVINCIBILITY));
+        //EXTRA LIFE
+        this.aliveEntities.putInstance(PowerUp.class, 
+                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X, WIN_ZONE_Y-1.45),
+                        0, EntityShape.RECTANGLE, 0.35, 0.35, EntityType.POWERUP), PowerUpType.EXTRA_LIFE));
+        this.aliveEntities.putInstance(PowerUp.class, 
+                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X+1.45, WIN_ZONE_Y-3.15),
+                        0, EntityShape.RECTANGLE, 0.35, 0.35, EntityType.POWERUP), PowerUpType.EXTRA_LIFE));
     }
 
     /**
