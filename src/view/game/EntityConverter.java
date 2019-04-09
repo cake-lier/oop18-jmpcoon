@@ -8,9 +8,10 @@ import model.entities.Entity;
 public interface EntityConverter {
 
     /**
-     * @param entity the {@link Entity} to convert
-     * @return the converted {@link DrawableEntity}
+     * @param entity The {@link Entity} to convert.
+     * @return The converted {@link DrawableEntity}.
+     * @throws IllegalArgumentException If the given {@link Entity} is not supported.
      */
-    DrawableEntity getDrawableEntity(Entity entity);
+    DrawableEntity getDrawableEntity(Entity entity) throws IllegalArgumentException;
 
 }

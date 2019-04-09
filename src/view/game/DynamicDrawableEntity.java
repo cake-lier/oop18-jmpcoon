@@ -40,15 +40,13 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
     /**
      * updates the image view.
      */
-    protected void updateSpritePosition() {
-        Platform.runLater(() -> {
+    public void updateSpritePosition() {
             super.updateSpriteProperties();
             this.changeAnimation(this.getEntity().getState());
             if (!checkClimb()) {
                 this.getImageView().setImage(this.map.get(this.getEntity().getState()).getImage());
             }
             this.getImageView().setScaleX(this.getImageView().getScaleX() * direction());
-        });
     }
 
     /**
