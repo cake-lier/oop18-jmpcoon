@@ -1,81 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.Button?>
 <?import java.net.URL?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:id="savesPage"
-            id="root">
-    <center>
-        <VBox alignment="CENTER"
-              BorderPane.alignment="CENTER"
-              id="pageContainer">
-            <BorderPane>
-                <center>
-                    <Button fx:id="firstSave"
-                            styleClass="buttons, loadButtons"
-                            BorderPane.alignment="CENTER"
-                            alignment="CENTER_LEFT"></Button>
-                </center>
-                <bottom>
-                    <FlowPane styleClass="deleteButtonsContainers"
-                              alignment="BOTTOM_RIGHT">
-	                    <Button fx:id="firstDelete"
-	                            styleClass="deleteButtons"
-	                            alignment="CENTER">Delete</Button>
-                    </FlowPane>
-                </bottom>
-            </BorderPane>
-            <BorderPane>
-                <center>
-                    <Button fx:id="secondSave"
-                            styleClass="buttons, loadButtons"
-                            BorderPane.alignment="CENTER"
-                            alignment="CENTER_LEFT"></Button>
-                </center>
-                <bottom>
-                    <FlowPane styleClass="deleteButtonsContainers"
-                              alignment="BOTTOM_RIGHT">
-	                    <Button fx:id="secondDelete"
-	                            styleClass="deleteButtons"
-	                            alignment="CENTER">Delete</Button>
-	                </FlowPane>
-                </bottom>
-            </BorderPane>
-            <BorderPane>
-                <center>
-                    <Button fx:id="thirdSave"
-                            styleClass="buttons, loadButtons"
-                            BorderPane.alignment="CENTER"
-                            alignment="CENTER_LEFT"></Button>
-                </center>
-                <bottom>
-                    <FlowPane styleClass="deleteButtonsContainers"
-                              alignment="BOTTOM_RIGHT">
-	                    <Button fx:id="thirdDelete"
-	                            styleClass="deleteButtons"
-	                            alignment="CENTER">Delete</Button>
-	               </FlowPane>
-                </bottom>
-            </BorderPane>
-        </VBox>
-    </center>
-    <bottom>
-        <FlowPane id="buttonContainer"
-                  BorderPane.alignment="TOP_LEFT">
-            <Button styleClass="buttons"
-                    fx:id="backSavesButton"
-                    id="backButton"
-                    alignment="CENTER">Back to main menu</Button>
-        </FlowPane>
-    </bottom>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:id="savesPage"
+          id="root"
+          prefHeight="Infinity"
+          prefWidth="Infinity">
+	<columnConstraints>
+		<ColumnConstraints percentWidth="2"/>
+		<ColumnConstraints percentWidth="8"/>
+		<ColumnConstraints percentWidth="80"/>
+		<ColumnConstraints percentWidth="8"/>
+		<ColumnConstraints percentWidth="2"/>
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="4.5"/>
+		<RowConstraints percentHeight="20"/>
+		<RowConstraints percentHeight="5"/>
+		<RowConstraints percentHeight="20"/>
+		<RowConstraints percentHeight="5"/>
+		<RowConstraints percentHeight="20"/>
+		<RowConstraints percentHeight="5"/>
+		<RowConstraints percentHeight="20.5"/>
+	</rowConstraints>
+	<children>
+		<Button fx:id="firstSave"
+	            styleClass="buttons, loadButtons"
+	            GridPane.columnIndex="2" 
+	            GridPane.halignment="CENTER"
+            	GridPane.rowIndex="1"
+            	GridPane.valignment="CENTER"></Button>
+	    <Button fx:id="firstDelete"
+		        styleClass="deleteButtons"
+		        GridPane.columnIndex="2" 
+	            GridPane.halignment="RIGHT"
+            	GridPane.rowIndex="2"
+            	GridPane.valignment="CENTER">Delete</Button>
+	    <Button fx:id="secondSave"
+	            styleClass="buttons, loadButtons"
+	            GridPane.columnIndex="2" 
+	            GridPane.halignment="CENTER"
+            	GridPane.rowIndex="3"
+            	GridPane.valignment="CENTER"></Button>
+	    <Button fx:id="secondDelete"
+		        styleClass="deleteButtons"
+		        GridPane.columnIndex="2" 
+	            GridPane.halignment="RIGHT"
+            	GridPane.rowIndex="4"
+            	GridPane.valignment="CENTER">Delete</Button>
+		<Button fx:id="thirdSave"
+	            styleClass="buttons, loadButtons"
+	            GridPane.columnIndex="2" 
+	            GridPane.halignment="CENTER"
+            	GridPane.rowIndex="5"
+            	GridPane.valignment="CENTER"></Button>
+	    <Button fx:id="thirdDelete"
+	            styleClass="deleteButtons"
+		        GridPane.columnIndex="2" 
+	            GridPane.halignment="RIGHT"
+            	GridPane.rowIndex="6"
+            	GridPane.valignment="CENTER">Delete</Button>
+        <Button fx:id="backSavesButton"
+            	id="backButton"
+            	styleClass="buttons"
+                GridPane.columnIndex="1" 
+	            GridPane.halignment="LEFT"
+            	GridPane.rowIndex="7"
+            	GridPane.valignment="CENTER"
+            	GridPane.columnSpan="3">Back to main menu</Button>
+	</children>        
     <stylesheets>
       <URL value="@savesLoader.css" />
       <URL value="@background.css" />
       <URL value="@buttons.css" />
    </stylesheets>
-</BorderPane>
+</GridPane>
