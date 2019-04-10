@@ -40,7 +40,7 @@ public class EntityConverterImpl implements EntityConverter {
     private static final int PLAYER_WALKING_FRAMES = 8;
     private static final String WALKING_ENEMY_WALKING_SPRITE_URL = SPRITES_DIR + "walkingEnemy_walking.png";
     private static final int WALKING_ENEMY_WALKING_FRAMES = 2;
-    private static final String WALKING_ENEMY_IDLE_SPRITE_URL = SPRITES_DIR + "walkingEnemy.png";
+    private static final String WALKING_ENEMY_IDLE_SPRITE_URL = SPRITES_DIR + "walkingEnemy_idle.png";
     private static final int WALKING_ENEMY_IDLE_FRAMES = 1;
     private static final String ROLLING_ENEMY_SPRITE_URL = SPRITES_DIR + "rollingEnemy.png";
     private static final int ROLLING_ENEMY_MOVING_FRAMES = 2;
@@ -144,19 +144,19 @@ public class EntityConverterImpl implements EntityConverter {
         this.imagesForDynamicEntities.put(EntityType.PLAYER, playerImages);
         /* walking enemies images */
         final Map<State, Pair<Image, Integer>> walkingEnemyImages = new EnumMap<>(State.class);
-        playerImages.put(State.IDLE, new ImmutablePair<>(loadImage(WALKING_ENEMY_IDLE_SPRITE_URL), WALKING_ENEMY_IDLE_FRAMES));
-        playerImages.put(State.MOVING_RIGHT, 
+        walkingEnemyImages.put(State.IDLE, new ImmutablePair<>(loadImage(WALKING_ENEMY_IDLE_SPRITE_URL), WALKING_ENEMY_IDLE_FRAMES));
+        walkingEnemyImages.put(State.MOVING_RIGHT, 
                 new ImmutablePair<>(loadImage(WALKING_ENEMY_WALKING_SPRITE_URL), WALKING_ENEMY_WALKING_FRAMES));
-        playerImages.put(State.MOVING_LEFT, 
+        walkingEnemyImages.put(State.MOVING_LEFT, 
                 new ImmutablePair<>(loadImage(WALKING_ENEMY_WALKING_SPRITE_URL), WALKING_ENEMY_WALKING_FRAMES));
         this.imagesForDynamicEntities.put(EntityType.WALKING_ENEMY, walkingEnemyImages);
         /* rolling enemies images */
         final Map<State, Pair<Image, Integer>> rollingEnemyImages = new EnumMap<>(State.class);
-        playerImages.put(State.IDLE, 
+        rollingEnemyImages.put(State.IDLE, 
                 new ImmutablePair<>(loadImage(ROLLING_ENEMY_SPRITE_URL), ROLLING_ENEMY_IDLE_FRAMES));
-        playerImages.put(State.MOVING_RIGHT, 
+        rollingEnemyImages.put(State.MOVING_RIGHT, 
                 new ImmutablePair<>(loadImage(ROLLING_ENEMY_SPRITE_URL), ROLLING_ENEMY_MOVING_FRAMES));
-        playerImages.put(State.MOVING_LEFT, 
+        rollingEnemyImages.put(State.MOVING_LEFT, 
                 new ImmutablePair<>(loadImage(ROLLING_ENEMY_SPRITE_URL), ROLLING_ENEMY_MOVING_FRAMES));
         this.imagesForDynamicEntities.put(EntityType.ROLLING_ENEMY, rollingEnemyImages);
     }
