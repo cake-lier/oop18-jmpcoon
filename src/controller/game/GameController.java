@@ -27,7 +27,7 @@ public interface GameController {
     /**
      * Saves the current game.
      * @param saveFileUrl the {@link URL} of the file where the information about the game to be loaded will be saved
-     * @throws IOException 
+     * @throws IOException if an I/O error occurs
      * @throws FileNotFoundException if the {@link URL} passed does not reference an existent file
      */
     void saveGame(URL saveFileUrl) throws FileNotFoundException, IOException;

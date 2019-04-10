@@ -20,6 +20,8 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public class EntityConverterImpl implements EntityConverter {
 
+    private static final String NOT_SUPPORTED_ENTITY_MSG = "This Entity is not supported";
+
     private static final String SPRITES_DIR = "images/";
     private static final String MODULE_LADDER_SPRITE_URL = SPRITES_DIR + "ladder.png";
     private static final String MODULE_PLATFORM_SPRITE_URL = SPRITES_DIR + "platform.png";
@@ -74,7 +76,7 @@ public class EntityConverterImpl implements EntityConverter {
                 }
                 drawableEntity = new StaticDrawableEntity(image, (StaticEntity) entity, this.worldDimensions, this.sceneDimensions);
             } else {
-                throw new IllegalArgumentException("Not supported entity");
+                throw new IllegalArgumentException(NOT_SUPPORTED_ENTITY_MSG);
             }
             this.convertedEntities.put(entity, drawableEntity);
             return drawableEntity;

@@ -28,6 +28,7 @@ import view.game.GameView;
  */
 public class GameControllerImpl implements GameController {
 
+    private static final String INCOMPATIBLE_FILE_MSG = "The file read isn't compatible";
     private static final long DELTA_UPDATE = 15;
     private static final URL LEVEL_FILE = ClassLoader.getSystemResource("level1.lev");
 
@@ -101,7 +102,7 @@ public class GameControllerImpl implements GameController {
         try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(saveFileUrl.openStream()))) {
             this.gameWorld = (World) in.readObject();
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("The file read isn't compatible");
+            throw new IllegalArgumentException(INCOMPATIBLE_FILE_MSG);
         }
     }
 

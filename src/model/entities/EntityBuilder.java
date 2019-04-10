@@ -13,6 +13,8 @@ import model.physics.StaticPhysicalBody;
  * @param <E> the type of {@link Entity} to create, which should be a subclass of this type.
  */
 public abstract class EntityBuilder<E extends Entity> {
+    private static final String INCOMPLETE_BUILDER_MSG = "Not all the fields have been initialized";
+    private static final String ALREADY_BUILT_MSG = "This builder has already been used";
     private Optional<Pair<Double, Double>> center;
     private Optional<Pair<Double, Double>> dimensions;
     private Optional<EntityShape> shape;
@@ -105,10 +107,10 @@ public abstract class EntityBuilder<E extends Entity> {
 
     private void checkIfbuildable() {
         if (!this.areAllFieldsFull()) {
-            throw new IllegalStateException("Not all the fields have been initialized");
+            throw new IllegalStateException(INCOMPLETE_BUILDER_MSG);
         }
         if (this.built) {
-            throw new IllegalStateException("This builder has already been used");
+            throw new IllegalStateException(ALREADY_BUILT_MSG);
         }
     }
 

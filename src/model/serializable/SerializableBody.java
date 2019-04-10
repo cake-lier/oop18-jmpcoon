@@ -27,6 +27,9 @@ public class SerializableBody extends Body implements Serializable {
 
     private static final long serialVersionUID = 8243356758623109937L;
 
+    private static final String NO_WRITABLE_MSG = "This body is in an illegal state, so it isn't serializable";
+    private static final String NO_READABLE_MSG = "The body read is in an illegal state";
+
     private void writeObject(final ObjectOutputStream out) throws IOException {
         /* writing number of fixtures */
         out.writeInt(this.getFixtureCount());
@@ -42,7 +45,7 @@ public class SerializableBody extends Body implements Serializable {
                 out.writeObject(EntityShape.CIRCLE);
                 out.writeDouble(circle.getRadius());
             } else {
-                throw new NotSerializableException("This body is in an illegal state, so it isn't serializable");
+                throw new NotSerializableException(NO_WRITABLE_MSG);
             }
             /* writing physical properties */
             out.writeDouble(fixture.getDensity());
@@ -56,7 +59,7 @@ public class SerializableBody extends Body implements Serializable {
                 /* writing mask */
                 out.writeLong(filter.getMask());
             } else {
-                throw new NotSerializableException("This body is in an illegal state, so it isn't serializable");
+                throw new NotSerializableException(NO_WRITABLE_MSG);
             }
             /* writing if the fixture is a sensor */
             out.writeBoolean(fixture.isSensor());
@@ -80,7 +83,7 @@ public class SerializableBody extends Body implements Serializable {
         if (this.getUserData() instanceof EntityType) {
             out.writeObject(this.getUserData());
         } else {
-            throw new NotSerializableException("This body is in an illegal state, so it isn't serializable");
+            throw new NotSerializableException(NO_WRITABLE_MSG);
         }
     }
 
@@ -99,7 +102,7 @@ public class SerializableBody extends Body implements Serializable {
                 final double radius = in.readDouble();
                 fixture = this.addFixture(Geometry.createCircle(radius));
             } else {
-                throw new IllegalStateException("This body is can't exist");
+                throw new IllegalStateException(NO_READABLE_MSG);
             }
             /* reading physical properties */
             fixture.setDensity(in.readDouble());
@@ -128,7 +131,7 @@ public class SerializableBody extends Body implements Serializable {
         final boolean isInfinite = in.readBoolean();
         final boolean hasFixedAngularVelocity = in.readBoolean();
         if (isInfinite && hasFixedAngularVelocity) {
-            throw new IllegalStateException("This body is can't exist");
+            throw new IllegalStateException(NO_READABLE_MSG);
         } else if (isInfinite) {
             this.setMass(MassType.INFINITE);
         } else if (hasFixedAngularVelocity) {
