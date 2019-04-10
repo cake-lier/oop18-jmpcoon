@@ -30,14 +30,15 @@ public class EntityConverterImpl implements EntityConverter {
     private static final String SPRITES_DIR = "images/";
     private static final String MODULE_LADDER_SPRITE_URL = SPRITES_DIR + "ladder.png";
     private static final String MODULE_PLATFORM_SPRITE_URL = SPRITES_DIR + "platform.png";
+    /* if the sprite sheets are changed this section could be in need of changes */
     private static final String PLAYER_IDLE_SPRITE_URL = SPRITES_DIR + "raccoon_idle.png";
     private static final int PLAYER_IDLE_FRAMES = 1;
     private static final String PLAYER_CLIMBING_SPRITE_URL = SPRITES_DIR + "raccoon_climb.png";
     private static final int PLAYER_CLIMBING_FRAMES = 2;
     private static final String PLAYER_JUMPING_SPRITE_URL = SPRITES_DIR + "raccoon_jump.png";
-    private static final int PLAYER_JUMPING_FRAMES = 3;
+    private static final int PLAYER_JUMPING_FRAMES = 6;
     private static final String PLAYER_WALKING_SPRITE_URL = SPRITES_DIR + "raccoon_walking.png";
-    private static final int PLAYER_WALKING_FRAMES = 8;
+    private static final int PLAYER_WALKING_FRAMES = 2;
     private static final String WALKING_ENEMY_WALKING_SPRITE_URL = SPRITES_DIR + "walkingEnemy_walking.png";
     private static final int WALKING_ENEMY_WALKING_FRAMES = 2;
     private static final String WALKING_ENEMY_IDLE_SPRITE_URL = SPRITES_DIR + "walkingEnemy_idle.png";
