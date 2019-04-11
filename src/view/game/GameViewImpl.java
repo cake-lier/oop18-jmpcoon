@@ -1,6 +1,7 @@
 package view.game;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -21,6 +22,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.entities.EntityType;
 import view.View;
 import view.menus.GameMenu;
@@ -56,18 +58,22 @@ public final class GameViewImpl implements GameView {
     private static final String SCORE_STR = "Score: ";
     private static final String WIN_MSG = "YOU WON";
     private static final String LOSE_MSG = "GAME OVER";
+    private static final String INIT_ERR = "You can't call this method before initializing the instance";
 
     private final AppController appController;
     private final View appView;
-    private final GameController gameController;
-    private final EntityConverterImpl entityConverter;
-    private final GameMenu gameMenu;
     private final Stage stage;
+    private final GameController gameController;
+    private final EntityConverter entityConverter;
+    private final GameMenu gameMenu;
     private final StackPane root;
     private final Pane entities;
+    private final MediaPlayer music;
+    private final EventHandler<KeyEvent> commandHandler;
+    private final EventHandler<WindowEvent> closeHandler;
     private boolean isMenuVisible;
     private boolean isGameEnded;
-    private final MediaPlayer music;
+    private boolean isInitialized;
 
     @FXML
     private Text score;
@@ -79,39 +85,45 @@ public final class GameViewImpl implements GameView {
     private Button finalQuitButton;
 
     /**
-     * Binds this game view to the instance of the {@link AppController},
-     * acquires the {@link Stage} in which to draw the game,
+     * Binds this game view to the instance of the {@link AppController}, acquires the {@link Stage} in which to draw the game,
      * creates an instance of the {@link GameController}.
      * @param appController The application controller.
      * @param view The application view.
      * @param stage The stage in which to draw the game scene.
-     * @param music The music to play in the background.
+     * @param music The music to play in background.
      */
     public GameViewImpl(final AppController appController, final View view, final Stage stage, final MediaPlayer music) {
         this.appController = Objects.requireNonNull(appController);
         this.appView = Objects.requireNonNull(view);
-        this.gameController = new GameControllerImpl(this);
         this.music = Objects.requireNonNull(music);
         this.stage = Objects.requireNonNull(stage);
+        this.gameController = new GameControllerImpl(this);
         this.root = new StackPane();
         this.entities = new Pane();
-        this.gameMenu = new GameMenuImpl(this.root, this.appController, this.appView, this.gameController);
         this.entityConverter = new EntityConverterImpl(this.gameController.getWorldDimensions(),
                                                        new ImmutablePair<>(this.stage.getScene().getWidth(),
                                                                            this.stage.getScene().getHeight()));
-        this.isMenuVisible = false;
+        this.gameMenu = new GameMenuImpl(this.root, this.appController, this.appView, this.gameController, this);
+        this.closeHandler = e -> this.gameController.stopGame();
+        this.commandHandler = key -> this.getInput(key.getCode());
         this.isGameEnded = false;
+        this.isMenuVisible = false;
+        this.isInitialized = false;
     }
 
     /**
      *{@inheritDoc}
      */
     public void update() {
-        Platform.runLater(() -> {
-            this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
-            this.drawAliveEntities();
-            this.score.setText(SCORE_STR + this.gameController.getCurrentScore());
-        });
+        if (this.isInitialized) {
+            Platform.runLater(() -> {
+                this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
+                this.drawAliveEntities();
+                this.score.setText(SCORE_STR + this.gameController.getCurrentScore());
+            });
+        } else {
+            throw new IllegalStateException(INIT_ERR);
+        }
     }
 
     /**
@@ -128,6 +140,8 @@ public final class GameViewImpl implements GameView {
                 new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
             }
         }
+        this.music.play();
+        this.isInitialized = true;
         this.gameController.startGame();
     }
 
@@ -153,9 +167,8 @@ public final class GameViewImpl implements GameView {
                                                                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, 
                                                                                       true, true, false, true))));
         this.stage.getScene().setRoot(this.root);
-        this.stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, key -> this.getInput(key.getCode()));
-        this.stage.setOnCloseRequest(e -> this.gameController.stopGame());
-        this.music.play();
+        this.stage.setOnCloseRequest(this.closeHandler);
+        this.stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
     }
 
     private void drawAliveEntities() {
@@ -209,18 +222,26 @@ public final class GameViewImpl implements GameView {
      * {@inheritDoc}
      */
     public void showGameOver() {
-        Platform.runLater(() -> {
-            this.showMessage(LOSE_MSG);
-        });
+        if (this.isInitialized) {
+            Platform.runLater(() -> {
+                this.showMessage(LOSE_MSG);
+            });
+        } else {
+            throw new IllegalStateException(INIT_ERR);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public void showPlayerWin() {
-        Platform.runLater(() -> {
-            this.showMessage(WIN_MSG);
-        });
+        if (this.isInitialized) {
+            Platform.runLater(() -> {
+                this.showMessage(WIN_MSG);
+            });
+        } else {
+            throw new IllegalStateException(INIT_ERR);
+        }
     }
 
     private void showMessage(final String msg) {
@@ -237,6 +258,7 @@ public final class GameViewImpl implements GameView {
                 this.message.setFill(Color.web(LOSE_COLOR));
             }
             this.finalBackMenuButton.setOnMouseClicked(e -> {
+                this.cleanView();
                 this.appView.displayMenu();
             });
             this.finalQuitButton.setOnMouseClicked(e -> {
@@ -244,6 +266,16 @@ public final class GameViewImpl implements GameView {
             });
         } catch (final IOException ex) {
             new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
+        }
+    }
+
+    @Override
+    public void cleanView() {
+        if (this.isInitialized) {
+            this.stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
+            this.stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this.closeHandler);
+        } else {
+            throw new IllegalStateException(INIT_ERR);
         }
     }
 }

@@ -1,5 +1,7 @@
 package view.game;
 
+import java.util.Collection;
+
 import model.entities.Entity;
 
 /**
@@ -13,4 +15,9 @@ public interface EntityConverter {
      */
     DrawableEntity getDrawableEntity(Entity entity);
 
+    /**
+     * 
+     * @param deadEntities the entities to remove
+     */
+    void removeUnusedEntities(Collection<Entity> deadEntities);
 }

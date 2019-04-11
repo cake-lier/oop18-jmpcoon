@@ -21,6 +21,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import view.View;
+import view.game.GameView;
 import javafx.scene.control.Alert.AlertType;
 
 /**
@@ -31,7 +32,7 @@ public final class GameMenuImpl implements GameMenu {
     private static final String LAYOUT_PATH = "layouts/";
     private static final String GAME_MENU_SRC = LAYOUT_PATH + "gameMenu.fxml";
     private static final String SAVE_GAME_MENU_SRC = LAYOUT_PATH + "saveGameMenu.fxml";
-    private static final String TIME_FORMAT = "d MMMM yyyy H:mm";
+    private static final String TIME_FORMAT = "d MMMM yyyy HH:mm";
     private static final String NO_SAVE_MSG = "No save game in this slot";
     private static final String DEL_ERR_MSG = " was not correctly deleted!";
     private static final String OVERWRITE_MSG = "Are you sure you want to overwrite this saved game?";
@@ -43,6 +44,7 @@ public final class GameMenuImpl implements GameMenu {
     private final AppController appController;
     private final View appView;
     private final GameController gameController;
+    private final GameView gameView;
     private final Pane root;
     private BorderPane menu;
     private BorderPane saveMenu;
@@ -70,12 +72,15 @@ public final class GameMenuImpl implements GameMenu {
      * @param appController The controller of this application.
      * @param appView The view of this application.
      * @param gameController The controller of this game.
+     * @param gameView The view of this game.
      */
-    public GameMenuImpl(final Pane root, final AppController appController, final View appView, final GameController gameController) {
+    public GameMenuImpl(final Pane root, final AppController appController, final View appView, final GameController gameController,
+                        final GameView gameView) {
         this.root = root;
         this.appController = appController;
         this.appView = appView;
         this.gameController = gameController;
+        this.gameView = gameView;
     }
 
     private void formatSaveSlotText(final Button saveButton, final File file) {
@@ -88,7 +93,7 @@ public final class GameMenuImpl implements GameMenu {
     }
 
     /*
-     * Initializes a generical save game button present in this menu.
+     * Initializes a generic save game button present in this menu.
      */
     private void initSaveButton(final Button save, final String fileName) {
         final URL fileURL = ClassLoader.getSystemResource(SAVES_PATH + fileName);
@@ -144,6 +149,7 @@ public final class GameMenuImpl implements GameMenu {
             this.menu.setVisible(false);
             this.root.getChildren().add(this.menu);
             this.backMenuButton.setOnMouseClicked(e -> {
+                this.gameView.cleanView();
                 this.appView.displayMenu();
             });
             this.quitButton.setOnMouseClicked(e -> {

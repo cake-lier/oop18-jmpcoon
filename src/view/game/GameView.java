@@ -29,4 +29,10 @@ public interface GameView {
      * Shows win screen.
      */
     void showPlayerWin();
+
+    /**
+     * Performs cleaning of the view of this game, intended as a component, putting it into a state like before this object was
+     * created. It should be used only after putting it in an "unusable" state, such as removing it, deleting it, etc.
+     */
+    void cleanView();
 }
