@@ -53,7 +53,7 @@ public final class MenuImpl implements Menu {
     @FXML
     private GridPane savesPage;
     @FXML
-    private BorderPane settingsPage;
+    private GridPane settingsPage;
     @FXML
     private Button startButton;
     @FXML

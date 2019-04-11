@@ -4,46 +4,63 @@
 <?import java.net.URL?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:id="settingsPage"
-            id="root">
-    <center>
-        <GridPane alignment="center">
-	    <AnchorPane styleClass="cells"
-	                GridPane.columnIndex="0"
-	                GridPane.rowIndex="0"
-	                GridPane.hgrow="ALWAYS">
-	        <Label styleClass="descriptions"
-	               AnchorPane.leftAnchor="0"
-	               AnchorPane.rightAnchor="0">Volume</Label>
-	    </AnchorPane>
-	    <Slider fx:id="volumeControl"
-	            id="slider"
-	            styleClass="cells"
-	            GridPane.columnIndex="1"
-	            GridPane.rowIndex="0"
-	            GridPane.hgrow="ALWAYS">
-	    </Slider>
-	    </GridPane>
-    </center>
-    <bottom>
-        <FlowPane id="buttonContainer"
-                  BorderPane.alignment="TOP_LEFT">
-            <Button styleClass="buttons"
-                    fx:id="backSettingsButton"
-                    id="backButton"
-                    alignment="CENTER">Back to main menu</Button>
-        </FlowPane>
-    </bottom>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:id="settingsPage"
+          id="root">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="2"></ColumnConstraints>
+        <ColumnConstraints percentWidth="3"></ColumnConstraints>
+        <ColumnConstraints percentWidth="44"></ColumnConstraints>
+        <ColumnConstraints percentWidth="2"></ColumnConstraints>
+        <ColumnConstraints percentWidth="44"></ColumnConstraints>
+        <ColumnConstraints percentWidth="3"></ColumnConstraints>
+        <ColumnConstraints percentWidth="2"></ColumnConstraints>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="34"></RowConstraints>
+        <RowConstraints percentHeight="16"></RowConstraints>
+        <RowConstraints percentHeight="34"></RowConstraints>
+        <RowConstraints percentHeight="6"></RowConstraints>
+        <RowConstraints percentHeight="8"></RowConstraints>
+        <RowConstraints percentHeight="2"></RowConstraints>
+    </rowConstraints>
+    <children>
+        <Label styleClass="descriptions"
+               GridPane.columnIndex="2"
+               GridPane.halignment="CENTER"
+               GridPane.rowIndex="1"
+               GridPane.valignment="CENTER"
+               alignment="CENTER"
+               GridPane.hgrow="ALWAYS">
+            Volume
+        </Label>
+        <Slider fx:id="volumeControl"
+                id="slider"
+                GridPane.columnIndex="4"
+                GridPane.halignment="CENTER"
+                GridPane.rowIndex="1"
+                GridPane.valignment="CENTER"
+                GridPane.hgrow="ALWAYS">
+        </Slider>
+        <Button styleClass="buttons"
+                fx:id="backSettingsButton"
+                id="backButton"
+                GridPane.columnIndex="1"
+                GridPane.halignment="LEFT"
+                GridPane.rowIndex="4"
+                GridPane.valignment="BOTTOM"
+                GridPane.columnSpan="3">
+            Back to main menu
+        </Button>
+    </children>
     <stylesheets>
         <URL value="@settings.css" />
         <URL value="@background.css" />
         <URL value="@buttons.css" />
     </stylesheets>
-</BorderPane>
+</GridPane>
