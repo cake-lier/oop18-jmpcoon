@@ -18,20 +18,20 @@
 		<ColumnConstraints percentWidth="2"/>
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints percentHeight="5"/>
-		<RowConstraints percentHeight="18"/>
-		<RowConstraints percentHeight="1"/>
-		<RowConstraints percentHeight="6"/>
 		<RowConstraints percentHeight="1"/>
 		<RowConstraints percentHeight="18"/>
 		<RowConstraints percentHeight="1"/>
-		<RowConstraints percentHeight="6"/>
+		<RowConstraints percentHeight="8"/>
 		<RowConstraints percentHeight="1"/>
 		<RowConstraints percentHeight="18"/>
 		<RowConstraints percentHeight="1"/>
-		<RowConstraints percentHeight="6"/>
+		<RowConstraints percentHeight="8"/>
 		<RowConstraints percentHeight="1"/>
-		<RowConstraints percentHeight="15"/>
+		<RowConstraints percentHeight="18"/>
+		<RowConstraints percentHeight="1"/>
+		<RowConstraints percentHeight="8"/>
+		<RowConstraints percentHeight="6"/>
+		<RowConstraints percentHeight="8"/>
 		<RowConstraints percentHeight="2"/>
 	</rowConstraints>
 	<children>
