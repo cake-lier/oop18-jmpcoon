@@ -3,6 +3,8 @@ package model.world;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,7 @@ import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
 import model.entities.PowerUp;
+import model.entities.PowerUpManager;
 import model.entities.PowerUpType;
 import model.entities.State;
 import model.physics.PhysicalBody;
@@ -53,6 +56,8 @@ public final class WorldImpl implements World {
     private GameState currentState;
     private int score;
 
+    private transient Optional<PowerUpManager> powerUpManager; 
+
     /**
      * Default constructor, delegates the job of managing the physics of the game to the library underneath.
      */
@@ -64,6 +69,7 @@ public final class WorldImpl implements World {
         this.deadEntities = new LinkedHashSet<>();
         this.currentState = GameState.IS_GOING;
         this.score = 0;
+        this.powerUpManager = Optional.empty();
     }
 
     /**
@@ -95,18 +101,24 @@ public final class WorldImpl implements World {
         //GOAL
         this.aliveEntities.putInstance(PowerUp.class, 
                 new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X, WIN_ZONE_Y+0.45),
-                        0, EntityShape.RECTANGLE, 0.50, 0.50, EntityType.POWERUP), PowerUpType.GOAL));
+                        0, EntityShape.RECTANGLE, 0.35, 0.35, EntityType.POWERUP), PowerUpType.GOAL));
         //INVINCIBILITY
         this.aliveEntities.putInstance(PowerUp.class, 
-                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X+1.25, WIN_ZONE_Y+0.45),
-                        0, EntityShape.RECTANGLE, 0.35, 0.35, EntityType.POWERUP), PowerUpType.INVINCIBILITY));
+                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X+1.25, WIN_ZONE_Y+0.30),
+                        0, EntityShape.RECTANGLE, 0.20, 0.20, EntityType.POWERUP), PowerUpType.INVINCIBILITY));
         //EXTRA LIFE
         this.aliveEntities.putInstance(PowerUp.class, 
-                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X, WIN_ZONE_Y-1.45),
-                        0, EntityShape.RECTANGLE, 0.35, 0.35, EntityType.POWERUP), PowerUpType.EXTRA_LIFE));
+                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X, WIN_ZONE_Y-1.55),
+                        0, EntityShape.RECTANGLE, 0.20, 0.20, EntityType.POWERUP), PowerUpType.EXTRA_LIFE));
         this.aliveEntities.putInstance(PowerUp.class, 
-                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X+1.45, WIN_ZONE_Y-3.15),
-                        0, EntityShape.RECTANGLE, 0.35, 0.35, EntityType.POWERUP), PowerUpType.EXTRA_LIFE));
+                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X+1.45, WIN_ZONE_Y-3.20),
+                        0, EntityShape.RECTANGLE, 0.20, 0.20, EntityType.POWERUP), PowerUpType.EXTRA_LIFE));
+        List<PowerUp> powerups = this.aliveEntities.values().stream()
+                                                            .filter(e -> e.getType() == EntityType.POWERUP)
+                                                            .map((powerup) -> PowerUp.class.cast(powerup))
+                                                            .collect(Collectors.toList());
+
+        this.powerUpManager = Optional.of(new PowerUpManager(this.player, powerups));
     }
 
     /**
@@ -120,7 +132,17 @@ public final class WorldImpl implements World {
      */
     public synchronized void update() {
         this.innerWorld.update();
-        if (this.currentState == GameState.IS_GOING) {
+        if (this.powerUpManager.isPresent() && this.currentState == GameState.IS_GOING) {
+            PowerUpManager manager = this.powerUpManager.get();
+            manager.checkPowerUps();
+            if (!this.player.isAlive()) {
+                this.currentState = GameState.GAME_OVER;
+            }
+            if (manager.isGoalReached()) {
+                this.currentState = GameState.PLAYER_WON;
+            }
+        }
+      /*  if (this.currentState == GameState.IS_GOING) {
             if (!this.player.isAlive()) {
                 this.currentState = GameState.GAME_OVER;
             }
@@ -128,6 +150,7 @@ public final class WorldImpl implements World {
                 this.currentState = GameState.PLAYER_WON;
             }
         }
+        */
         this.deadEntities.clear();
         final Iterator<Entity> iterator = this.aliveEntities.values().iterator();
         while (iterator.hasNext()) {
@@ -246,8 +269,19 @@ public final class WorldImpl implements World {
         return this.deadEntities;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getCurrentScore() {
         return this.score;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getPlayerLives() {
+        return this.player.getLives();
     }
 }

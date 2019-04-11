@@ -3,7 +3,10 @@ package model.physics;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -27,7 +30,9 @@ import org.dyn4j.geometry.Vector2;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import model.entities.Entity;
 import model.entities.EntityType;
+import model.entities.Player;
 import model.entities.State;
 import model.serializable.SerializableWorld;
 
@@ -43,6 +48,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
     private transient Optional<DynamicPhysicalBody> player;
     private transient Optional<PhysicalBody> collidingLadder;
 
+    private final transient List<Entity> allEntities = new LinkedList<>();
+
     /**
      * Binds the current instance of {@link WholePhysicalWorldImpl} with the instance of {@link World} which will be wrapped and 
      * used.
@@ -55,6 +62,10 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.collidingLadder = Optional.empty();
         this.player = Optional.empty();
         this.addCollisionRules();
+    }
+
+    public void setWorldEntities(final Collection<Entity> entities) {
+        this.allEntities.addAll(entities);
     }
 
     /*

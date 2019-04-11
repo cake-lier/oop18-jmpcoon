@@ -121,7 +121,8 @@ public final class GameViewImpl implements GameView {
         Platform.runLater(() -> {
             this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
             this.drawAliveEntities();
-            this.score.setText(SCORE_STR + this.gameController.getCurrentScore());
+            this.score.setText(SCORE_STR + this.gameController.getCurrentScore()
+                               + "  |  Lives:" + this.gameController.getPlayerLives());
         });
     }
 

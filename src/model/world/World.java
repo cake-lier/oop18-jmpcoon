@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import model.entities.MovementType;
+import model.entities.Player;
 import model.entities.Entity;
 import model.entities.EntityProperties;
 import org.apache.commons.lang3.tuple.Pair;
@@ -68,4 +69,9 @@ public interface World extends Serializable {
      * @return The current game score.
      */
     int getCurrentScore();
+
+    /**
+     * @return the number of {@link Player}'s lives.
+     */
+    int getPlayerLives();
 }

@@ -137,6 +137,14 @@ public class GameControllerImpl implements GameController {
     /**
      * {@inheritDoc}
      */
+    @Override
+    public int getPlayerLives() {
+        return this.gameWorld.getPlayerLives();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public Collection<Entity> getAliveEntities() {
         return this.gameWorld.getAliveEntities();
     }

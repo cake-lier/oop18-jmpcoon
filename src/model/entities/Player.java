@@ -1,8 +1,5 @@
 package model.entities;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import model.physics.DynamicPhysicalBody;
 
 /**
@@ -17,7 +14,7 @@ public final class Player extends DynamicEntity {
 
     private final DynamicPhysicalBody body;
 
-    private Map<PowerUpType, PowerUp> powerups = new EnumMap<>(PowerUpType.class);
+    private int lives = 1;
     /*
      * but when u collect a powerup it disappears from the view
      * the easiest way to do this is to say it's dead
@@ -76,11 +73,16 @@ public final class Player extends DynamicEntity {
         }
     }
 
-    /**
-     * gives a {@link PowerUp} to the {@link Player}.
-     * @param powerUp The {@link PowerUp}
-     */
-    public void givePowerUp(final PowerUp powerUp) {
-        this.powerups.put(powerUp.getPowerUpType(), powerUp);
+    public void addLife() {
+        this.lives++;
     }
+
+    public void removeLife() {
+        this.lives--;
+    }
+
+    public int getLives() {
+        return this.lives;
+    }
+
 }

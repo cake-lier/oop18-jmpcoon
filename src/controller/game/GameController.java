@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.Collection;
 
 import model.entities.Entity;
+import model.entities.Player;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 
@@ -49,6 +51,11 @@ public interface GameController {
      * @return the current score of the game
      */
     int getCurrentScore();
+
+    /**
+     * @return the number of {@link Player}'s lives.
+     */
+    int getPlayerLives();
 
     /**
      * gives to the {@link World} in which the game is playing the input received from the view.
