@@ -2,16 +2,13 @@
     src: url("../fonts/forest_thing.ttf");
 }
 
-#buttonList {
-    -fx-spacing: 3em;
-    -fx-padding: 0 37.5em 0 37.5em;
-}
-
-#title {
+.titlePieces {
     -fx-font-family: "FOREST THING";
     -fx-font-size: 9em;
-    -fx-text-fill: rgb(143,89,2);
-    -fx-padding: 7em 0 0 0;
+    -fx-fill: rgb(143,89,2);
+    -fx-wrap-text: true;
+    -fx-text-overrun: clip;
+    -fx-text-alignment: center;
 }
 
 .buttons {

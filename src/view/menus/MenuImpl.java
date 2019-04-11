@@ -17,7 +17,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -49,7 +48,7 @@ public final class MenuImpl implements Menu {
     private boolean showed;
 
     @FXML
-    private BorderPane frontPage;
+    private GridPane frontPage;
     @FXML
     private GridPane savesPage;
     @FXML

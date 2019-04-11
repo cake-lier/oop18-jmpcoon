@@ -1,38 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import java.net.URL?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" 
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:id="frontPage"
-            id="root">
-    <top>
-        <Label id="title"
-              BorderPane.alignment="CENTER"
-              text="Jumping Raccoon Adventures">
-        </Label>
-    </top>
-    <center>
-        <VBox id="buttonList"
-              BorderPane.alignment="CENTER"
-              alignment="CENTER">
-                <Button fx:id="startButton"
-                        styleClass="buttons">Start Game</Button>
-                <Button fx:id="savesButton"
-                        styleClass="buttons">Load Game</Button>
-                <Button fx:id="settingsButton"
-                        styleClass="buttons">Settings</Button>
-                <Button fx:id="quitButton"
-                        styleClass="buttons">Quit</Button>          
-        </VBox>
-    </center>
+<GridPane xmlns="http://javafx.com/javafx/8" 
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:id="frontPage"
+          id="root">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="5"></ColumnConstraints>
+        <ColumnConstraints percentWidth="25"></ColumnConstraints>
+        <ColumnConstraints percentWidth="40"></ColumnConstraints>
+        <ColumnConstraints percentWidth="25"></ColumnConstraints>
+        <ColumnConstraints percentWidth="5"></ColumnConstraints>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="17.5"></RowConstraints>
+        <RowConstraints percentHeight="17.5"></RowConstraints>
+        <RowConstraints percentHeight="14"></RowConstraints>
+        <RowConstraints percentHeight="2"></RowConstraints>
+        <RowConstraints percentHeight="14"></RowConstraints>
+        <RowConstraints percentHeight="2"></RowConstraints>
+        <RowConstraints percentHeight="14"></RowConstraints>
+        <RowConstraints percentHeight="2"></RowConstraints>
+        <RowConstraints percentHeight="14"></RowConstraints>
+        <RowConstraints percentHeight="7"></RowConstraints>
+    </rowConstraints>
+    <children>
+        <Text styleClass="titlePieces"
+              GridPane.columnIndex="1"
+              GridPane.halignment="CENTER"
+              GridPane.rowIndex="0"
+              GridPane.valignment="CENTER"
+              GridPane.columnSpan="3">
+            Jumping Raccoon
+        </Text>
+        <Text styleClass="titlePieces"
+              GridPane.columnIndex="1"
+              GridPane.halignment="CENTER"
+              GridPane.rowIndex="1"
+              GridPane.valignment="CENTER"
+              GridPane.columnSpan="3">
+            Adventures
+         </Text>
+    <Button fx:id="startButton"
+            styleClass="buttons"
+            GridPane.columnIndex="2"
+            GridPane.halignment="CENTER"
+            GridPane.rowIndex="2"
+            GridPane.valignment="CENTER">
+        Start Game
+    </Button>
+    <Button fx:id="savesButton"
+            styleClass="buttons"
+            GridPane.columnIndex="2"
+            GridPane.halignment="CENTER"
+            GridPane.rowIndex="4"
+            GridPane.valignment="CENTER">
+        Load Game
+    </Button>
+    <Button fx:id="settingsButton"
+            styleClass="buttons"
+            GridPane.columnIndex="2"
+            GridPane.halignment="CENTER"
+            GridPane.rowIndex="6"
+            GridPane.valignment="CENTER">
+        Settings
+    </Button>
+    <Button fx:id="quitButton"
+            styleClass="buttons"
+            GridPane.columnIndex="2"
+            GridPane.halignment="CENTER"
+            GridPane.rowIndex="8"
+            GridPane.valignment="CENTER">
+        Quit
+    </Button>
+    </children>
     <stylesheets>
       <URL value="@menu.css" />
       <URL value="@background.css" />
       <URL value="@buttons.css" />
    </stylesheets>
-</BorderPane>
+</GridPane>
