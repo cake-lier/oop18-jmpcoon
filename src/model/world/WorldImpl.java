@@ -142,15 +142,6 @@ public final class WorldImpl implements World {
                 this.currentState = GameState.PLAYER_WON;
             }
         }
-      /*  if (this.currentState == GameState.IS_GOING) {
-            if (!this.player.isAlive()) {
-                this.currentState = GameState.GAME_OVER;
-            }
-            if (this.player.getPosition().getLeft() < WIN_ZONE_X && this.player.getPosition().getRight() > WIN_ZONE_Y) {
-                this.currentState = GameState.PLAYER_WON;
-            }
-        }
-        */
         this.deadEntities.clear();
         final Iterator<Entity> iterator = this.aliveEntities.values().iterator();
         while (iterator.hasNext()) {

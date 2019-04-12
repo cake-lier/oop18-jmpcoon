@@ -5,6 +5,7 @@ import org.dyn4j.geometry.Vector2;
 
 import model.entities.State;
 import model.serializable.SerializableBody;
+import model.entities.EntityType;
 import model.entities.MovementType;
 
 /**
@@ -19,6 +20,8 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
 
     private final SerializableBody body;
     private State currentState;
+
+    private int lives = 1;
 
     /**
      * builds a new {@link DynamicPhysicalBody}.
@@ -73,6 +76,30 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
         if (Math.abs(this.body.getLinearVelocity().y) > MAXVELOCITY_Y
             && (movement == MovementType.CLIMB_DOWN || movement == MovementType.CLIMB_UP)) {
             this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, Math.signum(this.body.getLinearVelocity().y) * MAXVELOCITY_Y));
+        }
+    }
+
+    /**
+     * @return the number of lives of this {@link DynamicPhysicalBody}.
+     */
+    public int getLives() {
+        return this.lives;
+    }
+
+    /**
+     * Adds one life to this {@link DynamicPhysicalBody}.
+     */
+    public void addLife() {
+        this.lives++;
+    }
+
+    /**
+     * Removes one life from this {@link DynamicPhysicalBody}.
+     */
+    public void removeLife() {
+        this.lives--;
+        if (this.lives == 0) {
+            this.body.setActive(false);
         }
     }
 }

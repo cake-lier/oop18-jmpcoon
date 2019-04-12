@@ -14,7 +14,6 @@ public final class Player extends DynamicEntity {
 
     private final DynamicPhysicalBody body;
 
-    private int lives = 1;
     /*
      * but when u collect a powerup it disappears from the view
      * the easiest way to do this is to say it's dead
@@ -73,16 +72,25 @@ public final class Player extends DynamicEntity {
         }
     }
 
+    /**
+     * Adds one life to this {@link Player}.
+     */
     public void addLife() {
-        this.lives++;
+        this.body.addLife();
     }
 
+    /**
+     * Removes one life from this {@link Player}.
+     */
     public void removeLife() {
-        this.lives--;
+        this.body.removeLife();
     }
 
+    /**
+     * @return the number of lives of this {@link Player}.
+     */
     public int getLives() {
-        return this.lives;
+        return this.body.getLives();
     }
 
 }

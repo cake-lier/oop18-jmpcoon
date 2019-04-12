@@ -32,7 +32,6 @@ import com.google.common.collect.HashBiMap;
 
 import model.entities.Entity;
 import model.entities.EntityType;
-import model.entities.Player;
 import model.entities.State;
 import model.serializable.SerializableWorld;
 
@@ -150,7 +149,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                             && PhysicsUtils.isBodyAbove(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint.getRight()))) {
                         otherTriple.getLeft().setActive(false);
                     } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
-                        playerTriple.getLeft().setActive(false);
+                        //playerTriple.getLeft().setActive(false);
+                        DynamicPhysicalBody.class.cast(playerTriple.getMiddle()).removeLife();
                     } else if (otherTriple.getRight() == EntityType.PLATFORM
                                && (playerState == State.CLIMBING_DOWN || playerState == State.CLIMBING_UP)
                                && WholePhysicalWorldImpl.this.collidingLadder.isPresent()) {
