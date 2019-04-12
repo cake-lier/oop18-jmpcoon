@@ -1,37 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.Button?>
 <?import java.net.URL?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1"
-            id="background">
-    <center>
-        <Text fx:id="message"
-              id="message"></Text>
-    </center>
-    <bottom>
-        <HBox id="buttonList"
-              alignment="CENTER"
-              BorderPane.alignment="CENTER">
-           <Button fx:id="finalBackMenuButton"
-                   styleClass="buttons"
-                   AnchorPane.leftAnchor="0"
-                   AnchorPane.rightAnchor="0"
-                   alignment="CENTER">Back to menu</Button>
-           <Button fx:id="finalQuitButton"
-                   styleClass="buttons"
-                   AnchorPane.leftAnchor="0"
-                   AnchorPane.rightAnchor="0"
-                   alignment="CENTER">Quit game</Button>
-        </HBox>
-    </bottom>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1"
+          id="background">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="20"></ColumnConstraints>
+        <ColumnConstraints percentWidth="39"></ColumnConstraints>
+        <ColumnConstraints percentWidth="2"></ColumnConstraints>
+        <ColumnConstraints percentWidth="39"></ColumnConstraints>
+        <ColumnConstraints percentWidth="20"></ColumnConstraints>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="25"></RowConstraints>
+        <RowConstraints percentHeight="35"></RowConstraints>
+        <RowConstraints percentHeight="15"></RowConstraints>
+        <RowConstraints percentHeight="25"></RowConstraints>
+    </rowConstraints>
+    <Text fx:id="message"
+          id="message"
+          GridPane.columnIndex="1"
+          GridPane.columnSpan="3"
+          GridPane.halignment="CENTER"
+          GridPane.rowIndex="1"
+          GridPane.valignment="CENTER">
+    </Text>
+    <Button fx:id="finalBackMenuButton"
+            styleClass="buttons"
+            GridPane.columnIndex="1"
+            GridPane.halignment="CENTER"
+            GridPane.rowIndex="2"
+            GridPane.valignment="CENTER">
+        Back to menu
+    </Button>
+    <Button fx:id="finalQuitButton"
+            styleClass="buttons"
+            GridPane.columnIndex="3"
+            GridPane.halignment="CENTER"
+            GridPane.rowIndex="2"
+            GridPane.valignment="CENTER">
+        Quit game
+    </Button>
     <stylesheets>
       <URL value="@endMessage.css" />
       <URL value="@buttons.css" />
    </stylesheets>
-</BorderPane>
+</GridPane>

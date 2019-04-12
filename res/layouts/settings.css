@@ -5,9 +5,12 @@
 .descriptions {
     -fx-font-family: "dark forest";
     -fx-font-size: 5em;
-    -fx-background-color: rgb(233,185,110);
     -fx-text-fill: rgb(143,89,2);
+    -fx-background-color: #C3DC93;
     -fx-max-width: infinity;
+    -fx-alignment: center;
+    -fx-background-radius: 1em;
+    -fx-border-radius: 1em;
 }
 
 #slider {

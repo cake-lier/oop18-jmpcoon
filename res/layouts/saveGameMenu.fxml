@@ -1,43 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.control.Button?>
 <?import java.net.URL?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1"
-            id="background">
-    <center>
-        <VBox alignment="CENTER"
-              BorderPane.alignment="CENTER"
-              id="pageContainer">
-            <Button fx:id="firstSave"
-                    styleClass="buttons, loadButtons"
-                    BorderPane.alignment="CENTER"
-                    alignment="CENTER_LEFT"></Button>
-            <Button fx:id="secondSave"
-                    styleClass="buttons, loadButtons"
-                    BorderPane.alignment="CENTER"
-                    alignment="CENTER_LEFT"></Button>
-            <Button fx:id="thirdSave"
-                    styleClass="buttons, loadButtons"
-                    BorderPane.alignment="CENTER"
-                    alignment="CENTER_LEFT"></Button>
-        </VBox>
-    </center>
-    <bottom>
-        <FlowPane id="buttonContainer"
-                  BorderPane.alignment="TOP_LEFT">
-            <Button fx:id="backButton"
-                    styleClass="buttons"
-                    id="backButton"
-                    alignment="CENTER">Back</Button>
-        </FlowPane>
-    </bottom>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1"
+          id="background">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="2"></ColumnConstraints>
+        <ColumnConstraints percentWidth="13"></ColumnConstraints>
+        <ColumnConstraints percentWidth="70"></ColumnConstraints>
+        <ColumnConstraints percentWidth="13"></ColumnConstraints>
+        <ColumnConstraints percentWidth="2"></ColumnConstraints>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="16.5"></RowConstraints>
+        <RowConstraints percentHeight="17"></RowConstraints>
+        <RowConstraints percentHeight="6"></RowConstraints>
+        <RowConstraints percentHeight="17"></RowConstraints>
+        <RowConstraints percentHeight="6"></RowConstraints>
+        <RowConstraints percentHeight="17"></RowConstraints>
+        <RowConstraints percentHeight="16.5"></RowConstraints>
+        <RowConstraints percentHeight="8"></RowConstraints>
+        <RowConstraints percentHeight="2"></RowConstraints>
+    </rowConstraints>
+    <Button fx:id="firstSave"
+            styleClass="loadButtons"
+            GridPane.columnIndex="2"
+            GridPane.halignment="CENTER"
+            GridPane.rowIndex="1"
+            GridPane.valignment="CENTER">
+    </Button>
+    <Button fx:id="secondSave"
+            styleClass="loadButtons"
+            GridPane.columnIndex="2"
+            GridPane.halignment="CENTER"
+            GridPane.rowIndex="3"
+            GridPane.valignment="CENTER">
+    </Button>
+    <Button fx:id="thirdSave"
+            styleClass="loadButtons"
+            GridPane.columnIndex="2"
+            GridPane.halignment="CENTER"
+            GridPane.rowIndex="5"
+            GridPane.valignment="CENTER">
+    </Button>
+    <Button fx:id="backButton"
+            styleClass="buttons"
+            GridPane.columnIndex="1"
+            GridPane.columnSpan="3"
+            GridPane.halignment="LEFT"
+            GridPane.rowIndex="7"
+            GridPane.valignment="BOTTOM">
+        Back
+    </Button>
     <stylesheets>
       <URL value="@saveGameMenu.css" />
       <URL value="@buttons.css" />
    </stylesheets>
-</BorderPane>
+</GridPane>

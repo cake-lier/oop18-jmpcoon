@@ -18,7 +18,7 @@
 		<ColumnConstraints percentWidth="2"></ColumnConstraints>
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints percentHeight="1"></RowConstraints>
+		<RowConstraints percentHeight="3.5"></RowConstraints>
 		<RowConstraints percentHeight="18"></RowConstraints>
 		<RowConstraints percentHeight="1"></RowConstraints>
 		<RowConstraints percentHeight="8"></RowConstraints>
@@ -30,70 +30,68 @@
 		<RowConstraints percentHeight="18"></RowConstraints>
 		<RowConstraints percentHeight="1"></RowConstraints>
 		<RowConstraints percentHeight="8"></RowConstraints>
-		<RowConstraints percentHeight="6"></RowConstraints>
+		<RowConstraints percentHeight="3.5"></RowConstraints>
 		<RowConstraints percentHeight="8"></RowConstraints>
 		<RowConstraints percentHeight="2"></RowConstraints>
 	</rowConstraints>
-	<children>
-		<Button fx:id="firstSave"
-	            styleClass="buttons, loadButtons"
-	            GridPane.columnIndex="2" 
-	            GridPane.halignment="CENTER"
-            	GridPane.rowIndex="1"
-            	GridPane.valignment="CENTER"
-            	alignment="CENTER_LEFT">
-        </Button>
-	    <Button fx:id="firstDelete"
-		        styleClass="deleteButtons"
-		        GridPane.columnIndex="2" 
-	            GridPane.halignment="RIGHT"
-            	GridPane.rowIndex="3"
-            	GridPane.valignment="CENTER">
-            Delete
-        </Button>
-	    <Button fx:id="secondSave"
-	            styleClass="buttons, loadButtons"
-	            GridPane.columnIndex="2" 
-	            GridPane.halignment="CENTER"
-            	GridPane.rowIndex="5"
-            	GridPane.valignment="CENTER"
-            	alignment="CENTER_LEFT">
-        </Button>
-	    <Button fx:id="secondDelete"
-		        styleClass="deleteButtons"
-		        GridPane.columnIndex="2" 
-	            GridPane.halignment="RIGHT"
-            	GridPane.rowIndex="7"
-            	GridPane.valignment="CENTER">
-            Delete
-        </Button>
-		<Button fx:id="thirdSave"
-	            styleClass="buttons, loadButtons"
-	            GridPane.columnIndex="2" 
-	            GridPane.halignment="CENTER"
-            	GridPane.rowIndex="9"
-            	GridPane.valignment="CENTER"
-            	alignment="CENTER_LEFT">
-        </Button>
-	    <Button fx:id="thirdDelete"
-	            styleClass="deleteButtons"
-		        GridPane.columnIndex="2" 
-	            GridPane.halignment="RIGHT"
-            	GridPane.rowIndex="11"
-            	GridPane.valignment="CENTER">
-            Delete
-        </Button>
-        <Button fx:id="backSavesButton"
-            	id="backButton"
-            	styleClass="buttons"
-                GridPane.columnIndex="1" 
-	            GridPane.halignment="LEFT"
-            	GridPane.rowIndex="13"
-            	GridPane.valignment="BOTTOM"
-            	GridPane.columnSpan="3">
-            Back to main menu
-        </Button>
-	</children>        
+    <Button fx:id="firstSave"
+	        styleClass="buttons, loadButtons"
+	        GridPane.columnIndex="2"
+	        GridPane.halignment="CENTER"
+            GridPane.rowIndex="1"
+            GridPane.valignment="CENTER"
+            alignment="CENTER_LEFT">
+    </Button>
+	<Button fx:id="firstDelete"
+		    styleClass="deleteButtons"
+		    GridPane.columnIndex="2"
+	        GridPane.halignment="RIGHT"
+            GridPane.rowIndex="3"
+            GridPane.valignment="CENTER">
+        Delete
+    </Button>
+    <Button fx:id="secondSave"
+	        styleClass="buttons, loadButtons"
+	        GridPane.columnIndex="2"
+	        GridPane.halignment="CENTER"
+            GridPane.rowIndex="5"
+            GridPane.valignment="CENTER"
+            alignment="CENTER_LEFT">
+    </Button>
+	<Button fx:id="secondDelete"
+	        styleClass="deleteButtons"
+		    GridPane.columnIndex="2"
+	        GridPane.halignment="RIGHT"
+            GridPane.rowIndex="7"
+            GridPane.valignment="CENTER">
+        Delete
+    </Button>
+	<Button fx:id="thirdSave"
+	        styleClass="buttons, loadButtons"
+	        GridPane.columnIndex="2"
+	        GridPane.halignment="CENTER"
+            GridPane.rowIndex="9"
+            GridPane.valignment="CENTER"
+            alignment="CENTER_LEFT">
+    </Button>
+	<Button fx:id="thirdDelete"
+	        styleClass="deleteButtons"
+		    GridPane.columnIndex="2"
+	        GridPane.halignment="RIGHT"
+            GridPane.rowIndex="11"
+            GridPane.valignment="CENTER">
+        Delete
+    </Button>
+    <Button fx:id="backSavesButton"
+            id="backButton"
+            styleClass="buttons"
+            GridPane.columnIndex="1"
+	        GridPane.halignment="LEFT"
+            GridPane.rowIndex="13"
+            GridPane.valignment="BOTTOM"
+            GridPane.columnSpan="3">
+        Back to main menu
+    </Button>
     <stylesheets>
       <URL value="@savesLoader.css" />
       <URL value="@background.css" />

@@ -19,39 +19,40 @@
         <ColumnConstraints percentWidth="5"></ColumnConstraints>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="17.5"></RowConstraints>
-        <RowConstraints percentHeight="17.5"></RowConstraints>
+        <RowConstraints percentHeight="6"></RowConstraints>
+        <RowConstraints percentHeight="15"></RowConstraints>
+        <RowConstraints percentHeight="15"></RowConstraints>
+        <RowConstraints percentHeight="1.5"></RowConstraints>
         <RowConstraints percentHeight="14"></RowConstraints>
-        <RowConstraints percentHeight="2"></RowConstraints>
+        <RowConstraints percentHeight="1.5"></RowConstraints>
         <RowConstraints percentHeight="14"></RowConstraints>
-        <RowConstraints percentHeight="2"></RowConstraints>
+        <RowConstraints percentHeight="1.5"></RowConstraints>
         <RowConstraints percentHeight="14"></RowConstraints>
-        <RowConstraints percentHeight="2"></RowConstraints>
+        <RowConstraints percentHeight="1.5"></RowConstraints>
         <RowConstraints percentHeight="14"></RowConstraints>
-        <RowConstraints percentHeight="7"></RowConstraints>
+        <RowConstraints percentHeight="6"></RowConstraints>
     </rowConstraints>
-    <children>
-        <Text styleClass="titlePieces"
-              GridPane.columnIndex="1"
-              GridPane.halignment="CENTER"
-              GridPane.rowIndex="0"
-              GridPane.valignment="CENTER"
-              GridPane.columnSpan="3">
-            Jumping Raccoon
-        </Text>
-        <Text styleClass="titlePieces"
-              GridPane.columnIndex="1"
-              GridPane.halignment="CENTER"
-              GridPane.rowIndex="1"
-              GridPane.valignment="CENTER"
-              GridPane.columnSpan="3">
-            Adventures
-         </Text>
+    <Text styleClass="titlePieces"
+          GridPane.columnIndex="1"
+          GridPane.halignment="CENTER"
+          GridPane.rowIndex="1"
+          GridPane.valignment="CENTER"
+          GridPane.columnSpan="3">
+        Jumping Raccoon
+    </Text>
+    <Text styleClass="titlePieces"
+          GridPane.columnIndex="1"
+          GridPane.halignment="CENTER"
+          GridPane.rowIndex="2"
+          GridPane.valignment="CENTER"
+          GridPane.columnSpan="3">
+        Adventures
+    </Text>
     <Button fx:id="startButton"
             styleClass="buttons"
             GridPane.columnIndex="2"
             GridPane.halignment="CENTER"
-            GridPane.rowIndex="2"
+            GridPane.rowIndex="4"
             GridPane.valignment="CENTER">
         Start Game
     </Button>
@@ -59,7 +60,7 @@
             styleClass="buttons"
             GridPane.columnIndex="2"
             GridPane.halignment="CENTER"
-            GridPane.rowIndex="4"
+            GridPane.rowIndex="6"
             GridPane.valignment="CENTER">
         Load Game
     </Button>
@@ -67,7 +68,7 @@
             styleClass="buttons"
             GridPane.columnIndex="2"
             GridPane.halignment="CENTER"
-            GridPane.rowIndex="6"
+            GridPane.rowIndex="8"
             GridPane.valignment="CENTER">
         Settings
     </Button>
@@ -75,11 +76,10 @@
             styleClass="buttons"
             GridPane.columnIndex="2"
             GridPane.halignment="CENTER"
-            GridPane.rowIndex="8"
+            GridPane.rowIndex="10"
             GridPane.valignment="CENTER">
         Quit
     </Button>
-    </children>
     <stylesheets>
       <URL value="@menu.css" />
       <URL value="@background.css" />

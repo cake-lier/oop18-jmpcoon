@@ -17,7 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import view.View;
@@ -46,8 +46,8 @@ public final class GameMenuImpl implements GameMenu {
     private final GameController gameController;
     private final GameView gameView;
     private final Pane root;
-    private BorderPane menu;
-    private BorderPane saveMenu;
+    private GridPane menu;
+    private GridPane saveMenu;
 
     @FXML
     private Button backMenuButton;
@@ -100,6 +100,7 @@ public final class GameMenuImpl implements GameMenu {
         if (fileURL != null) {
             final File file = new File(fileURL.getFile());
             this.formatSaveSlotText(save, file);
+            save.getStyleClass().add("buttons");
             save.setOnMouseClicked(e -> {
                 final Alert overwriteAlert = new Alert(AlertType.CONFIRMATION, OVERWRITE_MSG);
                 overwriteAlert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
@@ -127,6 +128,7 @@ public final class GameMenuImpl implements GameMenu {
                     try {
                         this.gameController.saveGame(saveURL);
                         this.formatSaveSlotText(save, new File(saveURL.getFile()));
+                        save.getStyleClass().add("buttons");
                     } catch (IOException ex) {
                         new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
                     }

@@ -2,12 +2,7 @@
     -fx-background-color: rgba(45, 41, 38, 0.75);
 }
 
-#buttonList {
-    -fx-spacing: 3em;
-    -fx-padding: 0 30em 0 30em;
-}
-
 .buttons {
-    -fx-font-size: 5em;
+    -fx-font-size: 6em;
     -fx-max-width: infinity;
 }
