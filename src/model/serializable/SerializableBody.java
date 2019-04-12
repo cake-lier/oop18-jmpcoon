@@ -75,6 +75,12 @@ public class SerializableBody extends Body implements Serializable {
         out.writeDouble(this.getLinearVelocity().y);
         /* writing angular velocity */
         out.writeDouble(this.getAngularVelocity());
+        /* writing gravity scale */
+        out.writeDouble(this.getGravityScale());
+        /* writing linear damping */
+        out.writeDouble(this.getLinearDamping());
+        /* writing angular damping */
+        out.writeDouble(this.getAngularDamping());
         /* writing whether the body has infinite mass or not */
         out.writeBoolean(this.getMass().getType() == MassType.INFINITE);
         /* writing whether the body can rotate or not */
@@ -127,6 +133,12 @@ public class SerializableBody extends Body implements Serializable {
         this.setLinearVelocity(new Vector2(velocityX, velocityY));
         /* reading angular velocity */
         this.setAngularVelocity(in.readDouble());
+        /* reading gravity scale */
+        this.setGravityScale(in.readDouble());
+        /* reading linear damping */
+        this.setLinearDamping(in.readDouble());
+        /* writing angular damping */
+        this.setAngularDamping(in.readDouble());
         /* reading information about mass */
         final boolean isInfinite = in.readBoolean();
         final boolean hasFixedAngularVelocity = in.readBoolean();
