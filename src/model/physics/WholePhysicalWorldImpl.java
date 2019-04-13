@@ -122,6 +122,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
             }
         });
         this.world.addListener(new CollisionAdapter() {
+            private int stepCount = 0;
+
             @Override
             public boolean collision(final ContactConstraint contactConstraint) {
                 final Body firstBody = contactConstraint.getBody1();
@@ -149,8 +151,17 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                             && PhysicsUtils.isBodyAbove(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint.getRight()))) {
                         otherTriple.getLeft().setActive(false);
                     } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
-                        //playerTriple.getLeft().setActive(false);
-                        DynamicPhysicalBody.class.cast(playerTriple.getMiddle()).removeLife();
+                        if (this.stepCount == 0) {
+                            DynamicPhysicalBody.class.cast(playerTriple.getMiddle()).removeLife();
+                            this.stepCount++;
+                        } else {
+                            if (this.stepCount < 50) {
+                                contactConstraint.setEnabled(false);
+                                this.stepCount++;
+                            } else {
+                                this.stepCount = 0;
+                            }
+                        }
                     } else if (otherTriple.getRight() == EntityType.PLATFORM
                                && (playerState == State.CLIMBING_DOWN || playerState == State.CLIMBING_UP)
                                && WholePhysicalWorldImpl.this.collidingLadder.isPresent()) {

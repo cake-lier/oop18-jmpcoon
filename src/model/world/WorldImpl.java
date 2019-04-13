@@ -102,10 +102,6 @@ public final class WorldImpl implements World {
         this.aliveEntities.putInstance(PowerUp.class, 
                 new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X, WIN_ZONE_Y+0.45),
                         0, EntityShape.RECTANGLE, 0.35, 0.35, EntityType.POWERUP), PowerUpType.GOAL));
-        //INVINCIBILITY
-        this.aliveEntities.putInstance(PowerUp.class, 
-                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X+1.25, WIN_ZONE_Y+0.30),
-                        0, EntityShape.RECTANGLE, 0.20, 0.20, EntityType.POWERUP), PowerUpType.INVINCIBILITY));
         //EXTRA LIFE
         this.aliveEntities.putInstance(PowerUp.class, 
                 new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X, WIN_ZONE_Y-1.55),
@@ -135,7 +131,7 @@ public final class WorldImpl implements World {
         if (this.powerUpManager.isPresent() && this.currentState == GameState.IS_GOING) {
             PowerUpManager manager = this.powerUpManager.get();
             manager.checkPowerUps();
-            if (!this.player.isAlive()) {
+            if (!manager.isPlayerAlive()) {
                 this.currentState = GameState.GAME_OVER;
             }
             if (manager.isGoalReached()) {

@@ -36,6 +36,13 @@ public class PowerUpManager {
     }
 
     /**
+     * @return true if {@link Player} has one or more lives.
+     */
+    public boolean isPlayerAlive() {
+        return this.player.getLives() != 0;
+    }
+
+    /**
      * @return true if the GOAL {@link PowerUp} has been picked up.
      */
     public boolean isGoalReached() {
@@ -47,7 +54,6 @@ public class PowerUpManager {
             this.goal = true;
         } else if (powerup == PowerUpType.EXTRA_LIFE) {
             this.player.addLife();
-            System.out.println("Received powerup EXTRA_LIFE");
         }
     }
 

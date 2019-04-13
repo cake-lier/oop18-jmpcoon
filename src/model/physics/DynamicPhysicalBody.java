@@ -78,6 +78,24 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
             this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, Math.signum(this.body.getLinearVelocity().y) * MAXVELOCITY_Y));
         }
     }
+    
+    public void applyMovement(final MovementType movement, final double x, final double y, final double maxVelocityX) {
+        if ((this.currentState != State.CLIMBING_UP && this.currentState != State.CLIMBING_DOWN)
+            && (movement == MovementType.CLIMB_UP || movement == MovementType.CLIMB_DOWN)) {
+            this.body.setGravityScale(0);
+            this.body.setLinearDamping(CLIMB_DAMPING);
+            this.body.setLinearVelocity(0, 0);
+        }
+        this.currentState = movement.convert();
+        this.body.applyImpulse(new Vector2(x, y));
+        if (Math.abs(this.body.getLinearVelocity().x) > MAXVELOCITY_X) {
+            this.body.setLinearVelocity(new Vector2(Math.signum(this.body.getLinearVelocity().x) * MAXVELOCITY_X, this.body.getLinearVelocity().y));
+        }
+        if (Math.abs(this.body.getLinearVelocity().y) > MAXVELOCITY_Y
+            && (movement == MovementType.CLIMB_DOWN || movement == MovementType.CLIMB_UP)) {
+            this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, Math.signum(this.body.getLinearVelocity().y) * MAXVELOCITY_Y));
+        }
+    }
 
     /**
      * @return the number of lives of this {@link DynamicPhysicalBody}.

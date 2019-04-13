@@ -9,10 +9,6 @@ public enum PowerUpType {
      */
     GOAL,
     /**
-     * The {@link Player} can't take damage.
-     */
-    INVINCIBILITY,
-    /**
      * Add an extra life to player.
      */
     EXTRA_LIFE;

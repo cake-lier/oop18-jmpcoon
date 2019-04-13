@@ -80,13 +80,6 @@ public final class Player extends DynamicEntity {
     }
 
     /**
-     * Removes one life from this {@link Player}.
-     */
-    public void removeLife() {
-        this.body.removeLife();
-    }
-
-    /**
      * @return the number of lives of this {@link Player}.
      */
     public int getLives() {
