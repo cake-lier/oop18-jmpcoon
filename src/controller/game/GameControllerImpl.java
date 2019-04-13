@@ -2,6 +2,8 @@ package controller.game;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -86,10 +88,8 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public void saveGame(final URL saveFileUrl) throws FileNotFoundException, IOException {
-        try (ObjectOutputStream out = new ObjectOutputStream(
-                                        new BufferedOutputStream(
-                                            new FileOutputStream(saveFileUrl.getFile())))) {
+    public void saveGame(final File saveFile) throws FileNotFoundException, IOException {
+        try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(saveFile)))) {
             out.writeObject(this.gameWorld);
         }
     }
@@ -98,8 +98,8 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public void loadGame(final URL saveFileUrl) throws IOException, IllegalArgumentException {
-        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(saveFileUrl.openStream()))) {
+    public void loadGame(final File saveFile) throws IOException, IllegalArgumentException {
+        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(saveFile)))) {
             this.gameWorld = (World) in.readObject();
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException(INCOMPATIBLE_FILE_MSG);

@@ -1,12 +1,13 @@
 package view;
 
-import java.net.URL;
+import java.io.File;
 import java.util.Optional;
 
 import controller.app.AppController;
 import controller.app.AppControllerImpl;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -22,8 +23,9 @@ import view.menus.MenuImpl;
  */
 public final class ViewImpl implements View {
     private static final String TITLE = "Jumping Raccoon Adventures";
-    private static final Media MENU_MUSIC = new Media(ClassLoader.getSystemResource("sounds/stillalive.mp3").toString());
-    private static final Media GAME_MUSIC = new Media(ClassLoader.getSystemResource("sounds/pixelland.mp3").toString());
+    private static final Media MENU_MUSIC = new Media(ClassLoader.getSystemResource("sounds/stillalive.mp3").toExternalForm());
+    private static final Media GAME_MUSIC = new Media(ClassLoader.getSystemResource("sounds/pixelland.mp3").toExternalForm());
+    private static final Image ICON = new Image(ClassLoader.getSystemResource("images/raccoon.png").toExternalForm());
     private static final int HEIGHT_RATIO = 9;
     private static final int WIDTH_RATIO = 16;
     private static final double INIT_VOLUME = 0.5;
@@ -42,6 +44,7 @@ public final class ViewImpl implements View {
         this.controller = new AppControllerImpl(this);
         this.stage = stage;
         this.stage.setTitle(TITLE);
+        this.stage.getIcons().add(ICON);
         this.setScreenSize();
         this.stage.setScene(new Scene(new Pane()));
         this.player = new MediaPlayer(MENU_MUSIC);
@@ -101,7 +104,7 @@ public final class ViewImpl implements View {
      * {@inheritDoc}
      */
     @Override
-    public void displayGame(final Optional<URL> saveFile) {
+    public void displayGame(final Optional<File> saveFile) {
         this.createNewTrack(GAME_MUSIC);
         final GameView gameView = new GameViewImpl(this.controller, this, this.stage, this.player);
         gameView.init(saveFile);

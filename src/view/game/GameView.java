@@ -1,6 +1,6 @@
 package view.game;
 
-import java.net.URL;
+import java.io.File;
 import java.util.Optional;
 
 /**
@@ -19,7 +19,7 @@ public interface GameView {
      * start.
      * @param saveFile The file with the saved game from which starting the game, if present.
      */
-    void init(Optional<URL> saveFile);
+    void init(Optional<File> saveFile);
 
     /**
      * Shows game over screen.

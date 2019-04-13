@@ -5,9 +5,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -28,8 +26,8 @@ import view.View;
 import view.menus.GameMenu;
 import view.menus.GameMenuImpl;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -111,25 +109,28 @@ public final class GameViewImpl implements GameView {
         this.isInitialized = false;
     }
 
-    /**
-     *{@inheritDoc}
-     */
-    public void update() {
-        if (this.isInitialized) {
-            Platform.runLater(() -> {
-                this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
-                this.drawAliveEntities();
-                this.score.setText(SCORE_STR + this.gameController.getCurrentScore());
-            });
-        } else {
+    private void checkInitialization() {
+        if (!this.isInitialized) {
             throw new IllegalStateException(INIT_ERR);
         }
     }
 
     /**
+     *{@inheritDoc}
+     */
+    public void update() {
+        this.checkInitialization();
+        Platform.runLater(() -> {
+            this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
+            this.drawAliveEntities();
+            this.score.setText(SCORE_STR + this.gameController.getCurrentScore());
+        });
+    }
+
+    /**
      * {@inheritDoc}
      */
-    public void init(final Optional<URL> saveFile) {
+    public void init(final Optional<File> saveFile) {
         this.setupStage();
         this.gameMenu.draw();
         this.drawAliveEntities();
@@ -137,7 +138,7 @@ public final class GameViewImpl implements GameView {
             try {
                 this.gameController.loadGame(saveFile.get());
             } catch (final IOException ex) {
-                new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
+                ex.printStackTrace();
             }
         }
         this.music.play();
@@ -160,7 +161,7 @@ public final class GameViewImpl implements GameView {
             scoreLoader.setController(this);
             this.root.getChildren().add(scoreLoader.load());
         } catch (final IOException ex) {
-            new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
+            ex.printStackTrace();
         }
         this.root.setBackground(new Background(new BackgroundImage(new Image(BG_IMAGE), BackgroundRepeat.ROUND, 
                                                                    BackgroundRepeat.ROUND, BackgroundPosition.CENTER,
@@ -222,26 +223,20 @@ public final class GameViewImpl implements GameView {
      * {@inheritDoc}
      */
     public void showGameOver() {
-        if (this.isInitialized) {
-            Platform.runLater(() -> {
-                this.showMessage(LOSE_MSG);
-            });
-        } else {
-            throw new IllegalStateException(INIT_ERR);
-        }
+        this.checkInitialization();
+        Platform.runLater(() -> {
+            this.showMessage(LOSE_MSG);
+        });
     }
 
     /**
      * {@inheritDoc}
      */
     public void showPlayerWin() {
-        if (this.isInitialized) {
-            Platform.runLater(() -> {
-                this.showMessage(WIN_MSG);
-            });
-        } else {
-            throw new IllegalStateException(INIT_ERR);
-        }
+        this.checkInitialization();
+        Platform.runLater(() -> {
+            this.showMessage(WIN_MSG);
+        });
     }
 
     private void showMessage(final String msg) {
@@ -265,17 +260,14 @@ public final class GameViewImpl implements GameView {
                 this.appController.exitApp();
             });
         } catch (final IOException ex) {
-            new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
+            ex.printStackTrace();
         }
     }
 
     @Override
     public void cleanView() {
-        if (this.isInitialized) {
-            this.stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
-            this.stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this.closeHandler);
-        } else {
-            throw new IllegalStateException(INIT_ERR);
-        }
+        this.checkInitialization();
+        this.stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
+        this.stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this.closeHandler);
     }
 }

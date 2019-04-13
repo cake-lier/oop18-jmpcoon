@@ -1,7 +1,7 @@
 package view.menus;
 
 import java.io.IOException;
-import java.net.URL;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -19,6 +19,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.MediaPlayer;
@@ -28,7 +29,8 @@ import javafx.scene.media.MediaPlayer;
  */
 public final class MenuImpl implements Menu {
     private static final String LAYOUT_PATH = "layouts/";
-    private static final String SAVES_PATH = "saves/";
+    private static final String SAVES_PATH = System.getProperty("user.home") + System.getProperty("file.separator") + "jmpcoon" 
+                                             + System.getProperty("file.separator");
     private static final String FIRST_SAVE_FILE = "save1.sav";
     private static final String SECOND_SAVE_FILE = "save2.sav";
     private static final String THIRD_SAVE_FILE = "save3.sav";
@@ -103,14 +105,13 @@ public final class MenuImpl implements Menu {
             page.setVisible(false);
             root.getChildren().add(page);
         } catch (final IOException ex) {
-            new Alert(AlertType.ERROR, ex.getLocalizedMessage()).show();
+            ex.printStackTrace();
         }
     }
 
     private void initSaveDeleteButton(final Button save, final Button delete, final String fileName) {
-        final URL fileURL = ClassLoader.getSystemResource(SAVES_PATH + fileName);
-        if (fileURL != null) {
-            final File file = new File(fileURL.getFile());
+        final File file = Paths.get(SAVES_PATH + fileName).toFile();
+        if (file.exists()) {
             final String created = LocalDateTime.ofEpochSecond(file.lastModified() / 1000, 0, 
                                                                ZoneOffset.of(ZoneOffset.systemDefault()
                                                                                        .getRules()
@@ -120,10 +121,12 @@ public final class MenuImpl implements Menu {
             save.setText(created);
             save.setOnMouseClicked(e -> {
                 this.music.stop();
-                this.controller.startGame(Optional.of(fileURL));
+                this.controller.startGame(Optional.of(file));
             });
             delete.setOnMouseClicked(e -> {
-                final Optional<ButtonType> choice = new Alert(AlertType.CONFIRMATION, DEL_MSG).showAndWait();
+                final Alert deleteAlert = new Alert(AlertType.CONFIRMATION, DEL_MSG);
+                deleteAlert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                final Optional<ButtonType> choice = deleteAlert.showAndWait();
                 choice.ifPresent(b -> {
                     if (b.equals(ButtonType.OK)) {
                         if (!file.delete()) {

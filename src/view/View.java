@@ -1,6 +1,6 @@
 package view;
 
-import java.net.URL;
+import java.io.File;
 import java.util.Optional;
 
 /**
@@ -19,5 +19,5 @@ public interface View {
      * game from the associated file and then displayed.
      * @param saveFile The file from which starting the game, if present.
      */
-    void displayGame(Optional<URL> saveFile);
+    void displayGame(Optional<File> saveFile);
 }

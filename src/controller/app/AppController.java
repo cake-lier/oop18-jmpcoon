@@ -1,6 +1,6 @@
 package controller.app;
 
-import java.net.URL;
+import java.io.File;
 import java.util.Optional;
 
 /**
@@ -21,5 +21,5 @@ public interface AppController {
      * latter case, it will start a new game.
      * @param saveFile The URL of the file from which to load the game, if present.
      */
-    void startGame(Optional<URL> saveFile);
+    void startGame(Optional<File> saveFile);
 }
