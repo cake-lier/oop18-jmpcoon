@@ -77,4 +77,15 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
             this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, Math.signum(this.body.getLinearVelocity().y) * MAXVELOCITY_Y));
         }
     }
+
+    /**
+     * Sets a linear velocity to this {@link Body} and its corresponding {@link State}.
+     * @param movement The type of {@link MovementType}
+     * @param x The horizontal component of the movement
+     * @param y The vertical component of the movement
+     */
+    public void setFixedVelocity(final MovementType movement, final double x, final double y) {
+        this.currentState = movement.convert();
+        this.body.setLinearVelocity(new Vector2(x, y));
+    }
 }
