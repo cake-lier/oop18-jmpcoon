@@ -44,9 +44,10 @@ public final class EnemyGenerator extends StaticEntity {
         return EntityShape.RECTANGLE;
     }
 
+    //TODO: something better?
     /**
-     * @param physicsFactory the {@link Physics
-     * @return ddh
+     * @param physicsFactory the {@link PhysicsFactory}
+     * @return a Iterable of the enemies
      */
     public Iterable<RollingEnemy> onTimeAdvanced(final PhysicalFactory physicsFactory) {
         this.enemies.clear();
