@@ -52,7 +52,7 @@ public class ClassToInstanceMultimapTest {
     }
 
     /**
-     * Tests if the {@link ClassToInstanceMultiMap} adds elements to itself correctly and return them as they originally were 
+     * Tests if the {@link ClassToInstanceMultimap} adds elements to itself correctly and return them as they originally were 
      * using {@link ClassToInstanceMultimap#putInstance(Class, Object)} and {@link ClassToInstanceMultimap#getInstances(Class)}
      * methods.
      */
@@ -70,7 +70,7 @@ public class ClassToInstanceMultimapTest {
     }
 
     /**
-     * Tests if the {@link ClassToInstanceMultiMap} adds elements to itself correctly and return them as they originally were
+     * Tests if the {@link ClassToInstanceMultimap} adds elements to itself correctly and return them as they originally were
      * using methods inherited from {@link Multimap}.
      */
     @Test
@@ -102,6 +102,15 @@ public class ClassToInstanceMultimapTest {
     @Test(expected = ClassCastException.class)
     public void wrongTypeInsertionTest() {
         this.testMultimap.put(Double.class, Integer.valueOf(0));
+    }
+
+    /**
+     * Tests if the insertion with the {@link ClassToInstanceMultimap#put(Object, Object)} with a {@code null} value raises the
+     * {@link IllegalArgumentException} exception as it should do.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void nullInsertionTest() {
+        this.testMultimap.put(null, new Double(0));
     }
 
     /**

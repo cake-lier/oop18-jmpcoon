@@ -4,7 +4,7 @@ import model.physics.DynamicPhysicalBody;
 
 /**
  * TODO: add a non-linear velocity movement
- * a walking enemy inside the {@link World} of the game.
+ * a walking enemy inside the {@link model.world.World} of the game.
  */
 public final class RollingEnemy extends DynamicEntity {
 

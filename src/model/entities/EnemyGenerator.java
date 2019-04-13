@@ -3,7 +3,7 @@ package model.entities;
 import model.physics.StaticPhysicalBody;
 
 /**
- * An enemy generator inside the {@link World} of the game.
+ * An enemy generator inside the {@link model.world.World} of the game.
  */
 public final class EnemyGenerator extends StaticEntity {
 

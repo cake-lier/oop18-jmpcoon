@@ -7,7 +7,7 @@ import java.io.Serializable;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * an interface representing the physical body of an {@link Entity}.
+ * an interface representing the physical body of an {@link model.entities.Entity}.
  */
 public interface PhysicalBody extends Serializable {
 

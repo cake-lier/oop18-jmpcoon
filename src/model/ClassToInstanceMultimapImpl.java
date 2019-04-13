@@ -11,9 +11,13 @@ import com.google.common.collect.MultimapBuilder;
 import com.google.common.primitives.Primitives;
 
 /**
- * The class implementation of {@link ClassToInstanceMultimap}. It also extends a {@link ForwardingMultimap} because it's the 
- * multimap which has to be used in cases we want to wrap another multimap and delegate to it all or part of the methods we want
- * to define.
+ * The class implementation of {@link ClassToInstanceMultimap}. It also extends a {@link ForwardingMultimap} because it wraps
+ * another multimap and delegate to it the job of storing values, leaving to itself the job of checking the correctness of the
+ * entries inserted. It doesn't support {@code null} as a key or value, because the point of a multimap like this one is to
+ * store instances along with their type. An object in Java can't have no type. Every object belongs at least at the supertype
+ * {@link Object} and because of that a type of an object can't be unknown. As for the values of the entries, they also can't be
+ * null, because the idea behind this data structure is that it should contain instances of some class and {@code null} is not an
+ * instance, is an absence of instance, because it references to nothing. Hence, a {@code null} as a value can't be inserted.
  * @param <B> An upper bound supertype shared by all the instances in the multimap.
  */
 public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Class<? extends B>, B> 
@@ -36,8 +40,8 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
     }
 
     /**
-     * Default constructor which chooses itself the map to rely on, which is a
-     * {@link SetMultimap} with keys stored in a hash set.
+     * Default constructor which chooses itself the map to rely on, which is a {@link com.google.common.collect.SetMultimap} with
+     * keys stored in a hash set, for the greatest performances in terms of speed and memory usage.
      */
     public ClassToInstanceMultimapImpl() {
         this(MultimapBuilder.hashKeys().hashSetValues().build());
@@ -46,7 +50,6 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
     /*
      * A method for checking all if the entries of a multimap follow the rule for which the key is the class of the value
      * instance before using the map.
-     * "multimap": The multimap to check.
      */
     private void checkMultimapEntries(final Multimap<Class<? extends B>, B> multimap) {
         multimap.entries()
@@ -64,8 +67,6 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
     /*
      * The method used instead of make a cast. It's copied from the MutableClassToInstanceMap implementation in the Guava
      * library, although this it isn't static. It returns "value" casted to "type".
-     * "type": The type to use while trying to cast the value.
-     * "value": The value to be casted.
      */
     private <T extends B> T cast(final Class<T> type, final B value) {
         return Primitives.wrap(type).cast(value);
@@ -73,12 +74,19 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
 
     /**
      * {@inheritDoc}
+     * This particular type of multimap doesn't accept a {@code null} as a key or value. For a greater safety and a better
+     * understandability, use {@link #putInstance(Class, Object)} instead. For "overwriting" the contract placed by
+     * {@link ForwardingMultimap}, input {@code null} values can't throw a {@link NullPointerException}, because they were
+     * accepted, they have to be specifically rejected by a {@link IllegalArgumentException}.
      * @throws ClassCastException If the value passed isn't of the type specified by key.
+     * @throws IllegalArgumentException If the key passed is {@code null}.
      */
     @Override
-    public boolean put(final Class<? extends B> key, final B value) throws ClassCastException {
-        final Class<? extends B> copyKey = Objects.requireNonNull(key);
-        return super.put(copyKey, this.cast(copyKey, Objects.requireNonNull(value)));
+    public boolean put(final Class<? extends B> key, final B value) throws ClassCastException, IllegalArgumentException {
+        if (key == null) {
+            throw new IllegalArgumentException("A null key is not accepted!");
+        }
+        return super.put(key, this.cast(key, Objects.requireNonNull(value)));
     }
 
     /**
@@ -97,8 +105,6 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
 
     /*
      * Given an iterable and a type, checks if all the values inside the iterable are of the same type specified.
-     * "type": the type of the value inside the iterable
-     * "values": the iterable to check
      */
     private void checkIterableValues(final Class<? extends B> type, final Iterable<? extends B> values) {
         StreamSupport.stream(Objects.requireNonNull(values).spliterator(), true)
@@ -121,7 +127,7 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
      */
     @Override
     public Collection<B> replaceValues(final Class<? extends B> key, final Iterable<? extends B> values)
-                                                                                                    throws ClassCastException {
+                         throws ClassCastException {
         this.checkIterableValues(key, values);
         return super.replaceValues(key, values);
     }

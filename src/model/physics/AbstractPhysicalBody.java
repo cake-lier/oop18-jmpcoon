@@ -17,7 +17,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * A class implementing {@link PhysicalBody}. It encapsulates a {@link SerializableBody} that must be either a circle or a 
- * rectangle, and it must have only one {@link Fixture}.
+ * rectangle, and it must have only one {@link org.dyn4j.collision.Fixture}.
  */
 public abstract class AbstractPhysicalBody implements PhysicalBody {
     private static final long serialVersionUID = 8007445555444017586L;

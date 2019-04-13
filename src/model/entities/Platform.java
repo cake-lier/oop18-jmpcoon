@@ -3,7 +3,7 @@ package model.entities;
 import model.physics.StaticPhysicalBody;
 
 /**
- * a platform inside the {@link World} of the game.
+ * a platform inside the {@link model.world.World} of the game.
  */
 public final class Platform extends StaticEntity {
 

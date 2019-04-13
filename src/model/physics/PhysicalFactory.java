@@ -32,7 +32,7 @@ public interface PhysicalFactory extends Serializable {
      * @param shape The {@link EntityShape} of {@link StaticPhysicalBody} created.
      * @param width The width of the {@link PhysicalBody}.
      * @param height The height of the {@link PhysicalBody}.
-     * @param type The {@link EntityType} of the {@link Entity} that will use the created {@link StaticPhysicalBody}.
+     * @param type The {@link EntityType} of the {@link model.entities.Entity} that will use the created {@link StaticPhysicalBody}.
      * @return A {@link StaticPhysicalBody} with the given characteristics.
      * @throws IllegalStateException If a {@link PhysicalWorld} has yet to be created.
      * @throws IllegalArgumentException If the given position is outside the {@link PhysicalWorld} bounds, or if the combination
@@ -48,7 +48,7 @@ public interface PhysicalFactory extends Serializable {
      * @param shape The {@link EntityShape} of {@link DynamicPhysicalBody} created.
      *  @param width The width of the {@link PhysicalBody}.
      * @param height The height of the {@link PhysicalBody}.
-     * @param type The {@link EntityType} of the {@link Entity} that will use the created {@link DynamicPhysicalBody}
+     * @param type The {@link EntityType} of the {@link model.entities.Entity} that will use the created {@link DynamicPhysicalBody}
      * @return A {@link DynamicPhysicalBody} with the given characteristics.
      * @throws IllegalStateException If a {@link PhysicalWorld} has yet to be created.
      * @throws IllegalArgumentException If the given position is outside the {@link PhysicalWorld} bounds, or if the combination

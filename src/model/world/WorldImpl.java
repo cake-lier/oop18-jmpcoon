@@ -97,8 +97,8 @@ public final class WorldImpl implements World {
      * {@inheritDoc}
      * For first, it checks if the game has currently ended or not by checking if during this step the {@link Player} is no longer
      * alive and has lost or if the "end level trigger" was reached and has consequently won. Then it separates all
-     * {@link Entity}s no longer alive from the others and for last it signals to all {@link GeneratorEnemy}s that a lapse of time
-     * has passed and asking if they have created any new {@link RollingEnemy}.
+     * {@link Entity}s no longer alive from the others and for last it signals to all {@link model.entities.EnemyGenerator}s that
+     * a lapse of time has passed and asking if they have created any new {@link model.entities.RollingEnemy}.
      * The synchronization is required because an update of the {@link World} cannot be interleaved with a user movement,
      * otherwise these two operations could interfere and make the state of the {@link Player} entity inconsistent.
      */

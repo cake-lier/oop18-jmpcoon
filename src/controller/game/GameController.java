@@ -8,7 +8,6 @@ import java.util.Collection;
 import model.entities.Entity;
 import org.apache.commons.lang3.tuple.Pair;
 
-
 /**
  * a controller for the game playing.
  */
@@ -51,14 +50,14 @@ public interface GameController {
     int getCurrentScore();
 
     /**
-     * gives to the {@link World} in which the game is playing the input received from the view.
+     * gives to the {@link model.world.World} in which the game is playing the input received from the view.
      * @param input the input received
      */
     void processInput(InputType input);
 
     /**
      * 
-     * @return the dimensions (width and height) of the {@link World} in which the game is playing
+     * @return the dimensions (width and height) of the {@link model.world.World} in which the game is playing
      */
     Pair<Double, Double> getWorldDimensions();
 

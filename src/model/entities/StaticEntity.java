@@ -11,7 +11,7 @@ public abstract class StaticEntity extends AbstractEntity {
 
     /**
      * builds a new {@link StaticEntity}.
-     * @param body the {@link PhysicalBody} of this {@link StaticEntity}
+     * @param body the {@link model.physics.PhysicalBody} of this {@link StaticEntity}
      */
     public StaticEntity(final StaticPhysicalBody body) {
         super(body);

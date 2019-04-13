@@ -3,7 +3,7 @@ package model.entities;
 import model.physics.DynamicPhysicalBody;
 
 /**
- * The player inside the {@link World} of the game.
+ * The player inside the {@link model.world.World} of the game.
  */
 public final class Player extends DynamicEntity {
 

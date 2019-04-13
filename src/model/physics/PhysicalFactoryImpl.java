@@ -86,8 +86,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     /**
      * {@inheritDoc}
-     * @throws IllegalStateException If the {@link Body} encapsulated is in an illegal state (specifically, if it has too many
-     * {@link Fixture}.
+     * @throws IllegalStateException If the {@link org.dyn4j.dynamics.Body} encapsulated is in an illegal state (specifically, if
+     * it has too many {@link org.dyn4j.collision.Fixture}.
      */
     @Override
     public StaticPhysicalBody createStaticPhysicalBody(final Pair<Double, Double> position, final double angle,
@@ -117,13 +117,12 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         final StaticPhysicalBody physicalBody = new StaticPhysicalBody(body);
         this.physicalWorld.get().addContainerAssociation(physicalBody, body, type);
         return physicalBody;
-
     }
 
     /**
      * {@inheritDoc}
-     * @throws IllegalStateException If the {@link Body} encapsulated is in an illegal state (specifically, if it has too many
-     * {@link Fixture}.
+     * @throws IllegalStateException If the {@link org.dyn4j.dynamics.Body} encapsulated is in an illegal state (specifically, if
+     * it has too many {@link org.dyn4j.collision.Fixture}.
      */
     @Override
     public DynamicPhysicalBody createDynamicPhysicalBody(final Pair<Double, Double> position, final double angle,

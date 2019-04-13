@@ -3,7 +3,7 @@ package model.entities;
 import model.physics.DynamicPhysicalBody;
 
 /**
- * a walking enemy inside the {@link World} of the game.
+ * a walking enemy inside the {@link model.world.World} of the game.
  */
 public final class WalkingEnemy extends DynamicEntity {
 
@@ -17,8 +17,7 @@ public final class WalkingEnemy extends DynamicEntity {
     /**
      * builds a new {@link WalkingEnemy}.
      * 
-     * @param body
-     *            the {@link PhysicalBody} of this {@link WalkingEnemy}
+     * @param body the {@link model.physics.PhysicalBody} of this {@link WalkingEnemy}
      */
     public WalkingEnemy(final DynamicPhysicalBody body) {
         super(body);

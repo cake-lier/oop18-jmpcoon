@@ -8,7 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Represents an entity, a physical object with an extension, a position, mass and a particular behavior which
- * depends on its {@link EntityType} and {@link State}, inside the {@link World}.
+ * depends on its {@link EntityType} and {@link State}, inside the {@link model.world.World}.
  */
 public interface Entity extends Serializable {
 

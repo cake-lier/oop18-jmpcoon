@@ -5,7 +5,7 @@ import java.util.Optional;
 import controller.game.InputType;
 
 /**
- * The keyboard keys that control the {@link Player}.
+ * The keyboard keys that control the {@link model.entities.Player}.
  */
 public enum InputKey {
     /**
@@ -21,11 +21,11 @@ public enum InputKey {
      */
     D(Optional.of(InputType.RIGHT)), 
     /**
-     * Player climbs down a {@link Ladder}.
+     * Player climbs down a {@link model.entities.Ladder}.
      */
     S(Optional.of(InputType.CLIMB_DOWN)),
     /**
-     * Player climbs up a {@link Ladder}.
+     * Player climbs up a {@link model.entities.Ladder}.
      */
     SPACE(Optional.of(InputType.UP)),
     /**

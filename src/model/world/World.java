@@ -40,14 +40,14 @@ public interface World extends Serializable {
     void movePlayer(MovementType movement);
 
     /**
-     * Checks whether the game has ended and the {@link Player} has lost or not.
-     * @return True if the game has ended and the {@link Player} has lost, false otherwise.
+     * Checks whether the game has ended and the {@link model.entities.Player} has lost or not.
+     * @return True if the game has ended and the {@link model.entities.Player} has lost, false otherwise.
      */
     boolean isGameOver();
 
     /**
-     * Checks whether the game has ended and the {@link Player} has won or not.
-     * @return True if the game has ended and the {@link Player} has won, false otherwise.
+     * Checks whether the game has ended and the {@link model.entities.Player} has won or not.
+     * @return True if the game has ended and the {@link model.entities.Player} has won, false otherwise.
      */
     boolean hasPlayerWon();
 

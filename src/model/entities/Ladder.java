@@ -3,7 +3,7 @@ package model.entities;
 import model.physics.StaticPhysicalBody;
 
 /**
- * a ladder inside the {@link World} of the game.
+ * a ladder inside the {@link model.world.World} of the game.
  */
 public final class Ladder extends StaticEntity {
 

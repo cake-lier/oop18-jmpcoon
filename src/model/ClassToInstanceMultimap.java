@@ -6,11 +6,12 @@ import java.util.Collection;
 import com.google.common.collect.Multimap;
 
 /**
- * A {@link Multimap} with the same properties as a {@link ClassToInstanceMap}. It models a data structure following the item
- * "Consider Typesafe Heterogeneous Containers" described by Joshua Bloch into his "Effective Java" book, but with the possibility
- * of assigning more than one instance value to the same instance class key. The methods are then the same as the ones into the 
- * {@link ClassToInstanceMap} interface, except for the fact that you can get more than one instance for a given class, so the
- * {@link ClassToInstanceMultimap#getInstances(Class)} returns a {@link Collection} instead of a simple value.
+ * A {@link Multimap} with the same properties as a {@link com.google.common.collect.ClassToInstanceMap}. It models a data
+ * structure following the item "Consider Typesafe Heterogeneous Containers" described by Joshua Bloch into his "Effective Java"
+ * book, but with the possibility of assigning more than one instance value to the same instance class key. The methods are then
+ * the same as the ones into the {@link com.google.common.collect.ClassToInstanceMap} interface, except for the fact that you can
+ * get more than one instance for a given class, so the {@link ClassToInstanceMultimap#getInstances(Class)} returns a
+ * {@link Collection} instead of a simple value.
  * @param <B> An upper bound supertype shared by all the instances in the multimap.
  */
 public interface ClassToInstanceMultimap<B> extends Multimap<Class<? extends B>, B>, Serializable {

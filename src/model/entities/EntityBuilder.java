@@ -75,10 +75,10 @@ public abstract class EntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the {@link PhysicalFactory} that will be used to create the {@link PhysicalBody} of the {@link Entity} that will be 
-     * created by this {@link EntityBuilder}.
-     * @param factory the {@link PhysicalFactory} that will be used to create the {@link PhysicalBody} of the {@link Entity} that
-     *  will be created
+     * Sets the {@link PhysicalFactory} that will be used to create the {@link model.physics.PhysicalBody} of the {@link Entity}
+     * that will be created by this {@link EntityBuilder}.
+     * @param factory the {@link PhysicalFactory} that will be used to create the {@link model.physics.PhysicalBody} of the
+     * {@link Entity} that will be created.
      * @return a reference to this {@link EntityBuilder}
      */
     public EntityBuilder<E> setFactory(final PhysicalFactory factory) {

@@ -82,7 +82,7 @@ public final class MenuImpl implements Menu {
 
     /**
      * Binds this menu to the instance who has to be the controller of the menu, which is the controller of the application.
-     * Furthermore, it acquires the {@link Stage} in which to draw the menu.
+     * Furthermore, it acquires the {@link Scene} in which to draw the menu.
      * @param controller The controller of this application.
      * @param scene The {@link Scene} in which adding this menu and all its pages.
      * @param music The {@link MediaPlayer} from which play music while the menu is showed.

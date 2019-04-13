@@ -8,7 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.hash.Hashing;
 
 /**
- * abstract class from which all the {@link Entity} of the {@link World} derives.
+ * abstract class from which all the {@link Entity} of the {@link model.world.World} derives.
  */
 public abstract class AbstractEntity implements Entity {
     private static final long serialVersionUID = -7374912841474322755L;

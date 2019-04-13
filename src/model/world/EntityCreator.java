@@ -43,7 +43,7 @@ enum EntityCreator {
      */
     WALKING_ENEMY(WalkingEnemy.class, EntityBuilderUtils::getWalkingEnemyBuilder),
     /**
-     * A {@link GeneratorEnemy} creator.
+     * A {@link EnemyGenerator} creator.
      */
     ENEMY_GENERATOR(EnemyGenerator.class, EntityBuilderUtils::getEnemyGeneratorBuilder);
 
