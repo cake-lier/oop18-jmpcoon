@@ -8,10 +8,11 @@ import model.physics.DynamicPhysicalBody;
 public final class WalkingEnemy extends DynamicEntity {
 
     private static final long serialVersionUID = 5020187009003425168L;
-    private static final double WALKING_SPEED = 1;
-    private static final double DELTA = 0.055;
+    private static final double WALKING_SPEED = 0.4;
+    private static final double DELTA = 150;
 
     private double count = 0;
+    private boolean direction = false;
     private final DynamicPhysicalBody body;
 
     /**
@@ -44,24 +45,19 @@ public final class WalkingEnemy extends DynamicEntity {
      * computes the backward-and-forward movement.
      */
     public void computeMovement() {
-        applyImpulse(direction());
-    }
-
-    private void applyImpulse(final boolean direction) {
-        if (direction) {
-            body.applyMovement(MovementType.MOVE_RIGHT, WALKING_SPEED, 0);
-        } else {
-            body.applyMovement(MovementType.MOVE_LEFT, -WALKING_SPEED, 0);
+        if (count++ % DELTA == 0) {
+            direction = !direction;
         }
+
+        this.body.setFixedVelocity(getMovement(), getDirection() * WALKING_SPEED, 0);
     }
 
-    private boolean direction() {
-        return Math.sin(counter()) >= 0;
+    private MovementType getMovement() {
+        return this.direction ? MovementType.MOVE_RIGHT : MovementType.MOVE_LEFT;
     }
 
-    private double counter() {
-        this.count = count + DELTA;
-        return this.count;
+    private int getDirection() {
+        return this.direction ? 1 : -1;
     }
 
 }
