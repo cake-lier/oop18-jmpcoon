@@ -1,10 +1,12 @@
 package model.world;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -28,7 +30,7 @@ import model.physics.PhysicalFactoryImpl;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.google.common.base.Predicate;
+import com.google.common.base.Optional;
 import com.google.common.collect.MultimapBuilder;
 
 /**
@@ -42,14 +44,16 @@ public final class WorldImpl implements World {
     private static final double WIN_ZONE_Y = 3.71;
     private static final int ROLLING_POINTS = 50;
     private static final int WALKING_POINTS = 100;
+    private static final String NO_INIT_MSG = "It's needed to initialize this world by initLevel() before using it";
 
     private final PhysicalFactory physicsFactory;
     private final PhysicalWorld innerWorld;
     private final Pair<Double, Double> worldDimensions;
     private final ClassToInstanceMultimap<Entity> aliveEntities;
     private final Set<Entity> deadEntities;
-    private Player player;
+    private Optional<Player> player;
     private GameState currentState;
+    private boolean initialized;
     private int score;
 
     /**
@@ -62,7 +66,9 @@ public final class WorldImpl implements World {
         this.aliveEntities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
         this.deadEntities = new LinkedHashSet<>();
         this.currentState = GameState.IS_GOING;
+        this.player = Optional.absent();
         this.score = 0;
+        this.initialized = false;
     }
 
     /**
@@ -79,7 +85,10 @@ public final class WorldImpl implements World {
     @Override
     public void initLevel(final Collection<EntityProperties> entities) {
         entities.forEach(entity -> {
-            final EntityCreator creator = EntityCreator.valueOf(entity.getEntityType().name());
+            final EntityCreator creator = Arrays.asList(EntityCreator.values()).stream()
+                                                .filter(et -> et.getAssociatedType() == entity.getEntityType())
+                                                .findFirst()
+                                                .get();
             final Class<? extends Entity> entityClass = creator.getAssociatedClass();
             this.aliveEntities.put(entityClass, creator.getEntityBuilder().setFactory(this.physicsFactory)
                                                                           .setDimensions(entity.getDimensions())
@@ -88,9 +97,16 @@ public final class WorldImpl implements World {
                                                                           .setShape(entity.getEntityShape())
                                                                           .build());
             if (entity.getEntityType() == EntityType.PLAYER) {
-                this.player = this.aliveEntities.getInstances(Player.class).stream().findFirst().get();
+                this.player = Optional.fromJavaUtil(this.aliveEntities.getInstances(Player.class).stream().findFirst());
             }
         });
+        this.initialized = true;
+    }
+
+    private void checkInitialization() {
+        if (!this.initialized) {
+            throw new IllegalStateException(NO_INIT_MSG);
+        }
     }
 
     /**
@@ -103,12 +119,13 @@ public final class WorldImpl implements World {
      * otherwise these two operations could interfere and make the state of the {@link Player} entity inconsistent.
      */
     public synchronized void update() {
+        this.checkInitialization();
         this.innerWorld.update();
-        if (this.currentState == GameState.IS_GOING) {
-            if (!this.player.isAlive()) {
+        if (this.currentState == GameState.IS_GOING && this.player.isPresent()) {
+            if (!this.player.get().isAlive()) {
                 this.currentState = GameState.GAME_OVER;
             }
-            if (this.player.getPosition().getLeft() < WIN_ZONE_X && this.player.getPosition().getRight() > WIN_ZONE_Y) {
+            if (this.player.get().getPosition().getLeft() < WIN_ZONE_X && this.player.get().getPosition().getRight() > WIN_ZONE_Y) {
                 this.currentState = GameState.PLAYER_WON;
             }
         }
@@ -138,17 +155,15 @@ public final class WorldImpl implements World {
      * Gets if the Player is currently standing on a platform or not. This is true only if is currently in contact with
      * a Platform and the contact point is at the bottom of the player bounding box and at the top of the platform bounding box.
      */
-    private boolean isPlayerStanding() {
-        final PhysicalBody innerPlayer = this.player.getPhysicalBody();
+    private boolean isBodyStanding(final PhysicalBody body) {
         final Collection<PhysicalBody> platformsBodies = this.aliveEntities.getInstances(Platform.class)
                                                                            .parallelStream()
                                                                            .map(Platform::getPhysicalBody)
                                                                            .collect(Collectors.toSet());
-        return this.innerWorld.getCollidingBodies(innerPlayer)
+        return this.innerWorld.getCollidingBodies(body)
                               .parallelStream()
                               .filter(collision -> platformsBodies.contains(collision.getLeft()))
-                              .anyMatch(platformStand -> PhysicsUtils.isBodyOnTop(innerPlayer,
-                                                                                  platformStand.getLeft(),
+                              .anyMatch(platformStand -> PhysicsUtils.isBodyOnTop(body, platformStand.getLeft(), 
                                                                                   platformStand.getRight()));
     }
 
@@ -156,28 +171,12 @@ public final class WorldImpl implements World {
      * Gets if the Player is currently standing in front of a ladder and it could be specified where to check the player is
      * with respect to the ladder.
      */
-    private boolean isPlayerinFrontLadder(final Predicate<PhysicalBody> where) {
+    private boolean isBodyInFrontLadder(final PhysicalBody body, final Predicate<PhysicalBody> where) {
         return this.aliveEntities.getInstances(Ladder.class).parallelStream()
                                                             .map(Ladder::getPhysicalBody)
-                                                            .anyMatch(ladderBody -> 
-                                                                      this.innerWorld
-                                                                          .areBodiesInContact(this.player.getPhysicalBody(),
-                                                                                              ladderBody)
-                                                                      && where.apply(ladderBody));
-    }
-
-    /*
-     * Gets if the Player is currently standing in front of a ladder at its bottom or not.
-     */
-    private boolean isPlayerAtBottomLadder() {
-        return this.isPlayerinFrontLadder(ladderBody -> PhysicsUtils.isBodyAtBottomHalf(this.player.getPhysicalBody(), ladderBody));
-    }
-
-    /*
-     * Gets if the Player is currently standing in front of a ladder at its top or not.
-     */
-    private boolean isPlayerAtTopLadder() {
-        return this.isPlayerinFrontLadder(ladderBody -> !PhysicsUtils.isBodyAtBottomHalf(this.player.getPhysicalBody(), ladderBody));
+                                                            .anyMatch(ladderBody -> this.innerWorld
+                                                                                        .areBodiesInContact(body, ladderBody)
+                                                                                    && where.test(ladderBody));
     }
 
     /**
@@ -187,16 +186,23 @@ public final class WorldImpl implements World {
      */
     @Override
     public synchronized void movePlayer(final MovementType movement) {
-        final State playerState = this.player.getPhysicalBody().getState();
-        if (this.currentState == GameState.IS_GOING 
-            && ((movement == MovementType.JUMP && this.isPlayerStanding()) 
-                || (movement == MovementType.CLIMB_UP 
-                    && (this.isPlayerAtBottomLadder() || (playerState == State.CLIMBING_UP || playerState == State.CLIMBING_DOWN)))
-                || (movement == MovementType.CLIMB_DOWN
-                    && (this.isPlayerAtTopLadder() || (playerState == State.CLIMBING_UP || playerState == State.CLIMBING_DOWN)))
-                || ((movement == MovementType.MOVE_LEFT || movement == MovementType.MOVE_RIGHT)
-                    && (playerState != State.CLIMBING_DOWN && playerState != State.CLIMBING_UP)))) {
-            this.player.move(movement);
+        this.checkInitialization();
+        if (this.player.isPresent()) {
+            final PhysicalBody playerBody = this.player.get().getPhysicalBody();
+            final State playerState = playerBody.getState();
+            final Predicate<PhysicalBody> isPlayerAtBottom = ladderBody -> PhysicsUtils.isBodyAtBottomHalf(playerBody, ladderBody);
+            if (this.currentState == GameState.IS_GOING 
+                && ((movement == MovementType.JUMP && this.isBodyStanding(playerBody)) 
+                    || (movement == MovementType.CLIMB_UP 
+                        && (this.isBodyInFrontLadder(playerBody, isPlayerAtBottom)
+                            || (playerState == State.CLIMBING_UP || playerState == State.CLIMBING_DOWN)))
+                    || (movement == MovementType.CLIMB_DOWN
+                        && (this.isBodyInFrontLadder(playerBody, isPlayerAtBottom.negate())
+                            || (playerState == State.CLIMBING_UP || playerState == State.CLIMBING_DOWN)))
+                    || ((movement == MovementType.MOVE_LEFT || movement == MovementType.MOVE_RIGHT)
+                        && (playerState != State.CLIMBING_DOWN && playerState != State.CLIMBING_UP)))) {
+                this.player.get().move(movement);
+            }
         }
     }
 

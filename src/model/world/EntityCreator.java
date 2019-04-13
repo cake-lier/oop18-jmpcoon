@@ -3,6 +3,7 @@ package model.world;
 import java.util.function.Supplier;
 
 import model.entities.Entity;
+import model.entities.EntityType;
 import model.entities.EntityBuilder;
 import model.entities.EntityBuilderUtils;
 import model.entities.EnemyGenerator;
@@ -21,38 +22,45 @@ enum EntityCreator {
     /**
      * A {@link Ladder} creator.
      */
-    LADDER(Ladder.class, EntityBuilderUtils::getLadderBuilder),
+    LADDER(EntityType.LADDER, Ladder.class, EntityBuilderUtils::getLadderBuilder),
     /**
      * A {@link Player} creator.
      */
-    PLAYER(Player.class, EntityBuilderUtils::getPlayerBuilder),
+    PLAYER(EntityType.PLAYER, Player.class, EntityBuilderUtils::getPlayerBuilder),
     /**
      * A {@link Platform} creator.
      */
-    PLATFORM(Platform.class, EntityBuilderUtils::getPlatformBuilder),
+    PLATFORM(EntityType.PLATFORM, Platform.class, EntityBuilderUtils::getPlatformBuilder),
     /**
      * A {@link PowerUp} creator.
      */
-    POWERUP(PowerUp.class, EntityBuilderUtils::getPowerUpBuilder),
+    POWERUP(EntityType.POWERUP, PowerUp.class, EntityBuilderUtils::getPowerUpBuilder),
     /**
      * A {@link RollingEnemy} creator.
      */
-    ROLLING_ENEMY(RollingEnemy.class, EntityBuilderUtils::getRollingEnemyBuilder),
+    ROLLING_ENEMY(EntityType.ROLLING_ENEMY, RollingEnemy.class, EntityBuilderUtils::getRollingEnemyBuilder),
     /**
      * A {@link WalkingEnemy} creator.
      */
-    WALKING_ENEMY(WalkingEnemy.class, EntityBuilderUtils::getWalkingEnemyBuilder),
+    WALKING_ENEMY(EntityType.WALKING_ENEMY, WalkingEnemy.class, EntityBuilderUtils::getWalkingEnemyBuilder),
     /**
      * A {@link EnemyGenerator} creator.
      */
-    ENEMY_GENERATOR(EnemyGenerator.class, EntityBuilderUtils::getEnemyGeneratorBuilder);
+    ENEMY_GENERATOR(EntityType.ENEMY_GENERATOR, EnemyGenerator.class, EntityBuilderUtils::getEnemyGeneratorBuilder);
 
     private final Supplier<EntityBuilder<? extends Entity>> supplier;
     private final Class<? extends Entity> associatedClass;
+    private final EntityType associatedType;
 
-    EntityCreator(final Class<? extends Entity> associatedClass, final Supplier<EntityBuilder<? extends Entity>> supplier) {
+    EntityCreator(final EntityType associatedType, final Class<? extends Entity> associatedClass,
+                  final Supplier<EntityBuilder<? extends Entity>> supplier) {
+        this.associatedType = associatedType;
         this.supplier = supplier;
         this.associatedClass = associatedClass;
+    }
+
+    public EntityType getAssociatedType() {
+        return this.associatedType;
     }
 
     public EntityBuilder<? extends Entity> getEntityBuilder() {
