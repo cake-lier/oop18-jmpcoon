@@ -79,7 +79,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
         double width = 0;
         double height = 0;
         if (shape instanceof Circle) {
-            width = ((Circle) shape).getRadius();
+            width = 2 * ((Circle) shape).getRadius();
             height = width;
         } else if (shape instanceof Rectangle) {
             width = ((Rectangle) shape).getWidth();
