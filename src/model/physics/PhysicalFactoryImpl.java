@@ -138,6 +138,10 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                 break;
             case ROLLING_ENEMY:
                 body.getFixture(0).setFilter(ROLLING_ENEMY_FILTER);
+                //TODO: better fixtures. Once decided, delete magic numbers
+                //body.getFixture(0).setFriction(0.8);
+                body.setGravityScale(2.6);
+                body.setAngularDamping(1.3);
                 body.setMass(MassType.NORMAL);
                 break;
             case WALKING_ENEMY:
@@ -183,7 +187,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     private boolean isStaticBodyAllowed(final EntityShape shape, final EntityType type) {
         /* other allowed combinations could be added in the future */
-        return shape.equals(EntityShape.RECTANGLE) && (type.equals(EntityType.PLATFORM) || type.equals(EntityType.LADDER));
+        return shape.equals(EntityShape.RECTANGLE) && (type.equals(EntityType.PLATFORM) || type.equals(EntityType.LADDER))
+                || (shape.equals(EntityShape.CIRCLE) && (type.equals(EntityType.ENEMY_GENERATOR)));
     }
 
     private boolean isDynamicBodyAllowed(final EntityShape shape, final EntityType type) {
