@@ -109,6 +109,10 @@ public final class WorldImpl implements World {
         this.aliveEntities.putInstance(PowerUp.class, 
                 new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X+1.45, WIN_ZONE_Y-3.20),
                         0, EntityShape.RECTANGLE, 0.20, 0.20, EntityType.POWERUP), PowerUpType.EXTRA_LIFE));
+        //SUPER_STAR
+        this.aliveEntities.putInstance(PowerUp.class, 
+                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X+3.45, WIN_ZONE_Y-3.20),
+                        0, EntityShape.RECTANGLE, 0.20, 0.20, EntityType.POWERUP), PowerUpType.SUPER_STAR));
         List<PowerUp> powerups = this.aliveEntities.values().stream()
                                                             .filter(e -> e.getType() == EntityType.POWERUP)
                                                             .map((powerup) -> PowerUp.class.cast(powerup))

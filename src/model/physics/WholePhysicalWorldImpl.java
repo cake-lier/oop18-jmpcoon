@@ -151,15 +151,20 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                             && PhysicsUtils.isBodyAbove(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint.getRight()))) {
                         otherTriple.getLeft().setActive(false);
                     } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
-                        if (this.stepCount == 0) {
-                            DynamicPhysicalBody.class.cast(playerTriple.getMiddle()).removeLife();
-                            this.stepCount++;
+                        //collision with an enemy has a cooldown of 40 steps
+                        if (DynamicPhysicalBody.class.cast(playerTriple.getMiddle()).isInvincible()) {
+                            otherTriple.getLeft().setActive(false);
                         } else {
-                            if (this.stepCount < 50) {
-                                contactConstraint.setEnabled(false);
+                            if (this.stepCount == 0) {
+                                DynamicPhysicalBody.class.cast(playerTriple.getMiddle()).removeLife();
                                 this.stepCount++;
                             } else {
-                                this.stepCount = 0;
+                                if (this.stepCount < 40) {
+                                    contactConstraint.setEnabled(false);
+                                    this.stepCount++;
+                                } else {
+                                    this.stepCount = 0;
+                                }
                             }
                         }
                     } else if (otherTriple.getRight() == EntityType.PLATFORM

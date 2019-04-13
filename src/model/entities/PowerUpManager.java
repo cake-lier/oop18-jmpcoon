@@ -10,8 +10,13 @@ import java.util.LinkedList;
 public class PowerUpManager {
     private final Player player;
     private final Collection<PowerUp> worldPowerups;
+    private static final double STARVELOCITY_X = 1.60;
+    private static final double STARVELOCITY_Y = 1.50;
+    private static final int STAR_DURATION = 400;
 
     private boolean goal = false;
+    private boolean superStar = false;
+    private int counter = 0;
 
     /**
      * @param player the current {@link Player}.
@@ -33,6 +38,9 @@ public class PowerUpManager {
                 this.worldPowerups.remove(powerup);
             }
         });
+        if (this.superStar) {
+            counter();
+        }
     }
 
     /**
@@ -54,6 +62,19 @@ public class PowerUpManager {
             this.goal = true;
         } else if (powerup == PowerUpType.EXTRA_LIFE) {
             this.player.addLife();
+        } else if (powerup == PowerUpType.SUPER_STAR) {
+            this.superStar = true;
+            this.player.modifyMaxVelocity(STARVELOCITY_X, STARVELOCITY_Y);
+            this.player.setInvincible(true);
+        }
+    }
+
+    private void counter() {
+        this.counter++;
+        if (this.counter == STAR_DURATION) {
+            this.superStar = false;
+            this.player.modifyMaxVelocity(1 / STARVELOCITY_X, 1 / STARVELOCITY_Y);
+            this.player.setInvincible(false);
         }
     }
 

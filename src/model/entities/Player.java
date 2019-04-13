@@ -86,4 +86,21 @@ public final class Player extends DynamicEntity {
         return this.body.getLives();
     }
 
+    /**
+     * Modifies the maximum velocity of this {@link Player}.
+     * @param multiplierX The multiplier for the horizontal maximum velocity
+     * @param multiplierY The multiplier for the vertical maximum velocity
+     */
+    public void modifyMaxVelocity(final double multiplierX, final double multiplierY) {
+        this.body.setMaxVelocity(multiplierX, multiplierY);
+    }
+
+    /**
+     * Enables/disables collision with this body.
+     * @param bool The setting parameter
+     */
+    public void setInvincible(final boolean bool) {
+        this.body.setInvincible(bool);
+    }
+
 }

@@ -11,5 +11,10 @@ public enum PowerUpType {
     /**
      * Add an extra life to player.
      */
-    EXTRA_LIFE;
+    EXTRA_LIFE,
+    /**
+     * Player moves faster and is invincible for a short while.
+     */
+    SUPER_STAR;
+
 }

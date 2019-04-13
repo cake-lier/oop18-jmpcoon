@@ -18,10 +18,14 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     private static final double MAXVELOCITY_Y = 0.5;
     private static final double CLIMB_DAMPING = 2;
 
+    private double maxVelocityX = MAXVELOCITY_X;
+    private double maxVelocityY = MAXVELOCITY_Y;
+
     private final SerializableBody body;
     private State currentState;
 
     private int lives = 1;
+    private boolean invincible = false;
 
     /**
      * builds a new {@link DynamicPhysicalBody}.
@@ -70,31 +74,23 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
         }
         this.currentState = movement.convert();
         this.body.applyImpulse(new Vector2(x, y));
-        if (Math.abs(this.body.getLinearVelocity().x) > MAXVELOCITY_X) {
-            this.body.setLinearVelocity(new Vector2(Math.signum(this.body.getLinearVelocity().x) * MAXVELOCITY_X, this.body.getLinearVelocity().y));
+        if (Math.abs(this.body.getLinearVelocity().x) > maxVelocityX) {
+            this.body.setLinearVelocity(new Vector2(Math.signum(this.body.getLinearVelocity().x) * maxVelocityX, this.body.getLinearVelocity().y));
         }
-        if (Math.abs(this.body.getLinearVelocity().y) > MAXVELOCITY_Y
+        if (Math.abs(this.body.getLinearVelocity().y) > maxVelocityY
             && (movement == MovementType.CLIMB_DOWN || movement == MovementType.CLIMB_UP)) {
-            this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, Math.signum(this.body.getLinearVelocity().y) * MAXVELOCITY_Y));
+            this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, Math.signum(this.body.getLinearVelocity().y) * maxVelocityY));
         }
     }
-    
-    public void applyMovement(final MovementType movement, final double x, final double y, final double maxVelocityX) {
-        if ((this.currentState != State.CLIMBING_UP && this.currentState != State.CLIMBING_DOWN)
-            && (movement == MovementType.CLIMB_UP || movement == MovementType.CLIMB_DOWN)) {
-            this.body.setGravityScale(0);
-            this.body.setLinearDamping(CLIMB_DAMPING);
-            this.body.setLinearVelocity(0, 0);
-        }
-        this.currentState = movement.convert();
-        this.body.applyImpulse(new Vector2(x, y));
-        if (Math.abs(this.body.getLinearVelocity().x) > MAXVELOCITY_X) {
-            this.body.setLinearVelocity(new Vector2(Math.signum(this.body.getLinearVelocity().x) * MAXVELOCITY_X, this.body.getLinearVelocity().y));
-        }
-        if (Math.abs(this.body.getLinearVelocity().y) > MAXVELOCITY_Y
-            && (movement == MovementType.CLIMB_DOWN || movement == MovementType.CLIMB_UP)) {
-            this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, Math.signum(this.body.getLinearVelocity().y) * MAXVELOCITY_Y));
-        }
+
+    /**
+     * Modifies the maximum velocity of this {@link DynamicPhysicalBody}.
+     * @param multiplierX The multiplier for the horizontal maximum velocity
+     * @param multiplierY The multiplier for the vertical maximum velocity
+     */
+    public void setMaxVelocity(final double multiplierX, final double multiplierY) {
+        this.maxVelocityX = MAXVELOCITY_X * multiplierX;
+        this.maxVelocityY = MAXVELOCITY_Y * multiplierY;
     }
 
     /**
@@ -115,9 +111,26 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
      * Removes one life from this {@link DynamicPhysicalBody}.
      */
     public void removeLife() {
-        this.lives--;
-        if (this.lives == 0) {
-            this.body.setActive(false);
+        if (!this.invincible) {
+            this.lives--;
+            if (this.lives == 0) {
+                this.body.setActive(false);
+            }
         }
+    }
+
+    /**
+     * Enables/disables collision with this body.
+     * @param bool The setting parameter
+     */
+    public void setInvincible(final boolean bool) {
+        this.invincible = bool;
+    }
+
+    /**
+     * @return true if this {@link DynamicPhysicalBody} is invincible.
+     */
+    public boolean isInvincible() {
+        return this.invincible;
     }
 }
