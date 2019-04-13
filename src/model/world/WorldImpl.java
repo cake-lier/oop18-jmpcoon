@@ -14,12 +14,16 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import model.ClassToInstanceMultimap;
 import model.ClassToInstanceMultimapImpl;
 import model.entities.MovementType;
+import model.entities.EnemyGenerator;
 import model.entities.Entity;
+import model.entities.EntityBuilderUtils;
 import model.entities.EntityProperties;
+import model.entities.EntityShape;
 import model.entities.EntityType;
 import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
+import model.entities.RollingEnemy;
 import model.entities.State;
 import model.entities.WalkingEnemy;
 import model.physics.PhysicalBody;
@@ -100,6 +104,15 @@ public final class WorldImpl implements World {
                 this.player = Optional.fromJavaUtil(this.aliveEntities.getInstances(Player.class).stream().findFirst());
             }
         });
+
+        //TODO: delete once the level is fixed; it'll be left to make the program work
+        /*this.aliveEntities.put(EnemyGenerator.class, EntityBuilderUtils.getEnemyGeneratorBuilder()
+                                                                       .setFactory(this.physicsFactory)
+                                                                       .setDimensions(new ImmutablePair<Double, Double>(0.23, 0.23))
+                                                                       .setAngle(0.0)
+                                                                       .setPosition(new ImmutablePair<Double, Double>(0.37, 4.50))
+                                                                       .setShape(EntityShape.CIRCLE)
+                                                                       .build());*/
         this.initialized = true;
     }
 
@@ -147,8 +160,8 @@ public final class WorldImpl implements World {
         }
 
         this.aliveEntities.getInstances(WalkingEnemy.class).forEach(WalkingEnemy::computeMovement);
-        /*this.entities.getInstances(GeneratorEnemy.class).forEach(entity -> this.entities.putAll(RollingEnemy.class, 
-                                                                                                entity.onTimeAdvanced()));*/
+        this.aliveEntities.getInstances(EnemyGenerator.class).forEach(entity -> this.aliveEntities.putAll(RollingEnemy.class, 
+                                                                                                entity.onTimeAdvanced(this.physicsFactory)));
     }
 
     /*
