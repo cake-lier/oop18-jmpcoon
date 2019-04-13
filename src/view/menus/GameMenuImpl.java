@@ -46,9 +46,11 @@ public final class GameMenuImpl implements GameMenu {
     private final GameController gameController;
     private final GameView gameView;
     private final Pane root;
-    private GridPane menu;
-    private GridPane saveMenu;
 
+    @FXML
+    private GridPane menu;
+    @FXML
+    private GridPane saveMenu;
     @FXML
     private Button backMenuButton;
     @FXML
@@ -147,7 +149,7 @@ public final class GameMenuImpl implements GameMenu {
         final FXMLLoader menuLoader = new FXMLLoader(ClassLoader.getSystemResource(GAME_MENU_SRC));
         menuLoader.setController(this);
         try {
-            this.menu = menuLoader.load();
+            menuLoader.load();
             this.menu.setVisible(false);
             this.root.getChildren().add(this.menu);
             this.backMenuButton.setOnMouseClicked(e -> {
@@ -167,7 +169,7 @@ public final class GameMenuImpl implements GameMenu {
         final FXMLLoader saveLoader = new FXMLLoader(ClassLoader.getSystemResource(SAVE_GAME_MENU_SRC));
         saveLoader.setController(this);
         try {
-            this.saveMenu = saveLoader.load();
+            saveLoader.load();
             this.saveMenu.setVisible(false);
             this.root.getChildren().add(this.saveMenu);
             this.backButton.setOnMouseClicked(ev -> {

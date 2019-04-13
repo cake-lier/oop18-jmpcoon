@@ -8,6 +8,7 @@
 
 <GridPane xmlns="http://javafx.com/javafx/8"
           xmlns:fx="http://javafx.com/fxml/1"
+          fx:id="saveMenu"
           id="background">
     <columnConstraints>
         <ColumnConstraints percentWidth="2"></ColumnConstraints>

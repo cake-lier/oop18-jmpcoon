@@ -22,8 +22,8 @@ import view.menus.MenuImpl;
  */
 public final class ViewImpl implements View {
     private static final String TITLE = "Jumping Raccoon Adventures";
-    private static final String MENU_MUSIC = ClassLoader.getSystemResource("sounds/stillalive.mp3").toString();
-    private static final String GAME_MUSIC = ClassLoader.getSystemResource("sounds/pixelland.mp3").toString();
+    private static final Media MENU_MUSIC = new Media(ClassLoader.getSystemResource("sounds/stillalive.mp3").toString());
+    private static final Media GAME_MUSIC = new Media(ClassLoader.getSystemResource("sounds/pixelland.mp3").toString());
     private static final int HEIGHT_RATIO = 9;
     private static final int WIDTH_RATIO = 16;
     private static final double INIT_VOLUME = 0.5;
@@ -42,9 +42,9 @@ public final class ViewImpl implements View {
         this.controller = new AppControllerImpl(this);
         this.stage = stage;
         this.stage.setTitle(TITLE);
-        this.setScreenSize(this.stage);
+        this.setScreenSize();
         this.stage.setScene(new Scene(new Pane()));
-        this.player = new MediaPlayer(new Media(MENU_MUSIC));
+        this.player = new MediaPlayer(MENU_MUSIC);
         this.player.setVolume(INIT_VOLUME);
         this.controller.startApp();
         this.stage.show();
@@ -53,32 +53,35 @@ public final class ViewImpl implements View {
     /**
      * Sets the stage size to the appropriate values, so as to make it always the biggest possible and with an aspect ratio of
      * 16:9. It is also unresizable, so the ratio cannot be changed in any way.
-     * @param stage The stage being used.
      */
-    private void setScreenSize(final Stage stage) {
+    private void setScreenSize() {
         final Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        stage.setX(primaryScreenBounds.getMinX());
-        stage.setY(primaryScreenBounds.getMinY());
-        stage.centerOnScreen();
+        this.stage.setX(primaryScreenBounds.getMinX());
+        this.stage.setY(primaryScreenBounds.getMinY());
+        this.stage.centerOnScreen();
         final double unitaryHeight = primaryScreenBounds.getHeight() / HEIGHT_RATIO;
         final double unitaryWidth = primaryScreenBounds.getWidth() / WIDTH_RATIO;
         if (primaryScreenBounds.getWidth() < unitaryHeight * WIDTH_RATIO) {
-            stage.setWidth(primaryScreenBounds.getWidth());
-            stage.setHeight(unitaryWidth * HEIGHT_RATIO);
+            this.stage.setWidth(primaryScreenBounds.getWidth());
+            this.stage.setHeight(unitaryWidth * HEIGHT_RATIO);
         } else if (primaryScreenBounds.getHeight() < unitaryWidth * HEIGHT_RATIO) {
-            stage.setHeight(primaryScreenBounds.getHeight());
-            stage.setWidth(unitaryHeight * WIDTH_RATIO);
+            this.stage.setHeight(primaryScreenBounds.getHeight());
+            this.stage.setWidth(unitaryHeight * WIDTH_RATIO);
+        } else {
+            this.stage.setHeight(primaryScreenBounds.getHeight());
+            this.stage.setWidth(primaryScreenBounds.getWidth());
         }
-        stage.setResizable(false);
+        this.stage.setResizable(false);
     }
 
     /*
      * Creates a new player for the audio track which source is passed and then sets the volume as the same one of the preceding
      * player, so as to maintain consistency between volume levels in tracks.
      */
-    private void createNewTrack(final String source) {
-        final MediaPlayer music = new MediaPlayer(new Media(source));
+    private void createNewTrack(final Media source) {
+        final MediaPlayer music = new MediaPlayer(source);
         music.setVolume(this.player.getVolume());
+        music.setMute(this.player.isMute());
         music.setCycleCount(MediaPlayer.INDEFINITE);
         this.player = music;
     }
