@@ -39,12 +39,14 @@ public class EntityConverterImpl implements EntityConverter {
     private static final int PLAYER_JUMPING_FRAMES = 6;
     private static final String PLAYER_WALKING_SPRITE_URL = SPRITES_DIR + "raccoon_walking.png";
     private static final int PLAYER_WALKING_FRAMES = 2;
+
     private static final String WALKING_ENEMY_WALKING_SPRITE_URL = SPRITES_DIR + "walkingEnemy_walking.png";
     private static final int WALKING_ENEMY_WALKING_FRAMES = 2;
     private static final String WALKING_ENEMY_IDLE_SPRITE_URL = SPRITES_DIR + "walkingEnemy_idle.png";
     private static final int WALKING_ENEMY_IDLE_FRAMES = 1;
+
     private static final String ROLLING_ENEMY_SPRITE_URL = SPRITES_DIR + "rollingEnemy.png";
-    private static final int ROLLING_ENEMY_MOVING_FRAMES = 2;
+    private static final int ROLLING_ENEMY_MOVING_FRAMES = 1;
     private static final int ROLLING_ENEMY_IDLE_FRAMES = 1;
 
     private final Pair<Double, Double> worldDimensions;
