@@ -28,6 +28,7 @@ public class EntityConverterImpl implements EntityConverter {
     private static final String PLAYER_SPRITE_URL = SPRITES_DIR + "raccoon.png";
     private static final String ROLLING_ENEMY_SPRITE_URL = SPRITES_DIR + "rollingEnemy.png";
     private static final String WALKING_ENEMY_SPRITE_URL = SPRITES_DIR + "walkingEnemy.png";
+    private static final String ENEMY_GENERATOR_SPRITE_URL = SPRITES_DIR + "enemyGenerator.png";
 
     private static final double LADDER_RATIO = 0.5; // one ladder sprite is about 0.5m (height) in the world
     private static final double PLATFORM_RATIO = 0.9; // one platform sprite is about 0.9m (width) in the world
@@ -97,6 +98,7 @@ public class EntityConverterImpl implements EntityConverter {
         this.images.put(EntityType.PLAYER, loadImage(PLAYER_SPRITE_URL));
         this.images.put(EntityType.ROLLING_ENEMY, loadImage(ROLLING_ENEMY_SPRITE_URL));
         this.images.put(EntityType.WALKING_ENEMY, loadImage(WALKING_ENEMY_SPRITE_URL));
+        this.images.put(EntityType.ENEMY_GENERATOR, loadImage(ENEMY_GENERATOR_SPRITE_URL));
     }
 
     private Image loadImage(final String imageUrl) {

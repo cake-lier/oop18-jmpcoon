@@ -48,7 +48,7 @@ enum EntityCreator {
      */
     ENEMY_GENERATOR(EntityType.ENEMY_GENERATOR, EnemyGenerator.class, EntityBuilderUtils::getEnemyGeneratorBuilder);
 
-    private final Supplier<EntityBuilder<? extends Entity>> supplier;
+    private transient Supplier<EntityBuilder<? extends Entity>> supplier;
     private final Class<? extends Entity> associatedClass;
     private final EntityType associatedType;
 
