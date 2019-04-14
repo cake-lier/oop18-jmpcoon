@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import model.entities.MovementType;
-import model.entities.Entity;
 import model.entities.EntityProperties;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -55,13 +54,13 @@ public interface World extends Serializable {
      * Produces all the entities which populate this world which are still alive since the last {@link #update()} method call.
      * @return A {@link Collection} of the alive {@link Entity}s.
      */
-    Collection<Entity> getAliveEntities();
+    Collection<UnmodifiableEntity> getAliveEntities();
 
     /**
      * Produces all the entities which have died since the last {@link #update()} method call.
      * @return A {@link Collection} of the {@link Entity}s which have died across last {@link World} update.
      */
-    Collection<Entity> getDeadEntities();
+    Collection<UnmodifiableEntity> getDeadEntities();
 
     /**
      * Calculates the score currently totaled by the user.

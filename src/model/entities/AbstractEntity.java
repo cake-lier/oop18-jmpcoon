@@ -52,7 +52,7 @@ public abstract class AbstractEntity implements Entity {
      * {@inheritDoc}
      */
     @Override
-    public State getState() {
+    public EntityState getState() {
         return this.body.getState();
     }
 

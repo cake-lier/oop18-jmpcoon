@@ -8,10 +8,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import model.entities.DynamicEntity;
-import model.entities.Entity;
 import model.entities.EntityType;
-import model.entities.StaticEntity;
+import model.world.UnmodifiableEntity;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -19,9 +18,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * so that if requested again it does not need to create them again.
  */
 public class EntityConverterImpl implements EntityConverter {
-
     private static final String NOT_SUPPORTED_ENTITY_MSG = "This Entity is not supported";
-
     private static final String SPRITES_DIR = "images/";
     private static final String MODULE_LADDER_SPRITE_URL = SPRITES_DIR + "ladder.png";
     private static final String MODULE_PLATFORM_SPRITE_URL = SPRITES_DIR + "platform.png";
@@ -29,14 +26,13 @@ public class EntityConverterImpl implements EntityConverter {
     private static final String ROLLING_ENEMY_SPRITE_URL = SPRITES_DIR + "rollingEnemy.png";
     private static final String WALKING_ENEMY_SPRITE_URL = SPRITES_DIR + "walkingEnemy.png";
     private static final String ENEMY_GENERATOR_SPRITE_URL = SPRITES_DIR + "enemyGenerator.png";
-
     private static final double LADDER_RATIO = 0.5; // one ladder sprite is about 0.5m (height) in the world
     private static final double PLATFORM_RATIO = 0.9; // one platform sprite is about 0.9m (width) in the world
 
     private final Pair<Double, Double> worldDimensions;
     private final Pair<Double, Double> sceneDimensions;
     private final Map<EntityType, Image> images;
-    private final Map<Entity, DrawableEntity> convertedEntities;
+    private final Map<UnmodifiableEntity, DrawableEntity> convertedEntities;
 
     /**
      * builds a new {@link EntityConverterImpl}.
@@ -54,15 +50,16 @@ public class EntityConverterImpl implements EntityConverter {
     /**
      * {@inheritDoc}
      */
-    public DrawableEntity getDrawableEntity(final Entity entity) {
+    @Override
+    public DrawableEntity getDrawableEntity(final UnmodifiableEntity entity) {
         if (this.convertedEntities.containsKey(entity)) {
             this.convertedEntities.get(entity).updatePosition();
             return this.convertedEntities.get(entity);
         } else {
             final DrawableEntity drawableEntity;
-            if (entity instanceof DynamicEntity) {
-                drawableEntity = new DynamicDrawableEntity(this.images.get(entity.getType()), (DynamicEntity) entity, this.worldDimensions, this.sceneDimensions);
-            } else if (entity instanceof StaticEntity) {
+            if (entity.isDynamic()) {
+                drawableEntity = new DynamicDrawableEntity(this.images.get(entity.getType()), entity, this.worldDimensions, this.sceneDimensions);
+            } else if (!entity.isDynamic()) {
                 final Image image;
                 if (entity.getType() == EntityType.LADDER) {
                     image = replicateSprite(this.images.get(EntityType.LADDER), 
@@ -75,7 +72,7 @@ public class EntityConverterImpl implements EntityConverter {
                 } else {
                     image = this.images.get(entity.getType());
                 }
-                drawableEntity = new StaticDrawableEntity(image, (StaticEntity) entity, this.worldDimensions, this.sceneDimensions);
+                drawableEntity = new StaticDrawableEntity(image, entity, this.worldDimensions, this.sceneDimensions);
             } else {
                 throw new IllegalArgumentException(NOT_SUPPORTED_ENTITY_MSG);
             }
@@ -88,8 +85,9 @@ public class EntityConverterImpl implements EntityConverter {
      * removes the {@link DrawableEntity}, saved  converted in the past that are now unused.
      * @param entities the {@link Entity} that will never be used in the future again
      */
-    public void removeUnusedEntities(final Collection<Entity> entities) {
-        entities.forEach(e -> this.convertedEntities.remove(e));
+    @Override
+    public void removeUnusedEntities(final Collection<UnmodifiableEntity> entities) {
+        entities.forEach(this.convertedEntities::remove);
     }
 
     private void fillImagesMap() {

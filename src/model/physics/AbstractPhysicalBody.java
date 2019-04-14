@@ -9,7 +9,7 @@ import org.dyn4j.geometry.Vector2;
 
 import com.google.common.hash.Hashing;
 
-import model.entities.State;
+import model.entities.EntityState;
 import model.serializable.SerializableBody;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -52,7 +52,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      * {@inheritDoc}
      */
     @Override
-    public abstract State getState();
+    public abstract EntityState getState();
 
     /**
      * {@inheritDoc}

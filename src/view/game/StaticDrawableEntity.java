@@ -1,7 +1,7 @@
 package view.game;
 
 import javafx.scene.image.Image;
-import model.entities.StaticEntity;
+import model.world.UnmodifiableEntity;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,7 +19,7 @@ public class StaticDrawableEntity extends AbstractDrawableEntity {
      * @param sceneDimensions the dimensions of the view in which this {@link StaticDrawableEntity} will be drawn
      */
     public StaticDrawableEntity(final Image image, 
-                                    final StaticEntity entity, 
+                                    final UnmodifiableEntity entity, 
                                         final Pair<Double, Double> worldDimensions,
                                             final Pair<Double, Double> sceneDimensions) {
         super(image, entity, worldDimensions, sceneDimensions);

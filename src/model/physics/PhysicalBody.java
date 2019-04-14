@@ -1,6 +1,6 @@
 package model.physics;
 
-import model.entities.State;
+import model.entities.EntityState;
 
 import java.io.Serializable;
 
@@ -22,9 +22,9 @@ public interface PhysicalBody extends Serializable {
     double getAngle();
 
     /**
-     * @return the {@link State} this {@link PhysicalBody} is in
+     * @return the {@link EntityState} this {@link PhysicalBody} is in
      */
-    State getState();
+    EntityState getState();
 
     /**
      * @return whether this {@link PhysicalBody} exists or not

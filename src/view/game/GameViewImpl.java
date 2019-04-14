@@ -185,9 +185,9 @@ public final class GameViewImpl implements GameView {
     private Collection<Node> getNodes(final EntityType type) {
         return this.gameController.getAliveEntities()
                                   .stream()
-                                  .map(entity -> this.entityConverter.getDrawableEntity(entity))
+                                  .map(this.entityConverter::getDrawableEntity)
                                   .filter(entity -> entity.getEntityType() == type)
-                                  .map(entity -> entity.getImageView())
+                                  .map(DrawableEntity::getImageView)
                                   .collect(Collectors.toList());
     }
 

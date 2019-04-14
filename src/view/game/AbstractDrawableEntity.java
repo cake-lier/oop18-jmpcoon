@@ -5,9 +5,8 @@ import java.util.Objects;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import model.entities.Entity;
 import model.entities.EntityType;
-import model.entities.AbstractEntity;
+import model.world.UnmodifiableEntity;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,7 +17,7 @@ import org.apache.commons.lang3.tuple.Pair;
 public abstract class AbstractDrawableEntity implements DrawableEntity {
 
     private final ImageView sprite;
-    private final Entity entity;
+    private final UnmodifiableEntity entity;
     private final Pair<Double, Double> worldDimensions;
     private final Pair<Double, Double> sceneDimensions;
 
@@ -30,7 +29,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      * @param sceneDimensions the dimensions of the view in which this {@link AbstractDrawableEntity} will be drawn
      */
     public AbstractDrawableEntity(final Image image, 
-                                    final AbstractEntity entity, 
+                                    final UnmodifiableEntity entity, 
                                         final Pair<Double, Double> worldDimensions,
                                             final Pair<Double, Double> sceneDimensions) {
         this.sprite = new ImageView(Objects.requireNonNull(image));
@@ -62,9 +61,9 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
     protected abstract void updateSpriteProperties();
 
     /**
-     * @return the {@link Entity} represented by this {@link DrawableEntity}
+     * @return the {@link UnmodifiableEntity} represented by this {@link DrawableEntity}
      */
-    protected Entity getEntity() {
+    protected UnmodifiableEntity getEntity() {
         return this.entity;
     }
 

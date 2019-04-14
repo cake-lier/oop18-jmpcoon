@@ -2,7 +2,6 @@ package model.world;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -24,7 +23,7 @@ import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
 import model.entities.RollingEnemy;
-import model.entities.State;
+import model.entities.EntityState;
 import model.entities.WalkingEnemy;
 import model.physics.PhysicalBody;
 import model.physics.PhysicalWorld;
@@ -35,6 +34,7 @@ import model.physics.PhysicalFactoryImpl;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MultimapBuilder;
 
 /**
@@ -202,18 +202,18 @@ public final class WorldImpl implements World {
         this.checkInitialization();
         if (this.player.isPresent()) {
             final PhysicalBody playerBody = this.player.get().getPhysicalBody();
-            final State playerState = playerBody.getState();
+            final EntityState playerState = playerBody.getState();
             final Predicate<PhysicalBody> isPlayerAtBottom = ladderBody -> PhysicsUtils.isBodyAtBottomHalf(playerBody, ladderBody);
             if (this.currentState == GameState.IS_GOING 
                 && ((movement == MovementType.JUMP && this.isBodyStanding(playerBody)) 
                     || (movement == MovementType.CLIMB_UP 
                         && (this.isBodyInFrontLadder(playerBody, isPlayerAtBottom)
-                            || (playerState == State.CLIMBING_UP || playerState == State.CLIMBING_DOWN)))
+                            || (playerState == EntityState.CLIMBING_UP || playerState == EntityState.CLIMBING_DOWN)))
                     || (movement == MovementType.CLIMB_DOWN
                         && (this.isBodyInFrontLadder(playerBody, isPlayerAtBottom.negate())
-                            || (playerState == State.CLIMBING_UP || playerState == State.CLIMBING_DOWN)))
+                            || (playerState == EntityState.CLIMBING_UP || playerState == EntityState.CLIMBING_DOWN)))
                     || ((movement == MovementType.MOVE_LEFT || movement == MovementType.MOVE_RIGHT)
-                        && (playerState != State.CLIMBING_DOWN && playerState != State.CLIMBING_UP)))) {
+                        && (playerState != EntityState.CLIMBING_DOWN && playerState != EntityState.CLIMBING_UP)))) {
                 this.player.get().move(movement);
             }
         }
@@ -239,18 +239,25 @@ public final class WorldImpl implements World {
      * {@inheritDoc}
      */
     @Override
-    public Collection<Entity> getAliveEntities() {
-        return Collections.unmodifiableCollection(this.aliveEntities.values());
+    public Collection<UnmodifiableEntity> getAliveEntities() {
+        return this.aliveEntities.values().parallelStream()
+                                          .map(UnmodifiableEntity::new)
+                                          .collect(ImmutableSet.toImmutableSet());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Collection<Entity> getDeadEntities() {
-        return Collections.unmodifiableCollection(this.deadEntities);
+    public Collection<UnmodifiableEntity> getDeadEntities() {
+        return this.deadEntities.parallelStream()
+                                .map(UnmodifiableEntity::new)
+                                .collect(ImmutableSet.toImmutableSet());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getCurrentScore() {
         return this.score;

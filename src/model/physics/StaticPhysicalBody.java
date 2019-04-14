@@ -1,6 +1,6 @@
 package model.physics;
 
-import model.entities.State;
+import model.entities.EntityState;
 import model.serializable.SerializableBody;
 
 /**
@@ -22,8 +22,8 @@ public class StaticPhysicalBody extends AbstractPhysicalBody {
      * {@inheritDoc}
      */
     @Override
-    public State getState() {
-        return State.IDLE;
+    public EntityState getState() {
+        return EntityState.IDLE;
     }
 
 }

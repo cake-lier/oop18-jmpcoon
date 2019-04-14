@@ -5,7 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 
-import model.entities.Entity;
+import model.world.UnmodifiableEntity;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -65,12 +66,12 @@ public interface GameController {
      * 
      * @return alive entities.
      */
-    Collection<Entity> getAliveEntities();
+    Collection<UnmodifiableEntity> getAliveEntities();
 
     /**
      * 
      * @return dead entities.
      */
-    Collection<Entity> getDeadEntities();
+    Collection<UnmodifiableEntity> getDeadEntities();
 
 }

@@ -18,7 +18,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import model.entities.EntityProperties;
-import model.entities.Entity;
+import model.world.UnmodifiableEntity;
 import model.world.World;
 import model.world.WorldImpl;
 import org.apache.commons.lang3.tuple.Pair;
@@ -138,14 +138,14 @@ public class GameControllerImpl implements GameController {
     /**
      * {@inheritDoc}
      */
-    public Collection<Entity> getAliveEntities() {
+    public Collection<UnmodifiableEntity> getAliveEntities() {
         return this.gameWorld.getAliveEntities();
     }
 
     /**
      * {@inheritDoc}
      */
-    public Collection<Entity> getDeadEntities() {
+    public Collection<UnmodifiableEntity> getDeadEntities() {
         return this.gameWorld.getDeadEntities();
     }
 

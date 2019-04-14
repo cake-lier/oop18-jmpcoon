@@ -3,7 +3,7 @@ package model.physics;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Vector2;
 
-import model.entities.State;
+import model.entities.EntityState;
 import model.serializable.SerializableBody;
 import model.entities.MovementType;
 
@@ -18,7 +18,7 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     private static final double CLIMB_DAMPING = 2;
 
     private final SerializableBody body;
-    private State currentState;
+    private EntityState currentState;
 
     /**
      * builds a new {@link DynamicPhysicalBody}.
@@ -27,27 +27,27 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     public DynamicPhysicalBody(final SerializableBody body) {
         super(body);
         this.body = body;
-        this.currentState = State.IDLE;
+        this.currentState = EntityState.IDLE;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public State getState() {
+    public EntityState getState() {
         if (this.body.getLinearVelocity().equals(new Vector2(0, 0))
-            && this.currentState != State.CLIMBING_DOWN
-            && this.currentState != State.CLIMBING_UP) {
-            return State.IDLE;
+            && this.currentState != EntityState.CLIMBING_DOWN
+            && this.currentState != EntityState.CLIMBING_UP) {
+            return EntityState.IDLE;
         }
         return this.currentState;
     }
 
     /**
-     * Sets entity's {@link State} to idle.
+     * Sets entity's {@link EntityState} to idle.
      */
     public void setIdle() {
-        this.currentState = State.IDLE;
+        this.currentState = EntityState.IDLE;
         this.body.setGravityScale(1);
         this.body.setLinearDamping(Body.DEFAULT_LINEAR_DAMPING);
         this.body.setLinearVelocity(new Vector2(0, 0));
@@ -55,13 +55,13 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
 
     /**
      * Applies given movement to this {@link Body},
-     * sets corresponding {@link State}, sets body's gravity to 0 if climbing.
+     * sets corresponding {@link EntityState}, sets body's gravity to 0 if climbing.
      * @param movement The kind of movement
      * @param x The horizontal component of the movement
      * @param y The vertical component of the movement
      */
     public void applyMovement(final MovementType movement, final double x, final double y) {
-        if ((this.currentState != State.CLIMBING_UP && this.currentState != State.CLIMBING_DOWN)
+        if ((this.currentState != EntityState.CLIMBING_UP && this.currentState != EntityState.CLIMBING_DOWN)
             && (movement == MovementType.CLIMB_UP || movement == MovementType.CLIMB_DOWN)) {
             this.body.setGravityScale(0);
             this.body.setLinearDamping(CLIMB_DAMPING);

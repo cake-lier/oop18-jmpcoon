@@ -45,11 +45,10 @@ public final class WalkingEnemy extends DynamicEntity {
      * computes the backward-and-forward movement.
      */
     public void computeMovement() {
-        if (count++ % DELTA == 0) {
-            direction = !direction;
+        if (this.count++ % DELTA == 0) {
+            this.direction = !this.direction;
         }
-
-        this.body.setFixedVelocity(getMovement(), getDirection() * WALKING_SPEED, 0);
+        this.body.setFixedVelocity(this.getMovement(), this.getDirection() * WALKING_SPEED, 0);
     }
 
     private MovementType getMovement() {
@@ -59,6 +58,5 @@ public final class WalkingEnemy extends DynamicEntity {
     private int getDirection() {
         return this.direction ? 1 : -1;
     }
-
 }
 

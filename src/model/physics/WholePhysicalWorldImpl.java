@@ -28,7 +28,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import model.entities.EntityType;
-import model.entities.State;
+import model.entities.EntityState;
 import model.serializable.SerializableWorld;
 
 /**
@@ -95,14 +95,14 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                     final PhysicalBody otherBody = firstType != EntityType.PLAYER ? firstPhysicalBody : secondPhysicalBody;
                     final DynamicPhysicalBody playerBody = WholePhysicalWorldImpl.this.player.get();
                     final Vector2 coordinates = point.getPoint();
-                    final State playerState = playerBody.getState();
-                    if (otherType == EntityType.PLATFORM && (playerState == State.CLIMBING_DOWN || playerState == State.CLIMBING_UP)
+                    final EntityState playerState = playerBody.getState();
+                    if (otherType == EntityType.PLATFORM && (playerState == EntityState.CLIMBING_DOWN || playerState == EntityState.CLIMBING_UP)
                         && WholePhysicalWorldImpl.this.collidingLadder.isPresent()) {
                         final PhysicalBody collidingLadder = WholePhysicalWorldImpl.this.collidingLadder.get();
                         if (!PhysicsUtils.isBodyOnTop(playerBody, otherBody, new ImmutablePair<>(coordinates.x, coordinates.y))
-                            || ((playerState == State.CLIMBING_DOWN 
+                            || ((playerState == EntityState.CLIMBING_DOWN 
                                  && !PhysicsUtils.isBodyAtBottomHalf(playerBody, collidingLadder))
-                                || (playerState == State.CLIMBING_UP 
+                                || (playerState == EntityState.CLIMBING_UP 
                                     && PhysicsUtils.isBodyAtBottomHalf(playerBody, collidingLadder)))) {
                             return false;
                         }
@@ -129,7 +129,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                                                                                ? firstTriple : secondTriple;
                     final Vector2 point = contactConstraint.getContacts().get(0).getPoint();
                     final Pair<Double, Double> collisionPoint = new ImmutablePair<>(point.x, point.y);
-                    final State playerState = playerTriple.getMiddle().getState();
+                    final EntityState playerState = playerTriple.getMiddle().getState();
                     if ((otherTriple.getRight() == EntityType.WALKING_ENEMY
                          && PhysicsUtils.isBodyOnTop(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint))
                         || (otherTriple.getRight() == EntityType.ROLLING_ENEMY
@@ -138,13 +138,13 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                     } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
                         playerTriple.getLeft().setActive(false);
                     } else if (otherTriple.getRight() == EntityType.PLATFORM
-                               && (playerState == State.CLIMBING_DOWN || playerState == State.CLIMBING_UP)
+                               && (playerState == EntityState.CLIMBING_DOWN || playerState == EntityState.CLIMBING_UP)
                                && WholePhysicalWorldImpl.this.collidingLadder.isPresent()) {
                         final PhysicalBody collidingLadder = WholePhysicalWorldImpl.this.collidingLadder.get();
                         if (PhysicsUtils.isBodyOnTop(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint)
-                            && ((playerState == State.CLIMBING_DOWN && PhysicsUtils.isBodyAtBottomHalf(playerTriple.getMiddle(),
+                            && ((playerState == EntityState.CLIMBING_DOWN && PhysicsUtils.isBodyAtBottomHalf(playerTriple.getMiddle(),
                                                                                                        collidingLadder))
-                                || (playerState == State.CLIMBING_UP && !PhysicsUtils.isBodyAtBottomHalf(playerTriple.getMiddle(),
+                                || (playerState == EntityState.CLIMBING_UP && !PhysicsUtils.isBodyAtBottomHalf(playerTriple.getMiddle(),
                                                                                                          collidingLadder)))) {
                             WholePhysicalWorldImpl.this.player.ifPresent(p -> p.setIdle());
                         }

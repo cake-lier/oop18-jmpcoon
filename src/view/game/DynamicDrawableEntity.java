@@ -1,8 +1,7 @@
 package view.game;
 
 import javafx.scene.image.Image;
-import model.entities.DynamicEntity;
-import model.entities.Entity;
+import model.world.UnmodifiableEntity;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,7 +19,7 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
      * @param worldDimensions the dimensions of the {@link model.world.World} in which the {@link Entity} lives
      * @param sceneDimensions the dimensions of the view in which this {@link DynamicDrawableEntity} will be drawn
      */
-    public DynamicDrawableEntity(final Image image, final DynamicEntity entity,
+    public DynamicDrawableEntity(final Image image, final UnmodifiableEntity entity,
             final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
         super(image, entity, worldDimensions, sceneDimensions);
     }
@@ -30,7 +29,7 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
      */
     @Override
     protected void updateSpriteProperties() {
-        final Entity entity = this.getEntity();
+        final UnmodifiableEntity entity = this.getEntity();
         final double x = entity.getPosition().getLeft();
         final double y = entity.getPosition().getRight();
         final double width = entity.getDimensions().getLeft();
