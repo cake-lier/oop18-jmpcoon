@@ -1,5 +1,6 @@
 package model.entities;
 
+import model.physics.BodyShape;
 import model.physics.StaticPhysicalBody;
 
 /**
@@ -24,14 +25,6 @@ public final class Ladder extends StaticEntity {
     @Override
     public EntityType getType() {
         return EntityType.LADDER;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public EntityShape getShape() {
-        return EntityShape.RECTANGLE;
     }
 
 }

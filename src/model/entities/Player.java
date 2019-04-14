@@ -1,5 +1,6 @@
 package model.entities;
 
+import model.physics.BodyShape;
 import model.physics.DynamicPhysicalBody;
 
 /**
@@ -22,14 +23,6 @@ public final class Player extends DynamicEntity {
     Player(final DynamicPhysicalBody body) {
         super(body);
         this.body = body;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public EntityShape getShape() {
-        return EntityShape.RECTANGLE;
     }
 
     /**

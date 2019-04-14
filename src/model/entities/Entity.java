@@ -1,5 +1,6 @@
 package model.entities;
 
+import model.physics.BodyShape;
 import model.physics.PhysicalBody;
 
 import java.io.Serializable;
@@ -21,7 +22,7 @@ public interface Entity extends Serializable {
     /**
      * @return the shape of this {@link Entity}
      */
-    EntityShape getShape();
+    BodyShape getShape();
 
     /**
      * @return the angle of rotation around the center of the {@link Entity} from its position aligned

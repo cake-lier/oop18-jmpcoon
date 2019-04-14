@@ -6,6 +6,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.hash.Hashing;
 
+import model.physics.BodyShape;
+
 /**
  * Class implementation of {@link UnmodifiableEntity}.
  */
@@ -32,7 +34,7 @@ public final class UnmodifiableEntityImpl implements UnmodifiableEntity {
      * {@inheritDoc}
      */
     @Override
-    public EntityShape getShape() {
+    public BodyShape getShape() {
         return this.innerEntity.getShape();
     }
 

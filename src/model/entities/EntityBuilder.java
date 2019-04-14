@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import model.physics.BodyShape;
 import model.physics.DynamicPhysicalBody;
 import model.physics.PhysicalFactory;
 import model.physics.StaticPhysicalBody;
@@ -17,7 +18,7 @@ public abstract class EntityBuilder<E extends Entity> {
     private static final String ALREADY_BUILT_MSG = "This builder has already been used";
     private Optional<Pair<Double, Double>> center;
     private Optional<Pair<Double, Double>> dimensions;
-    private Optional<EntityShape> shape;
+    private Optional<BodyShape> shape;
     private Optional<Double> angle;
     private Optional<PhysicalFactory> factory;
     private boolean built;
@@ -55,11 +56,11 @@ public abstract class EntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the {@link EntityShape} of the {@link Entity} that will be created by this {@link EntityBuilder}.
-     * @param shape the {@link EntityShape} of the {@link Entity} that will be created
+     * Sets the {@link BodyShape} of the {@link Entity} that will be created by this {@link EntityBuilder}.
+     * @param shape the {@link BodyShape} of the {@link Entity} that will be created
      * @return a reference to this {@link EntityBuilder}
      */
-    public EntityBuilder<E> setShape(final EntityShape shape) {
+    public EntityBuilder<E> setShape(final BodyShape shape) {
         this.shape = Optional.of(shape);
         return this;
     }

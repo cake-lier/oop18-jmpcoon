@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import model.physics.BodyShape;
+
 /**
- * Contains the properties of an {@link Entity} which has to be created, such as the {@link EntityType}, the {@link EntityShape},
+ * Contains the properties of an {@link Entity} which has to be created, such as the {@link EntityType}, the {@link BodyShape},
  * the current position in the {@link model.world.World} and its angle with the x axis.
  */
 public interface EntityProperties extends Serializable {
@@ -17,10 +19,10 @@ public interface EntityProperties extends Serializable {
     EntityType getEntityType();
 
     /**
-     * Getter for the {@link EntityShape} property.
-     * @return The {@link EntityShape} property value.
+     * Getter for the {@link BodyShape} property.
+     * @return The {@link BodyShape} property value.
      */
-    EntityShape getEntityShape();
+    BodyShape getEntityShape();
 
     /**
      * Getter for the position of the upper left corner of this {@link Entity} in world coordinates.

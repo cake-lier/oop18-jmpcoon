@@ -2,6 +2,7 @@ package model.entities;
 
 import java.util.Objects;
 
+import model.physics.BodyShape;
 import model.physics.PhysicalBody;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -35,7 +36,9 @@ public abstract class AbstractEntity implements Entity {
      * {@inheritDoc}
      */
     @Override
-    public abstract EntityShape getShape();
+    public BodyShape getShape() {
+        return this.body.getShape();
+    }
 
     /**
      * {@inheritDoc}

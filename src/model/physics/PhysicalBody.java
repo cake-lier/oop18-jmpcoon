@@ -1,5 +1,6 @@
 package model.physics;
 
+import model.entities.Entity;
 import model.entities.EntityState;
 
 import java.io.Serializable;
@@ -30,6 +31,12 @@ public interface PhysicalBody extends Serializable {
      * @return whether this {@link PhysicalBody} exists or not
      */
     boolean exist();
+
+
+    /**
+     * @return the shape of this {@link PhysicalBody}
+     */
+    BodyShape getShape();
 
     /**
      * @return the dimensions (width and height) of this {@link PhysicalBody}

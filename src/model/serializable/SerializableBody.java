@@ -17,8 +17,8 @@ import org.dyn4j.geometry.Vector2;
 
 import com.google.common.hash.Hashing;
 
-import model.entities.EntityShape;
 import model.entities.EntityType;
+import model.physics.BodyShape;
 
 /**
  * a {@link Body} that can be serialized.
@@ -37,12 +37,12 @@ public class SerializableBody extends Body implements Serializable {
             /* writing dimensions */
             if (fixture.getShape() instanceof Rectangle) {
                 final Rectangle rectangle = (Rectangle) fixture.getShape();
-                out.writeObject(EntityShape.RECTANGLE);
+                out.writeObject(BodyShape.RECTANGLE);
                 out.writeDouble(rectangle.getWidth());
                 out.writeDouble(rectangle.getHeight());
             } else if (fixture.getShape() instanceof Circle) {
                 final Circle circle = (Circle) fixture.getShape();
-                out.writeObject(EntityShape.CIRCLE);
+                out.writeObject(BodyShape.CIRCLE);
                 out.writeDouble(circle.getRadius());
             } else {
                 throw new NotSerializableException(NO_WRITABLE_MSG);
@@ -98,13 +98,13 @@ public class SerializableBody extends Body implements Serializable {
         final int numFixtures = in.readInt();
         for (int i = 0; i < numFixtures; i++) {
             /* reading fixture dimensions */
-            final EntityShape shape = (EntityShape) in.readObject();
+            final BodyShape shape = (BodyShape) in.readObject();
             final BodyFixture fixture;
-            if (shape == EntityShape.RECTANGLE) {
+            if (shape == BodyShape.RECTANGLE) {
                 final double width = in.readDouble();
                 final double height = in.readDouble();
                 fixture = this.addFixture(Geometry.createRectangle(width, height));
-            } else if (shape == EntityShape.CIRCLE) {
+            } else if (shape == BodyShape.CIRCLE) {
                 final double radius = in.readDouble();
                 fixture = this.addFixture(Geometry.createCircle(radius));
             } else {

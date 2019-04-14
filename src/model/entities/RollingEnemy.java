@@ -1,5 +1,6 @@
 package model.entities;
 
+import model.physics.BodyShape;
 import model.physics.DynamicPhysicalBody;
 
 /**
@@ -23,14 +24,6 @@ public final class RollingEnemy extends DynamicEntity {
     RollingEnemy(final DynamicPhysicalBody body) {
         super(body);
         this.body = body;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public EntityShape getShape() {
-        return EntityShape.CIRCLE;
     }
 
     /**

@@ -1,5 +1,6 @@
 package model.entities;
 
+import model.physics.BodyShape;
 import model.physics.StaticPhysicalBody;
 
 /**
@@ -35,7 +36,7 @@ public final class PowerUp extends StaticEntity {
      * {@inheritDoc}
      */
     @Override
-    public EntityShape getShape() {
+    public BodyShape getShape() {
         // TODO Auto-generated method stub
         return null;
     }

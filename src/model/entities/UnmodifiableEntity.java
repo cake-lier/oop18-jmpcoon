@@ -2,6 +2,8 @@ package model.entities;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import model.physics.BodyShape;
+
 /**
  * An interface for realizing a wrapper class for an {@link Entity} instance, used to expose only those methods which are
  * necessary from the outside (for example, to the view of this game) to get informations about this {@link Entity}. All useless
@@ -15,10 +17,10 @@ public interface UnmodifiableEntity {
     Pair<Double, Double> getPosition();
 
     /**
-     * Gets the shape of this {@link UnmodifiableEntity} as a value of {@link EntityShape}.
-     * @return The {@link EntityShape} of this {@link UnmodifiableEntity}.
+     * Gets the shape of this {@link UnmodifiableEntity} as a value of {@link BodyShape}.
+     * @return The {@link BodyShape} of this {@link UnmodifiableEntity}.
      */
-    EntityShape getShape();
+    BodyShape getShape();
 
     /**
      * Gets the angle of rotation around the center of this {@link UnmodifiableEntity} from its position aligned with the coordinate

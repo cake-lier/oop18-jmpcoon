@@ -1,5 +1,6 @@
 package model.entities;
 
+import model.physics.BodyShape;
 import model.physics.DynamicPhysicalBody;
 
 /**
@@ -31,8 +32,8 @@ public final class WalkingEnemy extends DynamicEntity {
      * {@inheritDoc}
      */
     @Override
-    public EntityShape getShape() {
-        return EntityShape.RECTANGLE;
+    public BodyShape getShape() {
+        return BodyShape.RECTANGLE;
     }
 
     /**

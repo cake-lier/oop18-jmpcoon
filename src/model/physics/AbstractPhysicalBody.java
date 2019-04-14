@@ -9,6 +9,7 @@ import org.dyn4j.geometry.Vector2;
 
 import com.google.common.hash.Hashing;
 
+import model.entities.Entity;
 import model.entities.EntityState;
 import model.serializable.SerializableBody;
 
@@ -48,6 +49,19 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
         return this.body.getLocalPoint(this.body.getWorldCenter().add(1, 0)).getAngleBetween(new Vector2(1, 0));
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    public BodyShape getShape() {
+        if (this.getBodyShape() instanceof Circle) {
+            return BodyShape.CIRCLE;
+        } else {
+            /* if it isn't circular it's rectangular */
+            return BodyShape.RECTANGLE;
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -75,7 +89,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      */
     @Override
     public Pair<Double, Double> getDimensions() {
-        final Convex shape = this.body.getFixture(0).getShape();
+        final Convex shape = this.getBodyShape();
         double width = 0;
         double height = 0;
         if (shape instanceof Circle) {
@@ -86,6 +100,10 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
             height = ((Rectangle) shape).getHeight();
         }
         return new ImmutablePair<>(width, height);
+    }
+
+    private Convex getBodyShape() {
+        return this.body.getFixture(0).getShape();
     }
 
     /**

@@ -15,7 +15,6 @@ import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 
-import model.entities.EntityShape;
 import model.entities.EntityType;
 import model.serializable.SerializableBody;
 import model.serializable.SerializableWorld;
@@ -92,7 +91,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
      */
     @Override
     public StaticPhysicalBody createStaticPhysicalBody(final Pair<Double, Double> position, final double angle,
-            final EntityShape shape, final double width, 
+            final BodyShape shape, final double width, 
             final double height, final EntityType type)  throws IllegalStateException {
         this.checks(position, shape, type, true);
         final SerializableBody body = this.createBody(shape, position, angle, width, height);
@@ -127,7 +126,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
      */
     @Override
     public DynamicPhysicalBody createDynamicPhysicalBody(final Pair<Double, Double> position, final double angle,
-            final EntityShape shape, final double width, 
+            final BodyShape shape, final double width, 
             final double height, final EntityType type) throws IllegalStateException {
         this.checks(position, shape, type, false);
         final SerializableBody body = this.createBody(shape, position, angle, width, height);
@@ -159,11 +158,11 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         return physicalBody;
     }
 
-    private SerializableBody createBody(final EntityShape shape, final Pair<Double, Double> position, final double angle,
+    private SerializableBody createBody(final BodyShape shape, final Pair<Double, Double> position, final double angle,
             final double width, final double height) {
         final SerializableBody body;
         final Vector2 center = new Vector2(position.getLeft(), position.getRight());
-        if (shape.equals(EntityShape.CIRCLE)) {
+        if (shape.equals(BodyShape.CIRCLE)) {
             throwException(width != height, () -> new IllegalArgumentException(ILLEGAL_DIMENSIONS_MSG));
             body = createCircleBody(width / 2);
         } else {
@@ -187,16 +186,16 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         return body;
     }
 
-    private boolean isStaticBodyAllowed(final EntityShape shape, final EntityType type) {
+    private boolean isStaticBodyAllowed(final BodyShape shape, final EntityType type) {
         /* other allowed combinations could be added in the future */
-        return shape.equals(EntityShape.RECTANGLE) && (type.equals(EntityType.PLATFORM) || type.equals(EntityType.LADDER))
-                || (shape.equals(EntityShape.CIRCLE) && (type.equals(EntityType.ENEMY_GENERATOR)));
+        return shape.equals(BodyShape.RECTANGLE) && (type.equals(EntityType.PLATFORM) || type.equals(EntityType.LADDER))
+                || (shape.equals(BodyShape.CIRCLE) && (type.equals(EntityType.ENEMY_GENERATOR)));
     }
 
-    private boolean isDynamicBodyAllowed(final EntityShape shape, final EntityType type) {
+    private boolean isDynamicBodyAllowed(final BodyShape shape, final EntityType type) {
         /* other allowed combinations could be added in the future */
-        return (shape.equals(EntityShape.CIRCLE) && type.equals(EntityType.ROLLING_ENEMY)) 
-                || (shape.equals(EntityShape.RECTANGLE) 
+        return (shape.equals(BodyShape.CIRCLE) && type.equals(EntityType.ROLLING_ENEMY)) 
+                || (shape.equals(BodyShape.RECTANGLE) 
                         && (type.equals(EntityType.WALKING_ENEMY) || type.equals(EntityType.PLAYER)));
     }
 
@@ -207,7 +206,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                 && position.getRight() <= this.worldDimensions.getRight();
     }
 
-    private void checks(final Pair<Double, Double> position, final EntityShape shape, 
+    private void checks(final Pair<Double, Double> position, final BodyShape shape, 
             final EntityType type, final boolean isStatic) {
         this.throwException(!this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_WORLD_MSG));
         this.throwException(!isPositionInsideWorld(position), 

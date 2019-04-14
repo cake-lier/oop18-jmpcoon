@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+
+import model.physics.BodyShape;
 import model.physics.PhysicalFactory;
 import model.physics.StaticPhysicalBody;
 
@@ -38,14 +40,6 @@ public final class EnemyGenerator extends StaticEntity {
         return EntityType.ENEMY_GENERATOR;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public EntityShape getShape() {
-        return EntityShape.RECTANGLE;
-    }
-
     //TODO: something better?
     /**
      * @param physicsFactory the {@link PhysicsFactory}
@@ -71,7 +65,7 @@ public final class EnemyGenerator extends StaticEntity {
                 .setDimensions(ROLLING_ENEMY_DIMENSIONS)
                 .setAngle(0.0)
                 .setPosition(this.getPosition())
-                .setShape(EntityShape.CIRCLE)
+                .setShape(BodyShape.CIRCLE)
                 .build();
     }
 }
