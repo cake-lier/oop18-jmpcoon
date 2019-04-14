@@ -23,6 +23,8 @@ import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
 import model.entities.RollingEnemy;
+import model.entities.UnmodifiableEntity;
+import model.entities.UnmodifiableEntityImpl;
 import model.entities.EntityState;
 import model.entities.WalkingEnemy;
 import model.physics.PhysicalBody;
@@ -241,7 +243,7 @@ public final class WorldImpl implements World {
     @Override
     public Collection<UnmodifiableEntity> getAliveEntities() {
         return this.aliveEntities.values().parallelStream()
-                                          .map(UnmodifiableEntity::new)
+                                          .map(UnmodifiableEntityImpl::new)
                                           .collect(ImmutableSet.toImmutableSet());
     }
 
@@ -251,7 +253,7 @@ public final class WorldImpl implements World {
     @Override
     public Collection<UnmodifiableEntity> getDeadEntities() {
         return this.deadEntities.parallelStream()
-                                .map(UnmodifiableEntity::new)
+                                .map(UnmodifiableEntityImpl::new)
                                 .collect(ImmutableSet.toImmutableSet());
     }
 

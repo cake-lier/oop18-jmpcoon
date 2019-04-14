@@ -18,7 +18,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import model.entities.EntityProperties;
-import model.world.UnmodifiableEntity;
+import model.entities.UnmodifiableEntity;
 import model.world.World;
 import model.world.WorldImpl;
 import org.apache.commons.lang3.tuple.Pair;

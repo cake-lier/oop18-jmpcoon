@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import model.entities.MovementType;
+import model.entities.UnmodifiableEntity;
 import model.entities.EntityProperties;
 import org.apache.commons.lang3.tuple.Pair;
 

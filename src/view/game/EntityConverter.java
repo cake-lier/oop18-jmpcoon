@@ -2,7 +2,7 @@ package view.game;
 
 import java.util.Collection;
 
-import model.world.UnmodifiableEntity;
+import model.entities.UnmodifiableEntity;
 
 /**
  * Converter from {@link Entity} to {@link DrawableEntity}.

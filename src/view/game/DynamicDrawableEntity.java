@@ -1,7 +1,7 @@
 package view.game;
 
 import javafx.scene.image.Image;
-import model.world.UnmodifiableEntity;
+import model.entities.UnmodifiableEntity;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;

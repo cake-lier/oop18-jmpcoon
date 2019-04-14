@@ -11,8 +11,8 @@ public final class WalkingEnemy extends DynamicEntity {
     private static final double WALKING_SPEED = 0.4;
     private static final double DELTA = 150;
 
-    private double count = 0;
-    private boolean direction = false;
+    private double count;
+    private boolean direction;
     private final DynamicPhysicalBody body;
 
     /**
@@ -23,6 +23,8 @@ public final class WalkingEnemy extends DynamicEntity {
     public WalkingEnemy(final DynamicPhysicalBody body) {
         super(body);
         this.body = body;
+        this.count = 0;
+        this.direction = false;
     }
 
     /**
@@ -45,9 +47,10 @@ public final class WalkingEnemy extends DynamicEntity {
      * computes the backward-and-forward movement.
      */
     public void computeMovement() {
-        if (this.count++ % DELTA == 0) {
+        if (this.count % DELTA == 0) {
             this.direction = !this.direction;
         }
+        this.count++;
         this.body.setFixedVelocity(this.getMovement(), this.getDirection() * WALKING_SPEED, 0);
     }
 

@@ -5,9 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 
-import model.world.UnmodifiableEntity;
-
 import org.apache.commons.lang3.tuple.Pair;
+
+import model.entities.UnmodifiableEntity;
 
 /**
  * a controller for the game playing.

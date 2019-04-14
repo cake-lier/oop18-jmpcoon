@@ -9,7 +9,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import model.entities.EntityType;
-import model.world.UnmodifiableEntity;
+import model.entities.UnmodifiableEntity;
 
 import org.apache.commons.lang3.tuple.Pair;
 

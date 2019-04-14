@@ -16,8 +16,8 @@ public final class EnemyGenerator extends StaticEntity {
     private static final ImmutablePair<Double, Double> ROLLING_ENEMY_DIMENSIONS = new ImmutablePair<Double, Double>(0.15, 0.15);
     private static final int DELTA = 380;
 
-    private List<RollingEnemy> enemies = new LinkedList<>();
-    private int count = 0;
+    private final List<RollingEnemy> enemies;
+    private int count;
 
     /**
      * Creates a new {@link EnemyGenerator} with the given {@link StaticPhysicalBody}. This constructor is package protected
@@ -26,6 +26,8 @@ public final class EnemyGenerator extends StaticEntity {
      */
     EnemyGenerator(final StaticPhysicalBody body) {
         super(body);
+        this.enemies = new LinkedList<>();
+        this.count = 0;
     }
 
     /**
@@ -51,8 +53,8 @@ public final class EnemyGenerator extends StaticEntity {
      */
     public Iterable<RollingEnemy> onTimeAdvanced(final PhysicalFactory physicsFactory) {
         this.enemies.clear();
-        if (checkTime()) {
-            this.enemies.add(createRollingEnemy(physicsFactory));
+        if (this.checkTime()) {
+            this.enemies.add(this.createRollingEnemy(physicsFactory));
             this.enemies.get(0).applyImpulse();
         }
         return this.enemies;
