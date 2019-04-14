@@ -9,7 +9,6 @@ import org.dyn4j.geometry.Vector2;
 
 import com.google.common.hash.Hashing;
 
-import model.entities.Entity;
 import model.entities.EntityState;
 import model.serializable.SerializableBody;
 

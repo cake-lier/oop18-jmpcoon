@@ -1,6 +1,5 @@
 package model.physics;
 
-import model.entities.Entity;
 import model.entities.EntityState;
 
 import java.io.Serializable;

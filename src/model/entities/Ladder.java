@@ -1,6 +1,5 @@
 package model.entities;
 
-import model.physics.BodyShape;
 import model.physics.StaticPhysicalBody;
 
 /**
