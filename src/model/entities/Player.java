@@ -14,12 +14,7 @@ public final class Player extends DynamicEntity {
 
     private final DynamicPhysicalBody body;
 
-    /*
-     * but when u collect a powerup it disappears from the view
-     * the easiest way to do this is to say it's dead
-     * but then is the PowerUp deleted? 
-     * if so, the player could just retain the PowerUpType cause that's all that matters
-     */
+    private int lives = 1;
 
     /**
      * Creates a new {@link Player} with the given {@link DynamicPhysicalBody}. This constructor is package protected
@@ -76,14 +71,21 @@ public final class Player extends DynamicEntity {
      * Adds one life to this {@link Player}.
      */
     public void addLife() {
-        this.body.addLife();
+        this.lives++;
+    }
+
+    /**
+     * Removes one life to this {@link Player}.
+     */
+    public void removeLife() {
+        this.lives--;
     }
 
     /**
      * @return the number of lives of this {@link Player}.
      */
     public int getLives() {
-        return this.body.getLives();
+        return this.lives;
     }
 
     /**
@@ -93,14 +95,6 @@ public final class Player extends DynamicEntity {
      */
     public void modifyMaxVelocity(final double multiplierX, final double multiplierY) {
         this.body.setMaxVelocity(multiplierX, multiplierY);
-    }
-
-    /**
-     * Enables/disables collision with this body.
-     * @param bool The setting parameter
-     */
-    public void setInvincible(final boolean bool) {
-        this.body.setInvincible(bool);
     }
 
 }

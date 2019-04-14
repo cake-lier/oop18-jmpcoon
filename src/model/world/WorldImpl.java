@@ -27,6 +27,7 @@ import model.entities.State;
 import model.physics.PhysicalBody;
 import model.physics.PhysicalWorld;
 import model.physics.PhysicsUtils;
+import model.physics.WholePhysicalWorld;
 import model.physics.PhysicalFactory;
 import model.physics.PhysicalFactoryImpl;
 
@@ -42,8 +43,6 @@ public final class WorldImpl implements World {
     private static final long serialVersionUID = 4663479513512261181L;
     private static final double WORLD_WIDTH = 8;
     private static final double WORLD_HEIGHT = 4.5;
-    private static final double WIN_ZONE_X = 0.37;
-    private static final double WIN_ZONE_Y = 3.71;
     private static final int ROLLING_POINTS = 50;
     private static final int WALKING_POINTS = 100;
 
@@ -105,6 +104,7 @@ public final class WorldImpl implements World {
                                                             .collect(Collectors.toList());
 
         this.powerUpManager = Optional.of(new PowerUpManager(this.player, powerups));
+        WholePhysicalWorld.class.cast(this.innerWorld).setManager(this.powerUpManager.get());
     }
 
     /**
@@ -119,12 +119,12 @@ public final class WorldImpl implements World {
     public synchronized void update() {
         this.innerWorld.update();
         if (this.powerUpManager.isPresent() && this.currentState == GameState.IS_GOING) {
-            PowerUpManager manager = this.powerUpManager.get();
-            manager.checkPowerUps();
-            if (!manager.isPlayerAlive()) {
+            PowerUpManager powerUpManager = this.powerUpManager.get();
+            powerUpManager.checkPowerUps();
+            if (!powerUpManager.isPlayerAlive()) {
                 this.currentState = GameState.GAME_OVER;
             }
-            if (manager.isGoalReached()) {
+            if (powerUpManager.isGoalReached()) {
                 this.currentState = GameState.PLAYER_WON;
             }
         }

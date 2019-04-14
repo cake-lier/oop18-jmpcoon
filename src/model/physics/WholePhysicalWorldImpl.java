@@ -3,10 +3,7 @@ package model.physics;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -30,8 +27,8 @@ import org.dyn4j.geometry.Vector2;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import model.entities.Entity;
 import model.entities.EntityType;
+import model.entities.PowerUpManager;
 import model.entities.State;
 import model.serializable.SerializableWorld;
 
@@ -47,7 +44,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
     private transient Optional<DynamicPhysicalBody> player;
     private transient Optional<PhysicalBody> collidingLadder;
 
-    private final transient List<Entity> allEntities = new LinkedList<>();
+    private Optional<PowerUpManager> powerUpManager = Optional.empty();
 
     /**
      * Binds the current instance of {@link WholePhysicalWorldImpl} with the instance of {@link World} which will be wrapped and 
@@ -63,8 +60,11 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.addCollisionRules();
     }
 
-    public void setWorldEntities(final Collection<Entity> entities) {
-        this.allEntities.addAll(entities);
+    /**
+     * {@inheritDoc}
+     */
+    public void setManager(final PowerUpManager powerUpManager) {
+        this.powerUpManager = Optional.of(powerUpManager);
     }
 
     /*
@@ -122,8 +122,6 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
             }
         });
         this.world.addListener(new CollisionAdapter() {
-            private int stepCount = 0;
-
             @Override
             public boolean collision(final ContactConstraint contactConstraint) {
                 final Body firstBody = contactConstraint.getBody1();
@@ -151,20 +149,13 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                             && PhysicsUtils.isBodyAbove(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint.getRight()))) {
                         otherTriple.getLeft().setActive(false);
                     } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
-                        //collision with an enemy has a cooldown of 40 steps
-                        if (DynamicPhysicalBody.class.cast(playerTriple.getMiddle()).isInvincible()) {
+                        PowerUpManager powerUpManager = WholePhysicalWorldImpl.this.powerUpManager.get();
+                        if (powerUpManager.isPlayerInvincible()) {
                             otherTriple.getLeft().setActive(false);
                         } else {
-                            if (this.stepCount == 0) {
-                                DynamicPhysicalBody.class.cast(playerTriple.getMiddle()).removeLife();
-                                this.stepCount++;
-                            } else {
-                                if (this.stepCount < 40) {
-                                    contactConstraint.setEnabled(false);
-                                    this.stepCount++;
-                                } else {
-                                    this.stepCount = 0;
-                                }
+                            powerUpManager.playerHit(contactConstraint);
+                            if (!powerUpManager.isPlayerAlive()) {
+                                playerTriple.getLeft().setActive(false);
                             }
                         }
                     } else if (otherTriple.getRight() == EntityType.PLATFORM

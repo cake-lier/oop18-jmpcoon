@@ -5,7 +5,6 @@ import org.dyn4j.geometry.Vector2;
 
 import model.entities.State;
 import model.serializable.SerializableBody;
-import model.entities.EntityType;
 import model.entities.MovementType;
 
 /**
@@ -23,9 +22,6 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
 
     private final SerializableBody body;
     private State currentState;
-
-    private int lives = 1;
-    private boolean invincible = false;
 
     /**
      * builds a new {@link DynamicPhysicalBody}.
@@ -84,7 +80,7 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     }
 
     /**
-     * Modifies the maximum velocity of this {@link DynamicPhysicalBody}.
+     * Modifies the maximum velocity of this {@link DynamicPhysicalBody} to a custom one.
      * @param multiplierX The multiplier for the horizontal maximum velocity
      * @param multiplierY The multiplier for the vertical maximum velocity
      */
@@ -93,44 +89,4 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
         this.maxVelocityY = MAXVELOCITY_Y * multiplierY;
     }
 
-    /**
-     * @return the number of lives of this {@link DynamicPhysicalBody}.
-     */
-    public int getLives() {
-        return this.lives;
-    }
-
-    /**
-     * Adds one life to this {@link DynamicPhysicalBody}.
-     */
-    public void addLife() {
-        this.lives++;
-    }
-
-    /**
-     * Removes one life from this {@link DynamicPhysicalBody}.
-     */
-    public void removeLife() {
-        if (!this.invincible) {
-            this.lives--;
-            if (this.lives == 0) {
-                this.body.setActive(false);
-            }
-        }
-    }
-
-    /**
-     * Enables/disables collision with this body.
-     * @param bool The setting parameter
-     */
-    public void setInvincible(final boolean bool) {
-        this.invincible = bool;
-    }
-
-    /**
-     * @return true if this {@link DynamicPhysicalBody} is invincible.
-     */
-    public boolean isInvincible() {
-        return this.invincible;
-    }
 }

@@ -122,7 +122,7 @@ public final class GameViewImpl implements GameView {
             this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
             this.drawAliveEntities();
             this.score.setText(SCORE_STR + this.gameController.getCurrentScore()
-                               + "  |  Lives:" + this.gameController.getPlayerLives());
+                               + "  |  Lives: " + this.gameController.getPlayerLives());
         });
     }
 
@@ -168,7 +168,7 @@ public final class GameViewImpl implements GameView {
 
     private void drawAliveEntities() {
         final List<Node> nodes = new ArrayList<>();
-        Arrays.asList(EntityType.PLAYER, EntityType.ROLLING_ENEMY, EntityType.WALKING_ENEMY, EntityType.POWERUP)
+        Arrays.asList(EntityType.ROLLING_ENEMY, EntityType.WALKING_ENEMY, EntityType.POWERUP, EntityType.PLAYER)
               .forEach(type -> nodes.addAll(this.getNodes(type)));
         this.entities.getChildren().setAll(nodes);
     }
