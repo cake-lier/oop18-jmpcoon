@@ -11,6 +11,7 @@ import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Vector2;
@@ -81,8 +82,15 @@ public class SerializableBody extends Body implements Serializable {
         out.writeDouble(this.getLinearDamping());
         /* writing angular damping */
         out.writeDouble(this.getAngularDamping());
+        /* writing mass center */
+        out.writeDouble(this.getMass().getCenter().x);
+        out.writeDouble(this.getMass().getCenter().y);
+        /* writing inertia */
+        out.writeDouble(this.getMass().getInertia());
+        /* writing mass */
+        out.writeDouble(this.getMass().getMass());
         /* writing whether the body has infinite mass or not */
-        out.writeBoolean(this.getMass().getType() == MassType.INFINITE);
+        out.writeBoolean(this.getMass().isInfinite());
         /* writing whether the body can rotate or not */
         out.writeBoolean(this.getMass().getType() == MassType.FIXED_ANGULAR_VELOCITY);
         /* writing type */
@@ -140,6 +148,10 @@ public class SerializableBody extends Body implements Serializable {
         /* writing angular damping */
         this.setAngularDamping(in.readDouble());
         /* reading information about mass */
+        final double massCenterX = in.readDouble();
+        final double massCenterY = in.readDouble();
+        final double inertia = in.readDouble();
+        final double mass = in.readDouble();
         final boolean isInfinite = in.readBoolean();
         final boolean hasFixedAngularVelocity = in.readBoolean();
         if (isInfinite && hasFixedAngularVelocity) {
@@ -149,7 +161,7 @@ public class SerializableBody extends Body implements Serializable {
         } else if (hasFixedAngularVelocity) {
             this.setMass(MassType.FIXED_ANGULAR_VELOCITY);
         } else {
-            this.setMass(MassType.NORMAL);
+            this.setMass(new Mass(new Vector2(massCenterX, massCenterY), mass, inertia));
         }
         /* reading type */
         final EntityType type = (EntityType) in.readObject();
