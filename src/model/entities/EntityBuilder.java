@@ -1,8 +1,8 @@
 package model.entities;
 
-import java.util.Optional;
-
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.base.Optional;
 
 import model.physics.DynamicPhysicalBody;
 import model.physics.PhysicalFactory;
@@ -18,17 +18,19 @@ public abstract class EntityBuilder<E extends Entity> {
     private Optional<EntityShape> shape;
     private Optional<Double> angle;
     private Optional<PhysicalFactory> factory;
+    private Optional<PowerUpType> powerUpType;
     private boolean built;
 
     /**
      * The default constructor. Initializes as empty all parameters of this builder.
      */
     protected EntityBuilder() {
-        this.center = Optional.empty();
-        this.dimensions = Optional.empty();
-        this.shape = Optional.empty();
-        this.angle = Optional.empty();
-        this.factory = Optional.empty();
+        this.center = Optional.absent();
+        this.dimensions = Optional.absent();
+        this.shape = Optional.absent();
+        this.angle = Optional.absent();
+        this.factory = Optional.absent();
+        this.powerUpType = Optional.absent();
         this.built = false;
     }
 
@@ -85,6 +87,18 @@ public abstract class EntityBuilder<E extends Entity> {
     }
 
     /**
+     * Sets the {@link PowerUpType} of the {@link Entity} that will be created by this {@link EntityBuilder}, if said Entity is 
+     * a {@link PowerUp}.
+     * @param powerUpType an {@link Optional} containing the {@link PowerUpType} of the {@link PowerUp} being built, an empty
+     * {@link Optional} otherwise.
+     * @return a reference to this {@link EntityBuilder}
+     */
+    public EntityBuilder<E> setPowerUpType(final Optional<PowerUpType> powerUpType) {
+        this.powerUpType = powerUpType;
+        return this;
+    }
+
+    /**
      * Builds the {@link Entity} with parameters as previously set. All the parameters are needed and, as a builder, once the
      * build has happened this builder won't produce any other copies of the produced {@link Entity}.
      * @return The {@link Entity} with parameters specified with the others methods.
@@ -103,8 +117,21 @@ public abstract class EntityBuilder<E extends Entity> {
      */
     protected abstract E buildEntity();
 
+    /**
+     * Method that allows the subclass of this class to get the {@link PowerUpType} set.
+     * @return The {@link PowerUpType} set.
+     * @throws IllegalStateException if the {@link PowerUpType} for this {@link EntityBuilder} has not been set.
+     */
+    protected PowerUpType getPowerUpType() throws IllegalStateException {
+        if (this.powerUpType.isPresent()) {
+            return this.powerUpType.get();
+        } else {
+            throw new IllegalStateException("Not all the necessary fields have been initialized");
+        }
+    }
+
     private void checkIfbuildable() {
-        if (!this.areAllFieldsFull()) {
+        if (!this.areAllBasicFieldsFull()) {
             throw new IllegalStateException("Not all the fields have been initialized");
         }
         if (this.built) {
@@ -112,7 +139,7 @@ public abstract class EntityBuilder<E extends Entity> {
         }
     }
 
-    private boolean areAllFieldsFull() {
+    private boolean areAllBasicFieldsFull() {
         return this.center.isPresent()
                 && this.dimensions.isPresent()
                 && this.shape.isPresent()

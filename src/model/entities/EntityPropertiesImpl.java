@@ -5,6 +5,7 @@ import java.util.Objects;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.base.Optional;
 import com.google.common.hash.Hashing;
 
 /**
@@ -18,6 +19,7 @@ public final class EntityPropertiesImpl implements EntityProperties {
     private final Pair<Double, Double> position;
     private final Pair<Double, Double> size;
     private final double angle;
+    private final Optional<PowerUpType> powerUpType;
 
     /**
      * Collects the properties of the associated {@link Entity}.
@@ -29,13 +31,15 @@ public final class EntityPropertiesImpl implements EntityProperties {
      * @param height The height of the associated {@link Entity}.
      * @param angle The angle of the associated entity.
      */
-    public EntityPropertiesImpl(final EntityType type, final EntityShape shape, final double xCoord, final double yCoord,
-                                final double width, final double height, final double angle) {
+    public EntityPropertiesImpl(final EntityType type, final EntityShape shape, final double xCoord, 
+                                final double yCoord, final double width, final double height, 
+                                final double angle, final Optional<PowerUpType> powerUpType) {
         this.type = type;
         this.shape = shape;
         this.position = new ImmutablePair<>(xCoord, yCoord);
         this.size = new ImmutablePair<Double, Double>(width, height);
         this.angle = angle;
+        this.powerUpType = powerUpType;
     }
 
     /**
@@ -122,5 +126,13 @@ public final class EntityPropertiesImpl implements EntityProperties {
     public String toString() {
         return "EntityPropertiesImpl [type=" + this.type + ", shape=" + this.shape
                + ", position=" + this.position + ", dimensions=" + this.size + ", angle=" + this.angle + "]";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<PowerUpType> getPowerUpType() {
+        return this.powerUpType;
     }
 }

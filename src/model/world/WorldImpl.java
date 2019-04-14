@@ -93,26 +93,12 @@ public final class WorldImpl implements World {
                                                                           .setAngle(entity.getAngle())
                                                                           .setPosition(entity.getPosition())
                                                                           .setShape(entity.getEntityShape())
+                                                                          .setPowerUpType(entity.getPowerUpType())
                                                                           .build());
             if (entity.getEntityType() == EntityType.PLAYER) {
                 this.player = this.aliveEntities.getInstances(Player.class).stream().findFirst().get();
             }
         });
-        //GOAL
-        this.aliveEntities.putInstance(PowerUp.class, 
-                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X, WIN_ZONE_Y+0.45),
-                        0, EntityShape.RECTANGLE, 0.35, 0.35, EntityType.POWERUP), PowerUpType.GOAL));
-        //EXTRA LIFE
-        this.aliveEntities.putInstance(PowerUp.class, 
-                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X, WIN_ZONE_Y-1.55),
-                        0, EntityShape.RECTANGLE, 0.20, 0.20, EntityType.POWERUP), PowerUpType.EXTRA_LIFE));
-        this.aliveEntities.putInstance(PowerUp.class, 
-                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X+1.45, WIN_ZONE_Y-3.20),
-                        0, EntityShape.RECTANGLE, 0.20, 0.20, EntityType.POWERUP), PowerUpType.EXTRA_LIFE));
-        //SUPER_STAR
-        this.aliveEntities.putInstance(PowerUp.class, 
-                new PowerUp(this.physicsFactory.createStaticPhysicalBody(new ImmutablePair<Double, Double>(WIN_ZONE_X+3.45, WIN_ZONE_Y-3.20),
-                        0, EntityShape.RECTANGLE, 0.20, 0.20, EntityType.POWERUP), PowerUpType.SUPER_STAR));
         List<PowerUp> powerups = this.aliveEntities.values().stream()
                                                             .filter(e -> e.getType() == EntityType.POWERUP)
                                                             .map((powerup) -> PowerUp.class.cast(powerup))

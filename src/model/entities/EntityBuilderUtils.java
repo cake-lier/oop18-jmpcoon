@@ -60,20 +60,19 @@ public final class EntityBuilderUtils {
         };
     }
 
-    //TODO: xGio
     /**
      * Produces a new {@link EntityBuilder} for creating a new {@link PowerUp}.
      * @return a {@link EntityBuilder} for creating a {@link PowerUp}.
      */
-/*  public static EntityBuilder<PowerUp> getPowerUpBuilder() {
+    public static EntityBuilder<PowerUp> getPowerUpBuilder() {
         return new EntityBuilder<PowerUp>() {
             @Override
             protected PowerUp buildEntity() {
-                return new PowerUp(super.createStaticPhysicalBody(EntityType.POWERUP));
+                return new PowerUp(super.createStaticPhysicalBody(EntityType.POWERUP), this.getPowerUpType());
             }
         };
     }
-*/
+
     /**
      * Produces a new {@link EntityBuilder} for creating a new {@link RollingEnemy}.
      * @return a {@link EntityBuilder} for creating a {@link RollingEnemy}.
