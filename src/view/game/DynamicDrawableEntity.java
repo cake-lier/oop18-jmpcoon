@@ -1,7 +1,6 @@
 package view.game;
 
 import javafx.animation.Animation;
-import javafx.application.Platform;
 import javafx.scene.image.Image;
 import model.entities.DynamicEntity;
 import model.entities.State;
@@ -16,6 +15,7 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
 
     private final Map<State, SpriteAnimation> map = new HashMap<>();
     private Animation currentAnimation;
+    private int direction = 1;
     private State lastState = State.IDLE;
     private State currentState = State.IDLE;
 
@@ -46,14 +46,12 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
             if (!checkClimb()) {
                 this.getImageView().setImage(this.map.get(this.getEntity().getState()).getImage());
             }
-            this.getImageView().setScaleX(this.getImageView().getScaleX() * direction());
+            this.getImageView().setScaleX(this.getImageView().getScaleX() * this.direction);
     }
 
     /**
-     * @param state
-     *            state
-     * @param animation
-     *            animation
+     * @param state the {@link State} to which is associated a {@link SpriteAnimation}
+     * @param animation the {@link SpriteAnimation} istance to map
      */
     public void mapAnimation(final State state, final SpriteAnimation animation) {
         this.map.put(state, animation);
@@ -64,6 +62,7 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
 
     private void changeAnimation(final State state) {
         if (!this.currentState.equals(state)) {
+            this.direction = setDirection(state);
             this.currentAnimation.stop();
             this.currentAnimation = this.map.get(state);
             this.currentAnimation.setCycleCount(Animation.INDEFINITE);
@@ -73,10 +72,8 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
         }
     }
 
-    private int direction() {
-        return this.currentState.equals(State.MOVING_LEFT) ? -1
-                : (this.lastState.equals(State.MOVING_LEFT)
-                        && (this.currentState.equals(State.IDLE) || this.currentState.equals(State.JUMPING))) ? -1 : 1;
+    private int setDirection(final State state) {
+        return state.equals(State.MOVING_RIGHT) ? 1 : state.equals(State.MOVING_LEFT) ? -1 : this.direction;
     }
 
     private boolean checkClimb() {
