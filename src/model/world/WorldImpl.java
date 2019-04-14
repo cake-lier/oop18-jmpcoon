@@ -15,9 +15,7 @@ import model.ClassToInstanceMultimapImpl;
 import model.entities.MovementType;
 import model.entities.EnemyGenerator;
 import model.entities.Entity;
-import model.entities.EntityBuilderUtils;
 import model.entities.EntityProperties;
-import model.entities.EntityShape;
 import model.entities.EntityType;
 import model.entities.Ladder;
 import model.entities.Platform;
@@ -107,14 +105,6 @@ public final class WorldImpl implements World {
             }
         });
 
-        //TODO: delete once the level is fixed; it'll be left to make the program work
-        /*this.aliveEntities.put(EnemyGenerator.class, EntityBuilderUtils.getEnemyGeneratorBuilder()
-                                                                       .setFactory(this.physicsFactory)
-                                                                       .setDimensions(new ImmutablePair<Double, Double>(0.23, 0.23))
-                                                                       .setAngle(0.0)
-                                                                       .setPosition(new ImmutablePair<Double, Double>(0.37, 4.50))
-                                                                       .setShape(EntityShape.CIRCLE)
-                                                                       .build());*/
         this.initialized = true;
     }
 
