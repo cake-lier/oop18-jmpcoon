@@ -30,6 +30,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final String NO_WORLD_MSG = "A PhysicalWorld has yet to be created!";
     private static final String ILLEGAL_ENTITY_MSG = "No such Entity can be created";
     private static final String TOO_MANY_FIXTURES_MSG = "The body created has an illegal number of fixtures";
+    private static final String ILLEGAL_DIMENSIONS_MSG = "A circular entity can't have different width and height";
 
     private static final long CATEGORY_WALKING_ENEMY = 1; // 000001
     private static final long CATEGORY_ROLLING_ENEMY = 2; // 000010
@@ -163,7 +164,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         final SerializableBody body;
         final Vector2 center = new Vector2(position.getLeft(), position.getRight());
         if (shape.equals(EntityShape.CIRCLE)) {
-            body = createCircleBody(width);
+            throwException(width != height, () -> new IllegalArgumentException(ILLEGAL_DIMENSIONS_MSG));
+            body = createCircleBody(width / 2);
         } else {
             /* if a shape isn't a circle, automatically it's a rectangle */
             body = createRectangleBody(width, height);
