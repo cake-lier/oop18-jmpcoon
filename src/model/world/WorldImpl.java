@@ -152,8 +152,17 @@ public final class WorldImpl implements World {
         }
 
         this.aliveEntities.getInstances(WalkingEnemy.class).forEach(WalkingEnemy::computeMovement);
-        this.aliveEntities.getInstances(EnemyGenerator.class).forEach(entity -> this.aliveEntities.putAll(RollingEnemy.class, 
-                                                                                                entity.onTimeAdvanced(this.physicsFactory)));
+        this.aliveEntities.getInstances(EnemyGenerator.class).forEach(EnemyGenerator -> this.aliveEntities.putAll(RollingEnemy.class, 
+                                                                        EnemyGenerator.onTimeAdvanced(this.physicsFactory)));
+
+        this.aliveEntities.getInstances(RollingEnemy.class).forEach(RollingEnemy -> {
+            setRollingEnemyOnAir(RollingEnemy);
+            RollingEnemy.computeMovement();
+        });
+    }
+
+    private void setRollingEnemyOnAir(final RollingEnemy rollingEnemy) {
+        rollingEnemy.setOnAir(this.innerWorld.getCollidingBodies(rollingEnemy.getPhysicalBody()).isEmpty());
     }
 
     /*
