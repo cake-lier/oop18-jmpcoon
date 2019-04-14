@@ -25,11 +25,14 @@ import model.serializable.SerializableWorld;
 public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final long serialVersionUID = -3251686827966500039L;
 
+    private static final double PLATFORM_FRICTION = 0.5;
+
     private static final String NO_TWO_WORLDS_MSG = "You can't create two worlds for this game";
     private static final String NO_WORLD_MSG = "A PhysicalWorld has yet to be created!";
     private static final String ILLEGAL_ENTITY_MSG = "No such Entity can be created";
     private static final String TOO_MANY_FIXTURES_MSG = "The body created has an illegal number of fixtures";
     private static final String ILLEGAL_DIMENSIONS_MSG = "A circular entity can't have different width and height";
+    private static final String OUTSIDE_WORLD_MSG = "The entity would be created outside the world";
 
     private static final long CATEGORY_WALKING_ENEMY = 1; // 000001
     private static final long CATEGORY_ROLLING_ENEMY = 2; // 000010
@@ -41,26 +44,26 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     private static final CategoryFilter LADDER_FILTER = new CategoryFilter(CATEGORY_LADDER, CATEGORY_PLAYER);
     private static final CategoryFilter PLATFORM_FILTER = new CategoryFilter(CATEGORY_PLATFORM, CATEGORY_WALKING_ENEMY
-                                                                                                    | CATEGORY_ROLLING_ENEMY
-                                                                                                    | CATEGORY_PLATFORM 
-                                                                                                    | CATEGORY_PLAYER);
-    private static final CategoryFilter PLAYER_FILTER = new CategoryFilter(CATEGORY_PLAYER, CATEGORY_LADDER 
-                                                                                                | CATEGORY_WALKING_ENEMY
                                                                                                 | CATEGORY_ROLLING_ENEMY
-                                                                                                | CATEGORY_PLATFORM
+                                                                                                | CATEGORY_PLATFORM 
                                                                                                 | CATEGORY_PLAYER);
-    private static final CategoryFilter ROLLING_ENEMY_FILTER = new CategoryFilter(CATEGORY_ROLLING_ENEMY, CATEGORY_ROLLING_ENEMY
-                                                                                                            | CATEGORY_PLATFORM 
-                                                                                                            | CATEGORY_PLAYER);
-    private static final CategoryFilter WALKING_ENEMY_FILTER = new CategoryFilter(CATEGORY_WALKING_ENEMY, CATEGORY_WALKING_ENEMY
-                                                                                                            | CATEGORY_PLATFORM
-                                                                                                            | CATEGORY_PLAYER);
-    private static final CategoryFilter ENEMY_GENERATOR_FILTER = new CategoryFilter(CATEGORY_GENERATOR_ENEMY, 
-                                                                                        CATEGORY_GENERATOR_ENEMY
-                                                                                            | CATEGORY_WALKING_ENEMY 
-                                                                                            | CATEGORY_ROLLING_ENEMY 
+    private static final CategoryFilter PLAYER_FILTER = new CategoryFilter(CATEGORY_PLAYER, CATEGORY_LADDER 
+                                                                                            | CATEGORY_WALKING_ENEMY
+                                                                                            | CATEGORY_ROLLING_ENEMY
                                                                                             | CATEGORY_PLATFORM
                                                                                             | CATEGORY_PLAYER);
+    private static final CategoryFilter ROLLING_ENEMY_FILTER = new CategoryFilter(CATEGORY_ROLLING_ENEMY, CATEGORY_ROLLING_ENEMY
+                                                                                                          | CATEGORY_PLATFORM 
+                                                                                                          | CATEGORY_PLAYER);
+    private static final CategoryFilter WALKING_ENEMY_FILTER = new CategoryFilter(CATEGORY_WALKING_ENEMY, CATEGORY_WALKING_ENEMY
+                                                                                                          | CATEGORY_PLATFORM
+                                                                                                          | CATEGORY_PLAYER);
+    private static final CategoryFilter ENEMY_GENERATOR_FILTER = new CategoryFilter(CATEGORY_GENERATOR_ENEMY, 
+                                                                                        CATEGORY_GENERATOR_ENEMY
+                                                                                        | CATEGORY_WALKING_ENEMY 
+                                                                                        | CATEGORY_ROLLING_ENEMY 
+                                                                                        | CATEGORY_PLATFORM
+                                                                                        | CATEGORY_PLAYER);
 
     private transient Optional<WholePhysicalWorld> physicalWorld;
     private Pair<Double, Double> worldDimensions;
@@ -91,8 +94,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
      */
     @Override
     public StaticPhysicalBody createStaticPhysicalBody(final Pair<Double, Double> position, final double angle,
-            final BodyShape shape, final double width, 
-            final double height, final EntityType type)  throws IllegalStateException {
+                                                           final BodyShape shape, final double width, final double height, 
+                                                               final EntityType type)  throws IllegalStateException {
         this.checks(position, shape, type, true);
         final SerializableBody body = this.createBody(shape, position, angle, width, height);
         this.throwException(body.getFixtureCount() != 1, () -> new IllegalStateException(TOO_MANY_FIXTURES_MSG));
@@ -103,7 +106,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                 break;
             case PLATFORM:
                 body.getFixture(0).setFilter(PLATFORM_FILTER);
-                body.getFixture(0).setFriction(0.5);
+                body.getFixture(0).setFriction(PLATFORM_FRICTION);
                 break;
             case ENEMY_GENERATOR:
                 body.getFixture(0).setFilter(ENEMY_GENERATOR_FILTER);
@@ -126,8 +129,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
      */
     @Override
     public DynamicPhysicalBody createDynamicPhysicalBody(final Pair<Double, Double> position, final double angle,
-            final BodyShape shape, final double width, 
-            final double height, final EntityType type) throws IllegalStateException {
+                                                             final BodyShape shape, final double width, final double height,
+                                                                 final EntityType type) throws IllegalStateException {
         this.checks(position, shape, type, false);
         final SerializableBody body = this.createBody(shape, position, angle, width, height);
         this.throwException(body.getFixtureCount() != 1, () -> new IllegalStateException(TOO_MANY_FIXTURES_MSG));
@@ -138,10 +141,6 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                 break;
             case ROLLING_ENEMY:
                 body.getFixture(0).setFilter(ROLLING_ENEMY_FILTER);
-                //TODO: better fixtures. Once decided, delete magic numbers
-                //body.getFixture(0).setFriction(0.8);
-                body.setGravityScale(2.6);
-                body.setAngularDamping(1.3);
                 body.setMass(MassType.NORMAL);
                 break;
             case WALKING_ENEMY:
@@ -159,11 +158,11 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     }
 
     private SerializableBody createBody(final BodyShape shape, final Pair<Double, Double> position, final double angle,
-            final double width, final double height) {
+                                            final double width, final double height) {
         final SerializableBody body;
         final Vector2 center = new Vector2(position.getLeft(), position.getRight());
-        if (shape.equals(BodyShape.CIRCLE)) {
-            throwException(width != height, () -> new IllegalArgumentException(ILLEGAL_DIMENSIONS_MSG));
+        if (shape == BodyShape.CIRCLE) {
+            this.throwException(width != height, () -> new IllegalArgumentException(ILLEGAL_DIMENSIONS_MSG));
             body = createCircleBody(width / 2);
         } else {
             /* if a shape isn't a circle, automatically it's a rectangle */
@@ -188,31 +187,30 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     private boolean isStaticBodyAllowed(final BodyShape shape, final EntityType type) {
         /* other allowed combinations could be added in the future */
-        return shape.equals(BodyShape.RECTANGLE) && (type.equals(EntityType.PLATFORM) || type.equals(EntityType.LADDER))
-                || (shape.equals(BodyShape.CIRCLE) && (type.equals(EntityType.ENEMY_GENERATOR)));
+        return (shape == BodyShape.RECTANGLE && (type == EntityType.PLATFORM || type == EntityType.LADDER))
+               || (shape == BodyShape.CIRCLE && type == EntityType.ENEMY_GENERATOR);
     }
 
     private boolean isDynamicBodyAllowed(final BodyShape shape, final EntityType type) {
         /* other allowed combinations could be added in the future */
-        return (shape.equals(BodyShape.CIRCLE) && type.equals(EntityType.ROLLING_ENEMY)) 
-                || (shape.equals(BodyShape.RECTANGLE) 
-                        && (type.equals(EntityType.WALKING_ENEMY) || type.equals(EntityType.PLAYER)));
+        return (shape == BodyShape.CIRCLE && type == EntityType.ROLLING_ENEMY) 
+               || (shape == BodyShape.RECTANGLE && (type == EntityType.WALKING_ENEMY || type == EntityType.PLAYER));
     }
 
     private boolean isPositionInsideWorld(final Pair<Double, Double> position) {
         return position.getLeft() >= 0
-                && position.getRight() >= 0
-                && position.getLeft() <= this.worldDimensions.getLeft()
-                && position.getRight() <= this.worldDimensions.getRight();
+               && position.getRight() >= 0
+               && position.getLeft() <= this.worldDimensions.getLeft()
+               && position.getRight() <= this.worldDimensions.getRight();
     }
 
     private void checks(final Pair<Double, Double> position, final BodyShape shape, 
-            final EntityType type, final boolean isStatic) {
+                            final EntityType type, final boolean isStatic) {
         this.throwException(!this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_WORLD_MSG));
-        this.throwException(!isPositionInsideWorld(position), 
-                () -> new IllegalArgumentException("The entity would be created outside the world"));
-        this.throwException((isStatic && !isStaticBodyAllowed(shape, type)) || (!isStatic && !isDynamicBodyAllowed(shape, type)),
-                () -> new IllegalArgumentException(ILLEGAL_ENTITY_MSG));
+        this.throwException(!this.isPositionInsideWorld(position), () -> new IllegalArgumentException(OUTSIDE_WORLD_MSG));
+        this.throwException((isStatic && !this.isStaticBodyAllowed(shape, type)) 
+                            || (!isStatic && !this.isDynamicBodyAllowed(shape, type)),
+                                () -> new IllegalArgumentException(ILLEGAL_ENTITY_MSG));
     }
 
     private void throwException(final boolean condition, final Supplier<RuntimeException> supplier) {

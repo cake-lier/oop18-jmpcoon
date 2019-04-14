@@ -61,9 +61,10 @@ public final class WorldImpl implements World {
     private int score;
 
     /**
-     * Default constructor, delegates the job of managing the physics of the game to the library underneath.
+     * Default constructor, decides what are the dimensions of this {@link World}, which should be 8m by 4.5m. It's package
+     * protected because the only class that should access this constructor is its factory {@link WorldFactory}.
      */
-    public WorldImpl() {
+    WorldImpl() {
         this.physicsFactory = new PhysicalFactoryImpl();
         this.worldDimensions = new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT);
         this.innerWorld = physicsFactory.createPhysicalWorld(this.worldDimensions.getLeft(), this.worldDimensions.getRight());
@@ -104,7 +105,6 @@ public final class WorldImpl implements World {
                 this.player = Optional.fromJavaUtil(this.aliveEntities.getInstances(Player.class).stream().findFirst());
             }
         });
-
         this.initialized = true;
     }
 

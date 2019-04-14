@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import model.entities.EntityProperties;
 import model.entities.UnmodifiableEntity;
 import model.world.World;
-import model.world.WorldImpl;
+import model.world.WorldFactoryImpl;
 import org.apache.commons.lang3.tuple.Pair;
 
 import view.game.GameView;
@@ -44,7 +44,7 @@ public class GameControllerImpl implements GameController {
      * @param view the {@link GameView} relative to the game controlled by this {@link GameController}
      */
     public GameControllerImpl(final GameView view) {
-        this.gameWorld = new WorldImpl();
+        this.gameWorld = new WorldFactoryImpl().create();
         this.gameWorld.initLevel(this.loadLevel());
         this.gameView = Objects.requireNonNull(view);
         this.timer = this.createTimer();
