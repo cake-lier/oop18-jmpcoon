@@ -1,5 +1,6 @@
 package model.entities;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public final class EnemyGenerator extends StaticEntity {
 
     private static final long serialVersionUID = -3160192139428572083L;
     private static final ImmutablePair<Double, Double> ROLLING_ENEMY_DIMENSIONS = new ImmutablePair<Double, Double>(0.23, 0.23);
-    private static final int DELTA = 380;
+    private static final int DELTA = 150;
 
     private final List<RollingEnemy> enemies;
     private int count;
@@ -45,11 +46,10 @@ public final class EnemyGenerator extends StaticEntity {
      * @param physicsFactory the {@link PhysicsFactory}
      * @return a Iterable of the enemies
      */
-    public Iterable<RollingEnemy> onTimeAdvanced(final PhysicalFactory physicsFactory) {
+    public Collection<RollingEnemy> onTimeAdvanced(final PhysicalFactory physicsFactory) {
         this.enemies.clear();
         if (this.checkTime()) {
             this.enemies.add(this.createRollingEnemy(physicsFactory));
-            this.enemies.get(0).applyImpulse();
         }
         return this.enemies;
     }
@@ -69,3 +69,4 @@ public final class EnemyGenerator extends StaticEntity {
                 .build();
     }
 }
+
