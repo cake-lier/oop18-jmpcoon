@@ -10,10 +10,11 @@ import model.entities.UnmodifiableEntity;
 public interface EntityConverter {
 
     /**
-     * @param entity the {@link Entity} to convert
-     * @return the converted {@link DrawableEntity}
+     * @param entity The {@link Entity} to convert.
+     * @return The converted {@link DrawableEntity}.
+     * @throws IllegalArgumentException If the given {@link Entity} is not supported.
      */
-    DrawableEntity getDrawableEntity(UnmodifiableEntity entity);
+    DrawableEntity getDrawableEntity(UnmodifiableEntity entity) throws IllegalArgumentException;
 
     /**
      * 

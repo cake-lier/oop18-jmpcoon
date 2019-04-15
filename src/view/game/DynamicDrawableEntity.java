@@ -1,15 +1,23 @@
 package view.game;
 
+import javafx.animation.Animation;
 import javafx.scene.image.Image;
 import model.entities.UnmodifiableEntity;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import model.entities.EntityState;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * a {@link DynamicEntity} that can be drawn.
  */
-public class DynamicDrawableEntity extends AbstractDrawableEntity {
+public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
+
+    private final Map<EntityState, SpriteAnimation> map = new HashMap<>();
+    private Animation currentAnimation;
+    private boolean movingRight = true;
+    private EntityState lastState = EntityState.IDLE;
+    private EntityState currentState = EntityState.IDLE;
 
     /**
      * builds a new {@link StaticDrawableEntity}.
@@ -23,27 +31,53 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
             final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
         super(image, entity, worldDimensions, sceneDimensions);
     }
- 
+
+
     /**
-     * {@inheritDoc}
+     * updates the image view.
      */
-    @Override
-    protected void updateSpriteProperties() {
-        final UnmodifiableEntity entity = this.getEntity();
-        final double x = entity.getPosition().getLeft();
-        final double y = entity.getPosition().getRight();
-        final double width = entity.getDimensions().getLeft();
-        final double height = entity.getDimensions().getRight();
+    public void updateSpritePosition() {
+            super.updateSpriteProperties();
+            this.changeAnimation(this.getEntity().getState());
+            this.updateMovingRight();
+            this.getImageView().setImage(this.map.get(this.getEntity().getState()).getImage());
+            this.getImageView().setScaleX(this.getImageView().getScaleX() * (this.movingRight ? 1 : -1));
+    }
 
-        this.getImageView().setScaleX(width * this.getXRatio() / this.getImageView().getImage().getWidth());
-        this.getImageView().setScaleY(height * this.getYRatio() / this.getImageView().getImage().getHeight());
-        this.getImageView().setRotate(-Math.toDegrees(this.getEntity().getAngle()));
+    /**
+     * @param state
+     *            state
+     * @param animation
+     *            animation
+     */
+    public void mapAnimation(final EntityState state, final SpriteAnimation animation) {
+        this.map.put(state, animation);
+        if (state == EntityState.IDLE) {
+            this.currentAnimation = animation;
+        }
+    }
 
-        /* differences between the sizes of the ImageView and of the image really shown */
-        final double diffX = this.getImageView().getImage().getWidth() - width * this.getXRatio();
-        final double diffY = this.getImageView().getImage().getHeight() - height * this.getYRatio();
-        final Pair<Double, Double> sceneCoordinates = this.getConvertedCoordinates(new ImmutablePair<>(x - width / 2, y + height / 2));
-        this.getImageView().setX(sceneCoordinates.getLeft() - diffX / 2);
-        this.getImageView().setY(sceneCoordinates.getRight() - diffY / 2);
+    private void changeAnimation(final EntityState state) {
+        if (!this.currentState.equals(state)) {
+            this.currentAnimation.stop();
+            this.currentAnimation = this.map.get(state);
+            this.currentAnimation.setCycleCount(Animation.INDEFINITE);
+            this.currentAnimation.play();
+            this.lastState = this.currentState;
+            this.currentState = state;
+        }
+    }
+
+    private void updateMovingRight() {
+        if (this.currentState == EntityState.MOVING_RIGHT) {
+            this.movingRight = true;
+        } else if (this.currentState == EntityState.MOVING_LEFT) {
+            this.movingRight = false;
+        }
+    }
+
+    private boolean checkClimb() {
+        return this.currentState == EntityState.IDLE
+               && (this.lastState == EntityState.CLIMBING_UP || this.lastState == EntityState.CLIMBING_DOWN);
     }
 }

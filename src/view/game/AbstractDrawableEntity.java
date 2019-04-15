@@ -1,8 +1,6 @@
 package view.game;
 
 import java.util.Objects;
-
-import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.entities.EntityType;
@@ -43,22 +41,29 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      * {@inheritDoc}
      */
     @Override
-    public void updatePosition() {
-        Platform.runLater(() -> this.updateSpriteProperties());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public ImageView getImageView() {
         return this.sprite;
     }
 
     /**
-     * method used to update properties like position, rotation, ... of the {@link ImageView} of this {@link DrawableEntity}
+     * updates properties like position, rotation, ... of the {@link ImageView} of this {@link DrawableEntity}
      */
-    protected abstract void updateSpriteProperties();
+    protected void updateSpriteProperties() {
+        final double entityWidth = this.getEntity().getDimensions().getLeft();
+        final double entityHeight = this.getEntity().getDimensions().getRight();
+        final double entityX = this.getEntity().getPosition().getLeft();
+        final double entityY = this.getEntity().getPosition().getRight();
+        /* scaling the ImageView to correct dimensions */
+        this.getImageView().setScaleX(entityWidth * this.getXRatio() / this.getImageView().getImage().getWidth());
+        this.getImageView().setScaleY(entityHeight * this.getYRatio() / this.getImageView().getImage().getHeight());
+        this.getImageView().setRotate(-Math.toDegrees(this.getEntity().getAngle()));
+        /* differences between the sizes of the ImageView and of the image really shown */
+        final double diffX = this.getImageView().getImage().getWidth() - entityWidth * this.getXRatio();
+        final double diffY = this.getImageView().getImage().getHeight() - entityHeight * this.getYRatio();
+        final Pair<Double, Double> sceneCoordinates = this.getConvertedCoordinates(new ImmutablePair<>(entityX - entityWidth / 2, entityY + entityHeight / 2));
+        this.getImageView().setX(sceneCoordinates.getLeft() - diffX / 2);
+        this.getImageView().setY(sceneCoordinates.getRight() - diffY / 2);
+    }
 
     /**
      * @return the {@link UnmodifiableEntity} represented by this {@link DrawableEntity}
