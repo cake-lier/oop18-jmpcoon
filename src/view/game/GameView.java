@@ -22,7 +22,7 @@ public interface GameView {
      * start.
      * @param saveFile The file with the saved game from which starting the game, if present.
      */
-    void init(Optional<File> saveFile);
+    void initialize(Optional<File> saveFile);
 
     /**
      * Shows game over screen.
@@ -38,7 +38,7 @@ public interface GameView {
      * Performs cleaning of the view of this game, intended as a component, putting it into a state like before this object was
      * created. It should be used only after putting it in an "unusable" state, such as removing it, deleting it, etc.
      */
-    void cleanView();
+    void clean();
 
     /**
      * 

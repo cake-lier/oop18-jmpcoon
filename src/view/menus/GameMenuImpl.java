@@ -39,12 +39,19 @@ public final class GameMenuImpl implements GameMenu {
     private static final String FIRST_SAVE_FILE = "save1.sav";
     private static final String SECOND_SAVE_FILE = "save2.sav";
     private static final String THIRD_SAVE_FILE = "save3.sav";
+    private static final String BTN_STYLE_CLASS = "buttons";
+    private static final String FONT_SIZE = "-fx-font-size: ";
+    private static final String SIZE_UNIT = "em";
+    private static final int MENU_BUTTONS_RATIO = 150;
+    private static final int BACK_BUTTON_RATIO = 300;
+    private static final int SAVE_BUTTONS_RATIO = 135;
 
     private final AppController appController;
     private final View appView;
     private final GameController gameController;
     private final GameView gameView;
     private final Pane root;
+    private final double stageHeight;
     private boolean drawn;
     private boolean shown;
 
@@ -72,14 +79,16 @@ public final class GameMenuImpl implements GameMenu {
      * and the {@link GameController} of this particular instance of the game so as to save a game, go back to the main menu and
      * exit the game.
      * @param root The {@link Pane} in which to draw this menu.
+     * @param stageHeight The height of {@link Stage} which contains the root.
      * @param appController The controller of this application.
      * @param appView The view of this application.
      * @param gameController The controller of this game.
      * @param gameView The view of this game.
      */
-    public GameMenuImpl(final Pane root, final AppController appController, final View appView, final GameController gameController,
-                        final GameView gameView) {
+    public GameMenuImpl(final Pane root, final double stageHeight, final AppController appController, final View appView,
+                            final GameController gameController, final GameView gameView) {
         this.root = root;
+        this.stageHeight = stageHeight;
         this.appController = appController;
         this.appView = appView;
         this.gameController = gameController;
@@ -101,10 +110,11 @@ public final class GameMenuImpl implements GameMenu {
      * Initializes a generic save game button present in this menu.
      */
     private void initSaveButton(final Button save, final String fileName) {
+        save.setStyle(FONT_SIZE + this.stageHeight / SAVE_BUTTONS_RATIO + SIZE_UNIT);
         final File file = Paths.get(SAVES_PATH + fileName).toFile();
         if (file.exists()) {
             this.formatSaveSlotText(save, file);
-            save.getStyleClass().add("buttons");
+            save.getStyleClass().add(BTN_STYLE_CLASS);
             save.setOnMouseClicked(e -> {
                 final Alert overwriteAlert = new Alert(AlertType.CONFIRMATION, OVERWRITE_MSG);
                 overwriteAlert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
@@ -127,7 +137,7 @@ public final class GameMenuImpl implements GameMenu {
                 try {
                     this.gameController.saveGame(saveFile);
                     this.formatSaveSlotText(save, saveFile);
-                    save.getStyleClass().add("buttons");
+                    save.getStyleClass().add(BTN_STYLE_CLASS);
                 } catch (final IOException ex) {
                     ex.printStackTrace();
                 }
@@ -147,13 +157,16 @@ public final class GameMenuImpl implements GameMenu {
                 menuLoader.load();
                 this.menu.setVisible(false);
                 this.root.getChildren().add(this.menu);
+                this.backMenuButton.setStyle(FONT_SIZE + this.stageHeight / MENU_BUTTONS_RATIO + SIZE_UNIT);
                 this.backMenuButton.setOnMouseClicked(e -> {
-                    this.gameView.cleanView();
+                    this.gameView.clean();
                     this.appView.displayMenu();
                 });
+                this.quitButton.setStyle(FONT_SIZE + this.stageHeight / MENU_BUTTONS_RATIO + SIZE_UNIT);
                 this.quitButton.setOnMouseClicked(e -> {
                     this.appController.exitApp();
                 });
+                this.saveButton.setStyle(FONT_SIZE + this.stageHeight / MENU_BUTTONS_RATIO + SIZE_UNIT);
                 this.saveButton.setOnMouseClicked(e -> {
                     this.menu.setVisible(false);
                     this.saveMenu.setVisible(true);
@@ -167,6 +180,7 @@ public final class GameMenuImpl implements GameMenu {
                 saveLoader.load();
                 this.saveMenu.setVisible(false);
                 this.root.getChildren().add(this.saveMenu);
+                this.backButton.setStyle(FONT_SIZE + this.stageHeight / BACK_BUTTON_RATIO + SIZE_UNIT);
                 this.backButton.setOnMouseClicked(ev -> {
                     this.saveMenu.setVisible(false);
                     this.menu.setVisible(true);

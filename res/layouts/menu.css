@@ -4,7 +4,7 @@
 
 .titlePieces {
     -fx-font-family: "FOREST THING";
-    -fx-font-size: 9em;
+    -fx-font-size: 900%;
     -fx-fill: rgb(143,89,2);
     -fx-wrap-text: true;
     -fx-text-overrun: clip;
@@ -12,6 +12,5 @@
 }
 
 .buttons {
-    -fx-font-size: 5em;
     -fx-max-width: infinity;
 }

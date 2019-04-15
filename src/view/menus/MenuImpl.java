@@ -43,11 +43,18 @@ public final class MenuImpl implements Menu {
     private static final String DEL_MSG = "Are you sure you want to delete this game save?";
     private static final String DEL_ERR_MSG = " was not correctly deleted!";
     private static final String NO_SAVE_MSG = "No save game in this slot";
+    private static final String FONT_SIZE = "-fx-font-size: ";
+    private static final String SIZE_UNIT = "em";
     private static final int VOLUME_RATIO = 100;
+    private static final int MAIN_BUTTONS_RATIO = 200;
+    private static final int BACK_BUTTONS_RATIO = 300;
+    private static final int LOAD_BUTTONS_RATIO = 135;
+    private static final int DELETE_BUTTONS_RATIO = 250;
 
     private final AppController controller;
     private final Scene scene;
     private final MediaPlayer music;
+    private final double stageHeight;
     private boolean drawn;
     private boolean showed;
 
@@ -89,11 +96,13 @@ public final class MenuImpl implements Menu {
      * Furthermore, it acquires the {@link Scene} in which to draw the menu.
      * @param controller The controller of this application.
      * @param scene The {@link Scene} in which adding this menu and all its pages.
+     * @param stageHeight The height of the {@link javafx.stage.Stage} which contains the scene.
      * @param music The {@link MediaPlayer} from which play music while the menu is showed.
      */
-    public MenuImpl(final AppController controller, final Scene scene, final MediaPlayer music) {
+    public MenuImpl(final AppController controller, final Scene scene, final double stageHeight, final MediaPlayer music) {
         this.controller = controller;
         this.scene = scene;
+        this.stageHeight = stageHeight;
         this.music = music;
         this.drawn = false;
         this.showed = false;
@@ -111,8 +120,10 @@ public final class MenuImpl implements Menu {
         }
     }
 
-    private void initSaveDeleteButton(final Button save, final Button delete, final String fileName) {
+    private void initLoadDeleteButton(final Button load, final Button delete, final String fileName) {
         final File file = Paths.get(SAVES_PATH + fileName).toFile();
+        load.setStyle(FONT_SIZE + this.stageHeight / LOAD_BUTTONS_RATIO + SIZE_UNIT);
+        delete.setStyle(FONT_SIZE + this.stageHeight / DELETE_BUTTONS_RATIO + SIZE_UNIT);
         if (file.exists()) {
             final String created = LocalDateTime.ofEpochSecond(file.lastModified() / 1000, 0, 
                                                                ZoneOffset.of(ZoneOffset.systemDefault()
@@ -120,8 +131,8 @@ public final class MenuImpl implements Menu {
                                                                                        .getOffset(Instant.now())
                                                                                        .getId()))
                                                 .format(DateTimeFormatter.ofPattern(TIME_FORMAT));
-            save.setText(created);
-            save.setOnMouseClicked(e -> {
+            load.setText(created);
+            load.setOnMouseClicked(e -> {
                 this.music.stop();
                 this.controller.startGame(Optional.of(file));
             });
@@ -134,16 +145,16 @@ public final class MenuImpl implements Menu {
                         if (!file.delete()) {
                             new Alert(AlertType.ERROR, file.getName() + DEL_ERR_MSG).show();
                         }
-                        save.setDisable(true);
-                        save.setText(NO_SAVE_MSG);
+                        load.setDisable(true);
+                        load.setText(NO_SAVE_MSG);
                         delete.setDisable(true);
                     }
                 }
             });
         } else {
-            save.setDisable(true);
+            load.setDisable(true);
             delete.setDisable(true);
-            save.setText(NO_SAVE_MSG);
+            load.setText(NO_SAVE_MSG);
         }
     }
 
@@ -157,21 +168,25 @@ public final class MenuImpl implements Menu {
             this.scene.setRoot(root);
             this.drawFromURL(MENU_LAYOUT, root);
             this.frontPage.setVisible(false);
+            this.startButton.setStyle(FONT_SIZE + this.stageHeight / MAIN_BUTTONS_RATIO + SIZE_UNIT);
             this.startButton.setOnMouseClicked(e -> {
                 this.music.stop();
                 this.hide();
                 this.controller.startGame(Optional.absent());
             });
+            this.quitButton.setStyle(FONT_SIZE + this.stageHeight / MAIN_BUTTONS_RATIO + SIZE_UNIT);
             this.quitButton.setOnMouseClicked(e -> this.controller.exitApp());
             this.drawFromURL(LOADER_LAYOUT, root);
             this.savesPage.setVisible(false);
-            this.initSaveDeleteButton(this.firstSave, this.firstDelete, FIRST_SAVE_FILE);
-            this.initSaveDeleteButton(this.secondSave, this.secondDelete, SECOND_SAVE_FILE);
-            this.initSaveDeleteButton(this.thirdSave, this.thirdDelete, THIRD_SAVE_FILE);
+            this.initLoadDeleteButton(this.firstSave, this.firstDelete, FIRST_SAVE_FILE);
+            this.initLoadDeleteButton(this.secondSave, this.secondDelete, SECOND_SAVE_FILE);
+            this.initLoadDeleteButton(this.thirdSave, this.thirdDelete, THIRD_SAVE_FILE);
+            this.backSavesButton.setStyle(FONT_SIZE + this.stageHeight / BACK_BUTTONS_RATIO + SIZE_UNIT);
             this.backSavesButton.setOnMouseClicked(e -> {
                 this.savesPage.setVisible(false);
                 this.frontPage.setVisible(true);
             });
+            this.savesButton.setStyle(FONT_SIZE + this.stageHeight / MAIN_BUTTONS_RATIO + SIZE_UNIT);
             this.savesButton.setOnMouseClicked(e -> {
                 this.frontPage.setVisible(false);
                 this.savesPage.setVisible(true);
@@ -182,10 +197,12 @@ public final class MenuImpl implements Menu {
             this.volumeControl.valueProperty().addListener(c -> {
                 this.music.setVolume(this.volumeControl.getValue() / VOLUME_RATIO);
             });
+            this.backSettingsButton.setStyle(FONT_SIZE + this.stageHeight / BACK_BUTTONS_RATIO + SIZE_UNIT);
             this.backSettingsButton.setOnMouseClicked(e -> {
                 this.settingsPage.setVisible(false);
                 this.frontPage.setVisible(true);
             });
+            this.settingsButton.setStyle(FONT_SIZE + this.stageHeight / MAIN_BUTTONS_RATIO + SIZE_UNIT);
             this.settingsButton.setOnMouseClicked(e -> {
                 this.frontPage.setVisible(false);
                 this.settingsPage.setVisible(true);

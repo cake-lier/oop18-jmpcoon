@@ -82,19 +82,15 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.world.addListener(new StepAdapter() {
             @Override
             public void begin(final Step step, final World world) {
-                // TODO: lines formatting
                 WholePhysicalWorldImpl.this.collidingLadder 
-                    = Optional.fromJavaUtil(WholePhysicalWorldImpl.this.types
-                                                 .entrySet()
-                                                 .parallelStream()
-                                                 .filter(e -> e.getValue() == EntityType.LADDER)
-                                                 .filter(l -> WholePhysicalWorldImpl.this
-                                                                                    .areBodiesInContact(
-                                                                                            WholePhysicalWorldImpl.this.player
-                                                                                                                       .get(),
-                                                                                            l.getKey()))
-                                                 .findFirst()
-                                                 .map(cl -> cl.getKey()));
+                    = Optional.fromJavaUtil(
+                          WholePhysicalWorldImpl.this.types.entrySet()
+                                                           .parallelStream()
+                                                           .filter(e -> e.getValue() == EntityType.LADDER)
+                                                           .filter(l -> WholePhysicalWorldImpl.this.areBodiesInContact(
+                                                                            WholePhysicalWorldImpl.this.player.get(), l.getKey()))
+                                                           .findFirst()
+                                                           .map(cl -> cl.getKey()));
             }
         });
         this.world.addListener(new ContactAdapter() {

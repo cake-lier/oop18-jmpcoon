@@ -3,7 +3,6 @@
 }
 
 .loadButtons {
-    -fx-font-size: 7em;
     -fx-max-width: infinity;
     -fx-max-height: infinity;
 }
@@ -12,7 +11,6 @@
     -fx-background-color: rgb(208, 28, 31);
     -fx-text-fill: #ECDDC8;
     -fx-font-family: "dark forest";
-    -fx-font-size: 3em;
     -fx-effect: dropshadow(one-pass-box, #2D2926, 20, 0, 5, 5);
     -fx-max-height: infinity;
 }
@@ -24,9 +22,5 @@
 .buttons:disabled, .deleteButtons:disabled {
     -fx-opacity: 0.8;
     -fx-background-color: grey;
-    -fx-text-fill: darkgray;
-}
-
-#backButton {
-    -fx-font-size: 3em;
+    -fx-text-fill: darkgrey;
 }

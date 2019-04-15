@@ -6,12 +6,7 @@
     -fx-background-color: rgba(45, 41, 38, 0.75);
 }
 
-.buttons {
-    -fx-font-size: 5em;
-}
-
-.loadButtons {
-    -fx-font-size: 7em;
+.saveButtons {
     -fx-max-width: infinity;
     -fx-max-height: infinity;
     -fx-alignment: center-left;
@@ -21,10 +16,6 @@
     -fx-effect: dropshadow(one-pass-box, #2D2926, 20, 0, 5, 5);
 }
 
-.loadButtons:hover {
+.saveButtons:hover {
     -fx-background-color: derive(#C3DC93, 20%);
-}
-
-#backButton {
-    -fx-font-size: 3em;
 }

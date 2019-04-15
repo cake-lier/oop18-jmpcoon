@@ -47,7 +47,6 @@
     </Slider>
     <Button styleClass="buttons"
             fx:id="backSettingsButton"
-            id="backButton"
             GridPane.columnIndex="1"
             GridPane.halignment="LEFT"
             GridPane.rowIndex="4"

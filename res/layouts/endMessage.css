@@ -8,10 +8,8 @@
 
 #message {
     -fx-font-family: "dark forest";
-    -fx-font-size: 20em;
 }
 
 .buttons {
-    -fx-font-size: 5em;
     -fx-max-width: infinity;
 }

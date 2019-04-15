@@ -14,6 +14,7 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
@@ -53,6 +54,7 @@ public final class GameViewImpl implements GameView {
     private static final AudioClip JUMP = new AudioClip(ClassLoader.getSystemResource("sounds/jump.wav").toExternalForm());
     private static final AudioClip ROLL_DEST = new AudioClip(ClassLoader.getSystemResource("sounds/rollDestroy.wav").toExternalForm());
     private static final AudioClip WALK_DEST = new AudioClip(ClassLoader.getSystemResource("sounds/walkDestroy.wav").toExternalForm());
+    private static final String INIT_ERR = "You can't call this method before initializing the instance";
     private static final String BG_IMAGE = "images/bg_game.png";
     private static final String LAYOUT_PATH = "layouts/";
     private static final String SCORE_SRC = LAYOUT_PATH + "score.fxml";
@@ -60,22 +62,28 @@ public final class GameViewImpl implements GameView {
     private static final String WIN_COLOR = "#FFB100";
     private static final String LOSE_COLOR = "#BB29BB";
     private static final String SCORE_STR = "Score: ";
+    private static final String LIVES_STR = " - Lives: ";
     private static final String WIN_MSG = "YOU WON";
     private static final String LOSE_MSG = "GAME OVER";
-    private static final String INIT_ERR = "You can't call this method before initializing the instance";
+    private static final String FONT_SIZE = "-fx-font-size: ";
+    private static final String PADDING = "-fx-padding: ";
+    private static final String SIZE_UNIT = "em";
+    private static final int SCORE_RATIO = 255;
+    private static final int SCORE_PADDING_RATIO = 2500;
+    private static final int END_MSG_RATIO = 40;
+    private static final int END_BUTTONS_RATIO = 200;
 
     private final AppController appController;
     private final View appView;
     private final Stage stage;
-    private final GameController gameController;
-    private final EntityConverter entityConverter;
-    private final GameMenu gameMenu;
-    private final StackPane root;
     private final Pane entities;
     private final MediaPlayer music;
     private final EventHandler<KeyEvent> commandHandler;
-    private final EventHandler<WindowEvent> closeHandler;
-    private Optional<AudioClip> currentSound;
+    private EventHandler<WindowEvent> closeHandler;
+    private GameController gameController;
+    private EntityConverter entityConverter;
+    private GameMenu gameMenu;
+    private StackPane root;
     private boolean isMenuVisible;
     private boolean isGameEnded;
     private boolean isInitialized;
@@ -87,7 +95,7 @@ public final class GameViewImpl implements GameView {
     @FXML
     private Button finalBackMenuButton;
     @FXML
-    private Button finalQuitButton;
+    private Button restartButton;
 
     /**
      * Binds this game view to the instance of the {@link AppController}, acquires the {@link Stage} in which to draw the game,
@@ -102,21 +110,31 @@ public final class GameViewImpl implements GameView {
         this.appView = Objects.requireNonNull(view);
         this.music = Objects.requireNonNull(music);
         this.stage = Objects.requireNonNull(stage);
-        this.gameController = new GameControllerImpl(this);
-        this.root = new StackPane();
         this.entities = new Pane();
-        this.entityConverter = new EntityConverterImpl(this.gameController.getWorldDimensions(),
-                                                       new ImmutablePair<>(this.stage.getScene().getWidth(),
-                                                                           this.stage.getScene().getHeight()));
-        this.gameMenu = new GameMenuImpl(this.root, this.appController, this.appView, this.gameController, this);
-        this.closeHandler = e -> this.gameController.stopGame();
+        this.mutableInitialization();
         this.commandHandler = key -> this.getInput(key.getCode());
-        this.currentSound = Optional.absent();
         this.isGameEnded = false;
         this.isMenuVisible = false;
         this.isInitialized = false;
     }
 
+    /**
+     * Assigns a value to the mutable fields of this instance. It can be called multiple times, so as to reinitialize these
+     * fields every time a new game starts.
+     */
+    private void mutableInitialization() {
+        this.root = new StackPane();
+        this.gameController = new GameControllerImpl(this);
+        this.entityConverter = new EntityConverterImpl(this.gameController.getWorldDimensions(),
+                                                           new ImmutablePair<>(this.stage.getScene().getWidth(),
+                                                                                   this.stage.getScene().getHeight()));
+        this.gameMenu = new GameMenuImpl(this.root, this.stage.getHeight(), this.appController, this.appView, this.gameController, this);
+        this.closeHandler = e -> this.gameController.stopGame();
+    }
+
+    /*
+     * Checks if this instance has already been initialized and if not, throws an exception.
+     */
     private void checkInitialization() {
         if (!this.isInitialized) {
             throw new IllegalStateException(INIT_ERR);
@@ -124,22 +142,9 @@ public final class GameViewImpl implements GameView {
     }
 
     /**
-     *{@inheritDoc}
-     */
-    public void update() {
-        this.checkInitialization();
-        Platform.runLater(() -> {
-            this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
-            this.drawAliveEntities();
-            this.score.setText(SCORE_STR + this.gameController.getCurrentScore()
-                               + "  |  Lives: " + this.gameController.getPlayerLives());
-        });
-    }
-
-    /**
      * {@inheritDoc}
      */
-    public void init(final Optional<File> saveFile) {
+    public void initialize(final Optional<File> saveFile) {
         this.setupStage();
         this.gameMenu.draw();
         this.drawAliveEntities();
@@ -156,8 +161,8 @@ public final class GameViewImpl implements GameView {
     }
 
     /*
-     * sets up the stage and the scene in it by also setting up root's children ordered by layer (from bottom to top: platforms,
-     * ladders, entities, score)
+     * Sets up the stage and the scene in it by also setting up root's children ordered by layer (from bottom to top: platforms,
+     * ladders, entities, score).
      */
     private void setupStage() {
         final Pane platforms = new Pane();
@@ -170,7 +175,10 @@ public final class GameViewImpl implements GameView {
         try {
             final FXMLLoader scoreLoader = new FXMLLoader(ClassLoader.getSystemResource(SCORE_SRC));
             scoreLoader.setController(this);
-            this.root.getChildren().add(scoreLoader.load());
+            final FlowPane scorePane = scoreLoader.load();
+            scorePane.setStyle(PADDING + this.stage.getHeight() / SCORE_PADDING_RATIO + SIZE_UNIT);
+            this.root.getChildren().add(scorePane);
+            this.score.setStyle(FONT_SIZE + this.stage.getHeight() / SCORE_RATIO + SIZE_UNIT);
         } catch (final IOException ex) {
             ex.printStackTrace();
         }
@@ -183,6 +191,9 @@ public final class GameViewImpl implements GameView {
         this.stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
     }
 
+    /**
+     * Draws only the alive entities of the specified types.
+     */
     private void drawAliveEntities() {
         final List<Node> nodes = new ArrayList<>();
         Arrays.asList(EntityType.ROLLING_ENEMY, EntityType.WALKING_ENEMY, EntityType.POWERUP, EntityType.PLAYER)
@@ -191,7 +202,7 @@ public final class GameViewImpl implements GameView {
     }
 
     /*
-     * returns a collection of ImageViews(Nodes) of the specified EntityType
+     * Returns a collection of ImageViews, which are Nodes, of the specified EntityType.
      */
     private Collection<Node> getNodes(final EntityType type) {
         return this.gameController.getAliveEntities()
@@ -202,9 +213,21 @@ public final class GameViewImpl implements GameView {
                                   .collect(Collectors.toList());
     }
 
+    /**
+     *{@inheritDoc}
+     */
+    public void update() {
+        this.checkInitialization();
+        Platform.runLater(() -> {
+            this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
+            this.drawAliveEntities();
+            this.score.setText(SCORE_STR + this.gameController.getCurrentScore() + LIVES_STR + this.gameController.getPlayerLives());
+        });
+    }
+
     /*
-     * Finds the key's correspondent in InputKey which has a method that converts it into InputType,
-     * which is passed to the gameController
+     * Finds the key's correspondent in InputKey which has a method that converts it into InputType, which is passed to the
+     * gameController.
      */
     private void getInput(final KeyCode key) {
         Stream.of(InputKey.values())
@@ -222,9 +245,6 @@ public final class GameViewImpl implements GameView {
                               this.gameMenu.show();
                               this.isMenuVisible = true;
                               this.music.pause();
-                              if (this.currentSound.isPresent()) {
-                                  this.currentSound.get().stop();
-                              }
                           }
                       }
                   } else {
@@ -263,17 +283,22 @@ public final class GameViewImpl implements GameView {
         try {
             this.root.getChildren().add(loader.load());
             this.message.setText(msg);
+            this.message.setStyle(FONT_SIZE + this.stage.getHeight() / END_MSG_RATIO + SIZE_UNIT);
             if (msg.equals(WIN_MSG)) {
                 this.message.setFill(Color.web(WIN_COLOR));
             } else if (msg.equals(LOSE_MSG)) {
                 this.message.setFill(Color.web(LOSE_COLOR));
             }
+            this.finalBackMenuButton.setStyle(FONT_SIZE + this.stage.getHeight() / END_BUTTONS_RATIO + SIZE_UNIT);
             this.finalBackMenuButton.setOnMouseClicked(e -> {
-                this.cleanView();
+                this.clean();
                 this.appView.displayMenu();
             });
-            this.finalQuitButton.setOnMouseClicked(e -> {
-                this.appController.exitApp();
+            this.restartButton.setStyle(FONT_SIZE + this.stage.getHeight() / END_BUTTONS_RATIO + SIZE_UNIT);
+            this.restartButton.setOnMouseClicked(e -> {
+                this.mutableInitialization();
+                this.initialize(Optional.absent());
+                this.gameController.startGame();
             });
         } catch (final IOException ex) {
             ex.printStackTrace();
@@ -281,7 +306,7 @@ public final class GameViewImpl implements GameView {
     }
 
     @Override
-    public void cleanView() {
+    public void clean() {
         this.checkInitialization();
         this.stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
         this.stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this.closeHandler);
@@ -289,21 +314,18 @@ public final class GameViewImpl implements GameView {
 
     @Override
     public void notifyEvent(final EventType type) {
+        this.checkInitialization();
         switch (type) {
             case ROLLING_COLLISION:
-                this.currentSound = Optional.of(ROLL_DEST);
+                ROLL_DEST.play();
                 break;
             case WALKING_COLLISION:
-                this.currentSound = Optional.of(WALK_DEST);
+                WALK_DEST.play();
                 break;
             case PLAYER_JUMP:
-                this.currentSound = Optional.of(JUMP);
+                JUMP.play();
                 break;
             default:
-        }
-        if (this.currentSound.isPresent()) {
-            this.currentSound.get().setVolume(this.music.getVolume());
-            this.currentSound.get().play();
         }
     }
 }

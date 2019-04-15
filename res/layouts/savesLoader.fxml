@@ -83,7 +83,6 @@
         Delete
     </Button>
     <Button fx:id="backSavesButton"
-            id="backButton"
             styleClass="buttons"
             GridPane.columnIndex="1"
 	        GridPane.halignment="LEFT"

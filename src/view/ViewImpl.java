@@ -96,7 +96,7 @@ public final class ViewImpl implements View {
     @Override
     public void displayMenu() {
         this.createNewTrack(MENU_MUSIC);
-        final Menu menu = new MenuImpl(this.controller, this.stage.getScene(), this.player);
+        final Menu menu = new MenuImpl(this.controller, this.stage.getScene(), this.stage.getHeight(), this.player);
         menu.draw();
         menu.show();
     }
@@ -108,6 +108,6 @@ public final class ViewImpl implements View {
     public void displayGame(final Optional<File> saveFile) {
         this.createNewTrack(GAME_MUSIC);
         final GameView gameView = new GameViewImpl(this.controller, this, this.stage, this.player);
-        gameView.init(saveFile);
+        gameView.initialize(saveFile);
     }
 }

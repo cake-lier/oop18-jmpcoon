@@ -39,13 +39,13 @@
             GridPane.valignment="CENTER">
         Back to menu
     </Button>
-    <Button fx:id="finalQuitButton"
+    <Button fx:id="restartButton"
             styleClass="buttons"
             GridPane.columnIndex="3"
             GridPane.halignment="CENTER"
             GridPane.rowIndex="2"
             GridPane.valignment="CENTER">
-        Quit game
+        Restart game
     </Button>
     <stylesheets>
       <URL value="@endMessage.css" />

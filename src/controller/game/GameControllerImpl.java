@@ -115,6 +115,7 @@ public class GameControllerImpl implements GameController {
         if (this.running) {
             this.timer.shutdown();
             this.running = false;
+            this.timer = this.createTimer();
         }
     }
 
