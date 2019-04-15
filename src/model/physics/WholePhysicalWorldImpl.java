@@ -6,7 +6,6 @@ import java.io.ObjectOutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,12 +23,12 @@ import org.dyn4j.dynamics.contact.ContactConstraint;
 import org.dyn4j.dynamics.contact.ContactPoint;
 import org.dyn4j.geometry.Vector2;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import model.entities.EntityType;
 import model.entities.EntityState;
-import model.entities.PowerUpManager;
 import model.entities.PowerUpType;
 import model.serializable.SerializableWorld;
 import model.world.CollisionType;
@@ -45,8 +44,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
     private final NotifiableWorld outerWorld;
     private transient BiMap<PhysicalBody, Body> containers;
     private final Map<PhysicalBody, EntityType> types;
-    private transient Optional<DynamicPhysicalBody> player;
-    private transient Optional<PhysicalBody> collidingLadder;
+    private Optional<DynamicPhysicalBody> player;
+    private Optional<PhysicalBody> collidingLadder;
 
   //  private final PowerUpManager powerUpManager;
 
@@ -60,8 +59,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.outerWorld = outerWorld;
         this.containers = HashBiMap.create();
         this.types = new LinkedHashMap<>();
-        this.collidingLadder = Optional.empty();
-        this.player = Optional.empty();
+        this.collidingLadder = Optional.absent();
+        this.player = Optional.absent();
         this.addCollisionRules();
    //     this.powerUpManager = new PowerUpManager();
     }
@@ -77,8 +76,9 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.world.addListener(new StepAdapter() {
             @Override
             public void begin(final Step step, final World world) {
+                // TODO: lines formatting
                 WholePhysicalWorldImpl.this.collidingLadder 
-                    = WholePhysicalWorldImpl.this.types
+                    = Optional.fromJavaUtil(WholePhysicalWorldImpl.this.types
                                                  .entrySet()
                                                  .parallelStream()
                                                  .filter(e -> e.getValue() == EntityType.LADDER)
@@ -88,7 +88,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                                                                                                                        .get(),
                                                                                             l.getKey()))
                                                  .findFirst()
-                                                 .map(cl -> cl.getKey());
+                                                 .map(cl -> cl.getKey()));
             }
         });
         this.world.addListener(new ContactAdapter() {
@@ -174,7 +174,9 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                                                                                                        collidingLadder))
                                 || (playerState == EntityState.CLIMBING_UP && !PhysicsUtils.isBodyAtBottomHalf(playerTriple.getMiddle(),
                                                                                                          collidingLadder)))) {
-                            WholePhysicalWorldImpl.this.player.ifPresent(p -> p.setIdle());
+                            if (WholePhysicalWorldImpl.this.player.isPresent()) {
+                                WholePhysicalWorldImpl.this.player.get().setIdle();
+                            }
                         }
                     }
                 }
@@ -260,14 +262,6 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
             out.writeObject(entry.getKey());
             out.writeObject(entry.getValue());
         }
-        out.writeBoolean(this.player.isPresent());
-        if (this.player.isPresent()) {
-            out.writeObject(this.player.get());
-        }
-        out.writeBoolean(this.collidingLadder.isPresent());
-        if (this.collidingLadder.isPresent()) {
-            out.writeObject(this.collidingLadder.get());
-        }
     }
 
     private void readObject(final ObjectInputStream in) throws ClassNotFoundException, IOException {
@@ -279,14 +273,6 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
             final PhysicalBody key = (PhysicalBody) in.readObject();
             final Body value = (Body) in.readObject();
             this.containers.put(key, value);
-        }
-        if (in.readBoolean()) {
-            /* the player was present */
-            this.player = Optional.of((DynamicPhysicalBody) in.readObject());
-        }
-        if (in.readBoolean()) {
-            /* the colliding ladder was present */
-            this.collidingLadder = Optional.of((PhysicalBody) in.readObject());
         }
     }
 }

@@ -205,7 +205,9 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     private boolean isStaticBodyAllowed(final BodyShape shape, final EntityType type) {
         /* other allowed combinations could be added in the future */
-        return (shape == BodyShape.RECTANGLE && (type == EntityType.PLATFORM || type == EntityType.LADDER))
+        return (shape == BodyShape.RECTANGLE && (type == EntityType.PLATFORM 
+                                                 || type == EntityType.LADDER
+                                                 || type == EntityType.POWERUP))
                || (shape == BodyShape.CIRCLE && type == EntityType.ENEMY_GENERATOR);
     }
 

@@ -1,8 +1,9 @@
 package view.game;
 
-import java.util.Optional;
-
 import controller.game.InputType;
+
+import com.google.common.base.Optional;
+
 
 /**
  * The keyboard keys that control the {@link model.entities.Player}.
@@ -31,7 +32,7 @@ public enum InputKey {
     /**
      * Pause the game.
      */
-    ESCAPE(Optional.empty());
+    ESCAPE(Optional.absent());
 
     private final Optional<InputType> correspondingInputType;
 

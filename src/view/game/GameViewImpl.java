@@ -35,11 +35,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+
+import com.google.common.base.Optional;
 
 import controller.app.AppController;
 import controller.game.GameController;
@@ -110,7 +111,7 @@ public final class GameViewImpl implements GameView {
         this.gameMenu = new GameMenuImpl(this.root, this.appController, this.appView, this.gameController, this);
         this.closeHandler = e -> this.gameController.stopGame();
         this.commandHandler = key -> this.getInput(key.getCode());
-        this.currentSound = Optional.empty();
+        this.currentSound = Optional.absent();
         this.isGameEnded = false;
         this.isMenuVisible = false;
         this.isInitialized = false;
@@ -221,11 +222,15 @@ public final class GameViewImpl implements GameView {
                               this.gameMenu.show();
                               this.isMenuVisible = true;
                               this.music.pause();
-                              this.currentSound.ifPresent(sound -> sound.stop());
+                              if (this.currentSound.isPresent()) {
+                                  this.currentSound.get().stop();
+                              }
                           }
                       }
                   } else {
-                      input.convert().ifPresent(moveInput -> this.gameController.processInput(moveInput));
+                      if (input.convert().isPresent()) {
+                          this.gameController.processInput(input.convert().get());
+                      }
                   }
               });
     }
@@ -296,9 +301,9 @@ public final class GameViewImpl implements GameView {
                 break;
             default:
         }
-        this.currentSound.ifPresent(sound -> {
-            sound.setVolume(this.music.getVolume());
-            sound.play();
-        });
+        if (this.currentSound.isPresent()) {
+            this.currentSound.get().setVolume(this.music.getVolume());
+            this.currentSound.get().play();
+        }
     }
 }

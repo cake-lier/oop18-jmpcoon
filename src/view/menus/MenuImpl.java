@@ -6,7 +6,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+
+import com.google.common.base.Optional;
+
 import java.io.File;
 
 import controller.app.AppController;
@@ -126,9 +128,9 @@ public final class MenuImpl implements Menu {
             delete.setOnMouseClicked(e -> {
                 final Alert deleteAlert = new Alert(AlertType.CONFIRMATION, DEL_MSG);
                 deleteAlert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-                final Optional<ButtonType> choice = deleteAlert.showAndWait();
-                choice.ifPresent(b -> {
-                    if (b.equals(ButtonType.OK)) {
+                final Optional<ButtonType> choice = Optional.fromJavaUtil(deleteAlert.showAndWait());
+                if (choice.isPresent()) {
+                    if (choice.get().equals(ButtonType.OK)) {
                         if (!file.delete()) {
                             new Alert(AlertType.ERROR, file.getName() + DEL_ERR_MSG).show();
                         }
@@ -136,7 +138,7 @@ public final class MenuImpl implements Menu {
                         save.setText(NO_SAVE_MSG);
                         delete.setDisable(true);
                     }
-                }); 
+                }
             });
         } else {
             save.setDisable(true);
@@ -158,7 +160,7 @@ public final class MenuImpl implements Menu {
             this.startButton.setOnMouseClicked(e -> {
                 this.music.stop();
                 this.hide();
-                this.controller.startGame(Optional.empty());
+                this.controller.startGame(Optional.absent());
             });
             this.quitButton.setOnMouseClicked(e -> this.controller.exitApp());
             this.drawFromURL(LOADER_LAYOUT, root);

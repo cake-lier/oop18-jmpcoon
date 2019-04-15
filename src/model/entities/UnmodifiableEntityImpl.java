@@ -96,6 +96,6 @@ public final class UnmodifiableEntityImpl implements UnmodifiableEntity {
 
     @Override
     public Optional<PowerUpType> getPowerUpType() {
-        return Optional.fromNullable(this.getType() == EntityType.POWERUP ? PowerUp.class.cast(this.innerEntity).getPowerUpType() : null);
+        return this.getType() == EntityType.POWERUP ? Optional.of(PowerUp.class.cast(this.innerEntity).getPowerUpType()) : Optional.absent();
     }
 }

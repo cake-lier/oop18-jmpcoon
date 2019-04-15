@@ -1,7 +1,8 @@
 package controller.app;
 
 import java.io.File;
-import java.util.Optional;
+
+import com.google.common.base.Optional;
 
 /**
  * Interface modeling the controller for the application: it should correctly start the application and the manage the application

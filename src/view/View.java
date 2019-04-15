@@ -1,7 +1,8 @@
 package view;
 
 import java.io.File;
-import java.util.Optional;
+
+import com.google.common.base.Optional;
 
 /**
  * It represents the view of the game, the class which will be called by the controller for requesting to display the visual part
