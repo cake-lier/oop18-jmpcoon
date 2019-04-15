@@ -10,6 +10,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import model.entities.EntityType;
+import model.entities.PowerUpType;
 import model.entities.UnmodifiableEntity;
 import model.entities.EntityState;
 
@@ -26,6 +27,10 @@ public class EntityConverterImpl implements EntityConverter {
     private static final String SPRITES_DIR = "images/";
     private static final String MODULE_LADDER_SPRITE_URL = SPRITES_DIR + "ladder.png";
     private static final String MODULE_PLATFORM_SPRITE_URL = SPRITES_DIR + "platform.png";
+    private static final String GOAL_SPRITE_URL = SPRITES_DIR + "goal.png";
+    private static final String EXTRA_LIFE_SPRITE_URL = SPRITES_DIR + "extra_life.png";
+    private static final String SUPER_STAR_URL = SPRITES_DIR + "super_star.png";
+    private static final String ENEMY_GENERATOR_SPRITE_URL = SPRITES_DIR + "enemyGenerator.png";
     /* if the sprite sheets are changed this section could be in need of changes */
     private static final String PLAYER_IDLE_SPRITE_URL = SPRITES_DIR + "raccoon_idle.png";
     private static final int PLAYER_IDLE_FRAMES = 1;
@@ -39,13 +44,9 @@ public class EntityConverterImpl implements EntityConverter {
     private static final int WALKING_ENEMY_WALKING_FRAMES = 3;
     private static final String WALKING_ENEMY_IDLE_SPRITE_URL = SPRITES_DIR + "walkingEnemy_idle.png";
     private static final int WALKING_ENEMY_IDLE_FRAMES = 1;
-    private static final String GOAL_SPRITE_URL = SPRITES_DIR + "goal.png";
-    private static final String EXTRA_LIFE_SPRITE_URL = SPRITES_DIR + "extra_life.png";
-    private static final String SUPER_STAR_URL = SPRITES_DIR + "super_star.png";
     private static final String ROLLING_ENEMY_SPRITE_URL = SPRITES_DIR + "rollingEnemy.png";
     private static final int ROLLING_ENEMY_MOVING_FRAMES = 1;
     private static final int ROLLING_ENEMY_IDLE_FRAMES = 1;
-    private static final String ENEMY_GENERATOR_SPRITE_URL = SPRITES_DIR + "enemyGenerator.png";
     private static final double LADDER_RATIO = 0.5; // one ladder sprite is about 0.5m (height) in the world
     private static final double PLATFORM_RATIO = 0.9; // one platform sprite is about 0.9m (width) in the world
 
@@ -54,6 +55,7 @@ public class EntityConverterImpl implements EntityConverter {
     private final Map<UnmodifiableEntity, DrawableEntity> convertedEntities;
     private final Map<EntityType, Image> imagesForStaticEntities;
     private final Map<EntityType, Map<EntityState, Pair<Image, Integer>>> imagesForDynamicEntities;
+    private final Map<PowerUpType, Image> imagesForPowerUps;
 
     /**
      * builds a new {@link EntityConverterImpl}.
@@ -70,6 +72,7 @@ public class EntityConverterImpl implements EntityConverter {
         this.sceneDimensions = sceneDimensions;
         this.imagesForStaticEntities = new EnumMap<>(EntityType.class);
         this.imagesForDynamicEntities = new EnumMap<>(EntityType.class);
+        this.imagesForPowerUps = new EnumMap<>(PowerUpType.class);
         this.fillImagesMaps();
         this.convertedEntities = new HashMap<>();
     }
@@ -97,7 +100,7 @@ public class EntityConverterImpl implements EntityConverter {
                         image = this.imagesForStaticEntities.get(entity.getType());
                         break;
                     case POWERUP:
-                        image = this.getPowerUpImage(entity);
+                        image = this.imagesForPowerUps.get(entity.getPowerUpType().get());
                         break;
                     default:
                         throw new IllegalArgumentException(NOT_SUPPORTED_ENTITY_MSG);
@@ -131,19 +134,6 @@ public class EntityConverterImpl implements EntityConverter {
         return drawableEntity;
     }
 
-    private Image getPowerUpImage(final UnmodifiableEntity powerUp) {
-        switch (powerUp.getPowerUpType().get()) {
-            case GOAL: 
-                return this.loadImage(GOAL_SPRITE_URL);
-            case EXTRA_LIFE: 
-                return this.loadImage(EXTRA_LIFE_SPRITE_URL);
-            case SUPER_STAR: 
-                return this.loadImage(SUPER_STAR_URL);
-            default: 
-                return null;
-       }
-    }
-
     /**
      * removes the {@link DrawableEntity}, saved converted in the past that are now
      * unused.
@@ -157,9 +147,24 @@ public class EntityConverterImpl implements EntityConverter {
     }
 
     private void fillImagesMaps() {
+        this.fillStaticEntitiesMap();
+        this.fillPowerUpsMap();
+        this.fillDynamicEntitiesMap();
+    }
+
+    private void fillStaticEntitiesMap() {
         this.imagesForStaticEntities.put(EntityType.LADDER, loadImage(MODULE_LADDER_SPRITE_URL));
         this.imagesForStaticEntities.put(EntityType.PLATFORM, loadImage(MODULE_PLATFORM_SPRITE_URL));
         this.imagesForStaticEntities.put(EntityType.ENEMY_GENERATOR, loadImage(ENEMY_GENERATOR_SPRITE_URL));
+    }
+
+    private void fillPowerUpsMap() {
+        this.imagesForPowerUps.put(PowerUpType.EXTRA_LIFE, loadImage(EXTRA_LIFE_SPRITE_URL));
+        this.imagesForPowerUps.put(PowerUpType.GOAL, loadImage(GOAL_SPRITE_URL));
+        this.imagesForPowerUps.put(PowerUpType.SUPER_STAR, loadImage(SUPER_STAR_URL));
+    }
+
+    private void fillDynamicEntitiesMap() {
         /* player images */
         final Map<EntityState, Pair<Image, Integer>> playerImages = new EnumMap<>(EntityState.class);
         playerImages.put(EntityState.IDLE, new ImmutablePair<>(loadImage(PLAYER_IDLE_SPRITE_URL), PLAYER_IDLE_FRAMES));
