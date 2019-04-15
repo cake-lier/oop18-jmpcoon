@@ -16,12 +16,14 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.entities.EntityType;
+import model.world.EventType;
 import view.View;
 import view.menus.GameMenu;
 import view.menus.GameMenuImpl;
@@ -47,6 +49,9 @@ import controller.game.GameControllerImpl;
  * The class implementation of the {@link GameView} interface.
  */
 public final class GameViewImpl implements GameView {
+    private static final AudioClip JUMP = new AudioClip(ClassLoader.getSystemResource("sounds/jump.wav").toExternalForm());
+    private static final AudioClip ROLL_DEST = new AudioClip(ClassLoader.getSystemResource("sounds/rollDestroy.wav").toExternalForm());
+    private static final AudioClip WALK_DEST = new AudioClip(ClassLoader.getSystemResource("sounds/walkDestroy.wav").toExternalForm());
     private static final String BG_IMAGE = "images/bg_game.png";
     private static final String LAYOUT_PATH = "layouts/";
     private static final String SCORE_SRC = LAYOUT_PATH + "score.fxml";
@@ -69,6 +74,7 @@ public final class GameViewImpl implements GameView {
     private final MediaPlayer music;
     private final EventHandler<KeyEvent> commandHandler;
     private final EventHandler<WindowEvent> closeHandler;
+    private Optional<AudioClip> currentSound;
     private boolean isMenuVisible;
     private boolean isGameEnded;
     private boolean isInitialized;
@@ -104,6 +110,7 @@ public final class GameViewImpl implements GameView {
         this.gameMenu = new GameMenuImpl(this.root, this.appController, this.appView, this.gameController, this);
         this.closeHandler = e -> this.gameController.stopGame();
         this.commandHandler = key -> this.getInput(key.getCode());
+        this.currentSound = Optional.empty();
         this.isGameEnded = false;
         this.isMenuVisible = false;
         this.isInitialized = false;
@@ -211,6 +218,7 @@ public final class GameViewImpl implements GameView {
                               this.gameMenu.show();
                               this.isMenuVisible = true;
                               this.music.pause();
+                              this.currentSound.ifPresent(sound -> sound.stop());
                           }
                       }
                   } else {
@@ -269,5 +277,25 @@ public final class GameViewImpl implements GameView {
         this.checkInitialization();
         this.stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
         this.stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this.closeHandler);
+    }
+
+    @Override
+    public void notifyEvent(final EventType type) {
+        switch (type) {
+            case ROLLING_COLLISION:
+                this.currentSound = Optional.of(ROLL_DEST);
+                break;
+            case WALKING_COLLISION:
+                this.currentSound = Optional.of(WALK_DEST);
+                break;
+            case PLAYER_JUMP:
+                this.currentSound = Optional.of(JUMP);
+                break;
+            default:
+        }
+        this.currentSound.ifPresent(sound -> {
+            sound.setVolume(this.music.getVolume());
+            sound.play();
+        });
     }
 }

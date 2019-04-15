@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import model.entities.EntityProperties;
 import model.entities.UnmodifiableEntity;
+import model.world.EventType;
 import model.world.World;
 import model.world.WorldFactoryImpl;
 import org.apache.commons.lang3.tuple.Pair;
@@ -44,7 +45,7 @@ public class GameControllerImpl implements GameController {
      * @param view the {@link GameView} relative to the game controlled by this {@link GameController}
      */
     public GameControllerImpl(final GameView view) {
-        this.gameWorld = new WorldFactoryImpl().create();
+        this.gameWorld = new WorldFactoryImpl().create(this);
         this.gameWorld.initLevel(this.loadLevel());
         this.gameView = Objects.requireNonNull(view);
         this.timer = this.createTimer();
@@ -186,5 +187,13 @@ public class GameControllerImpl implements GameController {
             e.printStackTrace();
         }
         return entities;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void notifyEvent(final EventType type) {
+        this.gameView.notifyEvent(type);
     }
 }

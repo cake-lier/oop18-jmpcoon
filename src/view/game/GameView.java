@@ -3,6 +3,8 @@ package view.game;
 import java.io.File;
 import java.util.Optional;
 
+import model.world.EventType;
+
 /**
  * Visual component of the game.
  */
@@ -36,4 +38,10 @@ public interface GameView {
      * created. It should be used only after putting it in an "unusable" state, such as removing it, deleting it, etc.
      */
     void cleanView();
+
+    /**
+     * 
+     * @param type The type of the event.
+     */
+    void notifyEvent(EventType type);
 }

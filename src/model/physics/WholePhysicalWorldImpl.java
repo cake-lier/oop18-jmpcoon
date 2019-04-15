@@ -30,6 +30,8 @@ import com.google.common.collect.HashBiMap;
 import model.entities.EntityType;
 import model.entities.EntityState;
 import model.serializable.SerializableWorld;
+import model.world.CollisionType;
+import model.world.NotifiableWorld;
 
 /**
  * The class implementation of {@link PhysicalWorld}. It's package protected so the only class which can build it is the 
@@ -38,6 +40,7 @@ import model.serializable.SerializableWorld;
 final class WholePhysicalWorldImpl implements WholePhysicalWorld {
     private static final long serialVersionUID = -8486558535164534658L;
     private final SerializableWorld world;
+    private final NotifiableWorld outerWorld;
     private transient BiMap<PhysicalBody, Body> containers;
     private final Map<PhysicalBody, EntityType> types;
     private transient Optional<DynamicPhysicalBody> player;
@@ -48,8 +51,9 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
      * used.
      * @param world The {@link World} to wrap.
      */
-    WholePhysicalWorldImpl(final SerializableWorld world) {
+    WholePhysicalWorldImpl(final NotifiableWorld outerWorld, final SerializableWorld world) {
         this.world = world;
+        this.outerWorld = outerWorld;
         this.containers = HashBiMap.create();
         this.types = new LinkedHashMap<>();
         this.collidingLadder = Optional.empty();
@@ -130,13 +134,17 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                     final Vector2 point = contactConstraint.getContacts().get(0).getPoint();
                     final Pair<Double, Double> collisionPoint = new ImmutablePair<>(point.x, point.y);
                     final EntityState playerState = playerTriple.getMiddle().getState();
-                    if ((otherTriple.getRight() == EntityType.WALKING_ENEMY
-                         && PhysicsUtils.isBodyOnTop(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint))
-                        || (otherTriple.getRight() == EntityType.ROLLING_ENEMY
-                            && PhysicsUtils.isBodyAbove(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint.getRight()))) {
+                    if (otherTriple.getRight() == EntityType.WALKING_ENEMY
+                         && PhysicsUtils.isBodyOnTop(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint)) {
                         otherTriple.getLeft().setActive(false);
+                        WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.WALKING_ENEMY_KILLED);
+                    } else if (otherTriple.getRight() == EntityType.ROLLING_ENEMY
+                            && PhysicsUtils.isBodyAbove(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint.getRight())) {
+                        otherTriple.getLeft().setActive(false);
+                        WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.ROLLING_ENEMY_KILLED);
                     } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
                         playerTriple.getLeft().setActive(false);
+                        WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.PLAYER_KILLED);
                     } else if (otherTriple.getRight() == EntityType.PLATFORM
                                && (playerState == EntityState.CLIMBING_DOWN || playerState == EntityState.CLIMBING_UP)
                                && WholePhysicalWorldImpl.this.collidingLadder.isPresent()) {

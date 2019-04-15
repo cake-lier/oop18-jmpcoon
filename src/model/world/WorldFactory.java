@@ -1,5 +1,7 @@
 package model.world;
 
+import controller.game.GameController;
+
 /**
  * A factory for {@link World} so as to better control its instantiation. In fact, there could be only one instance of
  * {@link World} per game and the {@link controller.game.GameController} can't use all of {@link World} methods, some are reserved
@@ -13,9 +15,10 @@ public interface WorldFactory {
 
     /**
      * Creates a new instance of {@link World}. Only one instance will be produced, trying to call this method again will result
-     * in an {@link IllegalStateException}.
+     * in an {@link IllegalStateException}. It needs a controller to be created so as to notify it when events occur.
+     * @param controller The controller of this game.
      * @return The created {@link World}.
      * @throws IllegalStateException If the {@link World} has already been created.
      */
-    World create() throws IllegalStateException;
+    World create(GameController controller) throws IllegalStateException;
 }

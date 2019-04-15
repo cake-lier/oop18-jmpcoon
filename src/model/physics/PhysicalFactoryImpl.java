@@ -18,9 +18,10 @@ import org.dyn4j.geometry.Vector2;
 import model.entities.EntityType;
 import model.serializable.SerializableBody;
 import model.serializable.SerializableWorld;
+import model.world.NotifiableWorld;
 
 /**
- * a class that implements {@link PhysicalFactory}.
+ * Class implementation of a {@link PhysicalFactory}.
  */
 public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final long serialVersionUID = -3251686827966500039L;
@@ -69,7 +70,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private Pair<Double, Double> worldDimensions;
 
     /**
-     * builds a new {@link PhysicalFactoryImpl}.
+     * Default constructor for a {@link PhysicalFactory} builds a new {@link PhysicalFactoryImpl}.
+     * @param
      */
     public PhysicalFactoryImpl() {
         this.physicalWorld = Optional.empty();
@@ -80,10 +82,12 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
      * {@inheritDoc}
      */
     @Override
-    public PhysicalWorld createPhysicalWorld(final double width, final double height) {
+    public PhysicalWorld createPhysicalWorld(final NotifiableWorld outerWorld, final double width, final double height) {
         this.throwException(this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_TWO_WORLDS_MSG));
         this.worldDimensions = new ImmutablePair<>(width, height);
-        this.physicalWorld = Optional.of(new WholePhysicalWorldImpl(new SerializableWorld(new AxisAlignedBounds(width * 2, height * 2))));
+        this.physicalWorld = Optional.of(new WholePhysicalWorldImpl(outerWorld, 
+                                                                        new SerializableWorld(new AxisAlignedBounds(width * 2, 
+                                                                                                                        height * 2))));
         return this.physicalWorld.get();
     }
 

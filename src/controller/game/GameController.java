@@ -8,6 +8,7 @@ import java.util.Collection;
 import org.apache.commons.lang3.tuple.Pair;
 
 import model.entities.UnmodifiableEntity;
+import model.world.EventType;
 
 /**
  * a controller for the game playing.
@@ -74,4 +75,9 @@ public interface GameController {
      */
     Collection<UnmodifiableEntity> getDeadEntities();
 
+    /**
+     * 
+     * @param type The type of collision.
+     */
+    void notifyEvent(EventType type);
 }

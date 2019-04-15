@@ -1,6 +1,7 @@
 package model.physics;
 
 import model.entities.EntityType;
+import model.world.NotifiableWorld;
 
 import java.io.Serializable;
 
@@ -15,14 +16,17 @@ import org.apache.commons.lang3.tuple.Pair;
 public interface PhysicalFactory extends Serializable {
 
     /**
-     * A {@link PhysicalWorld} that manages the physics simulation needed by the {@link model.world.World}.
-     * It considers only positive coordinates.
+     * A {@link PhysicalWorld} that manages the physics simulation needed by the {@link model.world.World}. Notifies the
+     * {@link model.world.World} of occurred events through the methods contained in the interface {@link NotifiableWorld}. The
+     * {@link PhysicalWorld} considers only positive coordinates.
+     * @param outerWorld The reference to the {@link model.world.World} which contains only methods for notifying it of occurred
+     * physical events, such as {@link NotifiableWorld#notifyCollision(model.world.CollisionType)}.
      * @param width The width of the {@link PhysicalWorld}.
      * @param height The height of the {@link PhysicalWorld}.
      * @return The {@link PhysicalWorld} with the given dimensions.
      * @throws IllegalStateException if a {@link PhysicalWorld} has already been created.
      */
-    PhysicalWorld createPhysicalWorld(double width, double height) throws IllegalStateException;
+    PhysicalWorld createPhysicalWorld(NotifiableWorld outerWorld, double width, double height) throws IllegalStateException;
 
     /**
      * Creates a {@link StaticPhysicalBody} living inside the {@link PhysicalWorld} created by the same {@link PhysicalFactory}.

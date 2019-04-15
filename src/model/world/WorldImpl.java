@@ -37,10 +37,12 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MultimapBuilder;
 
+import controller.game.GameController;
+
 /**
  * The class implementation of {@link World}.
  */
-public final class WorldImpl implements World {
+public final class WorldImpl implements World, NotifiableWorld {
     private static final long serialVersionUID = 4663479513512261181L;
     private static final double WORLD_WIDTH = 8;
     private static final double WORLD_HEIGHT = 4.5;
@@ -50,6 +52,7 @@ public final class WorldImpl implements World {
     private static final int WALKING_POINTS = 100;
     private static final String NO_INIT_MSG = "It's needed to initialize this world by initLevel() before using it";
 
+    private final transient GameController controller;
     private final PhysicalFactory physicsFactory;
     private final PhysicalWorld innerWorld;
     private final Pair<Double, Double> worldDimensions;
@@ -64,10 +67,11 @@ public final class WorldImpl implements World {
      * Default constructor, decides what are the dimensions of this {@link World}, which should be 8m by 4.5m. It's package
      * protected because the only class that should access this constructor is its factory {@link WorldFactory}.
      */
-    WorldImpl() {
+    WorldImpl(final GameController controller) {
+        this.controller = controller;
         this.physicsFactory = new PhysicalFactoryImpl();
         this.worldDimensions = new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT);
-        this.innerWorld = physicsFactory.createPhysicalWorld(this.worldDimensions.getLeft(), this.worldDimensions.getRight());
+        this.innerWorld = physicsFactory.createPhysicalWorld(this, this.worldDimensions.getLeft(), this.worldDimensions.getRight());
         this.aliveEntities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
         this.deadEntities = new LinkedHashSet<>();
         this.currentState = GameState.IS_GOING;
@@ -140,12 +144,6 @@ public final class WorldImpl implements World {
             final Entity current = iterator.next();
             if (!current.isAlive()) {
                 this.deadEntities.add(current);
-                final EntityType currentType = current.getType();
-                if (currentType == EntityType.WALKING_ENEMY) {
-                    this.score += WALKING_POINTS;
-                } else if (currentType == EntityType.ROLLING_ENEMY) {
-                    this.score += ROLLING_POINTS;
-                }
                 iterator.remove();
                 this.innerWorld.removeBody(current.getPhysicalBody());
             }
@@ -215,6 +213,9 @@ public final class WorldImpl implements World {
                             || (playerState == EntityState.CLIMBING_UP || playerState == EntityState.CLIMBING_DOWN)))
                     || ((movement == MovementType.MOVE_LEFT || movement == MovementType.MOVE_RIGHT)
                         && (playerState != EntityState.CLIMBING_DOWN && playerState != EntityState.CLIMBING_UP)))) {
+                if (movement == MovementType.JUMP) {
+                    this.controller.notifyEvent(EventType.PLAYER_JUMP);
+                }
                 this.player.get().move(movement);
             }
         }
@@ -262,5 +263,23 @@ public final class WorldImpl implements World {
     @Override
     public int getCurrentScore() {
         return this.score;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void notifyCollision(final CollisionType collisionType) {
+        switch (collisionType) {
+            case ROLLING_ENEMY_KILLED:
+                this.score += ROLLING_POINTS;
+                this.controller.notifyEvent(EventType.ROLLING_COLLISION);
+                break;
+            case WALKING_ENEMY_KILLED:
+                this.score += WALKING_POINTS;
+                this.controller.notifyEvent(EventType.WALKING_COLLISION);
+                break;
+            default:
+        }
     }
 }

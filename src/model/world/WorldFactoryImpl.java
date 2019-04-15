@@ -1,5 +1,7 @@
 package model.world;
 
+import controller.game.GameController;
+
 /**
  * The class implementation of a {@link WorldFactory}.
  */
@@ -20,10 +22,10 @@ public final class WorldFactoryImpl implements WorldFactory {
      * {@inheritDoc}
      */
     @Override
-    public World create() throws IllegalStateException {
+    public World create(final GameController controller) throws IllegalStateException {
         if (!this.worldCreated) {
             this.worldCreated = true;
-            return new WorldImpl();
+            return new WorldImpl(controller);
         }
         throw new IllegalStateException(NO_TWO_WORLDS_MSG);
     }
