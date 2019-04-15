@@ -170,7 +170,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         }
         body.setUserData(type);
         this.physicalWorld.get().getWorld().addBody(body);
-        final DynamicPhysicalBody physicalBody = new DynamicPhysicalBody(body);
+        final DynamicPhysicalBody physicalBody = type == EntityType.PLAYER ? new PlayerPhysicalBody(body) : new DynamicPhysicalBody(body);
         this.physicalWorld.get().addContainerAssociation(physicalBody, body, type);
         return physicalBody;
     }

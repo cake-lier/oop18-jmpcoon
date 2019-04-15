@@ -22,10 +22,15 @@ public interface ModifiablePhysicalWorld {
     void addContainerAssociation(PhysicalBody container, Body contained, EntityType type);
 
     /**
+     * Registers an association between the {@link PowerUpType} of a {@link PowerUp} and the power-up's {@link Body}.
+     * @param body The {@link Body} which is associated with the {@link PowerUp}.
+     * @param powerUpType The {@link PowerUpType} of the {@link PowerUp}.
+     */
+    void addPowerUpTypeAssociation(Body body, PowerUpType powerUpType);
+
+    /**
      * Returns the {@link World} associated with this {@link ModifiablePhysicalWorld}.
      * @return The {@link World} this instance is associated with.
      */
     World getWorld();
-    
-    void addPowerUpTypeAssociation(Body body, PowerUpType powerUpType);
 }
