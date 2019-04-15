@@ -52,7 +52,12 @@ public interface GameController {
     int getCurrentScore();
 
     /**
-     * gives to the {@link model.world.World} in which the game is playing the input received from the view.
+     * @return the number of {@link model.entities.Player}'s lives.
+     */
+    int getPlayerLives();
+
+    /**
+     * gives to the {@link World} in which the game is playing the input received from the view.
      * @param input the input received
      */
     void processInput(InputType input);

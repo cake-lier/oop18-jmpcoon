@@ -46,8 +46,6 @@ public final class WorldImpl implements World, NotifiableWorld {
     private static final long serialVersionUID = 4663479513512261181L;
     private static final double WORLD_WIDTH = 8;
     private static final double WORLD_HEIGHT = 4.5;
-    private static final double WIN_ZONE_X = 0.37;
-    private static final double WIN_ZONE_Y = 3.71;
     private static final int ROLLING_POINTS = 50;
     private static final int WALKING_POINTS = 100;
     private static final String NO_INIT_MSG = "It's needed to initialize this world by initLevel() before using it";
@@ -104,6 +102,7 @@ public final class WorldImpl implements World, NotifiableWorld {
                                                                           .setAngle(entity.getAngle())
                                                                           .setPosition(entity.getPosition())
                                                                           .setShape(entity.getEntityShape())
+                                                                          .setPowerUpType(entity.getPowerUpType())
                                                                           .build());
             if (entity.getEntityType() == EntityType.PLAYER) {
                 this.player = Optional.fromJavaUtil(this.aliveEntities.getInstances(Player.class).stream().findFirst());
@@ -130,14 +129,6 @@ public final class WorldImpl implements World, NotifiableWorld {
     public synchronized void update() {
         this.checkInitialization();
         this.innerWorld.update();
-        if (this.currentState == GameState.IS_GOING && this.player.isPresent()) {
-            if (!this.player.get().isAlive()) {
-                this.currentState = GameState.GAME_OVER;
-            }
-            if (this.player.get().getPosition().getLeft() < WIN_ZONE_X && this.player.get().getPosition().getRight() > WIN_ZONE_Y) {
-                this.currentState = GameState.PLAYER_WON;
-            }
-        }
         this.deadEntities.clear();
         final Iterator<Entity> iterator = this.aliveEntities.values().iterator();
         while (iterator.hasNext()) {
@@ -281,5 +272,14 @@ public final class WorldImpl implements World, NotifiableWorld {
                 break;
             default:
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getPlayerLives() {
+        this.checkInitialization();
+        return this.player.get().getLives();
     }
 }

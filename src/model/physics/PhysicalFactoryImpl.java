@@ -1,13 +1,14 @@
 package model.physics;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Optional;
 import java.util.function.Supplier;
+
+import com.google.common.base.Optional;
 
 import org.dyn4j.collision.AxisAlignedBounds;
 import org.dyn4j.collision.CategoryFilter;
@@ -16,6 +17,7 @@ import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 
 import model.entities.EntityType;
+import model.entities.PowerUpType;
 import model.serializable.SerializableBody;
 import model.serializable.SerializableWorld;
 import model.world.NotifiableWorld;
@@ -41,7 +43,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final long CATEGORY_PLAYER = 8; // 001000
     private static final long CATEGORY_LADDER = 16; // 010000
     private static final long CATEGORY_GENERATOR_ENEMY = 32; // 100000
-    //private static final long CATEGORY_POWERUP = 64;
+    private static final long CATEGORY_POWERUP = 64; // 1000000
 
     private static final CategoryFilter LADDER_FILTER = new CategoryFilter(CATEGORY_LADDER, CATEGORY_PLAYER);
     private static final CategoryFilter PLATFORM_FILTER = new CategoryFilter(CATEGORY_PLATFORM, CATEGORY_WALKING_ENEMY
@@ -66,16 +68,20 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                                                                                         | CATEGORY_PLATFORM
                                                                                         | CATEGORY_PLAYER);
 
-    private transient Optional<WholePhysicalWorld> physicalWorld;
-    private Pair<Double, Double> worldDimensions;
+    private static final CategoryFilter POWERUP_FILTER = new CategoryFilter(CATEGORY_POWERUP, CATEGORY_PLATFORM 
+                                                                                              | CATEGORY_PLAYER
+                                                                                              | CATEGORY_POWERUP);
+
+    private Optional<WholePhysicalWorld> physicalWorld;
+    private final MutablePair<Double, Double> worldDimensions;
 
     /**
      * Default constructor for a {@link PhysicalFactory} builds a new {@link PhysicalFactoryImpl}.
      * @param
      */
     public PhysicalFactoryImpl() {
-        this.physicalWorld = Optional.empty();
-        this.worldDimensions = new ImmutablePair<>(0.0, 0.0);
+        this.physicalWorld = Optional.absent();
+        this.worldDimensions = new MutablePair<>(0.0, 0.0);
     }
 
     /**
@@ -84,7 +90,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     @Override
     public PhysicalWorld createPhysicalWorld(final NotifiableWorld outerWorld, final double width, final double height) {
         this.throwException(this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_TWO_WORLDS_MSG));
-        this.worldDimensions = new ImmutablePair<>(width, height);
+        this.worldDimensions.setLeft(width);
+        this.worldDimensions.setRight(height);
         this.physicalWorld = Optional.of(new WholePhysicalWorldImpl(outerWorld, 
                                                                         new SerializableWorld(new AxisAlignedBounds(width * 2, 
                                                                                                                         height * 2))));
@@ -99,7 +106,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     @Override
     public StaticPhysicalBody createStaticPhysicalBody(final Pair<Double, Double> position, final double angle,
                                                            final BodyShape shape, final double width, final double height, 
-                                                               final EntityType type)  throws IllegalStateException {
+                                                               final EntityType type, final Optional<PowerUpType> powerUpType)
+                                                                       throws IllegalStateException {
         this.checks(position, shape, type, true);
         final SerializableBody body = this.createBody(shape, position, angle, width, height);
         this.throwException(body.getFixtureCount() != 1, () -> new IllegalStateException(TOO_MANY_FIXTURES_MSG));
@@ -115,6 +123,9 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
             case ENEMY_GENERATOR:
                 body.getFixture(0).setFilter(ENEMY_GENERATOR_FILTER);
                 break;
+            case POWERUP:
+                body.getFixture(0).setFilter(POWERUP_FILTER);
+                break;
             default:
                 this.throwException(true, () -> new IllegalArgumentException(ILLEGAL_ENTITY_MSG));
         }
@@ -123,6 +134,9 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         this.physicalWorld.get().getWorld().addBody(body);
         final StaticPhysicalBody physicalBody = new StaticPhysicalBody(body);
         this.physicalWorld.get().addContainerAssociation(physicalBody, body, type);
+        if (powerUpType.isPresent()) {
+            this.physicalWorld.get().addPowerUpTypeAssociation(body, powerUpType.get());
+        }
         return physicalBody;
     }
 
@@ -238,7 +252,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         if (in.readBoolean()) {
             this.physicalWorld = Optional.of((WholePhysicalWorld) in.readObject());
         } else {
-            this.physicalWorld = Optional.empty();
+            this.physicalWorld = Optional.absent();
         }
     }
 }

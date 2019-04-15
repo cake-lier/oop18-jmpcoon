@@ -2,10 +2,14 @@ package model.physics;
 
 import model.entities.EntityType;
 import model.world.NotifiableWorld;
+import model.entities.PowerUpType;
 
 import java.io.Serializable;
 
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.base.Optional;
+
 
 /**
  * An interface representing the facade for the entire creation requested to the physical engine in order to create the
@@ -36,13 +40,15 @@ public interface PhysicalFactory extends Serializable {
      * @param width The width of the {@link PhysicalBody} (or the diameter, if the {@link PhysicalBody} will have a circular shape).
      * @param height The height of the {@link PhysicalBody} (or the diameter, if the {@link PhysicalBody} will have a circular shape).
      * @param type The {@link EntityType} of the {@link model.entities.Entity} that will use the created {@link StaticPhysicalBody}.
+     * @param powerUpType the {@link PowerUpType} if the type is a {@link PowerUp}.
      * @return A {@link StaticPhysicalBody} with the given characteristics.
      * @throws IllegalStateException If a {@link PhysicalWorld} has yet to be created.
      * @throws IllegalArgumentException If the given position is outside the {@link PhysicalWorld} bounds, or if the combination
      * of {@link EntityType}, {@link BodyShape} and dimensions is illegal. 
      */
     StaticPhysicalBody createStaticPhysicalBody(Pair<Double, Double> position, double angle, BodyShape shape,
-            double width, double height, EntityType type) throws IllegalStateException, IllegalArgumentException;
+                                                    double width, double height, EntityType type, Optional<PowerUpType> powerUpType)
+                                                            throws IllegalStateException, IllegalArgumentException;
 
     /**
      * Creates {@link DynamicPhysicalBody} living inside the {@link PhysicalWorld} created by the same {@link PhysicalFactory}.
@@ -58,6 +64,6 @@ public interface PhysicalFactory extends Serializable {
      * of {@link EntityType}, {@link BodyShape} and dimensions is illegal. 
      */
     DynamicPhysicalBody createDynamicPhysicalBody(Pair<Double, Double> position, double angle, BodyShape shape,
-            double width, double height, EntityType type)  throws IllegalStateException, IllegalArgumentException;
-
+                                                      double width, double height, EntityType type)
+                                                              throws IllegalStateException, IllegalArgumentException;
 }

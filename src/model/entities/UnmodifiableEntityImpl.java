@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.base.Optional;
 import com.google.common.hash.Hashing;
 
 import model.physics.BodyShape;
@@ -91,5 +92,10 @@ public final class UnmodifiableEntityImpl implements UnmodifiableEntity {
     public boolean equals(final Object obj) {
         return this == obj || (obj != null && this.getClass() == obj.getClass() 
                                && Objects.equals(this.innerEntity, UnmodifiableEntityImpl.class.cast(obj).innerEntity));
+    }
+
+    @Override
+    public Optional<PowerUpType> getPowerUpType() {
+        return Optional.fromNullable(this.getType() == EntityType.POWERUP ? PowerUp.class.cast(this.innerEntity).getPowerUpType() : null);
     }
 }

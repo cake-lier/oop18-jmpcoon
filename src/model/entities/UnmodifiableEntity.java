@@ -2,6 +2,8 @@ package model.entities;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.base.Optional;
+
 import model.physics.BodyShape;
 
 /**
@@ -52,4 +54,10 @@ public interface UnmodifiableEntity {
      * @return True if the wrapped {@link Entity} is a {@link DynamicEntity}.
      */
     boolean isDynamic();
+
+    /**
+     * Gets the power-up type of the wrapped {@link Entity}, if it wraps a {@link PowerUp}, an absent value otherwise.
+     * @return An {@link Optional} containing the the {@link PowerUpType} if this instance wraps a {@link PowerUp}, absent otherwise.
+     */
+    Optional<PowerUpType> getPowerUpType();
 }

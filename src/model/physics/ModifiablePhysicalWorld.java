@@ -4,6 +4,7 @@ import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.World;
 
 import model.entities.EntityType;
+import model.entities.PowerUpType;
 
 /**
  * 
@@ -25,4 +26,6 @@ public interface ModifiablePhysicalWorld {
      * @return The {@link World} this instance is associated with.
      */
     World getWorld();
+    
+    void addPowerUpTypeAssociation(Body body, PowerUpType powerUpType);
 }

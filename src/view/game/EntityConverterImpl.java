@@ -12,7 +12,6 @@ import javafx.scene.image.WritableImage;
 import model.entities.EntityType;
 import model.entities.UnmodifiableEntity;
 import model.entities.EntityState;
-import model.entities.StaticEntity;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -40,6 +39,9 @@ public class EntityConverterImpl implements EntityConverter {
     private static final int WALKING_ENEMY_WALKING_FRAMES = 3;
     private static final String WALKING_ENEMY_IDLE_SPRITE_URL = SPRITES_DIR + "walkingEnemy_idle.png";
     private static final int WALKING_ENEMY_IDLE_FRAMES = 1;
+    private static final String GOAL_SPRITE_URL = SPRITES_DIR + "goal.png";
+    private static final String EXTRA_LIFE_SPRITE_URL = SPRITES_DIR + "extra_life.png";
+    private static final String SUPER_STAR_URL = SPRITES_DIR + "super_star.png";
     private static final String ROLLING_ENEMY_SPRITE_URL = SPRITES_DIR + "rollingEnemy.png";
     private static final int ROLLING_ENEMY_MOVING_FRAMES = 1;
     private static final int ROLLING_ENEMY_IDLE_FRAMES = 1;
@@ -94,6 +96,9 @@ public class EntityConverterImpl implements EntityConverter {
                     case ENEMY_GENERATOR:
                         image = this.imagesForStaticEntities.get(entity.getType());
                         break;
+                    case POWERUP:
+                        image = this.getPowerUpImage(entity);
+                        break;
                     default:
                         throw new IllegalArgumentException(NOT_SUPPORTED_ENTITY_MSG);
                 }
@@ -124,6 +129,19 @@ public class EntityConverterImpl implements EntityConverter {
             ((DynamicDrawableEntity) drawableEntity).updateSpritePosition();
         }
         return drawableEntity;
+    }
+
+    private Image getPowerUpImage(final UnmodifiableEntity powerUp) {
+        switch (powerUp.getPowerUpType().get()) {
+            case GOAL: 
+                return this.loadImage(GOAL_SPRITE_URL);
+            case EXTRA_LIFE: 
+                return this.loadImage(EXTRA_LIFE_SPRITE_URL);
+            case SUPER_STAR: 
+                return this.loadImage(SUPER_STAR_URL);
+            default: 
+                return null;
+       }
     }
 
     /**

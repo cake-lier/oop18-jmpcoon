@@ -130,7 +130,8 @@ public final class GameViewImpl implements GameView {
         Platform.runLater(() -> {
             this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
             this.drawAliveEntities();
-            this.score.setText(SCORE_STR + this.gameController.getCurrentScore());
+            this.score.setText(SCORE_STR + this.gameController.getCurrentScore()
+                               + "  |  Lives: " + this.gameController.getPlayerLives());
         });
     }
 
@@ -160,9 +161,11 @@ public final class GameViewImpl implements GameView {
     private void setupStage() {
         final Pane platforms = new Pane();
         final Pane ladders = new Pane();
+        final Pane powerups = new Pane();
         platforms.getChildren().addAll(this.getNodes(EntityType.PLATFORM));
         ladders.getChildren().addAll(this.getNodes(EntityType.LADDER));
-        this.root.getChildren().addAll(platforms, ladders, this.entities);
+        powerups.getChildren().addAll(this.getNodes(EntityType.POWERUP));
+        this.root.getChildren().addAll(platforms, ladders, powerups, this.entities);
         try {
             final FXMLLoader scoreLoader = new FXMLLoader(ClassLoader.getSystemResource(SCORE_SRC));
             scoreLoader.setController(this);
@@ -181,7 +184,7 @@ public final class GameViewImpl implements GameView {
 
     private void drawAliveEntities() {
         final List<Node> nodes = new ArrayList<>();
-        Arrays.asList(EntityType.PLAYER, EntityType.ROLLING_ENEMY, EntityType.WALKING_ENEMY)
+        Arrays.asList(EntityType.ROLLING_ENEMY, EntityType.WALKING_ENEMY, EntityType.POWERUP, EntityType.PLAYER)
               .forEach(type -> nodes.addAll(this.getNodes(type)));
         this.entities.getChildren().setAll(nodes);
     }

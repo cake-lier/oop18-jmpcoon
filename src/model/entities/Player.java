@@ -14,6 +14,8 @@ public final class Player extends DynamicEntity {
 
     private final DynamicPhysicalBody body;
 
+    private int lives = 1;
+
     /**
      * Creates a new {@link Player} with the given {@link DynamicPhysicalBody}. This constructor is package protected
      * because it should be only invoked by the {@link EntityBuilder} when creating a new instance of it and no one else.
@@ -56,4 +58,35 @@ public final class Player extends DynamicEntity {
             default: 
         }
     }
+
+    /**
+     * Adds one life to this {@link Player}.
+     */
+    public void addLife() {
+        this.lives++;
+    }
+
+    /**
+     * Removes one life to this {@link Player}.
+     */
+    public void removeLife() {
+        this.lives--;
+    }
+
+    /**
+     * @return the number of lives of this {@link Player}.
+     */
+    public int getLives() {
+        return this.lives;
+    }
+
+    /**
+     * Modifies the maximum velocity of this {@link Player}.
+     * @param multiplierX The multiplier for the horizontal maximum velocity
+     * @param multiplierY The multiplier for the vertical maximum velocity
+     */
+    public void modifyMaxVelocity(final double multiplierX, final double multiplierY) {
+        this.body.setMaxVelocity(multiplierX, multiplierY);
+    }
+
 }

@@ -68,7 +68,7 @@ public final class EntityBuilderUtils {
         return new EntityBuilder<PowerUp>() {
             @Override
             protected PowerUp buildEntity() {
-                return new PowerUp(super.createStaticPhysicalBody(EntityType.POWERUP));
+                return new PowerUp(super.createStaticPhysicalBody(EntityType.POWERUP), this.getPowerUpType());
             }
         };
     }

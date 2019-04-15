@@ -17,6 +17,9 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     private static final double MAXVELOCITY_Y = 0.5;
     private static final double CLIMB_DAMPING = 2;
 
+    private double maxVelocityX = MAXVELOCITY_X;
+    private double maxVelocityY = MAXVELOCITY_Y;
+
     private final SerializableBody body;
     private EntityState currentState;
 
@@ -69,12 +72,14 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
         }
         this.currentState = movement.convert();
         this.body.applyImpulse(new Vector2(x, y));
-        if (Math.abs(this.body.getLinearVelocity().x) > MAXVELOCITY_X) {
-            this.body.setLinearVelocity(new Vector2(Math.signum(this.body.getLinearVelocity().x) * MAXVELOCITY_X, this.body.getLinearVelocity().y));
+        if (Math.abs(this.body.getLinearVelocity().x) > this.maxVelocityX) {
+            this.body.setLinearVelocity(new Vector2(Math.signum(this.body.getLinearVelocity().x) * this.maxVelocityX,
+                                                                    this.body.getLinearVelocity().y));
         }
-        if (Math.abs(this.body.getLinearVelocity().y) > MAXVELOCITY_Y
+        if (Math.abs(this.body.getLinearVelocity().y) > this.maxVelocityY
             && (movement == MovementType.CLIMB_DOWN || movement == MovementType.CLIMB_UP)) {
-            this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, Math.signum(this.body.getLinearVelocity().y) * MAXVELOCITY_Y));
+            this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, Math.signum(this.body.getLinearVelocity().y)
+                                                                                     * this.maxVelocityY));
         }
     }
 
@@ -87,5 +92,15 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     public void setFixedVelocity(final MovementType movement, final double x, final double y) {
         this.currentState = movement.convert();
         this.body.setLinearVelocity(new Vector2(x, y));
+    }
+
+     /**
+     * Modifies the maximum velocity of this {@link DynamicPhysicalBody} to a custom one.
+     * @param multiplierX The multiplier for the horizontal maximum velocity
+     * @param multiplierY The multiplier for the vertical maximum velocity
+     */
+    public void setMaxVelocity(final double multiplierX, final double multiplierY) {
+        this.maxVelocityX = MAXVELOCITY_X * multiplierX;
+        this.maxVelocityY = MAXVELOCITY_Y * multiplierY;
     }
 }

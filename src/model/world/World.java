@@ -68,4 +68,10 @@ public interface World extends Serializable {
      * @return The current game score.
      */
     int getCurrentScore();
+
+    /**
+     * Gets the current number of lives which the {@link model.entities.Player} has.
+     * @return The count of the {@link model.entities.Player}'s lives.
+     */
+    int getPlayerLives();
 }
