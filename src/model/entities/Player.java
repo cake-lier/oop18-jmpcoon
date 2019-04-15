@@ -1,6 +1,7 @@
 package model.entities;
 
 import model.physics.DynamicPhysicalBody;
+import model.physics.PlayerPhysicalBody;
 
 /**
  * The player inside the {@link model.world.World} of the game.
@@ -12,9 +13,7 @@ public final class Player extends DynamicEntity {
     private static final double CLIMBIMPULSE = 0.5;
     private static final double JUMPIMPULSE = 0.25;
 
-    private final DynamicPhysicalBody body;
-
-    private int lives = 1;
+    private final PlayerPhysicalBody body;
 
     /**
      * Creates a new {@link Player} with the given {@link DynamicPhysicalBody}. This constructor is package protected
@@ -23,7 +22,7 @@ public final class Player extends DynamicEntity {
      */
     Player(final DynamicPhysicalBody body) {
         super(body);
-        this.body = body;
+        this.body = PlayerPhysicalBody.class.cast(body);
     }
 
     /**
@@ -60,33 +59,10 @@ public final class Player extends DynamicEntity {
     }
 
     /**
-     * Adds one life to this {@link Player}.
-     */
-    public void addLife() {
-        this.lives++;
-    }
-
-    /**
-     * Removes one life to this {@link Player}.
-     */
-    public void removeLife() {
-        this.lives--;
-    }
-
-    /**
      * @return the number of lives of this {@link Player}.
      */
     public int getLives() {
-        return this.lives;
-    }
-
-    /**
-     * Modifies the maximum velocity of this {@link Player}.
-     * @param multiplierX The multiplier for the horizontal maximum velocity
-     * @param multiplierY The multiplier for the vertical maximum velocity
-     */
-    public void modifyMaxVelocity(final double multiplierX, final double multiplierY) {
-        this.body.setMaxVelocity(multiplierX, multiplierY);
+        return this.body.getLives();
     }
 
 }
