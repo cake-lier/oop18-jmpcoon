@@ -4,15 +4,14 @@ import model.entities.PowerUpType;
 import model.serializable.SerializableBody;
 
 /**
- * 
+ * A class representing a {@link PlayerPhysicalBody} that manages {@link Player} lives
+ * and {@link PowerUp} effects on the player.
  */
 public class PlayerPhysicalBody extends DynamicPhysicalBody {
-
     private static final long serialVersionUID = -6099710781272943170L;
 
     private static final double STARVELOCITY_X = 1.60;
     private static final double STARVELOCITY_Y = 1.50;
-
 
     private boolean superStar = false;
     private boolean invulnerable = false;

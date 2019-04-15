@@ -54,7 +54,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                                                                                             | CATEGORY_WALKING_ENEMY
                                                                                             | CATEGORY_ROLLING_ENEMY
                                                                                             | CATEGORY_PLATFORM
-                                                                                            | CATEGORY_PLAYER);
+                                                                                            | CATEGORY_PLAYER
+                                                                                            | CATEGORY_POWERUP);
     private static final CategoryFilter ROLLING_ENEMY_FILTER = new CategoryFilter(CATEGORY_ROLLING_ENEMY, CATEGORY_ROLLING_ENEMY
                                                                                                           | CATEGORY_PLATFORM 
                                                                                                           | CATEGORY_PLAYER);
