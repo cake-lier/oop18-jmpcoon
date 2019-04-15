@@ -270,6 +270,12 @@ public final class WorldImpl implements World, NotifiableWorld {
                 this.score += WALKING_POINTS;
                 this.controller.notifyEvent(EventType.WALKING_COLLISION);
                 break;
+            case GOAL_HIT:
+                this.currentState = GameState.PLAYER_WON;
+                break;
+            case PLAYER_KILLED:
+                this.currentState = GameState.GAME_OVER;
+                break;
             default:
         }
     }
