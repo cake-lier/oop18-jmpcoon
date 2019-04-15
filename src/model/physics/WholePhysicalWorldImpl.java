@@ -40,14 +40,20 @@ import model.world.NotifiableWorld;
  */
 final class WholePhysicalWorldImpl implements WholePhysicalWorld {
     private static final long serialVersionUID = -8486558535164534658L;
+
+    private static final int STAR_DURATION = 400;
+    private static final int HIT_COOLDOWN = 60;
+
     private final SerializableWorld world;
     private final NotifiableWorld outerWorld;
     private transient BiMap<PhysicalBody, Body> containers;
     private final Map<PhysicalBody, EntityType> types;
-    private Optional<DynamicPhysicalBody> player;
+    private final Map<Body, PowerUpType> powerups;
+    private Optional<PlayerPhysicalBody> player;
     private Optional<PhysicalBody> collidingLadder;
 
-  //  private final PowerUpManager powerUpManager;
+    private int stepCounterHit = -1;
+    private int stepCounterStar = 0;
 
     /**
      * Binds the current instance of {@link WholePhysicalWorldImpl} with the instance of {@link World} which will be wrapped and 
@@ -59,10 +65,10 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.outerWorld = outerWorld;
         this.containers = HashBiMap.create();
         this.types = new LinkedHashMap<>();
+        this.powerups = new LinkedHashMap<>();
         this.collidingLadder = Optional.absent();
         this.player = Optional.absent();
         this.addCollisionRules();
-   //     this.powerUpManager = new PowerUpManager();
     }
 
 
@@ -141,7 +147,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                     final Pair<Double, Double> collisionPoint = new ImmutablePair<>(point.x, point.y);
                     final EntityState playerState = playerTriple.getMiddle().getState();
                     if (otherTriple.getRight() == EntityType.POWERUP) {
-                         otherTriple.getLeft().setActive(false);
+                        otherTriple.getLeft().setActive(false);
+                        WholePhysicalWorldImpl.this.processPowerUp(WholePhysicalWorldImpl.this.powerups.get(otherTriple.getLeft()));
                     }
                     if (otherTriple.getRight() == EntityType.WALKING_ENEMY
                             && PhysicsUtils.isBodyOnTop(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint)) {
@@ -152,19 +159,16 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                         otherTriple.getLeft().setActive(false);
                         WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.ROLLING_ENEMY_KILLED);
                     } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
-                        playerTriple.getLeft().setActive(false);
-                        WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.PLAYER_KILLED);
-                        /*
-                        PowerUpManager powerUpManager = WholePhysicalWorldImpl.this.powerUpManager.get();
-                        if (powerUpManager.isPlayerInvincible()) {
+                        PlayerPhysicalBody player = WholePhysicalWorldImpl.this.player.get();
+                        if (player.isInvincible()) {
                             otherTriple.getLeft().setActive(false);
-                        } else {
-                            powerUpManager.playerHit(contactConstraint);
-                            if (!powerUpManager.isPlayerAlive()) {
-                                playerTriple.getLeft().setActive(false);
+                        }
+                        if (!player.isInvulnerable()) {
+                            player.hit();
+                            if (!player.exist()) {
+                                WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.PLAYER_KILLED);
                             }
                         }
-                        */
                     } else if (otherTriple.getRight() == EntityType.PLATFORM
                                && (playerState == EntityState.CLIMBING_DOWN || playerState == EntityState.CLIMBING_UP)
                                && WholePhysicalWorldImpl.this.collidingLadder.isPresent()) {
@@ -185,6 +189,14 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         });
     }
 
+    private void processPowerUp(final PowerUpType type) {
+        if (type == PowerUpType.GOAL) {
+            WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.GOAL_HIT); 
+        } else {
+            this.player.get().givePowerUp(type);
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -193,7 +205,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.containers.putIfAbsent(container, contained);
         this.types.putIfAbsent(container, type);
         if (type == EntityType.PLAYER) {
-            this.player = Optional.of(DynamicPhysicalBody.class.cast(container));
+            this.player = Optional.of(PlayerPhysicalBody.class.cast(container));
         }
     }
 
@@ -202,7 +214,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
      */
     @Override
     public void addPowerUpTypeAssociation(final Body contained, final PowerUpType type) {
-        //to fill
+        this.powerups.putIfAbsent(contained, type);
     }
 
     /**
@@ -253,6 +265,33 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
     @Override
     public void update() {
         this.world.step(1);
+        //TODO: rewrite this but better
+        if (this.player.get().isInvincible() && this.superStarCooldown()) {
+            this.player.get().endSuperStar();
+        }
+        if (this.player.get().isInvulnerable() && this.hitCooldown()) {
+            this.player.get().endInvulnerability();
+        }
+    }
+
+    private boolean hitCooldown() {
+        this.stepCounterHit++;
+        if (this.stepCounterHit == HIT_COOLDOWN) {
+            this.stepCounterHit = -1;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean superStarCooldown() {
+        this.stepCounterStar++;
+        if (this.stepCounterStar == STAR_DURATION) {
+            this.stepCounterStar = 0;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void writeObject(final ObjectOutputStream out) throws IOException {
