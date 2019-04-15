@@ -2,10 +2,14 @@ package model.physics;
 
 import model.entities.EntityShape;
 import model.entities.EntityType;
+import model.entities.PowerUpType;
 
 import java.io.Serializable;
 
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.base.Optional;
+
 
 /**
  * An interface representing the facade for the entire creation requested to the physical engine in order to create the
@@ -43,10 +47,11 @@ public interface PhysicalFactory extends Serializable {
      * @param type
      *            the {@link EntityType} of the {@link Entity} that will use the
      *            created {@link StaticPhysicalBody}
+     * @param powerUpType the {@link PowerUpType} if the type is a {@link PowerUp}
      * @return a {@link StaticPhysicalBody} with the given characteristics
      */
     StaticPhysicalBody createStaticPhysicalBody(Pair<Double, Double> position, double angle, EntityShape shape,
-            double width, double height, EntityType type);
+            double width, double height, EntityType type, Optional<PowerUpType> powerUpType);
 
     /**
      * creates {@link DynamicPhysicalBody}.
@@ -68,5 +73,4 @@ public interface PhysicalFactory extends Serializable {
      */
     DynamicPhysicalBody createDynamicPhysicalBody(Pair<Double, Double> position, double angle, EntityShape shape,
             double width, double height, EntityType type);
-
 }

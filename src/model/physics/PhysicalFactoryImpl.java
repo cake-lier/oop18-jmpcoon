@@ -6,8 +6,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Optional;
 import java.util.function.Supplier;
+
+import com.google.common.base.Optional;
 
 import org.dyn4j.collision.AxisAlignedBounds;
 import org.dyn4j.collision.CategoryFilter;
@@ -17,6 +18,7 @@ import org.dyn4j.geometry.Vector2;
 
 import model.entities.EntityShape;
 import model.entities.EntityType;
+import model.entities.PowerUpType;
 import model.serializable.SerializableBody;
 import model.serializable.SerializableWorld;
 
@@ -61,7 +63,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
      * builds a new {@link PhysicalFactoryImpl}.
      */
     public PhysicalFactoryImpl() {
-        this.physicalWorld = Optional.empty();
+        this.physicalWorld = Optional.absent();
         this.worldDimensions = new ImmutablePair<>(0.0, 0.0);
     }
 
@@ -81,7 +83,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
      */
     @Override
     public StaticPhysicalBody createStaticPhysicalBody(final Pair<Double, Double> position, final double angle,
-            final EntityShape shape, final double width, final double height, final EntityType type) {
+            final EntityShape shape, final double width, final double height, final EntityType type, final Optional<PowerUpType> powerUpType) {
         // TODO: repetitive code
         throwException(!this.physicalWorld.isPresent(), () -> new IllegalStateException("A PhysicalWorld has yet to be created!"));
         throwException(!isStaticBodyAllowed(shape, type), () -> new IllegalArgumentException("No such Entity can be created"));
@@ -109,8 +111,10 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         this.physicalWorld.get().getWorld().addBody(body);
         final StaticPhysicalBody physicalBody = new StaticPhysicalBody(body);
         this.physicalWorld.get().addContainerAssociation(physicalBody, body, type);
+        if (powerUpType.isPresent()) {
+            this.physicalWorld.get().addPowerUpTypeAssociation(body, powerUpType.get());
+        }
         return physicalBody;
-
     }
 
     private boolean isStaticBodyAllowed(final EntityShape shape, final EntityType type) {

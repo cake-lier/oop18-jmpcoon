@@ -158,7 +158,8 @@ public abstract class EntityBuilder<E extends Entity> {
                                                             this.shape.get(), 
                                                             this.dimensions.get().getLeft(), 
                                                             this.dimensions.get().getRight(), 
-                                                            type);
+                                                            type,
+                                                            this.powerUpType);
     }
 
     /**

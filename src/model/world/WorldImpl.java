@@ -3,8 +3,6 @@ package model.world;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,19 +13,14 @@ import model.ClassToInstanceMultimapImpl;
 import model.entities.MovementType;
 import model.entities.Entity;
 import model.entities.EntityProperties;
-import model.entities.EntityShape;
 import model.entities.EntityType;
 import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
-import model.entities.PowerUp;
-import model.entities.PowerUpManager;
-import model.entities.PowerUpType;
 import model.entities.State;
 import model.physics.PhysicalBody;
 import model.physics.PhysicalWorld;
 import model.physics.PhysicsUtils;
-import model.physics.WholePhysicalWorld;
 import model.physics.PhysicalFactory;
 import model.physics.PhysicalFactoryImpl;
 
@@ -55,8 +48,6 @@ public final class WorldImpl implements World {
     private GameState currentState;
     private int score;
 
-    private transient Optional<PowerUpManager> powerUpManager; 
-
     /**
      * Default constructor, delegates the job of managing the physics of the game to the library underneath.
      */
@@ -68,7 +59,6 @@ public final class WorldImpl implements World {
         this.deadEntities = new LinkedHashSet<>();
         this.currentState = GameState.IS_GOING;
         this.score = 0;
-        this.powerUpManager = Optional.empty();
     }
 
     /**
@@ -98,13 +88,6 @@ public final class WorldImpl implements World {
                 this.player = this.aliveEntities.getInstances(Player.class).stream().findFirst().get();
             }
         });
-        List<PowerUp> powerups = this.aliveEntities.values().stream()
-                                                            .filter(e -> e.getType() == EntityType.POWERUP)
-                                                            .map((powerup) -> PowerUp.class.cast(powerup))
-                                                            .collect(Collectors.toList());
-
-        this.powerUpManager = Optional.of(new PowerUpManager(this.player, powerups));
-        WholePhysicalWorld.class.cast(this.innerWorld).setManager(this.powerUpManager.get());
     }
 
     /**
@@ -118,16 +101,6 @@ public final class WorldImpl implements World {
      */
     public synchronized void update() {
         this.innerWorld.update();
-        if (this.powerUpManager.isPresent() && this.currentState == GameState.IS_GOING) {
-            PowerUpManager powerUpManager = this.powerUpManager.get();
-            powerUpManager.checkPowerUps();
-            if (!powerUpManager.isPlayerAlive()) {
-                this.currentState = GameState.GAME_OVER;
-            }
-            if (powerUpManager.isGoalReached()) {
-                this.currentState = GameState.PLAYER_WON;
-            }
-        }
         this.deadEntities.clear();
         final Iterator<Entity> iterator = this.aliveEntities.values().iterator();
         while (iterator.hasNext()) {

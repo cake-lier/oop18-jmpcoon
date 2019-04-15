@@ -29,6 +29,7 @@ import com.google.common.collect.HashBiMap;
 
 import model.entities.EntityType;
 import model.entities.PowerUpManager;
+import model.entities.PowerUpType;
 import model.entities.State;
 import model.serializable.SerializableWorld;
 
@@ -44,7 +45,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
     private transient Optional<DynamicPhysicalBody> player;
     private transient Optional<PhysicalBody> collidingLadder;
 
-    private Optional<PowerUpManager> powerUpManager = Optional.empty();
+  //  private final PowerUpManager powerUpManager;
 
     /**
      * Binds the current instance of {@link WholePhysicalWorldImpl} with the instance of {@link World} which will be wrapped and 
@@ -58,14 +59,9 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.collidingLadder = Optional.empty();
         this.player = Optional.empty();
         this.addCollisionRules();
+   //     this.powerUpManager = new PowerUpManager();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setManager(final PowerUpManager powerUpManager) {
-        this.powerUpManager = Optional.of(powerUpManager);
-    }
 
     /*
      * Sets the dyn4j World to use these rules when collisions happens. This is made by registering a CollisionAdapter which
@@ -149,6 +145,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                             && PhysicsUtils.isBodyAbove(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint.getRight()))) {
                         otherTriple.getLeft().setActive(false);
                     } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
+                        playerTriple.getLeft().setActive(false);
+                        /*
                         PowerUpManager powerUpManager = WholePhysicalWorldImpl.this.powerUpManager.get();
                         if (powerUpManager.isPlayerInvincible()) {
                             otherTriple.getLeft().setActive(false);
@@ -158,6 +156,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                                 playerTriple.getLeft().setActive(false);
                             }
                         }
+                        */
                     } else if (otherTriple.getRight() == EntityType.PLATFORM
                                && (playerState == State.CLIMBING_DOWN || playerState == State.CLIMBING_UP)
                                && WholePhysicalWorldImpl.this.collidingLadder.isPresent()) {
@@ -186,6 +185,10 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         if (type == EntityType.PLAYER) {
             this.player = Optional.of(DynamicPhysicalBody.class.cast(container));
         }
+    }
+    
+    public void addPowerUpTypeAssociation (final Body contained, final PowerUpType type) {
+        
     }
 
     /**
