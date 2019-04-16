@@ -18,6 +18,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import model.entities.EntityProperties;
+import model.entities.MovementType;
 import model.entities.UnmodifiableEntity;
 import model.world.EventType;
 import model.world.World;
@@ -45,7 +46,7 @@ public class GameControllerImpl implements GameController {
      * @param view the {@link GameView} relative to the game controlled by this {@link GameController}
      */
     public GameControllerImpl(final GameView view) {
-        this.gameWorld = new WorldFactoryImpl().create(this);
+        this.gameWorld = new WorldFactoryImpl().create();
         this.gameWorld.initLevel(this.loadLevel());
         this.gameView = Objects.requireNonNull(view);
         this.timer = this.createTimer();
@@ -125,7 +126,10 @@ public class GameControllerImpl implements GameController {
     @Override
     public void processInput(final InputType input) {
         if (this.running) {
-            this.gameWorld.movePlayer(input.getAssociatedMovementType());
+            final boolean hasMovementHappened = this.gameWorld.movePlayer(input.getAssociatedMovementType());
+            if (hasMovementHappened && input.getAssociatedMovementType() == MovementType.JUMP) {
+                this.gameView.notifyEvent(EventType.PLAYER_JUMP);
+            }
         }
     }
 
@@ -167,6 +171,14 @@ public class GameControllerImpl implements GameController {
         return this.gameWorld.getDimensions();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<EventType> getRecentEvents() {
+        return this.gameWorld.getRecentEvents();
+    }
+
     private void updateWorldAndView() {
         if (this.gameWorld.isGameOver()) {
             this.gameView.showGameOver();
@@ -196,13 +208,5 @@ public class GameControllerImpl implements GameController {
             e.printStackTrace();
         }
         return entities;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void notifyEvent(final EventType type) {
-        this.gameView.notifyEvent(type);
     }
 }

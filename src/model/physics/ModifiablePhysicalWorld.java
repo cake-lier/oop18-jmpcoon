@@ -1,10 +1,10 @@
 package model.physics;
 
-import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.World;
 
 import model.entities.EntityType;
 import model.entities.PowerUpType;
+import model.serializable.SerializableBody;
 
 /**
  * 
@@ -19,14 +19,14 @@ public interface ModifiablePhysicalWorld {
      * @param contained The {@link Body} which is contained in the {@link PhysicalBody}.
      * @param type The {@link EntityType} of the {@link model.entities.Entity} containing the {@link PhysicalBody}.
      */
-    void addContainerAssociation(PhysicalBody container, Body contained, EntityType type);
+    void addContainerAssociation(PhysicalBody container, SerializableBody contained, EntityType type);
 
     /**
      * Registers an association between the {@link PowerUpType} of a {@link PowerUp} and the power-up's {@link Body}.
      * @param body The {@link Body} which is associated with the {@link PowerUp}.
      * @param powerUpType The {@link PowerUpType} of the {@link PowerUp}.
      */
-    void addPowerUpTypeAssociation(Body body, PowerUpType powerUpType);
+    void addPowerUpTypeAssociation(SerializableBody body, PowerUpType powerUpType);
 
     /**
      * Returns the {@link World} associated with this {@link ModifiablePhysicalWorld}.

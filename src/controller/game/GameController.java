@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -82,7 +83,7 @@ public interface GameController {
 
     /**
      * 
-     * @param type The type of collision.
+     * @return A {@link List} of the last {@link EventType} that happened.
      */
-    void notifyEvent(EventType type);
+    List<EventType> getRecentEvents();
 }

@@ -2,10 +2,8 @@ package model.physics;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,6 +28,7 @@ import com.google.common.collect.HashBiMap;
 import model.entities.EntityType;
 import model.entities.EntityState;
 import model.entities.PowerUpType;
+import model.serializable.SerializableBody;
 import model.serializable.SerializableWorld;
 import model.world.CollisionType;
 import model.world.NotifiableWorld;
@@ -46,14 +45,14 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
 
     private final SerializableWorld world;
     private final NotifiableWorld outerWorld;
-    private transient BiMap<PhysicalBody, Body> containers;
+    private final BiMap<PhysicalBody, SerializableBody> containers;
     private final Map<PhysicalBody, EntityType> types;
-    private final Map<Body, PowerUpType> powerups;
+    private final Map<SerializableBody, PowerUpType> powerups;
     private Optional<PlayerPhysicalBody> player;
     private Optional<PhysicalBody> collidingLadder;
 
-    private int stepCounterHit = -1;
-    private int stepCounterStar = 0;
+    private int stepCounterHit;
+    private int stepCounterStar;
 
     /**
      * Binds the current instance of {@link WholePhysicalWorldImpl} with the instance of {@link World} which will be wrapped and 
@@ -68,6 +67,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.powerups = new LinkedHashMap<>();
         this.collidingLadder = Optional.absent();
         this.player = Optional.absent();
+        this.stepCounterHit = -1;
+        this.stepCounterStar = 0;
         this.addCollisionRules();
     }
 
@@ -155,7 +156,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                         otherTriple.getLeft().setActive(false);
                         WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.ROLLING_ENEMY_KILLED);
                     } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
-                        PlayerPhysicalBody player = WholePhysicalWorldImpl.this.player.get();
+                        final PlayerPhysicalBody player = WholePhysicalWorldImpl.this.player.get();
                         if (player.isInvincible()) {
                             otherTriple.getLeft().setActive(false);
                         }
@@ -197,7 +198,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
      * {@inheritDoc}
      */
     @Override
-    public void addContainerAssociation(final PhysicalBody container, final Body contained, final EntityType type) {
+    public void addContainerAssociation(final PhysicalBody container, final SerializableBody contained, final EntityType type) {
         this.containers.putIfAbsent(container, contained);
         this.types.putIfAbsent(container, type);
         if (type == EntityType.PLAYER) {
@@ -209,7 +210,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
      * {@inheritDoc}
      */
     @Override
-    public void addPowerUpTypeAssociation(final Body contained, final PowerUpType type) {
+    public void addPowerUpTypeAssociation(final SerializableBody contained, final PowerUpType type) {
         this.powerups.putIfAbsent(contained, type);
     }
 
@@ -290,24 +291,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         }
     }
 
-    private void writeObject(final ObjectOutputStream out) throws IOException {
-        out.defaultWriteObject();
-        out.writeInt(this.containers.size());
-        for (final Entry<PhysicalBody, Body> entry: this.containers.entrySet()) {
-            out.writeObject(entry.getKey());
-            out.writeObject(entry.getValue());
-        }
-    }
-
     private void readObject(final ObjectInputStream in) throws ClassNotFoundException, IOException {
         in.defaultReadObject();
         this.addCollisionRules();
-        final int numEntries = in.readInt();
-        this.containers = HashBiMap.create();
-        for (int i = 0; i < numEntries; i++) {
-            final PhysicalBody key = (PhysicalBody) in.readObject();
-            final Body value = (Body) in.readObject();
-            this.containers.put(key, value);
-        }
     }
 }

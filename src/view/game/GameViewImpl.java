@@ -221,6 +221,7 @@ public final class GameViewImpl implements GameView {
         Platform.runLater(() -> {
             this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
             this.drawAliveEntities();
+            this.gameController.getRecentEvents().forEach(e -> this.notifyEvent(e));
             this.score.setText(SCORE_STR + this.gameController.getCurrentScore() + LIVES_STR + this.gameController.getPlayerLives());
         });
     }
@@ -298,6 +299,7 @@ public final class GameViewImpl implements GameView {
             this.restartButton.setOnMouseClicked(e -> {
                 this.mutableInitialization();
                 this.initialize(Optional.absent());
+                this.isGameEnded = false;
                 this.gameController.startGame();
             });
         } catch (final IOException ex) {

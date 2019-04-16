@@ -1,10 +1,12 @@
 package model.world;
 
+import java.io.Serializable;
+
 /**
  * 
  *
  */
-public interface NotifiableWorld {
+public interface NotifiableWorld extends Serializable {
 
     /**
      * 

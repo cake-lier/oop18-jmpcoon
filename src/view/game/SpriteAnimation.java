@@ -1,6 +1,7 @@
 package view.game;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -16,7 +17,7 @@ import javafx.util.Duration;
 public class SpriteAnimation extends Transition {
 
     private final PixelReader pixelReader;
-    private final ArrayList<Image> list = new ArrayList<>();
+    private final List<Image> list = new ArrayList<>();
     private Image image;
     private final int frame;
     private final int width;

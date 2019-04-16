@@ -119,14 +119,12 @@ public final class GameMenuImpl implements GameMenu {
                 final Alert overwriteAlert = new Alert(AlertType.CONFIRMATION, OVERWRITE_MSG);
                 overwriteAlert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                 final Optional<ButtonType> choice = Optional.fromJavaUtil(overwriteAlert.showAndWait());
-                if (choice.isPresent()) {
-                    if (choice.get().equals(ButtonType.OK)) {
-                        try {
-                            this.gameController.saveGame(file);
-                            this.formatSaveSlotText(save, file);
-                        } catch (final IOException ex) {
-                            ex.printStackTrace();
-                        }
+                if (choice.isPresent() && choice.get().equals(ButtonType.OK)) {
+                    try {
+                        this.gameController.saveGame(file);
+                        this.formatSaveSlotText(save, file);
+                    } catch (final IOException ex) {
+                        ex.printStackTrace();
                     }
                 }
             });

@@ -153,15 +153,13 @@ public final class AppMenuImpl implements AppMenu {
                 final Alert deleteAlert = new Alert(AlertType.CONFIRMATION, DEL_MSG);
                 deleteAlert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                 final Optional<ButtonType> choice = Optional.fromJavaUtil(deleteAlert.showAndWait());
-                if (choice.isPresent()) {
-                    if (choice.get().equals(ButtonType.OK)) {
-                        if (!file.delete()) {
-                            new Alert(AlertType.ERROR, file.getName() + DEL_ERR_MSG).show();
-                        }
-                        load.setDisable(true);
-                        load.setText(NO_SAVE_MSG);
-                        delete.setDisable(true);
+                if (choice.isPresent() && choice.get().equals(ButtonType.OK)) {
+                    if (!file.delete()) {
+                        new Alert(AlertType.ERROR, file.getName() + DEL_ERR_MSG).show();
                     }
+                    load.setDisable(true);
+                    load.setText(NO_SAVE_MSG);
+                    delete.setDisable(true);
                 }
             });
         } else {

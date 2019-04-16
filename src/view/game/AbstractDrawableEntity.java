@@ -48,7 +48,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
     /**
      * updates properties like position, rotation, ... of the {@link ImageView} of this {@link DrawableEntity}
      */
-    protected void updateSpriteProperties() {
+    protected final void updateSpriteProperties() {
         final double entityWidth = this.getEntity().getDimensions().getLeft();
         final double entityHeight = this.getEntity().getDimensions().getRight();
         final double entityX = this.getEntity().getPosition().getLeft();
@@ -77,7 +77,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      * @param worldCoordinates the coordinates to be converted
      * @return the converted coordinates 
      */
-    protected Pair<Double, Double> getConvertedCoordinates(final Pair<Double, Double> worldCoordinates) {
+    protected final Pair<Double, Double> getConvertedCoordinates(final Pair<Double, Double> worldCoordinates) {
         return new ImmutablePair<>(worldCoordinates.getLeft() * this.getXRatio(),
                 this.sceneDimensions.getRight() - worldCoordinates.getRight() * this.getYRatio());
     }
@@ -85,14 +85,14 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
     /**
      * @return the ratio to convert world dimensions to scene dimensions along the x axis
      */
-    protected double getXRatio() {
+    protected final double getXRatio() {
         return this.sceneDimensions.getLeft() / this.worldDimensions.getLeft();
     }
 
     /**
      * @return the ratio to convert world dimensions to scene dimensions along the y axis
      */
-    protected double getYRatio() {
+    protected final double getYRatio() {
         return this.sceneDimensions.getRight() / this.worldDimensions.getRight();
     }
 

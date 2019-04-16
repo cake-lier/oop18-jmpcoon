@@ -13,8 +13,8 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     private static final double STARVELOCITY_X = 1.60;
     private static final double STARVELOCITY_Y = 1.50;
 
-    private boolean superStar = false;
-    private boolean invulnerable = false;
+    private boolean superStar;
+    private boolean invulnerable;
     private int lives = 1;
 
     private final SerializableBody body;
@@ -25,6 +25,8 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
      */
     public PlayerPhysicalBody(final SerializableBody body) {
         super(body);
+        this.superStar = false;
+        this.invulnerable = false;
         this.body = body;
     }
 

@@ -11,8 +11,8 @@ public final class RollingEnemy extends DynamicEntity {
     private static final double ROLLING_ENEMY_SPEED = 0.7;
 
     private final DynamicPhysicalBody body;
-    private boolean direction = false;
-    private boolean onAir = true;
+    private boolean direction;
+    private boolean onAir;
 
     /**
      * Creates a new {@link RollingEnemy} with the given {@link DynamicPhysicalBody}. This constructor is package protected because it
@@ -22,6 +22,8 @@ public final class RollingEnemy extends DynamicEntity {
     RollingEnemy(final DynamicPhysicalBody body) {
         super(body);
         this.body = body;
+        this.direction = false;
+        this.onAir = true;
     }
 
     /**

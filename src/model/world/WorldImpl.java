@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -37,8 +39,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MultimapBuilder;
 
-import controller.game.GameController;
-
 /**
  * The class implementation of {@link World}.
  */
@@ -52,12 +52,12 @@ public final class WorldImpl implements World, NotifiableWorld {
     private static final int WALKING_POINTS = 100;
     private static final String NO_INIT_MSG = "It's needed to initialize this world by initLevel() before using it";
 
-    private final transient GameController controller;
     private final PhysicalFactory physicsFactory;
     private final PhysicalWorld innerWorld;
     private final Pair<Double, Double> worldDimensions;
     private final ClassToInstanceMultimap<Entity> aliveEntities;
     private final Set<Entity> deadEntities;
+    private final List<EventType> recentEvents;
     private Optional<Player> player;
     private GameState currentState;
     private boolean initialized;
@@ -67,13 +67,13 @@ public final class WorldImpl implements World, NotifiableWorld {
      * Default constructor, decides what are the dimensions of this {@link World}, which should be 8m by 4.5m. It's package
      * protected because the only class that should access this constructor is its factory {@link WorldFactory}.
      */
-    WorldImpl(final GameController controller) {
-        this.controller = controller;
+    public WorldImpl() {
         this.physicsFactory = new PhysicalFactoryImpl();
         this.worldDimensions = new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT);
         this.innerWorld = physicsFactory.createPhysicalWorld(this, this.worldDimensions.getLeft(), this.worldDimensions.getRight());
         this.aliveEntities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
         this.deadEntities = new LinkedHashSet<>();
+        this.recentEvents = new LinkedList<>();
         this.currentState = GameState.IS_GOING;
         this.player = Optional.absent();
         this.score = 0;
@@ -197,7 +197,7 @@ public final class WorldImpl implements World, NotifiableWorld {
      * otherwise these two operations could interfere and make the state of the {@link Player} entity inconsistent.
      */
     @Override
-    public synchronized void movePlayer(final MovementType movement) {
+    public synchronized boolean movePlayer(final MovementType movement) {
         this.checkInitialization();
         if (this.player.isPresent()) {
             final PhysicalBody playerBody = this.player.get().getPhysicalBody();
@@ -213,12 +213,11 @@ public final class WorldImpl implements World, NotifiableWorld {
                             || (playerState == EntityState.CLIMBING_UP || playerState == EntityState.CLIMBING_DOWN)))
                     || ((movement == MovementType.MOVE_LEFT || movement == MovementType.MOVE_RIGHT)
                         && (playerState != EntityState.CLIMBING_DOWN && playerState != EntityState.CLIMBING_UP)))) {
-                if (movement == MovementType.JUMP) {
-                    this.controller.notifyEvent(EventType.PLAYER_JUMP);
-                }
                 this.player.get().move(movement);
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -273,11 +272,11 @@ public final class WorldImpl implements World, NotifiableWorld {
         switch (collisionType) {
             case ROLLING_ENEMY_KILLED:
                 this.score += ROLLING_POINTS;
-                this.controller.notifyEvent(EventType.ROLLING_COLLISION);
+                this.recentEvents.add(EventType.ROLLING_COLLISION);
                 break;
             case WALKING_ENEMY_KILLED:
                 this.score += WALKING_POINTS;
-                this.controller.notifyEvent(EventType.WALKING_COLLISION);
+                this.recentEvents.add(EventType.WALKING_COLLISION);
                 break;
             case GOAL_HIT:
                 this.currentState = GameState.PLAYER_WON;
@@ -296,5 +295,13 @@ public final class WorldImpl implements World, NotifiableWorld {
     public int getPlayerLives() {
         this.checkInitialization();
         return this.player.get().getLives();
+    }
+
+    @Override
+    public List<EventType> getRecentEvents() {
+        /* once it has been transmitted outside the world it has no interest in remembering the events that happened */
+        final List<EventType> eventList = new LinkedList<>(this.recentEvents);
+        this.recentEvents.clear();
+        return eventList;
     }
 }

@@ -2,6 +2,7 @@ package model.world;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import model.entities.MovementType;
 import model.entities.UnmodifiableEntity;
@@ -36,8 +37,9 @@ public interface World extends Serializable {
      * It moves the player inside the world making her do one of the movements it's allowed to make, as specified in the 
      * {@link MovementType} enum.
      * @param movement The type of movement the player should do.
+     * @return true if the movement was authorized by the world and executed by the player, false otherwise
      */
-    void movePlayer(MovementType movement);
+    boolean movePlayer(MovementType movement);
 
     /**
      * Checks whether the game has ended and the {@link model.entities.Player} has lost or not.
@@ -62,6 +64,12 @@ public interface World extends Serializable {
      * @return A {@link Collection} of the {@link Entity}s which have died across last {@link World} update.
      */
     Collection<UnmodifiableEntity> getDeadEntities();
+
+    /**
+     * 
+     * @return A {@link Queue} of the last {@link EventType} that happened.
+     */
+    List<EventType> getRecentEvents();
 
     /**
      * Calculates the score currently totaled by the user.
