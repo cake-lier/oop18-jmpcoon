@@ -155,14 +155,6 @@ public final class WorldImpl implements World, NotifiableWorld {
         this.aliveEntities.getInstances(EnemyGenerator.class)
                           .forEach(enemyGenerator -> this.aliveEntities.putAll(RollingEnemy.class,
                                                                                enemyGenerator.onTimeAdvanced(this.physicsFactory)));
-        this.aliveEntities.getInstances(RollingEnemy.class).forEach(rollingEnemy -> {
-            this.setRollingEnemyOnAir(rollingEnemy);
-            rollingEnemy.computeMovement();
-        });
-    }
-
-    private void setRollingEnemyOnAir(final RollingEnemy rollingEnemy) {
-        rollingEnemy.setOnAir(this.innerWorld.getCollidingBodies(rollingEnemy.getPhysicalBody()).isEmpty());
     }
 
     /*

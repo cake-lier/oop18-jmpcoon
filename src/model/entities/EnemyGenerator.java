@@ -12,12 +12,13 @@ import model.physics.StaticPhysicalBody;
 
 /**
  * An enemy generator inside the {@link model.world.World} of the game.
+ * It creates a new instance of the {@link RollingEnemy} on a regular interval of time.
  */
 public final class EnemyGenerator extends StaticEntity {
 
     private static final long serialVersionUID = -3160192139428572083L;
     private static final ImmutablePair<Double, Double> ROLLING_ENEMY_DIMENSIONS = new ImmutablePair<Double, Double>(0.23, 0.23);
-    private static final int DELTA = 150;
+    private static final int DELTA = 380;
 
     private final List<RollingEnemy> enemies;
     private int count;
@@ -50,6 +51,7 @@ public final class EnemyGenerator extends StaticEntity {
         this.enemies.clear();
         if (this.checkTime()) {
             this.enemies.add(this.createRollingEnemy(physicsFactory));
+            this.enemies.get(0).applyImpulse();
         }
         return this.enemies;
     }
@@ -69,4 +71,3 @@ public final class EnemyGenerator extends StaticEntity {
                 .build();
     }
 }
-
