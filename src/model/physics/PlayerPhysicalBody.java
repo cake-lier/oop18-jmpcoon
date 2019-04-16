@@ -15,7 +15,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
 
     private boolean superStar;
     private boolean invulnerable;
-    private int lives = 1;
+    private int lives;
 
     private final SerializableBody body;
 
@@ -28,6 +28,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
         this.body = body;
         this.superStar = false;
         this.invulnerable = false;
+        this.lives = 1;
     }
 
     /**
@@ -92,7 +93,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
      */
     public void endSuperStar() {
         this.superStar = false;
-        this.modifyMaxVelocity(1 / STARVELOCITY_X, 1 / STARVELOCITY_Y);
+        this.modifyMaxVelocity(1, 1);
     }
 
     /**

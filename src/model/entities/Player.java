@@ -1,5 +1,7 @@
 package model.entities;
 
+import java.util.Arrays;
+
 import model.physics.DynamicPhysicalBody;
 import model.physics.PlayerPhysicalBody;
 
@@ -9,9 +11,6 @@ import model.physics.PlayerPhysicalBody;
 public final class Player extends DynamicEntity {
 
     private static final long serialVersionUID = 7632362148460378676L;
-    private static final double WALKIMPULSE = 1;
-    private static final double CLIMBIMPULSE = 0.5;
-    private static final double JUMPIMPULSE = 0.25;
 
     private final PlayerPhysicalBody body;
 
@@ -38,24 +37,11 @@ public final class Player extends DynamicEntity {
      * @param movement The movement to apply to player
      */
     public void move(final MovementType movement) {
-        switch (movement) {
-            case JUMP: 
-                this.body.applyMovement(MovementType.JUMP, 0, JUMPIMPULSE);
-                break;
-            case CLIMB_UP:
-                this.body.applyMovement(MovementType.CLIMB_UP, 0, CLIMBIMPULSE);
-                break;
-            case CLIMB_DOWN:
-                this.body.applyMovement(MovementType.CLIMB_DOWN, 0, -CLIMBIMPULSE);
-                break;
-            case MOVE_RIGHT:
-                this.body.applyMovement(MovementType.MOVE_RIGHT, WALKIMPULSE,  0);
-                break;
-            case MOVE_LEFT:
-                this.body.applyMovement(MovementType.MOVE_LEFT, -WALKIMPULSE,  0);
-                break;
-            default: 
-        }
+        MovementValues moveValues = Arrays.asList(MovementValues.values())
+                                    .stream()
+                                    .filter(mValue -> mValue.getMovementType() == movement)
+                                    .findAny().get();
+        this.body.applyMovement(moveValues.getMovementType(), moveValues.getImpulseX(), moveValues.getImpulseY());
     }
 
     /**
