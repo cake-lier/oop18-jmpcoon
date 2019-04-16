@@ -159,8 +159,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                         final PlayerPhysicalBody player = WholePhysicalWorldImpl.this.player.get();
                         if (player.isInvincible()) {
                             otherTriple.getLeft().setActive(false);
-                        }
-                        if (!player.isInvulnerable()) {
+                        } else if (!player.isInvulnerable()) {
                             player.hit();
                             if (!player.exist()) {
                                 WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.PLAYER_KILLED);
@@ -261,20 +260,19 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
      */
     @Override
     public void update() {
-        this.world.step(1);
-        //TODO: rewrite this but better
         if (this.player.get().isInvincible() && this.superStarCooldown()) {
             this.player.get().endSuperStar();
         }
         if (this.player.get().isInvulnerable() && this.hitCooldown()) {
             this.player.get().endInvulnerability();
         }
+        this.world.step(1);
     }
 
     private boolean hitCooldown() {
         this.stepCounterHit++;
         if (this.stepCounterHit == HIT_COOLDOWN) {
-            this.stepCounterHit = -1;
+            this.stepCounterHit = 0;
             return true;
         } else {
             return false;

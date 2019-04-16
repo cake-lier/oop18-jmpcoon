@@ -25,9 +25,9 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
      */
     public PlayerPhysicalBody(final SerializableBody body) {
         super(body);
+        this.body = body;
         this.superStar = false;
         this.invulnerable = false;
-        this.body = body;
     }
 
     /**
@@ -53,7 +53,6 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
             this.lives++;
         } else if (powerUpType == PowerUpType.SUPER_STAR) {
             this.superStar = true;
-            this.invulnerable = true;
             this.modifyMaxVelocity(STARVELOCITY_X, STARVELOCITY_Y);
         }
     }
@@ -93,7 +92,6 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
      */
     public void endSuperStar() {
         this.superStar = false;
-        this.invulnerable = false;
         this.modifyMaxVelocity(1 / STARVELOCITY_X, 1 / STARVELOCITY_Y);
     }
 
