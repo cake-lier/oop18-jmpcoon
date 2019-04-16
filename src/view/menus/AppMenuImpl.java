@@ -6,18 +6,22 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Optional;
 
 import java.io.File;
 
 import controller.app.AppController;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -25,11 +29,14 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import view.ResizableView;
 
 /**
- * The class implementation of the {@link Menu} interface.
+ * The class implementation of the {@link AppMenu} interface.
  */
-public final class MenuImpl implements Menu {
+public final class AppMenuImpl implements AppMenu {
     private static final String LAYOUT_PATH = "layouts/";
     private static final String SAVES_PATH = System.getProperty("user.home") + System.getProperty("file.separator") + "jmpcoon" 
                                              + System.getProperty("file.separator");
@@ -52,7 +59,8 @@ public final class MenuImpl implements Menu {
     private static final int DELETE_BUTTONS_RATIO = 250;
 
     private final AppController controller;
-    private final Scene scene;
+    private final ResizableView view;
+    private final Stage stage;
     private final MediaPlayer music;
     private final double stageHeight;
     private boolean drawn;
@@ -74,6 +82,10 @@ public final class MenuImpl implements Menu {
     private Button quitButton;
     @FXML
     private Slider volumeControl;
+    @FXML
+    private CheckBox muteCheck;
+    @FXML
+    private ChoiceBox<Integer> screenChoice;
     @FXML
     private Button backSettingsButton;
     @FXML
@@ -99,9 +111,10 @@ public final class MenuImpl implements Menu {
      * @param stageHeight The height of the {@link javafx.stage.Stage} which contains the scene.
      * @param music The {@link MediaPlayer} from which play music while the menu is showed.
      */
-    public MenuImpl(final AppController controller, final Scene scene, final double stageHeight, final MediaPlayer music) {
+    public AppMenuImpl(final AppController controller, final ResizableView view, final Stage stage, final double stageHeight, final MediaPlayer music) {
         this.controller = controller;
-        this.scene = scene;
+        this.view = view;
+        this.stage = stage;
         this.stageHeight = stageHeight;
         this.music = music;
         this.drawn = false;
@@ -165,7 +178,7 @@ public final class MenuImpl implements Menu {
     public void draw() {
         if (!this.drawn) {
             final StackPane root = new StackPane();
-            this.scene.setRoot(root);
+            this.stage.getScene().setRoot(root);
             this.drawFromURL(MENU_LAYOUT, root);
             this.frontPage.setVisible(false);
             this.startButton.setStyle(FONT_SIZE + this.stageHeight / MAIN_BUTTONS_RATIO + SIZE_UNIT);
@@ -196,6 +209,28 @@ public final class MenuImpl implements Menu {
             this.volumeControl.setValue(this.music.getVolume() * VOLUME_RATIO);
             this.volumeControl.valueProperty().addListener(c -> {
                 this.music.setVolume(this.volumeControl.getValue() / VOLUME_RATIO);
+            });
+            this.muteCheck.setAllowIndeterminate(false);
+            this.muteCheck.selectedProperty().addListener(e -> {
+                this.music.setMute(this.muteCheck.isSelected());
+            });
+            this.screenChoice.setItems(Screen.getScreens()
+                                             .parallelStream()
+                                             .map(screen -> Screen.getScreens().indexOf(screen))
+                                             .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
+            this.screenChoice.setValue(Screen.getScreens()
+                                             .indexOf(Screen.getScreensForRectangle(this.stage.getX(),
+                                                                                        this.stage.getY(),
+                                                                                            this.stage.getWidth(),
+                                                                                                this.stage.getHeight())
+                                                            .get(0)));
+            this.screenChoice.valueProperty().addListener(e -> {
+                this.stage.setScene(new Scene(new Pane()));
+                this.view.setScreenSize(this.screenChoice.getValue());
+                this.drawn = false;
+                this.showed = false;
+                this.draw();
+                this.show();
             });
             this.backSettingsButton.setStyle(FONT_SIZE + this.stageHeight / BACK_BUTTONS_RATIO + SIZE_UNIT);
             this.backSettingsButton.setOnMouseClicked(e -> {

@@ -7,6 +7,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
 
 <GridPane xmlns="http://javafx.com/javafx/8"
           xmlns:fx="http://javafx.com/fxml/1"
@@ -22,10 +24,13 @@
         <ColumnConstraints percentWidth="2"></ColumnConstraints>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="34"></RowConstraints>
         <RowConstraints percentHeight="16"></RowConstraints>
-        <RowConstraints percentHeight="34"></RowConstraints>
-        <RowConstraints percentHeight="6"></RowConstraints>
+        <RowConstraints percentHeight="16"></RowConstraints>
+        <RowConstraints percentHeight="2"></RowConstraints>
+        <RowConstraints percentHeight="16"></RowConstraints>
+        <RowConstraints percentHeight="2"></RowConstraints>
+        <RowConstraints percentHeight="16"></RowConstraints>
+        <RowConstraints percentHeight="22"></RowConstraints>
         <RowConstraints percentHeight="8"></RowConstraints>
         <RowConstraints percentHeight="2"></RowConstraints>
     </rowConstraints>
@@ -45,11 +50,43 @@
             GridPane.valignment="CENTER"
             GridPane.hgrow="ALWAYS">
     </Slider>
+    <Label styleClass="descriptions"
+           GridPane.columnIndex="2"
+           GridPane.halignment="CENTER"
+           GridPane.rowIndex="3"
+           GridPane.valignment="CENTER"
+           GridPane.hgrow="ALWAYS">
+        Mute
+    </Label>
+    <CheckBox fx:id="muteCheck"
+            id="slider"
+            GridPane.columnIndex="4"
+            GridPane.halignment="CENTER"
+            GridPane.rowIndex="3"
+            GridPane.valignment="CENTER"
+            GridPane.hgrow="ALWAYS">
+    </CheckBox>
+    <Label styleClass="descriptions"
+           GridPane.columnIndex="2"
+           GridPane.halignment="CENTER"
+           GridPane.rowIndex="5"
+           GridPane.valignment="CENTER"
+           GridPane.hgrow="ALWAYS">
+        Change screen
+    </Label>
+    <ChoiceBox fx:id="screenChoice"
+            id="slider"
+            GridPane.columnIndex="4"
+            GridPane.halignment="CENTER"
+            GridPane.rowIndex="5"
+            GridPane.valignment="CENTER"
+            GridPane.hgrow="ALWAYS">
+    </ChoiceBox>
     <Button styleClass="buttons"
             fx:id="backSettingsButton"
             GridPane.columnIndex="1"
             GridPane.halignment="LEFT"
-            GridPane.rowIndex="4"
+            GridPane.rowIndex="7"
             GridPane.valignment="BOTTOM"
             GridPane.columnSpan="3">
         Back to main menu

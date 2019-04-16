@@ -16,13 +16,13 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import view.game.GameView;
 import view.game.GameViewImpl;
-import view.menus.Menu;
-import view.menus.MenuImpl;
+import view.menus.AppMenu;
+import view.menus.AppMenuImpl;
 
 /**
  * The class implementation of {@link View}.
  */
-public final class ViewImpl implements View {
+public final class ViewImpl implements View, ResizableView {
     private static final String TITLE = "Jumping Raccoon Adventures";
     private static final Media MENU_MUSIC = new Media(ClassLoader.getSystemResource("sounds/stillalive.mp3").toExternalForm());
     private static final Media GAME_MUSIC = new Media(ClassLoader.getSystemResource("sounds/pixelland.mp3").toExternalForm());
@@ -46,7 +46,7 @@ public final class ViewImpl implements View {
         this.stage = stage;
         this.stage.setTitle(TITLE);
         this.stage.getIcons().add(ICON);
-        this.setScreenSize();
+        this.setScreenSize(Screen.getScreens().indexOf(Screen.getPrimary()));
         this.stage.setScene(new Scene(new Pane()));
         this.player = new MediaPlayer(MENU_MUSIC);
         this.player.setVolume(INIT_VOLUME);
@@ -58,22 +58,23 @@ public final class ViewImpl implements View {
      * Sets the stage size to the appropriate values, so as to make it always the biggest possible and with an aspect ratio of
      * 16:9. It is also unresizable, so the ratio cannot be changed in any way.
      */
-    private void setScreenSize() {
-        final Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        this.stage.setX(primaryScreenBounds.getMinX());
-        this.stage.setY(primaryScreenBounds.getMinY());
+    @Override
+    public void setScreenSize(final int screenIndex) {
+        final Rectangle2D screenBounds = Screen.getScreens().get(screenIndex).getVisualBounds();
+        this.stage.setX(screenBounds.getMinX());
+        this.stage.setY(screenBounds.getMinY());
         this.stage.centerOnScreen();
-        final double unitaryHeight = primaryScreenBounds.getHeight() / HEIGHT_RATIO;
-        final double unitaryWidth = primaryScreenBounds.getWidth() / WIDTH_RATIO;
-        if (primaryScreenBounds.getWidth() < unitaryHeight * WIDTH_RATIO) {
-            this.stage.setWidth(primaryScreenBounds.getWidth());
+        final double unitaryHeight = screenBounds.getHeight() / HEIGHT_RATIO;
+        final double unitaryWidth = screenBounds.getWidth() / WIDTH_RATIO;
+        if (screenBounds.getWidth() < unitaryHeight * WIDTH_RATIO) {
+            this.stage.setWidth(screenBounds.getWidth());
             this.stage.setHeight(unitaryWidth * HEIGHT_RATIO);
-        } else if (primaryScreenBounds.getHeight() < unitaryWidth * HEIGHT_RATIO) {
-            this.stage.setHeight(primaryScreenBounds.getHeight());
+        } else if (screenBounds.getHeight() < unitaryWidth * HEIGHT_RATIO) {
+            this.stage.setHeight(screenBounds.getHeight());
             this.stage.setWidth(unitaryHeight * WIDTH_RATIO);
         } else {
-            this.stage.setHeight(primaryScreenBounds.getHeight());
-            this.stage.setWidth(primaryScreenBounds.getWidth());
+            this.stage.setHeight(screenBounds.getHeight());
+            this.stage.setWidth(screenBounds.getWidth());
         }
         this.stage.setResizable(false);
     }
@@ -96,7 +97,7 @@ public final class ViewImpl implements View {
     @Override
     public void displayMenu() {
         this.createNewTrack(MENU_MUSIC);
-        final Menu menu = new MenuImpl(this.controller, this.stage.getScene(), this.stage.getHeight(), this.player);
+        final AppMenu menu = new AppMenuImpl(this.controller, this, this.stage, this.stage.getHeight(), this.player);
         menu.draw();
         menu.show();
     }

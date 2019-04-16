@@ -37,3 +37,25 @@
     -fx-background-color: rgb(233,185,110);
     -fx-effect: dropshadow(one-pass-box, #2D2926, 5, 0, 1, 1);
 }
+
+.check-box {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.check-box > .box {
+     -fx-color: rgb(233,185,110);
+     -fx-padding: 500%;
+}
+
+.check-box > .box > .mark {
+    -fx-padding: 2250%;
+}
+
+.check-box:hover > .box {
+     -fx-color: derive(rgb(233,185,110), 20%);
+}
+
+.check-box:selected > .box > .mark {
+    -fx-background-color: rgb(143,89,2);
+}

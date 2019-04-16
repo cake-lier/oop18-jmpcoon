@@ -3,7 +3,7 @@ package view.menus;
 /**
  * The initial menu, it has to draw, show and hide itself.
  */
-public interface Menu {
+public interface AppMenu {
     /**
      * Draws the menu of the game. It should be invoked only one time, before showing the menu for the first time.
      */
