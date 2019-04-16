@@ -221,7 +221,7 @@ public final class GameViewImpl implements GameView {
         Platform.runLater(() -> {
             this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
             this.drawAliveEntities();
-            this.gameController.getRecentEvents().forEach(e -> this.notifyEvent(e));
+            this.gameController.getCurrentEvents().forEach(e -> this.notifyEvent(e));
             this.score.setText(SCORE_STR + this.gameController.getCurrentScore() + LIVES_STR + this.gameController.getPlayerLives());
         });
     }
@@ -250,7 +250,11 @@ public final class GameViewImpl implements GameView {
                       }
                   } else {
                       if (input.convert().isPresent()) {
-                          this.gameController.processInput(input.convert().get());
+                          if (this.gameController.processInput(input.convert().get())) {
+                              if (input == InputKey.SPACE) {
+                                  this.notifyEvent(EventType.PLAYER_JUMP);
+                              }
+                          }
                       }
                   }
               });

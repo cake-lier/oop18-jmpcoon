@@ -107,7 +107,8 @@ public final class AppMenuImpl implements AppMenu {
      * Binds this menu to the instance who has to be the controller of the menu, which is the controller of the application.
      * Furthermore, it acquires the {@link Scene} in which to draw the menu.
      * @param controller The controller of this application.
-     * @param scene The {@link Scene} in which adding this menu and all its pages.
+     * @param view The view which manages the screen.
+     * @param stage The {@link Stage} in which adding this menu and all its pages.
      * @param stageHeight The height of the {@link javafx.stage.Stage} which contains the scene.
      * @param music The {@link MediaPlayer} from which play music while the menu is showed.
      */

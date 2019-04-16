@@ -5,11 +5,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.queue.UnmodifiableQueue;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import model.ClassToInstanceMultimap;
@@ -57,7 +58,7 @@ public final class WorldImpl implements World, NotifiableWorld {
     private final Pair<Double, Double> worldDimensions;
     private final ClassToInstanceMultimap<Entity> aliveEntities;
     private final Set<Entity> deadEntities;
-    private final List<EventType> recentEvents;
+    private final Queue<EventType> currentEvents;
     private Optional<Player> player;
     private GameState currentState;
     private boolean initialized;
@@ -73,7 +74,7 @@ public final class WorldImpl implements World, NotifiableWorld {
         this.innerWorld = physicsFactory.createPhysicalWorld(this, this.worldDimensions.getLeft(), this.worldDimensions.getRight());
         this.aliveEntities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
         this.deadEntities = new LinkedHashSet<>();
-        this.recentEvents = new LinkedList<>();
+        this.currentEvents = new LinkedList<>();
         this.currentState = GameState.IS_GOING;
         this.player = Optional.absent();
         this.score = 0;
@@ -130,8 +131,9 @@ public final class WorldImpl implements World, NotifiableWorld {
      */
     public synchronized void update() {
         this.checkInitialization();
-        this.innerWorld.update();
+        this.currentEvents.clear();
         this.deadEntities.clear();
+        this.innerWorld.update();
         final Iterator<Entity> iterator = this.aliveEntities.values().iterator();
         while (iterator.hasNext()) {
             final Entity current = iterator.next();
@@ -272,11 +274,11 @@ public final class WorldImpl implements World, NotifiableWorld {
         switch (collisionType) {
             case ROLLING_ENEMY_KILLED:
                 this.score += ROLLING_POINTS;
-                this.recentEvents.add(EventType.ROLLING_COLLISION);
+                this.currentEvents.offer(EventType.ROLLING_COLLISION);
                 break;
             case WALKING_ENEMY_KILLED:
                 this.score += WALKING_POINTS;
-                this.recentEvents.add(EventType.WALKING_COLLISION);
+                this.currentEvents.offer(EventType.WALKING_COLLISION);
                 break;
             case GOAL_HIT:
                 this.currentState = GameState.PLAYER_WON;
@@ -297,11 +299,11 @@ public final class WorldImpl implements World, NotifiableWorld {
         return this.player.get().getLives();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<EventType> getRecentEvents() {
-        /* once it has been transmitted outside the world it has no interest in remembering the events that happened */
-        final List<EventType> eventList = new LinkedList<>(this.recentEvents);
-        this.recentEvents.clear();
-        return eventList;
+    public Queue<EventType> getCurrentEvents() {
+        return UnmodifiableQueue.unmodifiableQueue(this.currentEvents);
     }
 }

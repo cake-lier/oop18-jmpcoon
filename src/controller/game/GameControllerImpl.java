@@ -14,11 +14,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import model.entities.EntityProperties;
-import model.entities.MovementType;
 import model.entities.UnmodifiableEntity;
 import model.world.EventType;
 import model.world.World;
@@ -124,13 +124,8 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public void processInput(final InputType input) {
-        if (this.running) {
-            final boolean hasMovementHappened = this.gameWorld.movePlayer(input.getAssociatedMovementType());
-            if (hasMovementHappened && input.getAssociatedMovementType() == MovementType.JUMP) {
-                this.gameView.notifyEvent(EventType.PLAYER_JUMP);
-            }
-        }
+    public boolean processInput(final InputType input) {
+        return this.running && this.gameWorld.movePlayer(input.getAssociatedMovementType());
     }
 
     /**
@@ -175,8 +170,8 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public List<EventType> getRecentEvents() {
-        return this.gameWorld.getRecentEvents();
+    public Queue<EventType> getCurrentEvents() {
+        return this.gameWorld.getCurrentEvents();
     }
 
     private void updateWorldAndView() {

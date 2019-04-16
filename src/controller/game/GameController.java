@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
+import java.util.Queue;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -60,8 +60,9 @@ public interface GameController {
     /**
      * gives to the {@link World} in which the game is playing the input received from the view.
      * @param input the input received
+     * @return True if the command was successful and the {@link model.world.World} has accepted it, false otherwise.
      */
-    void processInput(InputType input);
+    boolean processInput(InputType input);
 
     /**
      * 
@@ -83,7 +84,7 @@ public interface GameController {
 
     /**
      * 
-     * @return A {@link List} of the last {@link EventType} that happened.
+     * @return A {@link Queue} of the last {@link EventType} that happened.
      */
-    List<EventType> getRecentEvents();
+    Queue<EventType> getCurrentEvents();
 }

@@ -2,7 +2,7 @@ package model.world;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
+import java.util.Queue;
 
 import model.entities.MovementType;
 import model.entities.UnmodifiableEntity;
@@ -66,10 +66,10 @@ public interface World extends Serializable {
     Collection<UnmodifiableEntity> getDeadEntities();
 
     /**
-     * 
-     * @return A {@link Queue} of the last {@link EventType} that happened.
+     * Returns a queue of all events that happened during the last {@link #update()}. 
+     * @return A {@link Queue} which contains the {@link EventType}s that happened during the last iteration step.
      */
-    List<EventType> getRecentEvents();
+    Queue<EventType> getCurrentEvents();
 
     /**
      * Calculates the score currently totaled by the user.
