@@ -1,7 +1,5 @@
 package view;
 
-import java.io.File;
-
 import com.google.common.base.Optional;
 
 /**
@@ -15,10 +13,11 @@ public interface View {
     void displayMenu();
 
     /**
-     * Displays the game. The game to be displayed depends on if it is a new game or a game saved and loaded. This is decided by
-     * the {@link Optional} {@link URL} passed. If not present, it will be displayed a new game, otherwise it will be loaded the
-     * game from the associated file and then displayed.
-     * @param saveFile The file from which starting the game, if present.
+     * Displays the game. The game to be displayed depends on if it is a new game or a game previously saved and now loaded.
+     * This is decided by the {@link Optional} passed. If not present, it will be displayed a new game, otherwise it will be
+     * loaded the game from the file with the associated index (the association is known by the {@link AppController}) and 
+     * then displayed.
+     * @param saveFileIndex The index of the file from which the game will be loaded, if present.
      */
-    void displayGame(Optional<File> saveFile);
+    void displayGame(Optional<Integer> saveFileIndex);
 }

@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.IntStream;
 
 import com.google.common.base.Optional;
 
@@ -28,17 +29,13 @@ import javafx.scene.control.Alert.AlertType;
  * The class implementation of {@link GameMenu}.
  */
 public final class GameMenuImpl implements GameMenu {
-    private static final String SAVES_PATH = System.getProperty("user.home") + System.getProperty("file.separator") + "jmpcoon" 
-                                             + System.getProperty("file.separator");
+
     private static final String LAYOUT_PATH = "layouts/";
     private static final String GAME_MENU_SRC = LAYOUT_PATH + "gameMenu.fxml";
     private static final String SAVE_GAME_MENU_SRC = LAYOUT_PATH + "saveGameMenu.fxml";
     private static final String TIME_FORMAT = "d MMMM yyyy HH:mm";
     private static final String NO_SAVE_MSG = "No save game in this slot";
     private static final String OVERWRITE_MSG = "Are you sure you want to overwrite this saved game?";
-    private static final String FIRST_SAVE_FILE = "save1.sav";
-    private static final String SECOND_SAVE_FILE = "save2.sav";
-    private static final String THIRD_SAVE_FILE = "save3.sav";
     private static final String BTN_STYLE_CLASS = "buttons";
     private static final String FONT_SIZE = "-fx-font-size: ";
     private static final String SIZE_UNIT = "em";
@@ -97,8 +94,8 @@ public final class GameMenuImpl implements GameMenu {
         this.shown = false;
     }
 
-    private void formatSaveSlotText(final Button saveButton, final File file) {
-        saveButton.setText(LocalDateTime.ofEpochSecond(file.lastModified() / 1000, 0, 
+    private void formatSaveSlotText(final Button saveButton, final Long lastModified) {
+        saveButton.setText(LocalDateTime.ofEpochSecond(lastModified / 1000, 0, 
                                                        ZoneOffset.of(ZoneOffset.systemDefault()
                                                                                .getRules()
                                                                                .getOffset(Instant.now())
@@ -109,11 +106,10 @@ public final class GameMenuImpl implements GameMenu {
     /*
      * Initializes a generic save game button present in this menu.
      */
-    private void initSaveButton(final Button save, final String fileName) {
+    private void initSaveButton(final Button save, final int saveFileIndex) {
         save.setStyle(FONT_SIZE + this.stageHeight / SAVE_BUTTONS_RATIO + SIZE_UNIT);
-        final File file = Paths.get(SAVES_PATH + fileName).toFile();
-        if (file.exists()) {
-            this.formatSaveSlotText(save, file);
+        if (this.appController.getSaveFileAvailability().get(saveFileIndex).isPresent()) {
+            this.formatSaveSlotText(save, this.appController.getSaveFileAvailability().get(saveFileIndex).get());
             save.getStyleClass().add(BTN_STYLE_CLASS);
             save.setOnMouseClicked(e -> {
                 final Alert overwriteAlert = new Alert(AlertType.CONFIRMATION, OVERWRITE_MSG);
@@ -121,8 +117,8 @@ public final class GameMenuImpl implements GameMenu {
                 final Optional<ButtonType> choice = Optional.fromJavaUtil(overwriteAlert.showAndWait());
                 if (choice.isPresent() && choice.get().equals(ButtonType.OK)) {
                     try {
-                        this.gameController.saveGame(file);
-                        this.formatSaveSlotText(save, file);
+                        this.gameController.saveGame(saveFileIndex);
+                        this.formatSaveSlotText(save, this.appController.getSaveFileAvailability().get(saveFileIndex).get());
                     } catch (final IOException ex) {
                         ex.printStackTrace();
                     }
@@ -130,11 +126,10 @@ public final class GameMenuImpl implements GameMenu {
             });
         } else {
             save.setText(NO_SAVE_MSG);
-            final File saveFile = Paths.get(SAVES_PATH + fileName).toFile();
             save.setOnMouseClicked(e -> {
                 try {
-                    this.gameController.saveGame(saveFile);
-                    this.formatSaveSlotText(save, saveFile);
+                    this.gameController.saveGame(saveFileIndex);
+                    this.formatSaveSlotText(save, this.appController.getSaveFileAvailability().get(saveFileIndex).get());
                     save.getStyleClass().add(BTN_STYLE_CLASS);
                 } catch (final IOException ex) {
                     ex.printStackTrace();
@@ -183,9 +178,9 @@ public final class GameMenuImpl implements GameMenu {
                     this.saveMenu.setVisible(false);
                     this.menu.setVisible(true);
                 });
-                this.initSaveButton(this.firstSave, FIRST_SAVE_FILE);
-                this.initSaveButton(this.secondSave, SECOND_SAVE_FILE);
-                this.initSaveButton(this.thirdSave, THIRD_SAVE_FILE);
+                this.initSaveButton(this.firstSave, 0);
+                this.initSaveButton(this.secondSave, 1);
+                this.initSaveButton(this.thirdSave, 2);
             } catch (final IOException ex) {
                 ex.printStackTrace();
             }

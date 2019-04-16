@@ -29,7 +29,6 @@ import view.View;
 import view.menus.GameMenu;
 import view.menus.GameMenuImpl;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -144,17 +143,17 @@ public final class GameViewImpl implements GameView {
     /**
      * {@inheritDoc}
      */
-    public void initialize(final Optional<File> saveFile) {
+    public void initialize(final Optional<Integer> saveFileIndex) {
         this.setupStage();
         this.gameMenu.draw();
-        this.drawAliveEntities();
-        if (saveFile.isPresent()) {
+        if (saveFileIndex.isPresent()) {
             try {
-                this.gameController.loadGame(saveFile.get());
+                this.gameController.loadGame(saveFileIndex.get());
             } catch (final IOException ex) {
                 ex.printStackTrace();
             }
         }
+        this.drawAliveEntities();
         this.music.play();
         this.isInitialized = true;
         this.gameController.startGame();
@@ -170,7 +169,6 @@ public final class GameViewImpl implements GameView {
         final Pane powerups = new Pane();
         platforms.getChildren().addAll(this.getNodes(EntityType.PLATFORM));
         ladders.getChildren().addAll(this.getNodes(EntityType.LADDER));
-        powerups.getChildren().addAll(this.getNodes(EntityType.POWERUP));
         this.root.getChildren().addAll(platforms, ladders, powerups, this.entities);
         try {
             final FXMLLoader scoreLoader = new FXMLLoader(ClassLoader.getSystemResource(SCORE_SRC));
@@ -196,7 +194,7 @@ public final class GameViewImpl implements GameView {
      */
     private void drawAliveEntities() {
         final List<Node> nodes = new ArrayList<>();
-        Arrays.asList(EntityType.ROLLING_ENEMY, EntityType.WALKING_ENEMY, EntityType.POWERUP, EntityType.PLAYER)
+        Arrays.asList(EntityType.POWERUP, EntityType.ROLLING_ENEMY, EntityType.WALKING_ENEMY, EntityType.PLAYER)
               .forEach(type -> nodes.addAll(this.getNodes(type)));
         this.entities.getChildren().setAll(nodes);
     }

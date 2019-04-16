@@ -2,7 +2,6 @@ package controller.game;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -25,6 +24,7 @@ import model.world.World;
 import model.world.WorldFactoryImpl;
 import org.apache.commons.lang3.tuple.Pair;
 
+import controller.SaveFile;
 import view.game.GameView;
 
 /**
@@ -90,8 +90,10 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public void saveGame(final File saveFile) throws FileNotFoundException, IOException {
-        try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(saveFile)))) {
+    public void saveGame(final int saveFileIndex) throws FileNotFoundException, IOException {
+        try (ObjectOutputStream out = new ObjectOutputStream(
+                                        new BufferedOutputStream(
+                                            new FileOutputStream(SaveFile.values()[saveFileIndex].getSavePath())))) {
             out.writeObject(this.gameWorld);
         }
     }
@@ -100,8 +102,10 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public void loadGame(final File saveFile) throws IOException, IllegalArgumentException {
-        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(saveFile)))) {
+    public void loadGame(final int saveFileIndex) throws IOException, IllegalArgumentException {
+        try (ObjectInputStream in = new ObjectInputStream(
+                                        new BufferedInputStream(
+                                            new FileInputStream(SaveFile.values()[saveFileIndex].getSavePath())))) {
             this.gameWorld = (World) in.readObject();
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException(INCOMPATIBLE_FILE_MSG);

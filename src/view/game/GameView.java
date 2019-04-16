@@ -1,7 +1,5 @@
 package view.game;
 
-import java.io.File;
-
 import com.google.common.base.Optional;
 
 import model.world.EventType;
@@ -18,11 +16,11 @@ public interface GameView {
 
     /**
      * Initializes the game scene and starts the game by calling the {@link controller.game.GameController} appropriately. If a
-     * file is specified, it means the game should started by loading data from the specified file, otherwise a new game should
-     * start.
-     * @param saveFile The file with the saved game from which starting the game, if present.
+     * file is specified, it means the game should be started by loading data from the specified file, otherwise a new game 
+     * should be started.
+     * @param saveFileIndex The index of the file with the saved game from which starting the game, if present
      */
-    void initialize(Optional<File> saveFile);
+    void initialize(Optional<Integer> saveFileIndex);
 
     /**
      * Shows game over screen.

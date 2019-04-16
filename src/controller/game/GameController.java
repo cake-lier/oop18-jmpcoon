@@ -1,6 +1,5 @@
 package controller.game;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
@@ -28,19 +27,19 @@ public interface GameController {
 
     /**
      * Saves the current game.
-     * @param saveFile the {@link File} where the information about the game to be loaded will be saved
+     * @param saveFileIndex the index of {@link SaveFile} referring to the choosen save file.
      * @throws IOException if an I/O error occurs
      * @throws FileNotFoundException if the {@link URL} passed does not reference an existent file
      */
-    void saveGame(File saveFile) throws FileNotFoundException, IOException;
+    void saveGame(int saveFileIndex) throws FileNotFoundException, IOException;
 
     /**
      * Load a previously saved game.
-     * @param saveFile the {@link File} where the information about the game to be loaded is saved
+     * @param saveFileIndex the index of {@link SaveFile} referring to the choosen save file.
      * @throws IOException if an I/O error occurs
      * @throws IllegalArgumentException if the file referenced by the {@link URL} isn't compatible with this application
      */
-    void loadGame(File saveFile) throws IOException;
+    void loadGame(int saveFileIndex) throws IOException, IllegalArgumentException;
 
     /**
      * Stops definitely the current game.

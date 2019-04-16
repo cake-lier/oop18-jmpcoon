@@ -1,16 +1,14 @@
 package view.menus;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.google.common.base.Optional;
-
-import java.io.File;
 
 import controller.app.AppController;
 import javafx.collections.FXCollections;
@@ -38,11 +36,6 @@ import view.ResizableView;
  */
 public final class AppMenuImpl implements AppMenu {
     private static final String LAYOUT_PATH = "layouts/";
-    private static final String SAVES_PATH = System.getProperty("user.home") + System.getProperty("file.separator") + "jmpcoon" 
-                                             + System.getProperty("file.separator");
-    private static final String FIRST_SAVE_FILE = "save1.sav";
-    private static final String SECOND_SAVE_FILE = "save2.sav";
-    private static final String THIRD_SAVE_FILE = "save3.sav";
     private static final String MENU_LAYOUT = LAYOUT_PATH + "menu.fxml";
     private static final String SETTINGS_LAYOUT = LAYOUT_PATH + "settings.fxml";
     private static final String LOADER_LAYOUT = LAYOUT_PATH + "savesLoader.fxml";
@@ -134,29 +127,29 @@ public final class AppMenuImpl implements AppMenu {
         }
     }
 
-    private void initLoadDeleteButton(final Button load, final Button delete, final String fileName) {
-        final File file = Paths.get(SAVES_PATH + fileName).toFile();
+    private void initLoadDeleteButton(final Button load, final Button delete, final int saveFileIndex) {
         load.setStyle(FONT_SIZE + this.stageHeight / LOAD_BUTTONS_RATIO + SIZE_UNIT);
         delete.setStyle(FONT_SIZE + this.stageHeight / DELETE_BUTTONS_RATIO + SIZE_UNIT);
-        if (file.exists()) {
-            final String created = LocalDateTime.ofEpochSecond(file.lastModified() / 1000, 0, 
-                                                               ZoneOffset.of(ZoneOffset.systemDefault()
-                                                                                       .getRules()
-                                                                                       .getOffset(Instant.now())
-                                                                                       .getId()))
+        if (this.controller.getSaveFileAvailability().get(saveFileIndex).isPresent()) {
+            final String created = LocalDateTime.ofEpochSecond(
+                                                    this.controller.getSaveFileAvailability().get(saveFileIndex).get() / 1000, 0, 
+                                                    ZoneOffset.of(ZoneOffset.systemDefault()
+                                                                            .getRules()
+                                                                            .getOffset(Instant.now())
+                                                                            .getId()))
                                                 .format(DateTimeFormatter.ofPattern(TIME_FORMAT));
             load.setText(created);
             load.setOnMouseClicked(e -> {
                 this.music.stop();
-                this.controller.startGame(Optional.of(file));
+                this.controller.startGame(Optional.of(saveFileIndex));
             });
             delete.setOnMouseClicked(e -> {
                 final Alert deleteAlert = new Alert(AlertType.CONFIRMATION, DEL_MSG);
                 deleteAlert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                 final Optional<ButtonType> choice = Optional.fromJavaUtil(deleteAlert.showAndWait());
                 if (choice.isPresent() && choice.get().equals(ButtonType.OK)) {
-                    if (!file.delete()) {
-                        new Alert(AlertType.ERROR, file.getName() + DEL_ERR_MSG).show();
+                    if (!this.controller.deleteSaveFile(saveFileIndex)) {
+                        new Alert(AlertType.ERROR, "save file " + saveFileIndex + DEL_ERR_MSG).show();
                     }
                     load.setDisable(true);
                     load.setText(NO_SAVE_MSG);
@@ -190,9 +183,9 @@ public final class AppMenuImpl implements AppMenu {
             this.quitButton.setOnMouseClicked(e -> this.controller.exitApp());
             this.drawFromURL(LOADER_LAYOUT, root);
             this.savesPage.setVisible(false);
-            this.initLoadDeleteButton(this.firstSave, this.firstDelete, FIRST_SAVE_FILE);
-            this.initLoadDeleteButton(this.secondSave, this.secondDelete, SECOND_SAVE_FILE);
-            this.initLoadDeleteButton(this.thirdSave, this.thirdDelete, THIRD_SAVE_FILE);
+            this.initLoadDeleteButton(this.firstSave, this.firstDelete, 0);
+            this.initLoadDeleteButton(this.secondSave, this.secondDelete, 1);
+            this.initLoadDeleteButton(this.thirdSave, this.thirdDelete, 2);
             this.backSavesButton.setStyle(FONT_SIZE + this.stageHeight / BACK_BUTTONS_RATIO + SIZE_UNIT);
             this.backSavesButton.setOnMouseClicked(e -> {
                 this.savesPage.setVisible(false);

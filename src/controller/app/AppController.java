@@ -1,6 +1,7 @@
 package controller.app;
 
 import java.io.File;
+import java.util.List;
 
 import com.google.common.base.Optional;
 
@@ -23,7 +24,20 @@ public interface AppController {
     /**
      * Starts the game. It can receive a {@link String} which represents a file from which to load the game to play or not. In the
      * latter case, it will start a new game.
-     * @param saveFile The URL of the file from which to load the game, if present.
+     * @param saveFileIndex The index of the file from which to load the game, if present.
      */
-    void startGame(Optional<File> saveFile);
+    void startGame(Optional<Integer> saveFileIndex);
+
+    /**
+     * @return a list of Optional. The nth element of the list is present if the nth possible save file exist, and it's the time
+     * at which the file was last modified, it's not present if the nth possible file doesn't exist yet.
+     */
+    List<Optional<Long>> getSaveFileAvailability();
+
+    /**
+     * Deletes a save file. 
+     * @param saveFileIndex the index of the save file to delete
+     * @return if the deletion was successful or not.
+     */
+    boolean deleteSaveFile(int saveFileIndex);
 }

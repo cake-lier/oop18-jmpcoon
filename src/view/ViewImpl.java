@@ -106,9 +106,9 @@ public final class ViewImpl implements View, ResizableView {
      * {@inheritDoc}
      */
     @Override
-    public void displayGame(final Optional<File> saveFile) {
+    public void displayGame(final Optional<Integer> saveFileIndex) {
         this.createNewTrack(GAME_MUSIC);
         final GameView gameView = new GameViewImpl(this.controller, this, this.stage, this.player);
-        gameView.initialize(saveFile);
+        gameView.initialize(saveFileIndex);
     }
 }

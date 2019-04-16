@@ -5,9 +5,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.google.common.base.Optional;
 
+import controller.SaveFile;
 import view.View;
 
 /**
@@ -63,7 +67,27 @@ public final class AppControllerImpl implements AppController {
      * {@inheritDoc}
      */
     @Override
-    public void startGame(final Optional<File> saveFile) {
-        this.view.displayGame(saveFile);
+    public void startGame(final Optional<Integer> saveFileIndex) {
+        this.view.displayGame(saveFileIndex);
+    }
+
+    @Override
+    public List<Optional<Long>> getSaveFileAvailability() {
+        final List<Optional<Long>> list = new LinkedList<>();
+        Arrays.asList(SaveFile.values()).stream()
+                                        .map(v -> v.getSavePath())
+                                        .map(File::new)
+                                        .forEach(f -> list.add(f.exists() ? Optional.of(f.lastModified()) : Optional.absent()));
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean deleteSaveFile(final int saveFileIndex) {
+        return saveFileIndex >= 0
+               && saveFileIndex < SaveFile.values().length
+               && new File(SaveFile.values()[saveFileIndex].getSavePath()).delete();
     }
 }

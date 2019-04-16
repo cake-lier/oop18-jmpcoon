@@ -3,9 +3,6 @@ package model.physics;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.function.Supplier;
 
 import com.google.common.base.Optional;
@@ -242,25 +239,6 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private void throwException(final boolean condition, final Supplier<RuntimeException> supplier) {
         if (condition) {
             throw supplier.get();
-        }
-    }
-
-    private void writeObject(final ObjectOutputStream out) throws IOException {
-        out.defaultWriteObject();
-        if (this.physicalWorld.isPresent()) {
-            out.writeBoolean(true);
-            out.writeObject(this.physicalWorld.get());
-        } else {
-            out.writeBoolean(false);
-        }
-    }
-
-    private void readObject(final ObjectInputStream in) throws ClassNotFoundException, IOException {
-        in.defaultReadObject();
-        if (in.readBoolean()) {
-            this.physicalWorld = Optional.of((WholePhysicalWorld) in.readObject());
-        } else {
-            this.physicalWorld = Optional.absent();
         }
     }
 }

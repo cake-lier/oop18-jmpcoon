@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -47,8 +48,6 @@ public final class WorldImpl implements World, NotifiableWorld {
     private static final long serialVersionUID = 4663479513512261181L;
     private static final double WORLD_WIDTH = 8;
     private static final double WORLD_HEIGHT = 4.5;
-    private static final double WIN_ZONE_X = 0.37;
-    private static final double WIN_ZONE_Y = 3.71;
     private static final int ROLLING_POINTS = 50;
     private static final int WALKING_POINTS = 100;
     private static final String NO_INIT_MSG = "It's needed to initialize this world by initLevel() before using it";
@@ -141,14 +140,6 @@ public final class WorldImpl implements World, NotifiableWorld {
                 this.deadEntities.add(current);
                 iterator.remove();
                 this.innerWorld.removeBody(current.getPhysicalBody());
-            }
-        }
-        if (this.currentState == GameState.IS_GOING && this.player.isPresent()) {
-            if (!this.player.get().isAlive()) {
-                this.currentState = GameState.GAME_OVER;
-            }
-            if (this.player.get().getPosition().getLeft() < WIN_ZONE_X && this.player.get().getPosition().getRight() > WIN_ZONE_Y) {
-                this.currentState = GameState.PLAYER_WON;
             }
         }
         this.aliveEntities.getInstances(WalkingEnemy.class).forEach(WalkingEnemy::computeMovement);
