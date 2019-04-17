@@ -2,7 +2,7 @@ package view.game;
 
 import com.google.common.base.Optional;
 
-import model.world.EventType;
+import model.world.CollisionType;
 
 /**
  * Visual component of the game.
@@ -42,5 +42,5 @@ public interface GameView {
      * 
      * @param type The type of the event.
      */
-    void notifyEvent(EventType type);
+    void notifyEvent(CollisionType type);
 }

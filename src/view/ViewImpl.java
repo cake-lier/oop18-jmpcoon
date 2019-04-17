@@ -1,7 +1,5 @@
 package view;
 
-import java.io.File;
-
 import com.google.common.base.Optional;
 
 import controller.app.AppController;

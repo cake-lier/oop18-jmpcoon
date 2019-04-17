@@ -13,11 +13,9 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     private static final double STARVELOCITY_X = 1.60;
     private static final double STARVELOCITY_Y = 1.50;
 
-    private boolean superStar;
+    private boolean invincible;
     private boolean invulnerable;
     private int lives;
-
-    private final SerializableBody body;
 
     /**
      * Builds a new {@link PlayerPhysicalBody}.
@@ -25,8 +23,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
      */
     public PlayerPhysicalBody(final SerializableBody body) {
         super(body);
-        this.body = body;
-        this.superStar = false;
+        this.invincible = false;
         this.invulnerable = false;
         this.lives = 1;
     }
@@ -42,7 +39,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
      * @return true if {@link Player} is invincible.
      */
     public boolean isInvincible() {
-        return this.superStar;
+        return this.invincible;
     }
 
     /**
@@ -53,7 +50,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
         if (powerUpType == PowerUpType.EXTRA_LIFE) {
             this.lives++;
         } else if (powerUpType == PowerUpType.SUPER_STAR) {
-            this.superStar = true;
+            this.invincible = true;
             this.modifyMaxVelocity(STARVELOCITY_X, STARVELOCITY_Y);
         }
     }
@@ -84,7 +81,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
             this.invulnerable = true;
         }
         if (this.lives == 0) {
-            this.body.setActive(false);
+            this.getBody().setActive(false);
         }
     }
 
@@ -92,7 +89,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
      * The effect of the Super Star {@link PowerUp} ends.
      */
     public void endSuperStar() {
-        this.superStar = false;
+        this.invincible = false;
         this.modifyMaxVelocity(1, 1);
     }
 

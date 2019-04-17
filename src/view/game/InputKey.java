@@ -12,15 +12,15 @@ public enum InputKey {
     /**
      * Player climbs up.
      */
-    W(Optional.of(InputType.CLIMB_UP)), 
+    W(Optional.of(InputType.CLIMB_UP)),
     /**
      * Player goes left.
      */
-    A(Optional.of(InputType.LEFT)), 
+    A(Optional.of(InputType.LEFT)),
     /**
      * Player goes right.
      */
-    D(Optional.of(InputType.RIGHT)), 
+    D(Optional.of(InputType.RIGHT)),
     /**
      * Player climbs down a {@link model.entities.Ladder}.
      */

@@ -100,7 +100,7 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
      * @param multiplierY The multiplier for the vertical maximum velocity
      */
     public void setMaxVelocity(final double multiplierX, final double multiplierY) {
-        this.maxVelocityX = MAXVELOCITY_X * multiplierX;
-        this.maxVelocityY = MAXVELOCITY_Y * multiplierY;
+        this.maxVelocityX *= multiplierX;
+        this.maxVelocityY *= multiplierY;
     }
 }

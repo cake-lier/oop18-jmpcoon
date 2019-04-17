@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import com.google.common.base.Optional;
 
@@ -27,6 +26,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import view.ResizableView;
@@ -46,6 +46,7 @@ public final class AppMenuImpl implements AppMenu {
     private static final String FONT_SIZE = "-fx-font-size: ";
     private static final String SIZE_UNIT = "em";
     private static final int VOLUME_RATIO = 100;
+    private static final int TITLE_RATIO = 105;
     private static final int MAIN_BUTTONS_RATIO = 200;
     private static final int BACK_BUTTONS_RATIO = 300;
     private static final int LOAD_BUTTONS_RATIO = 135;
@@ -65,6 +66,10 @@ public final class AppMenuImpl implements AppMenu {
     private GridPane savesPage;
     @FXML
     private GridPane settingsPage;
+    @FXML
+    private Text firstTitle;
+    @FXML
+    private Text secondTitle;
     @FXML
     private Button startButton;
     @FXML
@@ -173,6 +178,8 @@ public final class AppMenuImpl implements AppMenu {
             this.stage.getScene().setRoot(root);
             this.drawFromURL(MENU_LAYOUT, root);
             this.frontPage.setVisible(false);
+            this.firstTitle.setStyle(FONT_SIZE + this.stageHeight / TITLE_RATIO + SIZE_UNIT);
+            this.secondTitle.setStyle(FONT_SIZE + this.stageHeight / TITLE_RATIO + SIZE_UNIT);
             this.startButton.setStyle(FONT_SIZE + this.stageHeight / MAIN_BUTTONS_RATIO + SIZE_UNIT);
             this.startButton.setOnMouseClicked(e -> {
                 this.music.stop();

@@ -32,7 +32,8 @@
         <RowConstraints percentHeight="14"></RowConstraints>
         <RowConstraints percentHeight="6"></RowConstraints>
     </rowConstraints>
-    <Text styleClass="titlePieces"
+    <Text fx:id="firstTitle"
+          styleClass="titlePieces"
           GridPane.columnIndex="1"
           GridPane.halignment="CENTER"
           GridPane.rowIndex="1"
@@ -40,7 +41,8 @@
           GridPane.columnSpan="3">
         Jumping Raccoon
     </Text>
-    <Text styleClass="titlePieces"
+    <Text fx:id="secondTitle"
+          styleClass="titlePieces"
           GridPane.columnIndex="1"
           GridPane.halignment="CENTER"
           GridPane.rowIndex="2"

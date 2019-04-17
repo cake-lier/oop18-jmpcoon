@@ -67,6 +67,6 @@ public final class PhysicsUtils {
      */
     public static boolean isBodyAbove(final PhysicalBody aboveBody, final PhysicalBody belowBody, final double yContact) {
         return (Math.abs(aboveBody.getPosition().getRight() - aboveBody.getDimensions().getRight() / 2) - yContact) < PRECISION
-               && yContact > belowBody.getPosition().getRight();
+               && yContact > (belowBody.getPosition().getRight() + belowBody.getDimensions().getRight() / 4);
     }
 }

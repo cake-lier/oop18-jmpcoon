@@ -21,10 +21,10 @@ public interface PhysicalFactory extends Serializable {
 
     /**
      * A {@link PhysicalWorld} that manages the physics simulation needed by the {@link model.world.World}. Notifies the
-     * {@link model.world.World} of occurred events through the methods contained in the interface {@link NotifiableWorld}. The
+     * {@link model.world.World} of occurred events through the methods contained in the interface {@link AlertableWorld}. The
      * {@link PhysicalWorld} considers only positive coordinates.
      * @param outerWorld The reference to the {@link model.world.World} which contains only methods for notifying it of occurred
-     * physical events, such as {@link NotifiableWorld#notifyCollision(model.world.CollisionType)}.
+     * physical events, such as {@link AlertableWorld#notifyCollision(model.world.CollisionType)}.
      * @param width The width of the {@link PhysicalWorld}.
      * @param height The height of the {@link PhysicalWorld}.
      * @return The {@link PhysicalWorld} with the given dimensions.

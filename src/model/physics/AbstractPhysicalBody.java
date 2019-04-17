@@ -33,6 +33,14 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
     }
 
     /**
+     * 
+     * @return The body that this {@link PhysicalBody} contains.
+     */
+    protected SerializableBody getBody() {
+        return this.body;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

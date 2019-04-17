@@ -17,14 +17,13 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.entities.EntityType;
-import model.world.EventType;
+import model.world.CollisionType;
 import view.View;
 import view.menus.GameMenu;
 import view.menus.GameMenuImpl;
@@ -45,14 +44,12 @@ import com.google.common.base.Optional;
 import controller.app.AppController;
 import controller.game.GameController;
 import controller.game.GameControllerImpl;
+import controller.game.InputType;
 
 /**
  * The class implementation of the {@link GameView} interface.
  */
 public final class GameViewImpl implements GameView {
-    private static final AudioClip JUMP = new AudioClip(ClassLoader.getSystemResource("sounds/jump.wav").toExternalForm());
-    private static final AudioClip ROLL_DEST = new AudioClip(ClassLoader.getSystemResource("sounds/rollDestroy.wav").toExternalForm());
-    private static final AudioClip WALK_DEST = new AudioClip(ClassLoader.getSystemResource("sounds/walkDestroy.wav").toExternalForm());
     private static final String INIT_ERR = "You can't call this method before initializing the instance";
     private static final String BG_IMAGE = "images/bg_game.png";
     private static final String LAYOUT_PATH = "layouts/";
@@ -146,6 +143,11 @@ public final class GameViewImpl implements GameView {
     public void initialize(final Optional<Integer> saveFileIndex) {
         this.setupStage();
         this.gameMenu.draw();
+        Arrays.asList(Sounds.values()).parallelStream()
+                                      .map(value -> value.getSound())
+                                      .forEach(sound -> {
+                                          sound.setVolume(this.music.isMute() ? 0 : this.music.getVolume());
+                                      });
         if (saveFileIndex.isPresent()) {
             try {
                 this.gameController.loadGame(saveFileIndex.get());
@@ -248,10 +250,9 @@ public final class GameViewImpl implements GameView {
                       }
                   } else {
                       if (input.convert().isPresent()) {
-                          if (this.gameController.processInput(input.convert().get())) {
-                              if (input == InputKey.SPACE) {
-                                  this.notifyEvent(EventType.PLAYER_JUMP);
-                              }
+                          final InputType type = input.convert().get();
+                          if (this.gameController.processInput(type) && type == InputType.UP) {
+                              Sounds.JUMP.getSound().play();
                           }
                       }
                   }
@@ -264,6 +265,7 @@ public final class GameViewImpl implements GameView {
     public void showGameOver() {
         this.checkInitialization();
         Platform.runLater(() -> {
+            Sounds.PLAYER_DEATH.getSound().play();
             this.showMessage(LOSE_MSG);
         });
     }
@@ -274,6 +276,7 @@ public final class GameViewImpl implements GameView {
     public void showPlayerWin() {
         this.checkInitialization();
         Platform.runLater(() -> {
+            Sounds.END_GAME.getSound().play();
             this.showMessage(WIN_MSG);
         });
     }
@@ -317,17 +320,20 @@ public final class GameViewImpl implements GameView {
     }
 
     @Override
-    public void notifyEvent(final EventType type) {
+    public void notifyEvent(final CollisionType type) {
         this.checkInitialization();
         switch (type) {
-            case ROLLING_COLLISION:
-                ROLL_DEST.play();
+            case ROLLING_ENEMY_KILLED:
+                Sounds.ROLLING_DESTROY.getSound().play();
                 break;
-            case WALKING_COLLISION:
-                WALK_DEST.play();
+            case WALKING_ENEMY_KILLED:
+                Sounds.WALKING_DESTROY.getSound().play();
                 break;
-            case PLAYER_JUMP:
-                JUMP.play();
+            case INVINCIBILITY_HIT:
+                Sounds.INVINCIBIITY.getSound().play();
+                break;
+            case POWER_UP_HIT:
+                Sounds.POWER_UP_GOT.getSound().play();
                 break;
             default:
         }

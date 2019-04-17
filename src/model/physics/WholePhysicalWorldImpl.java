@@ -143,26 +143,39 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                     final Vector2 point = contactConstraint.getContacts().get(0).getPoint();
                     final Pair<Double, Double> collisionPoint = new ImmutablePair<>(point.x, point.y);
                     final EntityState playerState = playerTriple.getMiddle().getState();
+                    final NotifiableWorld world = WholePhysicalWorldImpl.this.outerWorld;
                     if (otherTriple.getRight() == EntityType.POWERUP) {
                         otherTriple.getLeft().setActive(false);
-                        WholePhysicalWorldImpl.this.processPowerUp(WholePhysicalWorldImpl.this.powerups.get(otherTriple.getLeft()));
-                    }
-                    if (otherTriple.getRight() == EntityType.WALKING_ENEMY
-                            && PhysicsUtils.isBodyOnTop(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint)) {
-                        otherTriple.getLeft().setActive(false);
-                        WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.WALKING_ENEMY_KILLED);
-                    } else if (otherTriple.getRight() == EntityType.ROLLING_ENEMY
-                            && PhysicsUtils.isBodyAbove(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint.getRight())) {
-                        otherTriple.getLeft().setActive(false);
-                        WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.ROLLING_ENEMY_KILLED);
-                    } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
+                        final PowerUpType type = WholePhysicalWorldImpl.this.powerups.get(otherTriple.getLeft());
+                        if (type == PowerUpType.SUPER_STAR) {
+                            world.notifyCollision(CollisionType.INVINCIBILITY_HIT);
+                        } else {
+                            world.notifyCollision(CollisionType.POWER_UP_HIT);
+                        }
+                        WholePhysicalWorldImpl.this.processPowerUp(type);
+                    } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY
+                               || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
+                        if (playerState == EntityState.CLIMBING_UP || playerState == EntityState.CLIMBING_DOWN) {
+                            return false;
+                        }
+                        if ((otherTriple.getRight() == EntityType.WALKING_ENEMY 
+                               && PhysicsUtils.isBodyOnTop(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint))
+                            || (otherTriple.getRight() == EntityType.ROLLING_ENEMY
+                                && PhysicsUtils.isBodyAbove(playerTriple.getMiddle(), otherTriple.getMiddle(), 
+                                                            collisionPoint.getRight()))) {
+                            otherTriple.getLeft().setActive(false);
+                            world.notifyCollision(otherTriple.getRight() == EntityType.WALKING_ENEMY
+                                                                            ? CollisionType.WALKING_ENEMY_KILLED
+                                                                            : CollisionType.ROLLING_ENEMY_KILLED);
+                            return true;
+                        }
                         final PlayerPhysicalBody player = WholePhysicalWorldImpl.this.player.get();
                         if (player.isInvincible()) {
                             otherTriple.getLeft().setActive(false);
                         } else if (!player.isInvulnerable()) {
                             player.hit();
                             if (!player.exist()) {
-                                WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.PLAYER_KILLED);
+                                world.notifyCollision(CollisionType.PLAYER_KILLED);
                             }
                         }
                     } else if (otherTriple.getRight() == EntityType.PLATFORM
@@ -171,9 +184,9 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                         final PhysicalBody collidingLadder = WholePhysicalWorldImpl.this.collidingLadder.get();
                         if (PhysicsUtils.isBodyOnTop(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint)
                             && ((playerState == EntityState.CLIMBING_DOWN && PhysicsUtils.isBodyAtBottomHalf(playerTriple.getMiddle(),
-                                                                                                       collidingLadder))
+                                                                                                             collidingLadder))
                                 || (playerState == EntityState.CLIMBING_UP && !PhysicsUtils.isBodyAtBottomHalf(playerTriple.getMiddle(),
-                                                                                                         collidingLadder)))) {
+                                                                                                               collidingLadder)))) {
                             if (WholePhysicalWorldImpl.this.player.isPresent()) {
                                 WholePhysicalWorldImpl.this.player.get().setIdle();
                             }
@@ -187,7 +200,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
 
     private void processPowerUp(final PowerUpType type) {
         if (type == PowerUpType.GOAL) {
-            WholePhysicalWorldImpl.this.outerWorld.notifyCollision(CollisionType.GOAL_HIT); 
+            this.outerWorld.notifyCollision(CollisionType.GOAL_HIT); 
         } else {
             this.player.get().givePowerUp(type);
         }
