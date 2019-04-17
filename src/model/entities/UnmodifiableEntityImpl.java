@@ -14,7 +14,7 @@ import model.physics.BodyShape;
  */
 public final class UnmodifiableEntityImpl implements UnmodifiableEntity {
     private final Entity innerEntity;
-    private final boolean isDynamic;
+    private final boolean dynamic;
     private final Optional<PowerUpType> powerUpType;
 
     /*
@@ -23,7 +23,7 @@ public final class UnmodifiableEntityImpl implements UnmodifiableEntity {
      */
     private UnmodifiableEntityImpl(final Entity innerEntity, final boolean isDynamic, final Optional<PowerUpType> powerUpType) {
         this.innerEntity = innerEntity;
-        this.isDynamic = isDynamic;
+        this.dynamic = isDynamic;
         this.powerUpType = powerUpType;
     }
 
@@ -107,7 +107,7 @@ public final class UnmodifiableEntityImpl implements UnmodifiableEntity {
      */
     @Override
     public boolean isDynamic() {
-        return this.isDynamic;
+        return this.dynamic;
     }
 
     /**

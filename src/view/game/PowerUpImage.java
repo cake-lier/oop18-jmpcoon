@@ -7,19 +7,17 @@ public enum PowerUpImage {
     /**
      * Image for a {@link PowerUpType#GOAL}.
      */
-    GOAL(getSpritesDir() + "goal.png"),
+    GOAL("goal.png"),
     /**
      * Image for a {@link PowerUpType#EXTRA_LIFE}.
      */
-    EXTRA_LIFE(getSpritesDir() + "extra_life.png"),
+    EXTRA_LIFE("extra_life.png"),
     /**
      * Image for a {@link PowerUpType#INVINCIBILITY}.
      */
-    INVINCIBILITY(getSpritesDir() + "invincibility.png");
+    INVINCIBILITY("invincibility.png");
 
-    private static String getSpritesDir() {
-        return "images/";
-    }
+    private static final String SPRITES_DIR = "images/";
 
     private final String imageUrl;
 
@@ -32,6 +30,6 @@ public enum PowerUpImage {
      * @return the url of the image associated to the {@link PowerUpType}
      */
     public String getImageUrl() {
-        return this.imageUrl;
+        return SPRITES_DIR + this.imageUrl;
     }
 }

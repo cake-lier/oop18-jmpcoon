@@ -37,10 +37,10 @@ public final class Player extends DynamicEntity {
      * @param movement The movement to apply to player
      */
     public void move(final MovementType movement) {
-        MovementValues moveValues = Arrays.asList(MovementValues.values())
-                                    .stream()
-                                    .filter(mValue -> mValue.getMovementType() == movement)
-                                    .findAny().get();
+        final MovementValues moveValues = Arrays.asList(MovementValues.values())
+                                                .stream()
+                                                .filter(mValue -> mValue.getMovementType() == movement)
+                                                .findAny().get();
         this.body.applyMovement(moveValues.getMovementType(), moveValues.getImpulseX(), moveValues.getImpulseY());
     }
 

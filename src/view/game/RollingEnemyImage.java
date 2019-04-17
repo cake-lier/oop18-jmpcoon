@@ -7,19 +7,17 @@ public enum RollingEnemyImage {
     /**
      * Image for an idle {@link RollingEnemy}.
      */
-    IDLE(getSpritesDir() + "rollingEnemy.png", 1),
+    IDLE("rollingEnemy.png", 1),
     /**
      * Image for a {@link RollingEnemy} moving left.
      */
-    MOVING_LEFT(getSpritesDir() + "rollingEnemy.png", 1),
+    MOVING_LEFT("rollingEnemy.png", 1),
     /**
      * Image for a {@link RollingEnemy} moving left.
      */
-    MOVING_RIGHT(getSpritesDir() + "rollingEnemy.png", 1);
+    MOVING_RIGHT("rollingEnemy.png", 1);
 
-    private static String getSpritesDir() {
-        return "images/";
-    }
+    private static final String SPRITES_DIR = "images/";
 
     private final String spriteSheetUrl;
     private final int framesNumber;
@@ -34,7 +32,7 @@ public enum RollingEnemyImage {
      * @return the url of the sprite sheet associated to the {@link model.entities.EntityState}
      */
     public String getImageUrl() {
-        return this.spriteSheetUrl;
+        return SPRITES_DIR + this.spriteSheetUrl;
     }
 
     /**

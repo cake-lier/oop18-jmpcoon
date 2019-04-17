@@ -184,10 +184,9 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                             && ((playerState == EntityState.CLIMBING_DOWN && PhysicsUtils.isBodyAtBottomHalf(playerTriple.getMiddle(),
                                                                                                              collidingLadder))
                                 || (playerState == EntityState.CLIMBING_UP && !PhysicsUtils.isBodyAtBottomHalf(playerTriple.getMiddle(),
-                                                                                                               collidingLadder)))) {
-                            if (WholePhysicalWorldImpl.this.player.isPresent()) {
+                                                                                                               collidingLadder)))
+                            && WholePhysicalWorldImpl.this.player.isPresent()) {
                                 WholePhysicalWorldImpl.this.player.get().setIdle();
-                            }
                         }
                     }
                 }

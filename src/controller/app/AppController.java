@@ -1,6 +1,5 @@
 package controller.app;
 
-import java.io.File;
 import java.util.List;
 
 import com.google.common.base.Optional;

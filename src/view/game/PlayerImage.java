@@ -7,31 +7,29 @@ public enum PlayerImage {
     /**
      * Image for a {@link Player} climbing up.
      */
-    CLIMBING_UP(getSpritesDir() + "raccoon_climb.png", 2),
+    CLIMBING_UP("raccoon_climb.png", 2),
     /**
      * Image for a {@link Player} climbing down.
      */
-    CLIMBING_DOWN(getSpritesDir() + "raccoon_climb.png", 2),
+    CLIMBING_DOWN("raccoon_climb.png", 2),
     /**
      * Image for an idle {@link Player}.
      */
-    IDLE(getSpritesDir() + "raccoon_idle.png", 1),
+    IDLE("raccoon_idle.png", 1),
     /**
      * Image for a {@link Player} jumping.
      */
-    JUMPING(getSpritesDir() + "raccoon_jump.png", 4),
+    JUMPING("raccoon_jump.png", 4),
     /**
      * Image for a {@link Player} moving left.
      */
-    MOVING_LEFT(getSpritesDir() + "raccoon_walking.png", 2),
+    MOVING_LEFT("raccoon_walking.png", 2),
     /**
      * Image for a {@link Player} moving left.
      */
-    MOVING_RIGHT(getSpritesDir() + "raccoon_walking.png", 2);
+    MOVING_RIGHT("raccoon_walking.png", 2);
 
-    private static String getSpritesDir() {
-        return "images/";
-    }
+    private static final String SPRITES_DIR = "images/";
 
     private final String spriteSheetUrl;
     private final int framesNumber;
@@ -46,7 +44,7 @@ public enum PlayerImage {
      * @return the url of the sprite sheet associated to the {@link model.entities.EntityState}
      */
     public String getImageUrl() {
-        return this.spriteSheetUrl;
+        return SPRITES_DIR + this.spriteSheetUrl;
     }
 
     /**

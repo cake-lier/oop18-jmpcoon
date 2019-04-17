@@ -7,19 +7,17 @@ public enum WalkingEnemyImage {
     /**
      * Image for an idle {@link WalkingEnemy}.
      */
-    IDLE(getSpritesDir() + "walkingEnemy_idle.png", 1),
+    IDLE("walkingEnemy_idle.png", 1),
     /**
      * Image for a {@link WalkingEnemy} moving left.
      */
-    MOVING_LEFT(getSpritesDir() + "walkingEnemy_walking.png", 3),
+    MOVING_LEFT("walkingEnemy_walking.png", 3),
     /**
      * Image for a {@link WalkingEnemy} moving left.
      */
-    MOVING_RIGHT(getSpritesDir() + "walkingEnemy_walking.png", 3);
+    MOVING_RIGHT("walkingEnemy_walking.png", 3);
 
-    private static String getSpritesDir() {
-        return "images/";
-    }
+    private static final String SPRITES_DIR = "images/";
 
     private final String spriteSheetUrl;
     private final int framesNumber;
@@ -34,7 +32,7 @@ public enum WalkingEnemyImage {
      * @return the url of the sprite sheet associated to the {@link model.entities.EntityState}
      */
     public String getImageUrl() {
-        return this.spriteSheetUrl;
+        return SPRITES_DIR + this.spriteSheetUrl;
     }
 
     /**

@@ -16,7 +16,9 @@ public final class EntityBuilderUtils {
         return new AbstractEntityBuilder<EnemyGenerator>() {
             @Override
             protected EnemyGenerator buildEntity() {
-                return new EnemyGenerator(super.createStaticPhysicalBody(EntityType.ENEMY_GENERATOR));
+                return new EnemyGenerator(super.createStaticPhysicalBody(EntityType.ENEMY_GENERATOR), 
+                                          super.getWorld(),
+                                          super.getPhysicalFactory());
             }
         };
     }

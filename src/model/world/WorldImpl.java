@@ -100,14 +100,18 @@ public final class WorldImpl implements World, NotifiableWorld {
                                                 .findFirst()
                                                 .get();
             final Class<? extends Entity> entityClass = creator.getAssociatedClass();
-            this.aliveEntities.put(entityClass, creator.getEntityBuilder().setFactory(this.physicsFactory)
-                                                                          .setDimensions(entity.getDimensions())
-                                                                          .setAngle(entity.getAngle())
-                                                                          .setPosition(entity.getPosition())
-                                                                          .setShape(entity.getEntityShape())
-                                                                          .setPowerUpType(entity.getPowerUpType())
-                                                                          .setWalkingRange(entity.getWalkingRange())
-                                                                          .build());
+            this.aliveEntities.put(entityClass, creator.getEntityBuilder()
+                                                       .setFactory(this.physicsFactory)
+                                                       .setDimensions(entity.getDimensions())
+                                                       .setAngle(entity.getAngle())
+                                                       .setPosition(entity.getPosition())
+                                                       .setShape(entity.getEntityShape())
+                                                       .setPowerUpType(entity.getPowerUpType())
+                                                       .setWalkingRange(entity.getWalkingRange())
+                                                       .setWorld(entity.getEntityType() == EntityType.ENEMY_GENERATOR
+                                                                 ? Optional.of(this)
+                                                                 : Optional.absent())
+                                                       .build());
             if (entity.getEntityType() == EntityType.PLAYER) {
                 this.player = Optional.fromJavaUtil(this.aliveEntities.getInstances(Player.class).stream().findFirst());
             }
@@ -144,15 +148,13 @@ public final class WorldImpl implements World, NotifiableWorld {
                 this.innerWorld.removeBody(current.getValue().getPhysicalBody());
             }
         }
-        if (this.currentState == GameState.IS_GOING && this.player.isPresent()) {
-            if (!this.player.get().isAlive()) {
-                this.currentState = GameState.GAME_OVER;
-            }
+        if (this.currentState == GameState.IS_GOING && this.player.isPresent() && !this.player.get().isAlive()) {
+            this.currentState = GameState.GAME_OVER;
         }
         this.aliveEntities.getInstances(WalkingEnemy.class).forEach(WalkingEnemy::computeMovement);
         this.aliveEntities.getInstances(EnemyGenerator.class)
                           .forEach(enemyGenerator -> this.aliveEntities.putAll(RollingEnemy.class,
-                                                                               enemyGenerator.onTimeAdvanced(this.physicsFactory)));
+                                                                               enemyGenerator.onTimeAdvanced()));
     }
 
     /*

@@ -7,19 +7,17 @@ public enum StaticEntityImage {
     /**
      * Modular image for a {@link Ladder}.
      */
-    LADDER(getSpritesDir() + "ladder.png"),
+    LADDER("ladder.png"),
     /**
      * Modular image for a {@link Platform}.
      */
-    PLATFORM(getSpritesDir() + "platform.png"),
+    PLATFORM("platform.png"),
     /**
      * Image for a {@link PowerUpType#INVINCIBILITY}.
      */
-    ENEMY_GENERATOR(getSpritesDir() + "enemyGenerator.png");
+    ENEMY_GENERATOR("enemyGenerator.png");
 
-    private static String getSpritesDir() {
-        return "images/";
-    }
+    private static final String SPRITES_DIR = "images/";
 
     private final String imageUrl;
 
@@ -32,6 +30,6 @@ public enum StaticEntityImage {
      * @return the url of the image associated to the {@link StaticEntity}
      */
     public String getImageUrl() {
-        return this.imageUrl;
+        return SPRITES_DIR + this.imageUrl;
     }
 }

@@ -7,8 +7,10 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import model.physics.BodyShape;
+import model.physics.PhysicalBody;
 import model.physics.PhysicalFactory;
 import model.physics.StaticPhysicalBody;
+import model.world.World;
 
 /**
  * An enemy generator inside the {@link model.world.World} of the game.
@@ -22,14 +24,20 @@ public final class EnemyGenerator extends StaticEntity {
 
     private final List<RollingEnemy> enemies;
     private int count;
+    private final World world;
+    private final PhysicalFactory factory;
 
     /**
      * Creates a new {@link EnemyGenerator} with the given {@link StaticPhysicalBody}. This constructor is package protected
      * because it should be only invoked by the {@link AbstractEntityBuilder} when creating a new instance of it and no one else.
-     * @param body The {@link StaticPhysicalBody} that should be contained in this {@link EnemyGenerator}.
+     * @param body the {@link StaticPhysicalBody} that should be contained in this {@link EnemyGenerator}
+     * @param world the world where the {@link RollingEnemy} generated will live
+     * @param factory the {@link PhysicalFactory} that generates the RollingEnemy {@link PhysicalBody}
      */
-    EnemyGenerator(final StaticPhysicalBody body) {
+    public EnemyGenerator(final StaticPhysicalBody body, final World world, final PhysicalFactory factory) {
         super(body);
+        this.world = world;
+        this.factory = factory;
         this.enemies = new LinkedList<>();
         this.count = 0;
     }
@@ -45,12 +53,12 @@ public final class EnemyGenerator extends StaticEntity {
     //TODO: something better?
     /**
      * @param physicsFactory the {@link PhysicsFactory}
-     * @return a Iterable of the enemies
+     * @return a {@link Collection} containing the enemies
      */
-    public Collection<RollingEnemy> onTimeAdvanced(final PhysicalFactory physicsFactory) {
+    public Collection<RollingEnemy> onTimeAdvanced() {
         this.enemies.clear();
         if (this.checkTime()) {
-            this.enemies.add(this.createRollingEnemy(physicsFactory));
+            this.enemies.add(this.createRollingEnemy());
             this.enemies.get(0).applyImpulse();
         }
         return this.enemies;
@@ -60,14 +68,13 @@ public final class EnemyGenerator extends StaticEntity {
         return this.count++ % DELTA == 0;
     }
 
-    //TODO: better way to give physicsFactory to RollingEnemy?
-    private RollingEnemy createRollingEnemy(final PhysicalFactory physicsFactory) {
+    private RollingEnemy createRollingEnemy() {
         return EntityBuilderUtils.getRollingEnemyBuilder()
-                .setFactory(physicsFactory)
-                .setDimensions(ROLLING_ENEMY_DIMENSIONS)
-                .setAngle(0.0)
-                .setPosition(this.getPosition())
-                .setShape(BodyShape.CIRCLE)
-                .build();
+                                 .setFactory(this.factory)
+                                 .setDimensions(ROLLING_ENEMY_DIMENSIONS)
+                                 .setAngle(0.0)
+                                 .setPosition(this.getPosition())
+                                 .setShape(BodyShape.CIRCLE)
+                                 .build();
     }
 }
