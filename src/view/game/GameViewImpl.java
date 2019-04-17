@@ -77,7 +77,7 @@ public final class GameViewImpl implements GameView {
     private final EventHandler<KeyEvent> commandHandler;
     private EventHandler<WindowEvent> closeHandler;
     private GameController gameController;
-    private EntityConverter entityConverter;
+    private MemoizedEntityConverter entityConverter;
     private GameMenu gameMenu;
     private StackPane root;
     private boolean isMenuVisible;
@@ -168,10 +168,9 @@ public final class GameViewImpl implements GameView {
     private void setupStage() {
         final Pane platforms = new Pane();
         final Pane ladders = new Pane();
-        final Pane powerups = new Pane();
         platforms.getChildren().addAll(this.getNodes(EntityType.PLATFORM));
         ladders.getChildren().addAll(this.getNodes(EntityType.LADDER));
-        this.root.getChildren().addAll(platforms, ladders, powerups, this.entities);
+        this.root.getChildren().addAll(platforms, ladders, this.entities);
         try {
             final FXMLLoader scoreLoader = new FXMLLoader(ClassLoader.getSystemResource(SCORE_SRC));
             scoreLoader.setController(this);
@@ -196,7 +195,7 @@ public final class GameViewImpl implements GameView {
      */
     private void drawAliveEntities() {
         final List<Node> nodes = new ArrayList<>();
-        Arrays.asList(EntityType.POWERUP, EntityType.ROLLING_ENEMY, EntityType.WALKING_ENEMY, EntityType.PLAYER)
+        Arrays.asList(EntityType.POWERUP, EntityType.WALKING_ENEMY, EntityType.PLAYER, EntityType.ROLLING_ENEMY)
               .forEach(type -> nodes.addAll(this.getNodes(type)));
         this.entities.getChildren().setAll(nodes);
     }

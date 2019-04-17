@@ -2,6 +2,7 @@ package view.game;
 
 import javafx.animation.Animation;
 import javafx.scene.image.Image;
+import javafx.util.Duration;
 import model.entities.UnmodifiableEntity;
 import model.entities.EntityState;
 import java.util.HashMap;
@@ -11,25 +12,37 @@ import org.apache.commons.lang3.tuple.Pair;
 /**
  * a {@link DynamicEntity} that can be drawn.
  */
-public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
+public class DynamicDrawableEntity extends AbstractDrawableEntity {
+    private static final int DURATION = 500;
 
-    private final Map<EntityState, SpriteAnimation> map = new HashMap<>();
+    private final Map<EntityState, SpriteAnimation> map;
     private Animation currentAnimation;
     private boolean movingRight = true;
-    private EntityState lastState = EntityState.IDLE;
-    private EntityState currentState = EntityState.IDLE;
+    private EntityState currentState;
 
     /**
-     * builds a new {@link StaticDrawableEntity}.
-     * 
-     * @param image the image representing entity in the view
-     * @param entity the {@link model.entities.StaticEntity} represented by this {@link DynamicDrawableEntity}
-     * @param worldDimensions the dimensions of the {@link model.world.World} in which the {@link Entity} lives
-     * @param sceneDimensions the dimensions of the view in which this {@link DynamicDrawableEntity} will be drawn
+     * Builds a new {@link DynamicDrawableEntity}.
+     * @param spritesheets A map that matches the {@link EntityState} of the drawn {@link UnmodifiableEntity} to the sprite 
+     * sheets that will represent it. The value of an entry is a pair with the sprite sheet and the number of frames it contains.
+     * There must always be a sprite sheet for the {@link EntityState#IDLE}.
+     * @param entity The {@link UnmodifiableEntity}.
+     * @param worldDimensions The dimensions of the {@link World}
+     * @param sceneDimensions The dimensions of the view in which this {@link UnmodifiableEntity} will be drawn
      */
-    public DynamicDrawableEntity(final Image image, final UnmodifiableEntity entity,
-            final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
-        super(image, entity, worldDimensions, sceneDimensions);
+    public DynamicDrawableEntity(final Map<EntityState, Pair<Image, Integer>> spritesheets, final UnmodifiableEntity entity,
+                                 final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
+        super(spritesheets.get(EntityState.IDLE).getLeft(), entity, worldDimensions, sceneDimensions);
+        this.map = new HashMap<>();
+        this.currentState = EntityState.IDLE;
+        final int height = ((Double) spritesheets.get(EntityState.IDLE).getLeft().getHeight()).intValue();
+        spritesheets.entrySet().forEach(entry -> {
+            final int width = ((Double) entry.getValue().getLeft().getWidth()).intValue() / entry.getValue().getRight();
+            this.mapAnimation(entry.getKey(), new SpriteAnimation(entry.getValue().getLeft(), 
+                                                                    Duration.millis(DURATION),
+                                                                    entry.getValue().getRight(),
+                                                                    width,
+                                                                    height));
+        });
     }
 
 
@@ -44,13 +57,7 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
             this.getImageView().setScaleX(this.getImageView().getScaleX() * (this.movingRight ? 1 : -1));
     }
 
-    /**
-     * @param state
-     *            state
-     * @param animation
-     *            animation
-     */
-    public void mapAnimation(final EntityState state, final SpriteAnimation animation) {
+    private void mapAnimation(final EntityState state, final SpriteAnimation animation) {
         this.map.put(state, animation);
         if (state == EntityState.IDLE) {
             this.currentAnimation = animation;
@@ -63,7 +70,6 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
             this.currentAnimation = this.map.get(state);
             this.currentAnimation.setCycleCount(Animation.INDEFINITE);
             this.currentAnimation.play();
-            this.lastState = this.currentState;
             this.currentState = state;
         }
     }
@@ -74,10 +80,5 @@ public abstract class DynamicDrawableEntity extends AbstractDrawableEntity {
         } else if (this.currentState == EntityState.MOVING_LEFT) {
             this.movingRight = false;
         }
-    }
-
-    private boolean checkClimb() {
-        return this.currentState == EntityState.IDLE
-               && (this.lastState == EntityState.CLIMBING_UP || this.lastState == EntityState.CLIMBING_DOWN);
     }
 }

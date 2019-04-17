@@ -49,7 +49,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     public void givePowerUp(final PowerUpType powerUpType) {
         if (powerUpType == PowerUpType.EXTRA_LIFE) {
             this.lives++;
-        } else if (powerUpType == PowerUpType.SUPER_STAR) {
+        } else if (powerUpType == PowerUpType.INVINCIBILITY) {
             this.invincible = true;
             this.modifyMaxVelocity(STARVELOCITY_X, STARVELOCITY_Y);
         }
