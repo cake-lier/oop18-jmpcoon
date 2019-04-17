@@ -13,7 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * a {@link DynamicEntity} that can be drawn.
  */
 public class DynamicDrawableEntity extends AbstractDrawableEntity {
-    private static final int DURATION = 500;
+    private static final int DURATION = 550;
 
     private final Map<EntityState, SpriteAnimation> map;
     private Animation currentAnimation;

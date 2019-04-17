@@ -19,7 +19,7 @@ public enum PlayerImage {
     /**
      * Image for a {@link Player} jumping.
      */
-    JUMPING(getSpritesDir() + "raccoon_jump.png", 6),
+    JUMPING(getSpritesDir() + "raccoon_jump.png", 4),
     /**
      * Image for a {@link Player} moving left.
      */
