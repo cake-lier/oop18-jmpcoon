@@ -159,16 +159,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                             return false;
                         }
                         final PlayerPhysicalBody player = WholePhysicalWorldImpl.this.player.get();
-                        if (player.isInvincible()) {
-                            otherTriple.getLeft().setActive(false);
-                            world.notifyCollision(otherTriple.getRight() == EntityType.WALKING_ENEMY
-                                    ? CollisionEvent.WALKING_ENEMY_KILLED
-                                    : CollisionEvent.ROLLING_ENEMY_KILLED);
-                            return true;
-                        } else if (player.isInvulnerable()) {
-                            return false;
-                        }
-                        if ((otherTriple.getRight() == EntityType.WALKING_ENEMY 
+                        if (player.isInvincible() || (otherTriple.getRight() == EntityType.WALKING_ENEMY 
                                 && PhysicsUtils.isBodyOnTop(playerTriple.getMiddle(), otherTriple.getMiddle(), collisionPoint))
                              || (otherTriple.getRight() == EntityType.ROLLING_ENEMY
                                  && PhysicsUtils.isBodyAbove(playerTriple.getMiddle(), otherTriple.getMiddle(), 
@@ -178,6 +169,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                                                                              ? CollisionEvent.WALKING_ENEMY_KILLED
                                                                              : CollisionEvent.ROLLING_ENEMY_KILLED);
                              return true;
+                        } else if (player.isInvulnerable()) {
+                            return false;
                         }
                         player.hit();
                         if (!player.exist()) {
