@@ -12,5 +12,5 @@ public interface NotifiableWorld extends Serializable {
      * 
      * @param collisionType
      */
-    void notifyCollision(CollisionType collisionType);
+    void notifyCollision(CollisionEvent collisionType);
 }

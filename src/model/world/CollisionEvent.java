@@ -6,7 +6,7 @@ package model.world;
  * {@link model.entities.Player} jumps on it or can kill the {@link model.entities.Player} if instead is the enemy that jumps or
  * touches the {@link model.entities.Player}.
  */
-public enum CollisionType {
+public enum CollisionEvent {
 
     /**
      * The collision in which is the {@link model.entities.Player} that gets killed. This can happen when a

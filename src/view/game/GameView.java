@@ -2,8 +2,6 @@ package view.game;
 
 import com.google.common.base.Optional;
 
-import model.world.CollisionType;
-
 /**
  * Visual component of the game.
  */
@@ -37,10 +35,4 @@ public interface GameView {
      * created. It should be used only after putting it in an "unusable" state, such as removing it, deleting it, etc.
      */
     void clean();
-
-    /**
-     * 
-     * @param type The type of the event.
-     */
-    void notifyEvent(CollisionType type);
 }

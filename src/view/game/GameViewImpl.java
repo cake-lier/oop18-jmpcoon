@@ -23,7 +23,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.entities.EntityType;
-import model.world.CollisionType;
+import model.world.CollisionEvent;
 import view.View;
 import view.menus.GameMenu;
 import view.menus.GameMenuImpl;
@@ -74,6 +74,7 @@ public final class GameViewImpl implements GameView {
     private final Stage stage;
     private final Pane entities;
     private final MediaPlayer music;
+    private final double volume;
     private final EventHandler<KeyEvent> commandHandler;
     private EventHandler<WindowEvent> closeHandler;
     private GameController gameController;
@@ -106,6 +107,7 @@ public final class GameViewImpl implements GameView {
         this.appView = Objects.requireNonNull(view);
         this.music = Objects.requireNonNull(music);
         this.stage = Objects.requireNonNull(stage);
+        this.volume = this.music.getVolume();
         this.entities = new Pane();
         this.mutableInitialization();
         this.commandHandler = key -> this.getInput(key.getCode());
@@ -251,8 +253,8 @@ public final class GameViewImpl implements GameView {
                   } else {
                       if (input.convert().isPresent()) {
                           final InputType type = input.convert().get();
-                          if (this.gameController.processInput(type) && type == InputType.UP) {
-                              Sounds.JUMP.getSound().play();
+                          if (this.gameController.processInput(type) && type == InputType.UP && !this.music.isMute()) {
+                              Sounds.JUMP.getSound().play(this.volume);
                           }
                       }
                   }
@@ -265,7 +267,9 @@ public final class GameViewImpl implements GameView {
     public void showGameOver() {
         this.checkInitialization();
         Platform.runLater(() -> {
-            Sounds.PLAYER_DEATH.getSound().play();
+            if (!this.music.isMute()) {
+                Sounds.PLAYER_DEATH.getSound().play(this.volume);
+            }
             this.showMessage(LOSE_MSG);
         });
     }
@@ -276,7 +280,10 @@ public final class GameViewImpl implements GameView {
     public void showPlayerWin() {
         this.checkInitialization();
         Platform.runLater(() -> {
-            Sounds.END_GAME.getSound().play();
+            if (!this.music.isMute()) {
+                Sounds.END_GAME.getSound().setVolume(this.volume);
+                Sounds.END_GAME.getSound().play();
+            }
             this.showMessage(WIN_MSG);
         });
     }
@@ -319,21 +326,28 @@ public final class GameViewImpl implements GameView {
         this.stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this.closeHandler);
     }
 
-    @Override
-    public void notifyEvent(final CollisionType type) {
+    private void notifyEvent(final CollisionEvent type) {
         this.checkInitialization();
         switch (type) {
             case ROLLING_ENEMY_KILLED:
-                Sounds.ROLLING_DESTROY.getSound().play();
+                if (!this.music.isMute()) {
+                    Sounds.ROLLING_DESTROY.getSound().play(this.volume);
+                }
                 break;
             case WALKING_ENEMY_KILLED:
-                Sounds.WALKING_DESTROY.getSound().play();
+                if (!this.music.isMute()) {
+                    Sounds.WALKING_DESTROY.getSound().play(this.volume);
+                }
                 break;
             case INVINCIBILITY_HIT:
-                Sounds.INVINCIBIITY.getSound().play();
+                if (!this.music.isMute()) {
+                    Sounds.INVINCIBIITY.getSound().play(this.volume);
+                }
                 break;
             case POWER_UP_HIT:
-                Sounds.POWER_UP_GOT.getSound().play();
+                if (!this.music.isMute()) {
+                    Sounds.POWER_UP_GOT.getSound().play(this.volume);
+                }
                 break;
             default:
         }

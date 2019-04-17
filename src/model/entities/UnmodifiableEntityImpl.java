@@ -14,13 +14,44 @@ import model.physics.BodyShape;
  */
 public final class UnmodifiableEntityImpl implements UnmodifiableEntity {
     private final Entity innerEntity;
+    private final boolean isDynamic;
+    private final Optional<PowerUpType> powerUpType;
+
+    /*
+     * This constructor accepts an entity to wrap so as to delegate to it the calls to methods that should be exposed,
+     * if is a dynamic entity and, if it's a power up, an optional with its type, otherwise an empty optional.
+     */
+    private UnmodifiableEntityImpl(final Entity innerEntity, final boolean isDynamic, final Optional<PowerUpType> powerUpType) {
+        this.innerEntity = innerEntity;
+        this.isDynamic = isDynamic;
+        this.powerUpType = powerUpType;
+    }
 
     /**
-     * This constructor accepts an {@link Entity} to wrap so as to delegate to it the calls to methods that should be exposed.
-     * @param innerEntity The {@link Entity} to wrap.
+     * Factory method for creating an {@link UnmodifiableEntity} from a {@link DynamicEntity}.
+     * @param entity the {@link DynamicEntity} to wrap
+     * @return an {@link UnmodifiableEntity} that wraps the {@link DynamicEntity} passed
      */
-    public UnmodifiableEntityImpl(final Entity innerEntity) {
-        this.innerEntity = innerEntity;
+    public static UnmodifiableEntity ofDynamicEntity(final DynamicEntity entity) {
+        return new UnmodifiableEntityImpl(entity, true, Optional.absent());
+    }
+
+    /**
+     * Factory method for creating an {@link UnmodifiableEntity} from a {@link StaticEntity}.
+     * @param entity the {@link StaticEntity} to wrap
+     * @return an {@link UnmodifiableEntity} that wraps the {@link StaticEntity} passed
+     */
+    public static UnmodifiableEntity ofStaticEntity(final StaticEntity entity) {
+        return new UnmodifiableEntityImpl(entity, false, Optional.absent());
+    }
+
+    /**
+     * Factory method for creating an {@link UnmodifiableEntity} from a {@link PowerUp}.
+     * @param powerUp the {@link PowerUp} to wrap
+     * @return an {@link UnmodifiableEntity} that wraps the {@link PowerUp} passed
+     */
+    public static UnmodifiableEntity ofPowerUp(final PowerUp powerUp) {
+        return new UnmodifiableEntityImpl(powerUp, false, Optional.of(powerUp.getPowerUpType()));
     }
 
     /**
@@ -76,8 +107,15 @@ public final class UnmodifiableEntityImpl implements UnmodifiableEntity {
      */
     @Override
     public boolean isDynamic() {
-        final EntityType type = this.getType();
-        return type == EntityType.PLAYER || type == EntityType.ROLLING_ENEMY || type == EntityType.WALKING_ENEMY;
+        return this.isDynamic;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<PowerUpType> getPowerUpType() {
+        return this.powerUpType;
     }
 
     /**
@@ -88,14 +126,12 @@ public final class UnmodifiableEntityImpl implements UnmodifiableEntity {
         return Hashing.murmur3_128().newHasher().putInt(this.innerEntity.hashCode()).hash().asInt();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(final Object obj) {
         return this == obj || (obj != null && this.getClass() == obj.getClass() 
                                && Objects.equals(this.innerEntity, UnmodifiableEntityImpl.class.cast(obj).innerEntity));
-    }
-
-    @Override
-    public Optional<PowerUpType> getPowerUpType() {
-        return this.getType() == EntityType.POWERUP ? Optional.of(PowerUp.class.cast(this.innerEntity).getPowerUpType()) : Optional.absent();
     }
 }

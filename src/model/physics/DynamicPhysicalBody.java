@@ -74,12 +74,12 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
         this.body.applyImpulse(new Vector2(x, y));
         if (Math.abs(this.body.getLinearVelocity().x) > this.maxVelocityX) {
             this.body.setLinearVelocity(new Vector2(Math.signum(this.body.getLinearVelocity().x) * this.maxVelocityX,
-                                                                    this.body.getLinearVelocity().y));
+                                                                this.body.getLinearVelocity().y));
         }
         if (Math.abs(this.body.getLinearVelocity().y) > this.maxVelocityY
             && (movement == MovementType.CLIMB_DOWN || movement == MovementType.CLIMB_UP)) {
-            this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, Math.signum(this.body.getLinearVelocity().y)
-                                                                                     * this.maxVelocityY));
+            this.body.setLinearVelocity(new Vector2(this.body.getLinearVelocity().x, 
+                                                    Math.signum(this.body.getLinearVelocity().y) * this.maxVelocityY));
         }
     }
 
@@ -100,7 +100,7 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
      * @param multiplierY The multiplier for the vertical maximum velocity
      */
     public void setMaxVelocity(final double multiplierX, final double multiplierY) {
-        this.maxVelocityX *= multiplierX;
-        this.maxVelocityY *= multiplierY;
+        this.maxVelocityX = MAXVELOCITY_X * multiplierX;
+        this.maxVelocityY = MAXVELOCITY_Y * multiplierY;
     }
 }

@@ -3,12 +3,13 @@ package model.world;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections4.queue.UnmodifiableQueue;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -23,6 +24,7 @@ import model.entities.EntityType;
 import model.entities.Ladder;
 import model.entities.Platform;
 import model.entities.Player;
+import model.entities.PowerUp;
 import model.entities.RollingEnemy;
 import model.entities.UnmodifiableEntity;
 import model.entities.UnmodifiableEntityImpl;
@@ -55,8 +57,8 @@ public final class WorldImpl implements World, NotifiableWorld {
     private final PhysicalWorld innerWorld;
     private final Pair<Double, Double> worldDimensions;
     private final ClassToInstanceMultimap<Entity> aliveEntities;
-    private final Set<Entity> deadEntities;
-    private final Queue<CollisionType> currentEvents;
+    private final ClassToInstanceMultimap<Entity> deadEntities;
+    private final Queue<CollisionEvent> currentEvents;
     private Optional<Player> player;
     private GameState currentState;
     private boolean initialized;
@@ -71,7 +73,7 @@ public final class WorldImpl implements World, NotifiableWorld {
         this.worldDimensions = new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT);
         this.innerWorld = this.physicsFactory.createPhysicalWorld(this, this.worldDimensions.getLeft(), this.worldDimensions.getRight());
         this.aliveEntities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
-        this.deadEntities = new LinkedHashSet<>();
+        this.deadEntities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
         this.currentEvents = new LinkedList<>();
         this.currentState = GameState.IS_GOING;
         this.player = Optional.absent();
@@ -132,13 +134,13 @@ public final class WorldImpl implements World, NotifiableWorld {
         this.currentEvents.clear();
         this.deadEntities.clear();
         this.innerWorld.update();
-        final Iterator<Entity> iterator = this.aliveEntities.values().iterator();
+        final Iterator<Map.Entry<Class<? extends Entity>, Entity>> iterator = this.aliveEntities.entries().iterator();
         while (iterator.hasNext()) {
-            final Entity current = iterator.next();
-            if (!current.isAlive()) {
-                this.deadEntities.add(current);
+            final Map.Entry<Class<? extends Entity>, Entity> current = iterator.next();
+            if (!current.getValue().isAlive()) {
+                this.deadEntities.put(current.getKey(), current.getValue());
                 iterator.remove();
-                this.innerWorld.removeBody(current.getPhysicalBody());
+                this.innerWorld.removeBody(current.getValue().getPhysicalBody());
             }
         }
         if (this.currentState == GameState.IS_GOING && this.player.isPresent()) {
@@ -169,15 +171,16 @@ public final class WorldImpl implements World, NotifiableWorld {
     }
 
     /*
-     * Gets if the Player is currently standing in front of a ladder and it could be specified where to check the player is
-     * with respect to the ladder.
+     * Gets if the Player is currently standing in front of a ladder and it could be specified where to check the player
+     * is with respect to the ladder.
      */
     private boolean isBodyInFrontLadder(final PhysicalBody body, final Predicate<PhysicalBody> where) {
         return this.aliveEntities.getInstances(Ladder.class).parallelStream()
                                                             .map(Ladder::getPhysicalBody)
-                                                            .anyMatch(ladderBody -> this.innerWorld
-                                                                                        .areBodiesInContact(body, ladderBody)
-                                                                                    && where.test(ladderBody));
+                                                            .anyMatch(ladderBody -> 
+                                                                      this.innerWorld.areBodiesInContact(body, ladderBody)
+                                                                      && where.test(ladderBody)
+                                                                      && PhysicsUtils.isBodyInside(body, ladderBody));
     }
 
     /**
@@ -191,7 +194,8 @@ public final class WorldImpl implements World, NotifiableWorld {
         if (this.player.isPresent()) {
             final PhysicalBody playerBody = this.player.get().getPhysicalBody();
             final EntityState playerState = playerBody.getState();
-            final Predicate<PhysicalBody> isPlayerAtBottom = ladderBody -> PhysicsUtils.isBodyAtBottomHalf(playerBody, ladderBody);
+            final Predicate<PhysicalBody> isPlayerAtBottom = ladderBody -> PhysicsUtils.isBodyAtBottomHalf(playerBody, 
+                                                                                                           ladderBody);
             if (this.currentState == GameState.IS_GOING 
                 && ((movement == MovementType.JUMP && this.isBodyStanding(playerBody)) 
                     || (movement == MovementType.CLIMB_UP 
@@ -230,9 +234,12 @@ public final class WorldImpl implements World, NotifiableWorld {
      */
     @Override
     public Collection<UnmodifiableEntity> getAliveEntities() {
-        return this.aliveEntities.values().parallelStream()
-                                          .map(UnmodifiableEntityImpl::new)
-                                          .collect(ImmutableSet.toImmutableSet());
+        return Stream.concat(Stream.concat(this.getEntitiesStream(this.aliveEntities, 
+                                                                  UnmodifiableEntityImpl::ofStaticEntity, 
+                                                                  Arrays.asList(Platform.class, Ladder.class)),
+                                           this.getDynamicEntitiesStream(this.aliveEntities)),
+                             this.getPowerUpStream(this.aliveEntities))
+                     .collect(ImmutableSet.toImmutableSet());
     }
 
     /**
@@ -240,9 +247,31 @@ public final class WorldImpl implements World, NotifiableWorld {
      */
     @Override
     public Collection<UnmodifiableEntity> getDeadEntities() {
-        return this.deadEntities.parallelStream()
-                                .map(UnmodifiableEntityImpl::new)
-                                .collect(ImmutableSet.toImmutableSet());
+        return Stream.concat(this.getPowerUpStream(this.deadEntities), 
+                             this.getDynamicEntitiesStream(this.deadEntities))
+                     .collect(ImmutableSet.toImmutableSet());
+    }
+
+    private Stream<UnmodifiableEntity> getDynamicEntitiesStream(final ClassToInstanceMultimap<Entity> multimap) {
+        return this.getEntitiesStream(multimap,
+                                      UnmodifiableEntityImpl::ofDynamicEntity,
+                                      Arrays.asList(Player.class, RollingEnemy.class, WalkingEnemy.class));
+    }
+
+    private <E extends Entity> Stream<UnmodifiableEntity> getEntitiesStream(final ClassToInstanceMultimap<Entity> multimap,
+                                                                            final Function<E, UnmodifiableEntity> mapper,
+                                                                            final Collection<Class<? extends E>> keys) {
+        return keys.parallelStream().flatMap(type -> this.getEntityKeyStream(multimap, mapper, type));
+    }
+
+    private Stream<UnmodifiableEntity> getPowerUpStream(final ClassToInstanceMultimap<Entity> multimap) {
+        return this.getEntityKeyStream(multimap, UnmodifiableEntityImpl::ofPowerUp, PowerUp.class);
+    }
+
+    private <E extends Entity> Stream<UnmodifiableEntity> getEntityKeyStream(final ClassToInstanceMultimap<Entity> multimap,
+                                                                             final Function<E, UnmodifiableEntity> mapper,
+                                                                             final Class<? extends E> key) {
+        return multimap.getInstances(key).parallelStream().map(mapper::apply);
     }
 
     /**
@@ -257,7 +286,7 @@ public final class WorldImpl implements World, NotifiableWorld {
      * {@inheritDoc}
      */
     @Override
-    public void notifyCollision(final CollisionType collisionType) {
+    public void notifyCollision(final CollisionEvent collisionType) {
         switch (collisionType) {
             case ROLLING_ENEMY_KILLED:
                 this.score += ROLLING_POINTS;
@@ -290,7 +319,7 @@ public final class WorldImpl implements World, NotifiableWorld {
      * {@inheritDoc}
      */
     @Override
-    public Queue<CollisionType> getCurrentEvents() {
+    public Queue<CollisionEvent> getCurrentEvents() {
         return UnmodifiableQueue.unmodifiableQueue(this.currentEvents);
     }
 }

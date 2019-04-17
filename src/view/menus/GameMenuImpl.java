@@ -1,13 +1,10 @@
 package view.menus;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.stream.IntStream;
 
 import com.google.common.base.Optional;
 

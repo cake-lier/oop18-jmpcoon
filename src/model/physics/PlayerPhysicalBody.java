@@ -10,8 +10,8 @@ import model.serializable.SerializableBody;
 public class PlayerPhysicalBody extends DynamicPhysicalBody {
     private static final long serialVersionUID = -6099710781272943170L;
 
-    private static final double STARVELOCITY_X = 1.60;
-    private static final double STARVELOCITY_Y = 1.50;
+    private static final double INVINCIBILITY_VELOCITY_X = 1.60;
+    private static final double INVINCIBILITY_VELOCITY_Y = 1.50;
 
     private boolean invincible;
     private boolean invulnerable;
@@ -51,7 +51,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
             this.lives++;
         } else if (powerUpType == PowerUpType.SUPER_STAR) {
             this.invincible = true;
-            this.modifyMaxVelocity(STARVELOCITY_X, STARVELOCITY_Y);
+            this.modifyMaxVelocity(INVINCIBILITY_VELOCITY_X, INVINCIBILITY_VELOCITY_Y);
         }
     }
 
@@ -88,7 +88,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     /**
      * The effect of the Super Star {@link PowerUp} ends.
      */
-    public void endSuperStar() {
+    public void endInvincibility() {
         this.invincible = false;
         this.modifyMaxVelocity(1, 1);
     }

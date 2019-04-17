@@ -57,6 +57,10 @@ public final class PhysicsUtils {
         return bottomBody.getPosition().getRight() + bottomBody.getDimensions().getRight() / 2 <= topBody.getPosition().getRight();
     }
 
+    public static boolean isBodyInside(final PhysicalBody insideBody, final PhysicalBody outsideBody) {
+        return Math.abs(insideBody.getPosition().getLeft() - outsideBody.getPosition().getLeft()) <= outsideBody.getDimensions().getLeft() / 4;
+    }
+    
     /**
      * Calculates if the first {@link PhysicalBody} is over the top of the other, as the one which is below is a circle and
      * they can make contact on any point on the upper half of the body which should be below.

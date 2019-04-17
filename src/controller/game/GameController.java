@@ -8,7 +8,7 @@ import java.util.Queue;
 import org.apache.commons.lang3.tuple.Pair;
 
 import model.entities.UnmodifiableEntity;
-import model.world.CollisionType;
+import model.world.CollisionEvent;
 
 /**
  * a controller for the game playing.
@@ -85,5 +85,5 @@ public interface GameController {
      * 
      * @return A {@link Queue} of the last {@link EventType} that happened.
      */
-    Queue<CollisionType> getCurrentEvents();
+    Queue<CollisionEvent> getCurrentEvents();
 }

@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import model.entities.EntityProperties;
 import model.entities.UnmodifiableEntity;
-import model.world.CollisionType;
+import model.world.CollisionEvent;
 import model.world.World;
 import model.world.WorldFactoryImpl;
 import org.apache.commons.lang3.tuple.Pair;
@@ -174,7 +174,7 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public Queue<CollisionType> getCurrentEvents() {
+    public Queue<CollisionEvent> getCurrentEvents() {
         return this.gameWorld.getCurrentEvents();
     }
 

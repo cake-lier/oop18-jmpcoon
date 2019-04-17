@@ -69,7 +69,7 @@ public interface World extends Serializable {
      * Returns a queue of all events that happened during the last {@link #update()}. 
      * @return A {@link Queue} which contains the {@link EventType}s that happened during the last iteration step.
      */
-    Queue<CollisionType> getCurrentEvents();
+    Queue<CollisionEvent> getCurrentEvents();
 
     /**
      * Calculates the score currently totaled by the user.

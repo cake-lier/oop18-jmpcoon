@@ -210,6 +210,7 @@ public final class AppMenuImpl implements AppMenu {
                 this.music.setVolume(this.volumeControl.getValue() / VOLUME_RATIO);
             });
             this.muteCheck.setAllowIndeterminate(false);
+            this.muteCheck.setSelected(this.music.isMute());
             this.muteCheck.selectedProperty().addListener(e -> {
                 this.music.setMute(this.muteCheck.isSelected());
             });
