@@ -8,7 +8,7 @@ import model.physics.DynamicPhysicalBody;
 public final class RollingEnemy extends DynamicEntity {
 
     private static final long serialVersionUID = -6624661835399417683L;
-    private static final double ROLLING_ENEMY_SPEED = 1;
+    private static final double ROLLING_ENEMY_SPEED = 2.5;
 
     private final DynamicPhysicalBody body;
 
@@ -32,7 +32,7 @@ public final class RollingEnemy extends DynamicEntity {
     }
 
     /**
-     * applies a fixed velocity to the {@link RollingEnemy}.
+     * Applies a fixed velocity to this {@link RollingEnemy}.
      */
     public void applyImpulse() {
         this.body.setFixedVelocity(MovementType.MOVE_RIGHT, ROLLING_ENEMY_SPEED, 0);

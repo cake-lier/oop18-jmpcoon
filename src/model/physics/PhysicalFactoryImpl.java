@@ -10,6 +10,7 @@ import com.google.common.base.Optional;
 import org.dyn4j.collision.AxisAlignedBounds;
 import org.dyn4j.collision.CategoryFilter;
 import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 
@@ -26,9 +27,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final long serialVersionUID = -3251686827966500039L;
 
     private static final double PLATFORM_FRICTION = 0.5;
-    //private static final double ROLLING_ENEMY_FRICTION = 0.0;
-    private static final double ROLLING_ENEMY_ANGULAR_DAMPING = 1.3;
-    private static final double ROLLING_ENEMY_GRAVITY_SCALE = 2.6;
+    private static final double ROLLING_ENEMY_ANGULAR_DAMPING = 0.3;
+    private static final double ROLLING_ENEMY_GRAVITY_SCALE = 0.3;
 
     private static final String NO_TWO_WORLDS_MSG = "You can't create two worlds for this game";
     private static final String NO_WORLD_MSG = "A PhysicalWorld has yet to be created!";
@@ -160,9 +160,10 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                 break;
             case ROLLING_ENEMY:
                 body.getFixture(0).setFilter(ROLLING_ENEMY_FILTER);
-                body.setMass(MassType.NORMAL);
-                body.setGravityScale(ROLLING_ENEMY_GRAVITY_SCALE);
-                body.setAngularDamping(ROLLING_ENEMY_ANGULAR_DAMPING);
+                body.setMass(new Mass(body.getLocalCenter(), 10, 0.03));
+                body.setGravityScale(1.9);
+                body.setAngularDamping(1.2);
+                body.setLinearDamping(0.5);
                 break;
             case WALKING_ENEMY:
                 body.getFixture(0).setFilter(WALKING_ENEMY_FILTER);

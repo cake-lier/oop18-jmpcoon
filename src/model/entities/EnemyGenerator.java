@@ -20,7 +20,7 @@ public final class EnemyGenerator extends StaticEntity {
 
     private static final long serialVersionUID = -3160192139428572083L;
     private static final ImmutablePair<Double, Double> ROLLING_ENEMY_DIMENSIONS = new ImmutablePair<Double, Double>(0.23, 0.23);
-    private static final int DELTA = 380;
+    private static final int DELTA = 280;
 
     private final List<RollingEnemy> enemies;
     private int count;
