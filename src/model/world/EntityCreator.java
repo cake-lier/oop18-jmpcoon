@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import model.entities.Entity;
 import model.entities.EntityType;
-import model.entities.EntityBuilder;
+import model.entities.AbstractEntityBuilder;
 import model.entities.EntityBuilderUtils;
 import model.entities.EnemyGenerator;
 import model.entities.Ladder;
@@ -48,12 +48,12 @@ enum EntityCreator {
      */
     ENEMY_GENERATOR(EntityType.ENEMY_GENERATOR, EnemyGenerator.class, EntityBuilderUtils::getEnemyGeneratorBuilder);
 
-    private transient Supplier<EntityBuilder<? extends Entity>> supplier;
+    private transient Supplier<AbstractEntityBuilder<? extends Entity>> supplier;
     private final Class<? extends Entity> associatedClass;
     private final EntityType associatedType;
 
     EntityCreator(final EntityType associatedType, final Class<? extends Entity> associatedClass,
-                  final Supplier<EntityBuilder<? extends Entity>> supplier) {
+                  final Supplier<AbstractEntityBuilder<? extends Entity>> supplier) {
         this.associatedType = associatedType;
         this.supplier = supplier;
         this.associatedClass = associatedClass;
@@ -63,7 +63,7 @@ enum EntityCreator {
         return this.associatedType;
     }
 
-    public EntityBuilder<? extends Entity> getEntityBuilder() {
+    public AbstractEntityBuilder<? extends Entity> getEntityBuilder() {
         return this.supplier.get();
     }
 

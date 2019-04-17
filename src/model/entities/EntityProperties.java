@@ -50,4 +50,12 @@ public interface EntityProperties extends Serializable {
      * {@link PowerUp}, an empty {@link Optional} otherwise.
      */
     Optional<PowerUpType> getPowerUpType();
+
+    /**
+     * Getter for the range a {@link WalkingEnemy} should pace across, if the {@link EntityProperties} refers to a 
+     * {@link WalkingEnemy}. 
+     * @return an {@link Optional} containing the range a {@link WalkingEnemy} should pace across, if the 
+     * {@link EntityProperties} refers to a {@link WalkingEnemy}, an empty {@link Optional} otherwise.
+     */
+    Optional<Double> getWalkingRange();
 }

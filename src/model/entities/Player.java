@@ -16,7 +16,7 @@ public final class Player extends DynamicEntity {
 
     /**
      * Creates a new {@link Player} with the given {@link DynamicPhysicalBody}. This constructor is package protected
-     * because it should be only invoked by the {@link EntityBuilder} when creating a new instance of it and no one else.
+     * because it should be only invoked by the {@link AbstractEntityBuilder} when creating a new instance of it and no one else.
      * @param body The {@link DynamicPhysicalBody} that should be contained in this {@link Player}.
      */
     Player(final DynamicPhysicalBody body) {

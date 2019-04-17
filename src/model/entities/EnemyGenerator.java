@@ -25,7 +25,7 @@ public final class EnemyGenerator extends StaticEntity {
 
     /**
      * Creates a new {@link EnemyGenerator} with the given {@link StaticPhysicalBody}. This constructor is package protected
-     * because it should be only invoked by the {@link EntityBuilder} when creating a new instance of it and no one else.
+     * because it should be only invoked by the {@link AbstractEntityBuilder} when creating a new instance of it and no one else.
      * @param body The {@link StaticPhysicalBody} that should be contained in this {@link EnemyGenerator}.
      */
     EnemyGenerator(final StaticPhysicalBody body) {

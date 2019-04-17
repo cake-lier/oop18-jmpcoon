@@ -106,6 +106,7 @@ public final class WorldImpl implements World, NotifiableWorld {
                                                                           .setPosition(entity.getPosition())
                                                                           .setShape(entity.getEntityShape())
                                                                           .setPowerUpType(entity.getPowerUpType())
+                                                                          .setWalkingRange(entity.getWalkingRange())
                                                                           .build());
             if (entity.getEntityType() == EntityType.PLAYER) {
                 this.player = Optional.fromJavaUtil(this.aliveEntities.getInstances(Player.class).stream().findFirst());

@@ -22,27 +22,32 @@ public final class EntityPropertiesImpl implements EntityProperties {
     private final Pair<Double, Double> size;
     private final double angle;
     private final Optional<PowerUpType> powerUpType;
+    private final Optional<Double> walkingRange;
 
     /**
      * Collects the properties of the associated {@link Entity}.
-     * @param type The {@link EntityType} of the associated {@link Entity}.
-     * @param shape The {@link BodyShape} of the associated {@link Entity}.
-     * @param xCoord The x coordinate of the associated {@link Entity}.
-     * @param yCoord The y coordinate of the associated {@link Entity}.
-     * @param width The width of the associated {@link Entity}.
-     * @param height The height of the associated {@link Entity}.
-     * @param angle The angle of the associated entity.
-     * @param powerUpType The type of the {@link PowerUp}, if these are the properties of a {@link PowerUp}.
+     * @param type the {@link EntityType} of the associated {@link Entity}
+     * @param shape the {@link BodyShape} of the associated {@link Entity}
+     * @param xCoord the x coordinate of the associated {@link Entity}
+     * @param yCoord the y coordinate of the associated {@link Entity}
+     * @param width the width of the associated {@link Entity}
+     * @param height the height of the associated {@link Entity}
+     * @param angle the angle of the associated entity
+     * @param powerUpType the type of the {@link PowerUp}, if these are the properties of a {@link PowerUp}
+     * @param walkingRange the distance the {@link WalkingEnemy} should walk across, if these are properties 
+     * of a {@link WalkingEnemy} 
      */
     public EntityPropertiesImpl(final EntityType type, final BodyShape shape, final double xCoord, 
                                 final double yCoord, final double width, final double height, 
-                                final double angle, final Optional<PowerUpType> powerUpType) {
+                                final double angle, final Optional<PowerUpType> powerUpType,
+                                final Optional<Double> walkingRange) {
         this.type = type;
         this.shape = shape;
         this.position = new ImmutablePair<>(xCoord, yCoord);
         this.size = new ImmutablePair<Double, Double>(width, height);
         this.angle = angle;
         this.powerUpType = powerUpType;
+        this.walkingRange = walkingRange;
     }
 
     /**
@@ -89,6 +94,22 @@ public final class EntityPropertiesImpl implements EntityProperties {
      * {@inheritDoc}
      */
     @Override
+    public Optional<PowerUpType> getPowerUpType() {
+        return this.powerUpType;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<Double> getWalkingRange() {
+        return this.walkingRange;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public int hashCode() {
         return Hashing.murmur3_128()
                       .newHasher()
@@ -129,13 +150,5 @@ public final class EntityPropertiesImpl implements EntityProperties {
     public String toString() {
         return "EntityPropertiesImpl [type=" + this.type + ", shape=" + this.shape
                + ", position=" + this.position + ", dimensions=" + this.size + ", angle=" + this.angle + "]";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Optional<PowerUpType> getPowerUpType() {
-        return this.powerUpType;
     }
 }
