@@ -15,6 +15,5 @@ public enum PowerUpType {
     /**
      * Player moves faster and is invincible for a short while.
      */
-    SUPER_STAR;
-
+    INVINCIBILITY;
 }

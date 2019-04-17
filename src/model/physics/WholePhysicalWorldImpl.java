@@ -147,7 +147,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                     if (otherTriple.getRight() == EntityType.POWERUP) {
                         otherTriple.getLeft().setActive(false);
                         final PowerUpType type = WholePhysicalWorldImpl.this.powerups.get(otherTriple.getLeft());
-                        if (type == PowerUpType.SUPER_STAR) {
+                        if (type == PowerUpType.INVINCIBILITY) {
                             world.notifyCollision(CollisionEvent.INVINCIBILITY_HIT);
                         } else {
                             world.notifyCollision(CollisionEvent.POWER_UP_HIT);

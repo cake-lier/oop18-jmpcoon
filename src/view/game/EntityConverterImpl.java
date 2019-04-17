@@ -1,9 +1,13 @@
 package view.game;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -18,35 +22,10 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * An implementation of {@link EntityConverter} that maintains the
- * {@link DrawableEntity} converted in the past, so that if requested again it
- * does not need to create them again.
+ * An implementation of {@link MemoizedEntityConverter}.
  */
-public class EntityConverterImpl implements EntityConverter {
+public class EntityConverterImpl implements MemoizedEntityConverter {
     private static final String NOT_SUPPORTED_ENTITY_MSG = "This Entity is not supported";
-    private static final String SPRITES_DIR = "images/";
-    private static final String MODULE_LADDER_SPRITE_URL = SPRITES_DIR + "ladder.png";
-    private static final String MODULE_PLATFORM_SPRITE_URL = SPRITES_DIR + "platform.png";
-    private static final String GOAL_SPRITE_URL = SPRITES_DIR + "goal.png";
-    private static final String EXTRA_LIFE_SPRITE_URL = SPRITES_DIR + "extra_life.png";
-    private static final String SUPER_STAR_URL = SPRITES_DIR + "super_star.png";
-    private static final String ENEMY_GENERATOR_SPRITE_URL = SPRITES_DIR + "enemyGenerator.png";
-    /* if the sprite sheets are changed this section could be in need of changes */
-    private static final String PLAYER_IDLE_SPRITE_URL = SPRITES_DIR + "raccoon_idle.png";
-    private static final int PLAYER_IDLE_FRAMES = 1;
-    private static final String PLAYER_CLIMBING_SPRITE_URL = SPRITES_DIR + "raccoon_climb.png";
-    private static final int PLAYER_CLIMBING_FRAMES = 2;
-    private static final String PLAYER_JUMPING_SPRITE_URL = SPRITES_DIR + "raccoon_jump.png";
-    private static final int PLAYER_JUMPING_FRAMES = 6;
-    private static final String PLAYER_WALKING_SPRITE_URL = SPRITES_DIR + "raccoon_walking.png";
-    private static final int PLAYER_WALKING_FRAMES = 2;
-    private static final String WALKING_ENEMY_WALKING_SPRITE_URL = SPRITES_DIR + "walkingEnemy_walking.png";
-    private static final int WALKING_ENEMY_WALKING_FRAMES = 3;
-    private static final String WALKING_ENEMY_IDLE_SPRITE_URL = SPRITES_DIR + "walkingEnemy_idle.png";
-    private static final int WALKING_ENEMY_IDLE_FRAMES = 1;
-    private static final String ROLLING_ENEMY_SPRITE_URL = SPRITES_DIR + "rollingEnemy.png";
-    private static final int ROLLING_ENEMY_MOVING_FRAMES = 1;
-    private static final int ROLLING_ENEMY_IDLE_FRAMES = 1;
     private static final double LADDER_RATIO = 0.5; // one ladder sprite is about 0.5m (height) in the world
     private static final double PLATFORM_RATIO = 0.9; // one platform sprite is about 0.9m (width) in the world
 
@@ -106,24 +85,16 @@ public class EntityConverterImpl implements EntityConverter {
                         throw new IllegalArgumentException(NOT_SUPPORTED_ENTITY_MSG);
                 }
                 this.convertedEntities.put(entity, 
-                        new StaticDrawableEntity(image, entity, this.worldDimensions, this.sceneDimensions));
+                                           new StaticDrawableEntity(image, entity, this.worldDimensions, this.sceneDimensions));
             } else {
-                final Map<EntityState, Pair<Image, Integer>> spritesheets = this.imagesForDynamicEntities.get(entity.getType());
-                switch (entity.getType()) {
-                    case PLAYER:
-                        this.convertedEntities.put(entity, 
-                                new PlayerView(spritesheets, entity, this.worldDimensions, this.sceneDimensions));
-                        break;
-                    case ROLLING_ENEMY:
-                        this.convertedEntities.put(entity, new RollingEnemyView(spritesheets, entity, 
-                                                                            this.worldDimensions, this.sceneDimensions));
-                        break;
-                    case WALKING_ENEMY:
-                        this.convertedEntities.put(entity, new WalkingEnemyView(spritesheets, entity,
-                                                                            this.worldDimensions, this.sceneDimensions));
-                        break;
-                    default:
-                        throw new IllegalArgumentException(NOT_SUPPORTED_ENTITY_MSG);
+                if (this.imagesForDynamicEntities.containsKey(entity.getType())) {
+                    this.convertedEntities.put(entity, 
+                                               new DynamicDrawableEntity(this.imagesForDynamicEntities.get(entity.getType()), 
+                                                                         entity,
+                                                                         this.worldDimensions,
+                                                                         this.sceneDimensions));
+                } else {
+                    throw new IllegalArgumentException(NOT_SUPPORTED_ENTITY_MSG);
                 }
             }
         }
@@ -153,45 +124,54 @@ public class EntityConverterImpl implements EntityConverter {
     }
 
     private void fillStaticEntitiesMap() {
-        this.imagesForStaticEntities.put(EntityType.LADDER, loadImage(MODULE_LADDER_SPRITE_URL));
-        this.imagesForStaticEntities.put(EntityType.PLATFORM, loadImage(MODULE_PLATFORM_SPRITE_URL));
-        this.imagesForStaticEntities.put(EntityType.ENEMY_GENERATOR, loadImage(ENEMY_GENERATOR_SPRITE_URL));
+        this.fillMap(StaticEntityImage.values(), 
+                     this.getMapFiller(this.imagesForStaticEntities, EntityType.class, s -> this.loadImage(s.getImageUrl())));
     }
 
     private void fillPowerUpsMap() {
-        this.imagesForPowerUps.put(PowerUpType.EXTRA_LIFE, loadImage(EXTRA_LIFE_SPRITE_URL));
-        this.imagesForPowerUps.put(PowerUpType.GOAL, loadImage(GOAL_SPRITE_URL));
-        this.imagesForPowerUps.put(PowerUpType.SUPER_STAR, loadImage(SUPER_STAR_URL));
+        this.fillMap(PowerUpImage.values(), 
+                     this.getMapFiller(this.imagesForPowerUps, PowerUpType.class, s -> this.loadImage(s.getImageUrl())));
+
     }
 
     private void fillDynamicEntitiesMap() {
-        /* player images */
         final Map<EntityState, Pair<Image, Integer>> playerImages = new EnumMap<>(EntityState.class);
-        playerImages.put(EntityState.IDLE, new ImmutablePair<>(loadImage(PLAYER_IDLE_SPRITE_URL), PLAYER_IDLE_FRAMES));
-        playerImages.put(EntityState.MOVING_RIGHT, new ImmutablePair<>(loadImage(PLAYER_WALKING_SPRITE_URL), PLAYER_WALKING_FRAMES));
-        playerImages.put(EntityState.MOVING_LEFT, new ImmutablePair<>(loadImage(PLAYER_WALKING_SPRITE_URL), PLAYER_WALKING_FRAMES));
-        playerImages.put(EntityState.CLIMBING_DOWN, 
-                new ImmutablePair<>(loadImage(PLAYER_CLIMBING_SPRITE_URL), PLAYER_CLIMBING_FRAMES));
-        playerImages.put(EntityState.CLIMBING_UP, new ImmutablePair<>(loadImage(PLAYER_CLIMBING_SPRITE_URL), PLAYER_CLIMBING_FRAMES));
-        playerImages.put(EntityState.JUMPING, new ImmutablePair<>(loadImage(PLAYER_JUMPING_SPRITE_URL), PLAYER_JUMPING_FRAMES));
-        this.imagesForDynamicEntities.put(EntityType.PLAYER, playerImages);
-        /* walking enemies images */
         final Map<EntityState, Pair<Image, Integer>> walkingEnemyImages = new EnumMap<>(EntityState.class);
-        walkingEnemyImages.put(EntityState.IDLE, new ImmutablePair<>(loadImage(WALKING_ENEMY_IDLE_SPRITE_URL), WALKING_ENEMY_IDLE_FRAMES));
-        walkingEnemyImages.put(EntityState.MOVING_RIGHT, 
-                new ImmutablePair<>(loadImage(WALKING_ENEMY_WALKING_SPRITE_URL), WALKING_ENEMY_WALKING_FRAMES));
-        walkingEnemyImages.put(EntityState.MOVING_LEFT, 
-                new ImmutablePair<>(loadImage(WALKING_ENEMY_WALKING_SPRITE_URL), WALKING_ENEMY_WALKING_FRAMES));
-        this.imagesForDynamicEntities.put(EntityType.WALKING_ENEMY, walkingEnemyImages);
-        /* rolling enemies images */
         final Map<EntityState, Pair<Image, Integer>> rollingEnemyImages = new EnumMap<>(EntityState.class);
-        rollingEnemyImages.put(EntityState.IDLE, 
-                new ImmutablePair<>(loadImage(ROLLING_ENEMY_SPRITE_URL), ROLLING_ENEMY_IDLE_FRAMES));
-        rollingEnemyImages.put(EntityState.MOVING_RIGHT, 
-                new ImmutablePair<>(loadImage(ROLLING_ENEMY_SPRITE_URL), ROLLING_ENEMY_MOVING_FRAMES));
-        rollingEnemyImages.put(EntityState.MOVING_LEFT, 
-                new ImmutablePair<>(loadImage(ROLLING_ENEMY_SPRITE_URL), ROLLING_ENEMY_MOVING_FRAMES));
+        /* player images */
+        this.fillMap(PlayerImage.values(), 
+                     this.getMapFiller(playerImages, 
+                                       EntityState.class, 
+                                       s -> new ImmutablePair<>(this.loadImage(s.getImageUrl()), s.getFramesNumber())));
+        /* walking enemies images */
+        this.fillMap(WalkingEnemyImage.values(), 
+                     this.getMapFiller(walkingEnemyImages, 
+                                       EntityState.class, 
+                                       s -> new ImmutablePair<>(this.loadImage(s.getImageUrl()), s.getFramesNumber())));
+        /* rolling enemies images */
+        this.fillMap(RollingEnemyImage.values(), 
+                     this.getMapFiller(rollingEnemyImages, 
+                                       EntityState.class, 
+                                       s -> new ImmutablePair<>(this.loadImage(s.getImageUrl()), s.getFramesNumber())));
+        this.imagesForDynamicEntities.put(EntityType.WALKING_ENEMY, walkingEnemyImages);
+        this.imagesForDynamicEntities.put(EntityType.PLAYER, playerImages);
         this.imagesForDynamicEntities.put(EntityType.ROLLING_ENEMY, rollingEnemyImages);
+    }
+
+    /*
+     * fills a map using as key generators the values of the array
+     */
+    private <V extends Enum<V>> void fillMap(final V[] keys, final Consumer<V> mapFiller) {
+        Arrays.asList(keys).stream().forEach(mapFiller);
+    }
+
+    /*
+     * given a map, it generates the key converting from enum E to enum K and it generates the value using the function
+     */
+    private <K extends Enum<K>, V, E extends Enum<E>> Consumer<E> getMapFiller(final Map<K, V> mapToFill, 
+                                                                               final Class<K> keyClass,
+                                                                               final Function<E, V> value) {
+        return e -> mapToFill.put(Enum.valueOf(keyClass, e.toString()), value.apply(e));
     }
 
     private Image loadImage(final String imageUrl) {
@@ -209,17 +189,19 @@ public class EntityConverterImpl implements EntityConverter {
         final int nRepetitions = ((Double) timesPerModule).intValue() + 1;
         /* PixelReader to read pixel per pixel the module of the sprite */
         final PixelReader pixelReader = module.getPixelReader();
-        final WritableImage image = new WritableImage(axis ? nRepetitions * width : width, !axis ? nRepetitions * height : height);
+        final WritableImage image = new WritableImage(axis ? nRepetitions * width : width, 
+                                                      !axis ? nRepetitions * height : height);
         /* PixelWriter to write pixel per pixel the sprite */
         final PixelWriter pixelWriter = image.getPixelWriter();
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                for (int k = 0; k < nRepetitions; k++) {
-                    pixelWriter.setColor(axis ? i + k * width : i, !axis ? j + k * height : j,
-                            pixelReader.getColor(i, j));
-                }
-            }
-        }
+        IntStream.range(0, width)
+                 .forEach(i -> 
+                          IntStream.range(0, height)
+                                   .forEach(j -> 
+                                            IntStream.range(0, nRepetitions)
+                                                     .forEach(k -> 
+                                                              pixelWriter.setColor(axis ? i + k * width : i, 
+                                                                                   !axis ? j + k * height : j, 
+                                                                                   pixelReader.getColor(i, j)))));
         return image;
     }
 }
