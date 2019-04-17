@@ -161,6 +161,9 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
                         final PlayerPhysicalBody player = WholePhysicalWorldImpl.this.player.get();
                         if (player.isInvincible()) {
                             otherTriple.getLeft().setActive(false);
+                            world.notifyCollision(otherTriple.getRight() == EntityType.WALKING_ENEMY
+                                    ? CollisionEvent.WALKING_ENEMY_KILLED
+                                    : CollisionEvent.ROLLING_ENEMY_KILLED);
                             return true;
                         } else if (player.isInvulnerable()) {
                             return false;
