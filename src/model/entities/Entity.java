@@ -12,7 +12,6 @@ import org.apache.commons.lang3.tuple.Pair;
  * depends on its {@link EntityType} and {@link EntityState}, inside the {@link model.world.World}.
  */
 public interface Entity extends Serializable {
-
     /**
      * @return the position of the entity, as a {@link Pair} where the first element is the x coordinate
      * and the second element is the y one of center of the {@link Entity}
@@ -51,7 +50,11 @@ public interface Entity extends Serializable {
     Pair<Double, Double> getDimensions();
 
     /**
-     * 
+     * @return the velocity of this {@link Entity}
+     */
+    Pair<Double, Double> getVelocity();
+
+    /**
      * @return the internal {@link PhysicalBody} inside this {@link Entity}
      */
     PhysicalBody getPhysicalBody();

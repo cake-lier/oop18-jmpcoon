@@ -4,12 +4,13 @@ import java.util.Objects;
 
 import model.physics.BodyShape;
 import model.physics.PhysicalBody;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.hash.Hashing;
 
 /**
- * abstract class from which all the {@link Entity} of the {@link model.world.World} derives.
+ * Abstract class from which all the {@link Entity} of the {@link model.world.World} derives.
  */
 public abstract class AbstractEntity implements Entity {
     private static final long serialVersionUID = -7374912841474322755L;
@@ -17,7 +18,7 @@ public abstract class AbstractEntity implements Entity {
     private final PhysicalBody body;
 
     /**
-     * builds a new {@link AbstractEntity}.
+     * Builds a new {@link AbstractEntity}.
      * @param body the body of this {@link AbstractEntity}
      */
     public AbstractEntity(final PhysicalBody body) {
@@ -48,6 +49,9 @@ public abstract class AbstractEntity implements Entity {
         return this.body.getAngle();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public abstract EntityType getType();
 
@@ -70,14 +74,16 @@ public abstract class AbstractEntity implements Entity {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Pair<Double, Double> getDimensions() {
         return this.body.getDimensions();
     }
 
     /**
-     * @return the velocity of this {@link AbstractEntity}, divided in its x and y components.
+     * {@inheritDoc}
      */
-    protected Pair<Double, Double> getVelocity() {
+    @Override
+    public Pair<Double, Double> getVelocity() {
         return this.body.getVelocity();
     }
 

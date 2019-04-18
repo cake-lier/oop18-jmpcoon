@@ -14,50 +14,56 @@ import model.physics.BodyShape;
 public interface UnmodifiableEntity {
     /**
      * Gets current position of this {@link UnmodifiableEntity}, as a {@link Pair} of coordinates which represents the center of it.
-     * @return The {@link Pair} of coordinates of the center of this {@link UnmodifiableEntity}.
+     * @return the {@link Pair} of coordinates of the center of this {@link UnmodifiableEntity}
      */
     Pair<Double, Double> getPosition();
 
     /**
      * Gets the shape of this {@link UnmodifiableEntity} as a value of {@link BodyShape}.
-     * @return The {@link BodyShape} of this {@link UnmodifiableEntity}.
+     * @return the {@link BodyShape} of this {@link UnmodifiableEntity}
      */
     BodyShape getShape();
 
     /**
      * Gets the angle of rotation around the center of this {@link UnmodifiableEntity} from its position aligned with the coordinate
      * system of the world calculated in radians counterclockwise in the interval [-pi, pi].
-     * @return The angle of rotation of this {@link UnmodifiableEntity}.
+     * @return the angle of rotation of this {@link UnmodifiableEntity}
      */
     double getAngle();
 
     /**
      * Gets the type of this {@link UnmodifiableEntity} as a value of {@link EntityType}.
-     * @return The {@link EntityType} of this {@link UnmodifiableEntity}.
+     * @return the {@link EntityType} of this {@link UnmodifiableEntity}
      */
     EntityType getType();
 
     /**
      * Gets the state of this {@link UnmodifiableEntity} as a value of {@link EntityState}. 
-     * @return The {@link EntityState} this {@link UnmodifiableEntity} is in.
+     * @return the {@link EntityState} this {@link UnmodifiableEntity} is in
      */
     EntityState getState();
 
     /**
      * Gets a {@link Pair} of values which represents respectively the width and height of this {@link UnmodifiableEntity}.
-     * @return The width and height of this {@link UnmodifiableEntity} as a {@link Pair}.
+     * @return the width and height of this {@link UnmodifiableEntity} as a {@link Pair}
      */
     Pair<Double, Double> getDimensions();
 
     /**
      * Gets if the wrapped {@link Entity} is part of the subtype {@link DynamicEntity} or not.
-     * @return True if the wrapped {@link Entity} is a {@link DynamicEntity}.
+     * @return true if the wrapped {@link Entity} is a {@link DynamicEntity}
      */
     boolean isDynamic();
 
     /**
+     * Gets a {@link Pair} of values which represents the x and y value of the velocity of this {@link UnmodifiableEntity}.
+     * @return true if the wrapped {@link Entity} is a {@link DynamicEntity}
+     */
+    Pair<Double, Double> getVelocity();
+
+    /**
      * Gets the power-up type of the wrapped {@link Entity}, if it wraps a {@link PowerUp}, an absent value otherwise.
-     * @return An {@link Optional} containing the the {@link PowerUpType} if this instance wraps a {@link PowerUp}, absent otherwise.
+     * @return an {@link Optional} containing the the {@link PowerUpType} if this instance wraps a {@link PowerUp}, absent otherwise
      */
     Optional<PowerUpType> getPowerUpType();
 }

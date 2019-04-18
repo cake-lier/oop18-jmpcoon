@@ -114,6 +114,14 @@ public final class UnmodifiableEntityImpl implements UnmodifiableEntity {
      * {@inheritDoc}
      */
     @Override
+    public Pair<Double, Double> getVelocity() {
+        return this.innerEntity.getVelocity();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Optional<PowerUpType> getPowerUpType() {
         return this.powerUpType;
     }
