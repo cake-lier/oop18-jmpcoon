@@ -6,7 +6,6 @@ import model.physics.BodyShape;
 import model.physics.DynamicPhysicalBody;
 import model.physics.PhysicalFactory;
 import model.physics.StaticPhysicalBody;
-import model.world.World;
 
 import com.google.common.base.Optional;
 
@@ -24,7 +23,6 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     private Optional<PhysicalFactory> factory;
     private Optional<PowerUpType> powerUpType;
     private Optional<Double> walkingRange;
-    private Optional<World> world;
     private boolean built;
 
     /**
@@ -38,7 +36,6 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
         this.factory = Optional.absent();
         this.powerUpType = Optional.absent();
         this.walkingRange = Optional.absent();
-        this.world = Optional.absent();
         this.built = false;
     }
 
@@ -119,18 +116,6 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the world the {@link Entity} to be created by this {@link AbstractEntityBuilder} will interact with, if said Entity
-     * is a {@link EnemyGenerator}.
-     * @param world an {@link Optional} containing the world the {@link EnemyGenerator} being built will interact with, 
-     * an empty {@link Optional} if an EnemyGenerator isn't being built
-     * @return a reference to this {@link AbstractEntityBuilder}
-     */
-    public AbstractEntityBuilder<E> setWorld(final Optional<World> world) {
-        this.world = world;
-        return this;
-    }
-
-    /**
      * Builds the {@link Entity} with parameters as previously set. All the parameters are needed and, as a builder, once the
      * build has happened this builder won't produce any other copies of the produced {@link Entity}.
      * @return The {@link Entity} with parameters specified with the others methods.
@@ -170,19 +155,6 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     protected double getWalkingRange() throws IllegalStateException {
         if (this.walkingRange.isPresent()) {
             return this.walkingRange.get();
-        } else {
-            throw new IllegalStateException("Not all the necessary fields have been initialized");
-        }
-    }
-
-    /**
-     * Method that allows the subclass of this class to get the {@link World} set.
-     * @return the World set
-     * @throws IllegalStateException if the world for this {@link AbstractEntityBuilder} has not been set.
-     */
-    protected World getWorld() throws IllegalStateException {
-        if (this.world.isPresent()) {
-            return this.world.get();
         } else {
             throw new IllegalStateException("Not all the necessary fields have been initialized");
         }
