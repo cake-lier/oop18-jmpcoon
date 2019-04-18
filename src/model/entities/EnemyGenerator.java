@@ -1,16 +1,15 @@
 package model.entities;
 
+import model.physics.BodyShape;
+import model.physics.PhysicalFactory;
+import model.physics.StaticPhysicalBody;
+
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-
-import model.physics.BodyShape;
-import model.physics.PhysicalBody;
-import model.physics.PhysicalFactory;
-import model.physics.StaticPhysicalBody;
-import model.world.World;
 
 /**
  * An enemy generator inside the {@link model.world.World} of the game.
@@ -24,19 +23,16 @@ public final class EnemyGenerator extends StaticEntity {
 
     private final List<RollingEnemy> enemies;
     private int count;
-    private final World world;
     private final PhysicalFactory factory;
 
     /**
      * Creates a new {@link EnemyGenerator} with the given {@link StaticPhysicalBody}. This constructor is package protected
      * because it should be only invoked by the {@link AbstractEntityBuilder} when creating a new instance of it and no one else.
      * @param body the {@link StaticPhysicalBody} that should be contained in this {@link EnemyGenerator}
-     * @param world the world where the {@link RollingEnemy} generated will live
      * @param factory the {@link PhysicalFactory} that generates the RollingEnemy {@link PhysicalBody}
      */
-    public EnemyGenerator(final StaticPhysicalBody body, final World world, final PhysicalFactory factory) {
+    public EnemyGenerator(final StaticPhysicalBody body, final PhysicalFactory factory) {
         super(body);
-        this.world = world;
         this.factory = factory;
         this.enemies = new LinkedList<>();
         this.count = 0;
@@ -50,16 +46,19 @@ public final class EnemyGenerator extends StaticEntity {
         return EntityType.ENEMY_GENERATOR;
     }
 
-    //TODO: something better?
     /**
-     * @return a {@link Collection} containing the enemies
+     * It checks if this {@link EnemyGenerator} has created a new instance of enemy. Returns a collection of {@link RollingEnemy}
+     * in case this {@link EnemyGenerator} has created a new enemy; otherwise returns an empty collection.
+     * @return a collection of {@link RollingEnemy}
      */
     public Collection<RollingEnemy> onTimeAdvanced() {
+        return checkTime() ?  fillSet() : Collections.emptyList();
+    }
+
+    private List<RollingEnemy> fillSet() {
         this.enemies.clear();
-        if (this.checkTime()) {
-            this.enemies.add(this.createRollingEnemy());
-            this.enemies.get(0).applyImpulse();
-        }
+        this.enemies.add(this.createRollingEnemy());
+        this.enemies.get(0).applyImpulse();
         return this.enemies;
     }
 
