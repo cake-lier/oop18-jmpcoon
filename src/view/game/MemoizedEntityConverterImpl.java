@@ -24,7 +24,7 @@ import org.apache.commons.lang3.tuple.Pair;
 /**
  * An implementation of {@link MemoizedEntityConverter}.
  */
-public class EntityConverterImpl implements MemoizedEntityConverter {
+public class MemoizedEntityConverterImpl implements MemoizedEntityConverter {
     private static final String NOT_SUPPORTED_ENTITY_MSG = "This Entity is not supported";
     private static final double LADDER_RATIO = 0.5; // one ladder sprite is about 0.5m (height) in the world
     private static final double PLATFORM_RATIO = 0.9; // one platform sprite is about 0.9m (width) in the world
@@ -37,7 +37,7 @@ public class EntityConverterImpl implements MemoizedEntityConverter {
     private final Map<PowerUpType, Image> imagesForPowerUps;
 
     /**
-     * builds a new {@link EntityConverterImpl}.
+     * builds a new {@link MemoizedEntityConverterImpl}.
      * 
      * @param worldDimensions
      *            the dimensions of the world in which the {@link Entity} to convert
@@ -46,7 +46,7 @@ public class EntityConverterImpl implements MemoizedEntityConverter {
      *            the dimensions of the scene in which the {@link DrawableEntity}
      *            produced will be put
      */
-    public EntityConverterImpl(final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
+    public MemoizedEntityConverterImpl(final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
         this.worldDimensions = worldDimensions;
         this.sceneDimensions = sceneDimensions;
         this.imagesForStaticEntities = new EnumMap<>(EntityType.class);
@@ -64,25 +64,24 @@ public class EntityConverterImpl implements MemoizedEntityConverter {
         if (!this.convertedEntities.containsKey(entity)) {
             if (!entity.isDynamic()) {
                 final Image image;
-                switch (entity.getType()) {
-                    case LADDER:
+                if (entity.getType() == EntityType.POWERUP 
+                        && entity.getPowerUpType().isPresent()
+                        && this.imagesForPowerUps.containsKey(entity.getPowerUpType().get())) {
+                    image = this.imagesForPowerUps.get(entity.getPowerUpType().get());
+                } else if (this.imagesForStaticEntities.containsKey(entity.getType())) {
+                    if (entity.getType() == EntityType.LADDER) {
                         image = replicateSprite(this.imagesForStaticEntities.get(EntityType.LADDER), 
-                                entity.getDimensions().getRight() / LADDER_RATIO,
-                                false);
-                        break;
-                    case PLATFORM:
+                                                entity.getDimensions().getRight() / LADDER_RATIO,
+                                                false);
+                    } else if (entity.getType() == EntityType.PLATFORM) {
                         image = replicateSprite(this.imagesForStaticEntities.get(EntityType.PLATFORM), 
-                                entity.getDimensions().getLeft() / PLATFORM_RATIO,
-                                true);
-                        break;
-                    case ENEMY_GENERATOR:
+                                                entity.getDimensions().getLeft() / PLATFORM_RATIO,
+                                                true);
+                    } else {
                         image = this.imagesForStaticEntities.get(entity.getType());
-                        break;
-                    case POWERUP:
-                        image = this.imagesForPowerUps.get(entity.getPowerUpType().get());
-                        break;
-                    default:
-                        throw new IllegalArgumentException(NOT_SUPPORTED_ENTITY_MSG);
+                    }
+                } else {
+                    throw new IllegalArgumentException(NOT_SUPPORTED_ENTITY_MSG);
                 }
                 this.convertedEntities.put(entity, 
                                            new StaticDrawableEntity(image, entity, this.worldDimensions, this.sceneDimensions));

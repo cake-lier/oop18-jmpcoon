@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +24,8 @@ import model.world.CollisionEvent;
 import model.world.World;
 import model.world.WorldFactoryImpl;
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.collect.Sets;
 
 import controller.SaveFile;
 import view.game.GameView;
@@ -40,6 +43,7 @@ public class GameControllerImpl implements GameController {
     private final GameView gameView;
     private ScheduledThreadPoolExecutor timer;
     private boolean running;
+    private final Set<InputType> inputs;
 
     /**
      * builds a new {@link GameControllerImpl}.
@@ -51,6 +55,7 @@ public class GameControllerImpl implements GameController {
         this.gameView = Objects.requireNonNull(view);
         this.timer = this.createTimer();
         this.running = false;
+        this.inputs = Sets.newConcurrentHashSet(); 
     }
 
     private ScheduledThreadPoolExecutor createTimer() {
@@ -128,8 +133,21 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public boolean processInput(final InputType input) {
-        return this.running && this.gameWorld.movePlayer(input.getAssociatedMovementType());
+    public boolean processInput(final InputType givenInput) {
+        if (this.running) {
+            this.inputs.add(givenInput);
+            return this.gameWorld.movePlayer(givenInput.getAssociatedMovementType());
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stopInput(final InputType stoppedInput) {
+        this.inputs.remove(stoppedInput);
     }
 
     /**
@@ -186,6 +204,9 @@ public class GameControllerImpl implements GameController {
             this.gameView.showPlayerWin();
             this.stopGame();
         } else {
+            this.inputs.stream()
+                       .map(i -> i.getAssociatedMovementType())
+                       .forEach(this.gameWorld::movePlayer);
             this.gameWorld.update();
             this.gameView.update();
         }

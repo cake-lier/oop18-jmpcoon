@@ -8,9 +8,9 @@ package model.entities;
 enum MovementValues {
     CLIMB_DOWN(MovementType.CLIMB_DOWN, 0, -0.5),
     CLIMB_UP(MovementType.CLIMB_UP, 0, 0.5),
-    JUMP(MovementType.JUMP, 0, 0.25),
-    MOVE_RIGHT(MovementType.MOVE_RIGHT, 1, 0),
-    MOVE_LEFT(MovementType.MOVE_LEFT, -1, 0);
+    JUMP(MovementType.JUMP, 0, 0.13),
+    MOVE_RIGHT(MovementType.MOVE_RIGHT, 0.5, 0),
+    MOVE_LEFT(MovementType.MOVE_LEFT, -0.5, 0);
 
     private final MovementType movementType;
     private final double impulseX;

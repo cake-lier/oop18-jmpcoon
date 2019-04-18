@@ -2,6 +2,7 @@ package view.game;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -110,7 +111,7 @@ public final class GameViewImpl implements GameView {
         this.volume = this.music.getVolume();
         this.entities = new Pane();
         this.mutableInitialization();
-        this.commandHandler = key -> this.getInput(key.getCode());
+        this.commandHandler = key -> this.processInput(key);
         this.isGameEnded = false;
         this.isMenuVisible = false;
         this.isInitialized = false;
@@ -123,7 +124,7 @@ public final class GameViewImpl implements GameView {
     private void mutableInitialization() {
         this.root = new StackPane();
         this.gameController = new GameControllerImpl(this);
-        this.entityConverter = new EntityConverterImpl(this.gameController.getWorldDimensions(),
+        this.entityConverter = new MemoizedEntityConverterImpl(this.gameController.getWorldDimensions(),
                                                            new ImmutablePair<>(this.stage.getScene().getWidth(),
                                                                                    this.stage.getScene().getHeight()));
         this.gameMenu = new GameMenuImpl(this.root, this.stage.getHeight(), this.appController, this.appView, this.gameController, this);
@@ -190,6 +191,7 @@ public final class GameViewImpl implements GameView {
         this.stage.getScene().setRoot(this.root);
         this.stage.setOnCloseRequest(this.closeHandler);
         this.stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
+        this.stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, this.commandHandler);
     }
 
     /**
@@ -227,16 +229,26 @@ public final class GameViewImpl implements GameView {
         });
     }
 
+    private void processInput(final KeyEvent event) {
+        if (event.getEventType() == KeyEvent.KEY_PRESSED) {
+            this.manageInput(event.getCode(), true);
+        } else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
+            this.manageInput(event.getCode(), false);
+        }
+    }
+
     /*
      * Finds the key's correspondent in InputKey which has a method that converts it into InputType, which is passed to the
      * gameController.
+     * forward must be true if the input has to be propagated to the GameController, false if it has to be removed from the
+     * GameController (this distinction isn't valid for the escape key)
      */
-    private void getInput(final KeyCode key) {
+    private void manageInput(final KeyCode key, final boolean forward) {
         Stream.of(InputKey.values())
               .filter(input -> input.name().equals(key.name()))
               .findAny()
               .ifPresent(input -> {
-                  if (input == InputKey.ESCAPE) {
+                  if (input == InputKey.ESCAPE && forward) {
                       if (!this.isGameEnded) {
                           this.gameController.togglePauseGame();
                           if (this.isMenuVisible) {
@@ -252,8 +264,11 @@ public final class GameViewImpl implements GameView {
                   } else {
                       if (input.convert().isPresent()) {
                           final InputType type = input.convert().get();
-                          if (this.gameController.processInput(type) && type == InputType.UP && !this.music.isMute()) {
+                          if (forward && this.gameController.processInput(type) 
+                              && type == InputType.UP && !this.music.isMute()) {
                               Sounds.JUMP.getSound().play(this.volume);
+                          } else if (!forward) {
+                              this.gameController.stopInput(type);
                           }
                       }
                   }

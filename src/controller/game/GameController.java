@@ -57,11 +57,18 @@ public interface GameController {
     int getPlayerLives();
 
     /**
-     * gives to the {@link World} in which the game is playing the input received from the view.
-     * @param input the input received
-     * @return True if the command was successful and the {@link model.world.World} has accepted it, false otherwise.
+     * Gives to the {@link World} in which the game is playing the input received from the view.
+     * @param givenInput the input received. Such input is propagated to the {@link World} until the view says differently using
+     * the method {@link #stopInput(InputType)}
+     * @return True if the command was successful and the {@link model.world.World} has accepted it, false otherwise
      */
-    boolean processInput(InputType input);
+    boolean processInput(InputType givenInput);
+
+    /**
+     * Stops the propagation of a previously given {@link InputType} to the {@link World}. 
+     * @param stoppedInput the input whose propagation has to stop
+     */
+    void stopInput(InputType stoppedInput);
 
     /**
      * 
