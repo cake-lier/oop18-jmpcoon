@@ -194,8 +194,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
             if (player.isInvulnerable() && this.hitEnded()) {
                 player.endInvulnerability();
             }
-            if ((player.getPosition().getLeft() - player.getDimensions().getLeft() / 2 < 0)
-                || (player.getPosition().getRight() - player.getDimensions().getRight() / 2) < 0) {
+            if ((player.getPosition().getLeft() + player.getDimensions().getLeft() / 2 < 0)
+                || (player.getPosition().getRight() + player.getDimensions().getRight() / 2) < 0) {
                     player.kill();
             }
         }
