@@ -38,7 +38,7 @@ public class PhysicalWorldTest {
                                                       BodyShape.RECTANGLE,
                                                       STD_WIDTH,
                                                       STD_HEIGHT,
-                                                      EntityType.PLAYER);
+                                                      EntityType.WALKING_ENEMY);
             fail("The creation of the body shouldn't have been allowed");
         } catch (final IllegalStateException e) {
             assertNotNull(NOT_NULL_MSG, e.getMessage());
@@ -48,12 +48,11 @@ public class PhysicalWorldTest {
         physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
         /* the world has been created */
         try {
-            physicalFactory.createDynamicPhysicalBody(STD_POSITION,
+            physicalFactory.createPlayerPhysicalBody(STD_POSITION,
                                                       0,
                                                       BodyShape.RECTANGLE,
                                                       STD_WIDTH,
-                                                      STD_HEIGHT,
-                                                      EntityType.PLAYER);
+                                                      STD_HEIGHT);
         } catch (final IllegalStateException e) {
             fail("The creation of the body should have been allowed");
         } catch (final IllegalArgumentException e1) {
