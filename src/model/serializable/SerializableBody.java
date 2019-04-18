@@ -68,6 +68,9 @@ public class SerializableBody extends Body implements Serializable {
         /* writing world position */
         out.writeDouble(this.getWorldCenter().x);
         out.writeDouble(this.getWorldCenter().y);
+        /* writing local position */
+        out.writeDouble(this.getLocalCenter().x);
+        out.writeDouble(this.getLocalCenter().y);
         /* writing angle */
         final double angle = this.getLocalPoint(this.getWorldCenter().add(1, 0)).getAngleBetween(new Vector2(1, 0));
         out.writeDouble(angle);
@@ -82,9 +85,6 @@ public class SerializableBody extends Body implements Serializable {
         out.writeDouble(this.getLinearDamping());
         /* writing angular damping */
         out.writeDouble(this.getAngularDamping());
-        /* writing mass center */
-        out.writeDouble(this.getMass().getCenter().x);
-        out.writeDouble(this.getMass().getCenter().y);
         /* writing inertia */
         out.writeDouble(this.getMass().getInertia());
         /* writing mass */
@@ -129,10 +129,13 @@ public class SerializableBody extends Body implements Serializable {
             fixture.setSensor(in.readBoolean());
         }
         /* reading world position */
-        final double x = in.readDouble();
-        final double y = in.readDouble();
+        final double xWorld = in.readDouble();
+        final double yWorld = in.readDouble();
+        /* reading local position */
+        final double xLocal = in.readDouble();
+        final double yLocal = in.readDouble();
         final double angle = in.readDouble();
-        final Vector2 center = new Vector2(x, y);
+        final Vector2 center = new Vector2(xWorld, yWorld);
         this.translate(center);
         this.rotate(angle, center);
         /* reading linear velocity */
@@ -148,8 +151,6 @@ public class SerializableBody extends Body implements Serializable {
         /* writing angular damping */
         this.setAngularDamping(in.readDouble());
         /* reading information about mass */
-        final double massCenterX = in.readDouble();
-        final double massCenterY = in.readDouble();
         final double inertia = in.readDouble();
         final double mass = in.readDouble();
         final boolean isInfinite = in.readBoolean();
@@ -161,7 +162,8 @@ public class SerializableBody extends Body implements Serializable {
         } else if (hasFixedAngularVelocity) {
             this.setMass(MassType.FIXED_ANGULAR_VELOCITY);
         } else {
-            this.setMass(new Mass(new Vector2(massCenterX, massCenterY), mass, inertia));
+            // this.setMass(new Mass(new Vector2(massCenterX, massCenterY), mass, inertia));
+            this.setMass(new Mass(new Vector2(xLocal, yLocal), mass, inertia));
         }
         /* reading type */
         final EntityType type = (EntityType) in.readObject();

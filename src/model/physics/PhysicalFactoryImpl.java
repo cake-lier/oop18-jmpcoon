@@ -25,18 +25,18 @@ import model.world.NotifiableWorld;
  */
 public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final long serialVersionUID = -3251686827966500039L;
-
     private static final double PLATFORM_FRICTION = 0.5;
-    private static final double ROLLING_ENEMY_ANGULAR_DAMPING = 0.3;
-    private static final double ROLLING_ENEMY_GRAVITY_SCALE = 0.3;
-
+    private static final double ROLLING_ENEMY_ANGULAR_DAMPING = 1.2;
+    private static final double ROLLING_ENEMY_GRAVITY_SCALE = 1.9;
+    private static final double ROLLING_ENEMY_LINEAR_DAMPING = 0.5;
+    private static final double ROLLING_ENEMY_MASS = 10;
+    private static final double ROLLING_ENEMY_INERTIA = 0.03;
     private static final String NO_TWO_WORLDS_MSG = "You can't create two worlds for this game";
     private static final String NO_WORLD_MSG = "A PhysicalWorld has yet to be created!";
     private static final String ILLEGAL_ENTITY_MSG = "No such Entity can be created";
     private static final String TOO_MANY_FIXTURES_MSG = "The body created has an illegal number of fixtures";
     private static final String ILLEGAL_DIMENSIONS_MSG = "A circular entity can't have different width and height";
     private static final String OUTSIDE_WORLD_MSG = "The entity would be created outside the world";
-
     private static final long CATEGORY_WALKING_ENEMY = 1; // 000001
     private static final long CATEGORY_ROLLING_ENEMY = 2; // 000010
     private static final long CATEGORY_PLATFORM = 4; // 000100
@@ -44,7 +44,6 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final long CATEGORY_LADDER = 16; // 010000
     private static final long CATEGORY_GENERATOR_ENEMY = 32; // 100000
     private static final long CATEGORY_POWERUP = 64; // 1000000
-
     private static final CategoryFilter LADDER_FILTER = new CategoryFilter(CATEGORY_LADDER, CATEGORY_PLAYER);
     private static final CategoryFilter PLATFORM_FILTER = new CategoryFilter(CATEGORY_PLATFORM, CATEGORY_WALKING_ENEMY
                                                                                                 | CATEGORY_ROLLING_ENEMY
@@ -160,10 +159,10 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                 break;
             case ROLLING_ENEMY:
                 body.getFixture(0).setFilter(ROLLING_ENEMY_FILTER);
-                body.setMass(new Mass(body.getLocalCenter(), 10, 0.03));
-                body.setGravityScale(1.9);
-                body.setAngularDamping(1.2);
-                body.setLinearDamping(0.5);
+                body.setMass(new Mass(body.getLocalCenter(), ROLLING_ENEMY_MASS, ROLLING_ENEMY_INERTIA));
+                body.setGravityScale(ROLLING_ENEMY_GRAVITY_SCALE);
+                body.setAngularDamping(ROLLING_ENEMY_ANGULAR_DAMPING);
+                body.setLinearDamping(ROLLING_ENEMY_LINEAR_DAMPING);
                 break;
             case WALKING_ENEMY:
                 body.getFixture(0).setFilter(WALKING_ENEMY_FILTER);

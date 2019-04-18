@@ -52,7 +52,6 @@ public final class EnemyGenerator extends StaticEntity {
 
     //TODO: something better?
     /**
-     * @param physicsFactory the {@link PhysicsFactory}
      * @return a {@link Collection} containing the enemies
      */
     public Collection<RollingEnemy> onTimeAdvanced() {

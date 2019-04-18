@@ -8,7 +8,7 @@ import model.physics.DynamicPhysicalBody;
 public final class RollingEnemy extends DynamicEntity {
 
     private static final long serialVersionUID = -6624661835399417683L;
-    private static final double ROLLING_ENEMY_SPEED = 2.5;
+    private static final double ROLLING_ENEMY_SPEED = 3;
 
     private final DynamicPhysicalBody body;
 
