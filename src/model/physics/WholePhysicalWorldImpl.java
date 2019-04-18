@@ -202,21 +202,38 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
         this.world.step(1);
     }
 
+    /*
+     * Calculates if the hit cool-down has terminated or not.
+     */
     private boolean hitEnded() {
         this.stepCounterHit = this.updateCounter(this.stepCounterHit, HIT_COOLDOWN);
         return this.counterEnded(this.stepCounterHit);
     }
 
+    /*
+     * Calculates if the power up that allows to be invincible has terminated its effects or not.
+     */
     private boolean invincibilityEnded() {
         this.stepCounterInvincibility = this.updateCounter(this.stepCounterInvincibility, INVINCIBILITY_DURATION);
         return this.counterEnded(this.stepCounterInvincibility);
     }
 
+    /*
+     * Calculates the value of a counter given the value after which has to overflow.
+     */
     private int updateCounter(final int currentValue, final int maxValue) {
         return (currentValue + 1) % maxValue;
     }
 
+    /*
+     * Calculates if a counter has overflowed.
+     */
     private boolean counterEnded(final int currentValue) {
         return currentValue == 0;
     }
+
+  /*  private void readObject(final ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        this.addPhysicalRules();
+    }*/
 }

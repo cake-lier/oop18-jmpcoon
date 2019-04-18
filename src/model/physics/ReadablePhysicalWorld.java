@@ -10,39 +10,45 @@ import model.entities.EntityType;
 import model.entities.PowerUpType;
 
 /**
- * 
+ * An interface used by {@link PhysicalWorld} for having getters for its physical properties, so as to allow its
+ * subcomponents to access them and do physical calculations correctly.
  */
 public interface ReadablePhysicalWorld extends Serializable {
     /**
-     * 
-     * @param body
-     * @return
+     * Gets a {@link PhysicalBody} given the {@link Body} to which is associated.
+     * @param body the {@link Body} from which getting its associated {@link PhysicalBody}
+     * @return the {@link PhysicalBody} associated with the passed {@link Body}
      */
-    PhysicalBody getPhysicalBodyFromBody(final Body body);
+    PhysicalBody getPhysicalBodyFromBody(Body body);
 
     /**
-     * 
-     * @param body
-     * @return
+     * Gets the {@link EntityType} of the {@link model.entities.Entity} which {@link PhysicalBody} is associated to the
+     * given {@link Body}.
+     * @param body the {@link Body} from which getting its associated {@link EntityType}
+     * @return the {@link EntityType} associated with the passed {@link Body}
      */
-    EntityType getEntityTypeFromBody(final Body body);
+    EntityType getEntityTypeFromBody(Body body);
 
     /**
-     * 
-     * @return
+     * Gets the {@link PhysicalBody} of a {@link model.entities.Ladder} in case the player is currently colliding with one
+     * in this iteration step.
+     * @return an {@link Optional} with the {@link PhysicalBody} of a {@link model.entities.Ladder} if the player is
+     * colliding with it, an {@link Optional#absent()} otherwise
      */
     Optional<PhysicalBody> getCollidingLadder();
 
     /**
-     * 
-     * @return
+     * Gets the {@link PlayerPhysicalBody} of the current {@link model.entities.Player}, if it has been created.
+     * @return an {@link Optional} with the {@link PlayerPhysicalBody} of the {@link model.entities.Player} if the player has
+     * been created, an {@link Optional#absent()} otherwise
      */
     Optional<PlayerPhysicalBody> getPlayerPhysicalBody();
 
     /**
-     * 
-     * @param body
-     * @return
+     * Gets the {@link PowerUpType} of the {@link model.entities.PowerUp} which {@link PhysicalBody} is associated to the
+     * given {@link Body}.
+     * @param body the {@link Body} from which getting its associated {@link PowerUpType}
+     * @return the {@link PowerUpType} associated with the passed {@link Body}
      */
-    PowerUpType getPowerUpTypeFromBody(final Body body);
+    PowerUpType getPowerUpTypeFromBody(Body body);
 }

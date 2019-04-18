@@ -18,7 +18,6 @@ import org.dyn4j.geometry.Vector2;
 
 import com.google.common.hash.Hashing;
 
-import model.entities.EntityType;
 import model.physics.BodyShape;
 
 /**
@@ -93,12 +92,6 @@ public class SerializableBody extends Body implements Serializable {
         out.writeBoolean(this.getMass().isInfinite());
         /* writing whether the body can rotate or not */
         out.writeBoolean(this.getMass().getType() == MassType.FIXED_ANGULAR_VELOCITY);
-        /* writing type */
-        if (this.getUserData() instanceof EntityType) {
-            out.writeObject(this.getUserData());
-        } else {
-            throw new NotSerializableException(NO_WRITABLE_MSG);
-        }
     }
 
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -165,9 +158,6 @@ public class SerializableBody extends Body implements Serializable {
             // this.setMass(new Mass(new Vector2(massCenterX, massCenterY), mass, inertia));
             this.setMass(new Mass(new Vector2(xLocal, yLocal), mass, inertia));
         }
-        /* reading type */
-        final EntityType type = (EntityType) in.readObject();
-        this.setUserData(type);
     }
 
     /**

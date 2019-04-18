@@ -1,5 +1,7 @@
 package model.physics.collisions;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.contact.ContactAdapter;
@@ -17,7 +19,8 @@ import model.physics.ReadablePhysicalWorld;
 /**
  * Class representing a listener for physical contacts between bodies required the dyn4j library so as to rule them.
  */
-public final class ContactRules extends ContactAdapter {
+public final class ContactRules extends ContactAdapter implements Serializable {
+    private static final long serialVersionUID = -5814150230389633139L;
     private final ReadablePhysicalWorld world;
 
     /**

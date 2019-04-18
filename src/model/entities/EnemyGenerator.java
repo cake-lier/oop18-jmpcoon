@@ -29,7 +29,7 @@ public final class EnemyGenerator extends StaticEntity {
     public EnemyGenerator(final StaticPhysicalBody body, final PhysicalFactory factory) {
         super(body);
         this.factory = factory;
-        this.count = 0;
+        this.count = -1;
     }
 
     /**

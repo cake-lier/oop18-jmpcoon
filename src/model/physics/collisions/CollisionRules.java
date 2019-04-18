@@ -1,6 +1,8 @@
 package model.physics.collisions;
 
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
@@ -25,7 +27,8 @@ import model.world.NotifiableWorld;
 /**
  * Class representing a listener for physical collisions between bodies required by the dyn4j library so as to rule them.
  */
-public class CollisionRules extends CollisionAdapter {
+public class CollisionRules extends CollisionAdapter implements Serializable {
+    private static final long serialVersionUID = 7929553481812283534L;
     private final NotifiableWorld outerWorld;
     private final ReadablePhysicalWorld physicalWorld;
 

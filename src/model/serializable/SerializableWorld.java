@@ -10,6 +10,9 @@ import org.dyn4j.collision.AxisAlignedBounds;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.World;
 
+import model.physics.collisions.CollisionRules;
+import model.physics.collisions.ContactRules;
+
 /**
  * A version of {@link World} that is serializable.
  */
@@ -31,6 +34,9 @@ public class SerializableWorld extends World implements Serializable {
         final AxisAlignedBounds bounds = (AxisAlignedBounds) this.bounds;
         out.writeDouble(bounds.getWidth());
         out.writeDouble(bounds.getHeight());
+        /* writes the physics rules classes, which are unique */
+        out.writeObject(this.getListeners(ContactRules.class).get(0));
+        out.writeObject(this.getListeners(CollisionRules.class).get(0));
         /* writing number of bodies */
         out.writeInt(this.getBodyCount());
         /* writing bodies */
@@ -48,6 +54,9 @@ public class SerializableWorld extends World implements Serializable {
         /* reading dimensions */
         final double width = in.readDouble();
         final double height = in.readDouble();
+        /* reading saved physics rules */
+        this.addListener(ContactRules.class.cast(in.readObject()));
+        this.addListener(CollisionRules.class.cast(in.readObject()));
         this.setBounds(new AxisAlignedBounds(width, height));
         /* reading number of bodies */
         final int numBodies = in.readInt();
