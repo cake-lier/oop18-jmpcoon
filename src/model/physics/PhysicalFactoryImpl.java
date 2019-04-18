@@ -155,6 +155,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         switch (type) {
             case PLAYER:
                 body.getFixture(0).setFilter(PLAYER_FILTER);
+                body.getFixture(0).setFriction(1);
                 body.setMass(MassType.FIXED_ANGULAR_VELOCITY);
                 break;
             case ROLLING_ENEMY:
