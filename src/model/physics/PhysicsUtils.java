@@ -23,7 +23,7 @@ public final class PhysicsUtils {
     public static boolean isBodyOnTop(final PhysicalBody aboveBody, final PhysicalBody belowBody,
                                       final Pair<Double, Double> contactPoint) {
         final double slope = Math.tan(belowBody.getAngle());
-        if (slope == 0) {
+        if (Double.compare(slope, 0) == 0) {
             return Math.abs((aboveBody.getPosition().getRight() - aboveBody.getDimensions().getRight() / 2)
                             - contactPoint.getRight()) < PRECISION
                    && Math.abs(contactPoint.getRight()
@@ -34,7 +34,7 @@ public final class PhysicsUtils {
         final double newXAbove = (interPerp - interParalAbove) * slope / (1 + Math.pow(slope, 2));
         final double newYAbove = slope * newXAbove + interParalAbove;
         final Vector2 rotatedHalfAboveHeight = new Vector2(0, -aboveBody.getDimensions().getRight() / 2)
-                                               .rotate(belowBody.getAngle())
+                                               .rotate(aboveBody.getAngle())
                                                .add(newXAbove, newYAbove);
         final double interParalBelow = belowBody.getPosition().getRight() - slope * belowBody.getPosition().getLeft();
         final double newXBelow = (interPerp - interParalBelow) * slope / (1 + Math.pow(slope, 2));
@@ -51,14 +51,23 @@ public final class PhysicsUtils {
      * which is below the center of the second {@link PhysicalBody}, ignoring angles of rotation.
      * @param bottomBody the body which should be at the bottom
      * @param topBody the body which should be at the top
-     * @return True if the first {@link PhysicalBody} is at the bottom half of the second {@link PhysicalBody}
+     * @return true if the first {@link PhysicalBody} is at the bottom half of the second {@link PhysicalBody}
      */
     public static boolean isBodyAtBottomHalf(final PhysicalBody bottomBody, final PhysicalBody topBody) {
         return bottomBody.getPosition().getRight() + bottomBody.getDimensions().getRight() / 2 <= topBody.getPosition().getRight();
     }
 
+    /**
+     * Calculates if the first {@link PhysicalBody} is inside the shape of the other {@link PhysicalBody}. This is true
+     * if the center of the first {@link PhysicalBody} is distant from the center of the second {@link PhysicalBody} less or
+     * equal than a quarter of the width of the second {@link PhysicalBody}.
+     * @param insideBody the {@link PhysicalBody} that should be contained in the shape of the second {@link PhysicalBody}
+     * @param outsideBody the {@link PhysicalBody} that should contain with its shape the first
+     * @return true if the first {@link PhysicalBody} is inside the shape of the second
+     */
     public static boolean isBodyInside(final PhysicalBody insideBody, final PhysicalBody outsideBody) {
-        return Math.abs(insideBody.getPosition().getLeft() - outsideBody.getPosition().getLeft()) <= outsideBody.getDimensions().getLeft() / 4;
+        return Math.abs(insideBody.getPosition().getLeft() - outsideBody.getPosition().getLeft()) 
+               <= outsideBody.getDimensions().getLeft() / 4;
     }
 
     /**

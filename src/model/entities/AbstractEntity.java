@@ -68,7 +68,7 @@ public abstract class AbstractEntity implements Entity {
      */
     @Override
     public boolean isAlive() {
-        return this.body.exist();
+        return this.body.exists();
     }
 
     /**

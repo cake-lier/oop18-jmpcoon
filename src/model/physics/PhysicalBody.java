@@ -29,7 +29,7 @@ public interface PhysicalBody extends Serializable {
     /**
      * @return whether this {@link PhysicalBody} exists or not
      */
-    boolean exist();
+    boolean exists();
 
 
     /**

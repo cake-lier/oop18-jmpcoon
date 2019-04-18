@@ -68,10 +68,11 @@ public final class WorldImpl implements World, NotifiableWorld {
      * Default constructor, decides what are the dimensions of this {@link World}, which should be 8m by 4.5m. It's package
      * protected because the only class that should access this constructor is its factory {@link WorldFactory}.
      */
-    public WorldImpl() {
+    WorldImpl() {
         this.physicsFactory = new PhysicalFactoryImpl();
         this.worldDimensions = new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT);
-        this.innerWorld = this.physicsFactory.createPhysicalWorld(this, this.worldDimensions.getLeft(), this.worldDimensions.getRight());
+        this.innerWorld = this.physicsFactory.createPhysicalWorld(this, this.worldDimensions.getLeft(), 
+                                                                  this.worldDimensions.getRight());
         this.aliveEntities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
         this.deadEntities = new ClassToInstanceMultimapImpl<>(MultimapBuilder.linkedHashKeys().linkedHashSetValues().build());
         this.currentEvents = new LinkedList<>();
@@ -151,7 +152,7 @@ public final class WorldImpl implements World, NotifiableWorld {
         this.aliveEntities.getInstances(WalkingEnemy.class).forEach(WalkingEnemy::computeMovement);
         this.aliveEntities.getInstances(EnemyGenerator.class)
                           .forEach(enemyGenerator -> this.aliveEntities.putAll(RollingEnemy.class,
-                                                                               enemyGenerator.onTimeAdvanced()));
+                                                                               enemyGenerator.onTimeAdvanced().asSet()));
     }
 
     /*

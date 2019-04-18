@@ -13,16 +13,18 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     private static final double INVINCIBILITY_VELOCITY_X = 1.60;
     private static final double INVINCIBILITY_VELOCITY_Y = 1.50;
 
+    private final SerializableBody body;
     private boolean invincible;
     private boolean invulnerable;
     private int lives;
 
     /**
      * Builds a new {@link PlayerPhysicalBody}.
-     * @param body The {@link SerializableBody} encapsulated by this {@link DynamicPhysicalBody}.
+     * @param body The {@link SerializableBody} encapsulated by this {@link PlayerPhysicalBody}.
      */
     public PlayerPhysicalBody(final SerializableBody body) {
         super(body);
+        this.body = body;
         this.invincible = false;
         this.invulnerable = false;
         this.lives = 1;
@@ -72,8 +74,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     }
 
     /**
-     * {@link Player} is hit by and enemy, loses one life.
-     * If Player has 0 lives, he dies.
+     * If the {@link Player} is hit by and enemy, loses one life, and if the count goes to zero, the {@link Player} dies.
      */
     public void hit() {
         if (!this.invulnerable) {
@@ -81,8 +82,16 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
             this.invulnerable = true;
         }
         if (this.lives == 0) {
-            this.getBody().setActive(false);
+            this.kill();
         }
+    }
+
+    /**
+     * Kills the {@link Player}.
+     */
+    public void kill() {
+        this.lives = 0;
+        this.body.setActive(false);
     }
 
     /**

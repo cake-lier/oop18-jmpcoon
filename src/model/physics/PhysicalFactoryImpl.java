@@ -93,9 +93,9 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         this.throwException(this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_TWO_WORLDS_MSG));
         this.worldDimensions.setLeft(width);
         this.worldDimensions.setRight(height);
-        this.physicalWorld = Optional.of(new WholePhysicalWorldImpl(outerWorld, 
-                                                                        new SerializableWorld(new AxisAlignedBounds(width * 2, 
-                                                                                                                        height * 2))));
+        this.physicalWorld 
+            = Optional.of(new WholePhysicalWorldImpl(outerWorld, new SerializableWorld(new AxisAlignedBounds(width * 2, 
+                                                                                                             height * 2))));
         return this.physicalWorld.get();
     }
 
@@ -106,9 +106,9 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
      */
     @Override
     public StaticPhysicalBody createStaticPhysicalBody(final Pair<Double, Double> position, final double angle,
-                                                           final BodyShape shape, final double width, final double height, 
-                                                               final EntityType type, final Optional<PowerUpType> powerUpType)
-                                                                       throws IllegalStateException {
+                                                       final BodyShape shape, final double width, final double height, 
+                                                       final EntityType type, final Optional<PowerUpType> powerUpType)
+                                                       throws IllegalStateException {
         this.checks(position, shape, type, true);
         final SerializableBody body = this.createBody(shape, position, angle, width, height);
         this.throwException(body.getFixtureCount() != 1, () -> new IllegalStateException(TOO_MANY_FIXTURES_MSG));
@@ -131,7 +131,6 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                 this.throwException(true, () -> new IllegalArgumentException(ILLEGAL_ENTITY_MSG));
         }
         body.setMass(MassType.INFINITE);
-        body.setUserData(type);
         this.physicalWorld.get().getWorld().addBody(body);
         final StaticPhysicalBody physicalBody = new StaticPhysicalBody(body);
         this.physicalWorld.get().addContainerAssociation(physicalBody, body, type);
@@ -148,17 +147,12 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
      */
     @Override
     public DynamicPhysicalBody createDynamicPhysicalBody(final Pair<Double, Double> position, final double angle,
-                                                             final BodyShape shape, final double width, final double height,
-                                                                 final EntityType type) throws IllegalStateException {
+                                                         final BodyShape shape, final double width, final double height,
+                                                         final EntityType type) throws IllegalStateException {
         this.checks(position, shape, type, false);
         final SerializableBody body = this.createBody(shape, position, angle, width, height);
         this.throwException(body.getFixtureCount() != 1, () -> new IllegalStateException(TOO_MANY_FIXTURES_MSG));
         switch (type) {
-            case PLAYER:
-                body.getFixture(0).setFilter(PLAYER_FILTER);
-                body.getFixture(0).setFriction(PLAYER_FRICTION);
-                body.setMass(MassType.FIXED_ANGULAR_VELOCITY);
-                break;
             case ROLLING_ENEMY:
                 body.getFixture(0).setFilter(ROLLING_ENEMY_FILTER);
                 body.setMass(new Mass(body.getLocalCenter(), ROLLING_ENEMY_MASS, ROLLING_ENEMY_INERTIA));
@@ -173,11 +167,31 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
             default:
                 this.throwException(true, () -> new IllegalArgumentException(ILLEGAL_ENTITY_MSG));
         }
-        body.setUserData(type);
         this.physicalWorld.get().getWorld().addBody(body);
-        final DynamicPhysicalBody physicalBody = type == EntityType.PLAYER ? new PlayerPhysicalBody(body) : new DynamicPhysicalBody(body);
+        final DynamicPhysicalBody physicalBody = new DynamicPhysicalBody(body);
         this.physicalWorld.get().addContainerAssociation(physicalBody, body, type);
         return physicalBody;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws IllegalStateException If the {@link org.dyn4j.dynamics.Body} encapsulated is in an illegal state (specifically, if
+     * it has too many {@link org.dyn4j.collision.Fixture}.
+     */
+    @Override
+    public PlayerPhysicalBody createPlayerPhysicalBody(final Pair<Double, Double> position, final double angle,
+                                                       final BodyShape shape, final double width, final double height)
+                                                       throws IllegalStateException {
+        this.checks(position, shape, EntityType.PLAYER, false);
+        final SerializableBody body = this.createBody(shape, position, angle, width, height);
+        this.throwException(body.getFixtureCount() != 1, () -> new IllegalStateException(TOO_MANY_FIXTURES_MSG));
+        body.getFixture(0).setFilter(PLAYER_FILTER);
+        body.getFixture(0).setFriction(PLAYER_FRICTION);
+        body.setMass(MassType.FIXED_ANGULAR_VELOCITY);
+        this.physicalWorld.get().getWorld().addBody(body);
+        final PlayerPhysicalBody playerBody = new PlayerPhysicalBody(body);
+        this.physicalWorld.get().addPlayerAssociation(playerBody, body);
+        return playerBody;
     }
 
     private SerializableBody createBody(final BodyShape shape, final Pair<Double, Double> position, final double angle,

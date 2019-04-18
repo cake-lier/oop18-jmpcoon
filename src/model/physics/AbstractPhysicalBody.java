@@ -33,14 +33,6 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
     }
 
     /**
-     * 
-     * @return The body that this {@link PhysicalBody} contains.
-     */
-    protected SerializableBody getBody() {
-        return this.body;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -79,7 +71,7 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
      * {@inheritDoc}
      */
     @Override
-    public boolean exist() {
+    public boolean exists() {
         return this.body.isActive();
     }
 

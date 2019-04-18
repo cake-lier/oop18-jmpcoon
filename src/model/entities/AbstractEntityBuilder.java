@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import model.physics.BodyShape;
 import model.physics.DynamicPhysicalBody;
 import model.physics.PhysicalFactory;
+import model.physics.PlayerPhysicalBody;
 import model.physics.StaticPhysicalBody;
 
 import com.google.common.base.Optional;
@@ -83,7 +84,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
      * Sets the {@link PhysicalFactory} that will be used to create the {@link model.physics.PhysicalBody} of the {@link Entity}
      * that will be created by this {@link AbstractEntityBuilder}.
      * @param factory the {@link PhysicalFactory} that will be used to create the {@link model.physics.PhysicalBody} of the
-     * {@link Entity} that will be created.
+     * {@link Entity} that will be created
      * @return a reference to this {@link AbstractEntityBuilder}
      */
     public AbstractEntityBuilder<E> setFactory(final PhysicalFactory factory) {
@@ -118,9 +119,9 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     /**
      * Builds the {@link Entity} with parameters as previously set. All the parameters are needed and, as a builder, once the
      * build has happened this builder won't produce any other copies of the produced {@link Entity}.
-     * @return The {@link Entity} with parameters specified with the others methods.
+     * @return the {@link Entity} with parameters specified with the others methods
      * @throws IllegalStateException if not every field has been initialized or if this {@link AbstractEntityBuilder} has already been
-     * built.
+     * built
      */
     public E build() throws IllegalStateException {
         this.checkIfbuildable();
@@ -130,14 +131,14 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
 
     /**
      * The actual method the subclass of this class should implement to correctly create a new {@link Entity} of this type.
-     * @return The {@link Entity} that should be returned by the {@link #build()} method.
+     * @return the {@link Entity} that should be returned by the {@link #build()} method
      */
     protected abstract E buildEntity();
 
     /**
      * Method that allows the subclass of this class to get the {@link PowerUpType} set.
-     * @return The {@link PowerUpType} set.
-     * @throws IllegalStateException if the {@link PowerUpType} for this {@link AbstractEntityBuilder} has not been set.
+     * @return the {@link PowerUpType} set
+     * @throws IllegalStateException if the {@link PowerUpType} for this {@link AbstractEntityBuilder} has not been set
      */
     protected PowerUpType getPowerUpType() throws IllegalStateException {
         if (this.powerUpType.isPresent()) {
@@ -150,7 +151,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     /**
      * Method that allows the subclass of this class to get the walking distance set.
      * @return the walking distance set
-     * @throws IllegalStateException if the walking distance for this {@link AbstractEntityBuilder} has not been set.
+     * @throws IllegalStateException if the walking distance for this {@link AbstractEntityBuilder} has not been set
      */
     protected double getWalkingRange() throws IllegalStateException {
         if (this.walkingRange.isPresent()) {
@@ -163,7 +164,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     /**
      * Method that allows the subclass of this class to get the {@link PhysicalFactory} set.
      * @return the {@link PhysicalFactory} set
-     * @throws IllegalStateException if the PhysicalFactory for this {@link AbstractEntityBuilder} has not been set.
+     * @throws IllegalStateException if the PhysicalFactory for this {@link AbstractEntityBuilder} has not been set
      */
     protected PhysicalFactory getPhysicalFactory() throws IllegalStateException {
         if (this.factory.isPresent()) {
@@ -184,31 +185,31 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
 
     private boolean areAllBasicFieldsFull() {
         return this.center.isPresent()
-                && this.dimensions.isPresent()
-                && this.shape.isPresent()
-                && this.angle.isPresent()
-                && this.factory.isPresent();
+               && this.dimensions.isPresent()
+               && this.shape.isPresent()
+               && this.angle.isPresent()
+               && this.factory.isPresent();
     }
 
     /**
      * Creates a {@link StaticPhysicalBody} for this {@link Entity}.
-     * @param type The {@link EntityType} of this {@link Entity}.
-     * @return The {@link StaticPhysicalBody} that this {@link Entity} should contain.
+     * @param type The {@link EntityType} of this {@link Entity}
+     * @return the {@link StaticPhysicalBody} that this {@link Entity} should contain
      */
     protected StaticPhysicalBody createStaticPhysicalBody(final EntityType type) {
         return this.factory.get().createStaticPhysicalBody(this.center.get(), 
-                                                            this.angle.get(), 
-                                                            this.shape.get(), 
-                                                            this.dimensions.get().getLeft(), 
-                                                            this.dimensions.get().getRight(), 
-                                                            type,
-                                                            this.powerUpType);
+                                                           this.angle.get(), 
+                                                           this.shape.get(), 
+                                                           this.dimensions.get().getLeft(), 
+                                                           this.dimensions.get().getRight(), 
+                                                           type,
+                                                           this.powerUpType);
     }
 
     /**
      * Creates a {@link DynamicPhysicalBody} for this {@link Entity}.
-     * @param type The {@link EntityType} of this {@link Entity}.
-     * @return The {@link DynamicPhysicalBody} that this {@link Entity} should contain.
+     * @param type The {@link EntityType} of this {@link Entity}
+     * @return the {@link DynamicPhysicalBody} that this {@link Entity} should contain
      */
     protected DynamicPhysicalBody createDynamicPhysicalBody(final EntityType type) {
         return this.factory.get().createDynamicPhysicalBody(this.center.get(), 
@@ -217,5 +218,17 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
                                                             this.dimensions.get().getLeft(), 
                                                             this.dimensions.get().getRight(), 
                                                             type);
+    }
+
+    /**
+     * Creates a {@link PlayerPhysicalBody} for this {@link Entity}.
+     * @return the {@link PlayerPhysicalBody} that this {@link Entity} should contain
+     */
+    protected PlayerPhysicalBody createPlayerPhysicalBody() {
+        return this.factory.get().createPlayerPhysicalBody(this.center.get(), 
+                                                           this.angle.get(), 
+                                                           this.shape.get(), 
+                                                           this.dimensions.get().getLeft(), 
+                                                           this.dimensions.get().getRight());
     }
 }

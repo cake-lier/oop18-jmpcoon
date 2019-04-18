@@ -43,7 +43,7 @@ public final class EntityBuilderUtils {
         return new AbstractEntityBuilder<Player>() {
             @Override
             protected Player buildEntity() {
-                return new Player(super.createDynamicPhysicalBody(EntityType.PLAYER));
+                return new Player(super.createPlayerPhysicalBody());
             }
         };
     }
