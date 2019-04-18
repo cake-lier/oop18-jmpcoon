@@ -57,7 +57,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
     /**
      * Binds the current instance of {@link WholePhysicalWorldImpl} with the instance of {@link World} which will be wrapped and 
      * used.
-     * @param world The {@link World} to wrap.
+     * @param world the {@link World} to wrap
      */
     WholePhysicalWorldImpl(final NotifiableWorld outerWorld, final SerializableWorld world) {
         this.world = world;
@@ -277,6 +277,11 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
             this.player.get().endInvulnerability();
         }
         this.world.step(1);
+        if (this.player.get().getPosition().getLeft() < 0 - this.player.get().getDimensions().getLeft() / 2
+            || this.player.get().getPosition().getRight() < 0 - this.player.get().getDimensions().getRight() / 2) {
+            /* the player is killed if it is completely outside the world positive bounds */
+            this.player.get().getBody().setActive(false);
+        }
     }
 
     private boolean hitEnded() {

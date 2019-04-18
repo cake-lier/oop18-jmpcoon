@@ -25,7 +25,8 @@ import model.world.NotifiableWorld;
  */
 public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final long serialVersionUID = -3251686827966500039L;
-    private static final double PLATFORM_FRICTION = 0.5;
+    private static final double PLATFORM_FRICTION = 0.25;
+    private static final double PLAYER_FRICTION = 0.1;
     private static final double ROLLING_ENEMY_ANGULAR_DAMPING = 1.2;
     private static final double ROLLING_ENEMY_GRAVITY_SCALE = 1.9;
     private static final double ROLLING_ENEMY_LINEAR_DAMPING = 0.5;
@@ -155,7 +156,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         switch (type) {
             case PLAYER:
                 body.getFixture(0).setFilter(PLAYER_FILTER);
-                body.getFixture(0).setFriction(1);
+                body.getFixture(0).setFriction(PLAYER_FRICTION);
                 body.setMass(MassType.FIXED_ANGULAR_VELOCITY);
                 break;
             case ROLLING_ENEMY:

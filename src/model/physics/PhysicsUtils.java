@@ -7,7 +7,7 @@ import org.dyn4j.geometry.Vector2;
  * A utility class with methods for calculating positions of {@link PhysicalBody}s with respect to one another.
  */
 public final class PhysicsUtils {
-    private static final double PRECISION = 0.02;
+    private static final double PRECISION = 0.025;
 
     private PhysicsUtils() {
     }
@@ -15,10 +15,10 @@ public final class PhysicsUtils {
     /**
      * Calculates if the first {@link PhysicalBody} is over the top of the other, as the one which is below is a rectangle and
      * they can make contact on the top side.
-     * @param aboveBody The {@link PhysicalBody} which should be above.
-     * @param belowBody The {@link PhysicalBody} which should be below.
-     * @param contactPoint The contact point in world coordinates.
-     * @return True if the first {@link PhysicalBody} is above the second {@link PhysicalBody} below. 
+     * @param aboveBody the {@link PhysicalBody} which should be above
+     * @param belowBody the {@link PhysicalBody} which should be below
+     * @param contactPoint the contact point in world coordinates
+     * @return True if the first {@link PhysicalBody} is above the second {@link PhysicalBody} below 
      */
     public static boolean isBodyOnTop(final PhysicalBody aboveBody, final PhysicalBody belowBody,
                                       final Pair<Double, Double> contactPoint) {
@@ -49,9 +49,9 @@ public final class PhysicsUtils {
     /**
      * Calculates if the first {@link PhysicalBody} is overlapping with the second {@link PhysicalBody} in a point
      * which is below the center of the second {@link PhysicalBody}, ignoring angles of rotation.
-     * @param bottomBody The body which should be at the bottom.
-     * @param topBody The body which should be at the top.
-     * @return True if the first {@link PhysicalBody} is at the bottom half of the second {@link PhysicalBody}.
+     * @param bottomBody the body which should be at the bottom
+     * @param topBody the body which should be at the top
+     * @return True if the first {@link PhysicalBody} is at the bottom half of the second {@link PhysicalBody}
      */
     public static boolean isBodyAtBottomHalf(final PhysicalBody bottomBody, final PhysicalBody topBody) {
         return bottomBody.getPosition().getRight() + bottomBody.getDimensions().getRight() / 2 <= topBody.getPosition().getRight();
@@ -64,10 +64,10 @@ public final class PhysicsUtils {
     /**
      * Calculates if the first {@link PhysicalBody} is over the top of the other, as the one which is below is a circle and
      * they can make contact on any point on the upper half of the body which should be below.
-     * @param aboveBody The {@link PhysicalBody} which should be above.
-     * @param belowBody The {@link PhysicalBody} which should be below.
-     * @param yContact The y coordinate of the contact point in world coordinates.
-     * @return True if the first {@link PhysicalBody} is above the second {@link PhysicalBody} below. 
+     * @param aboveBody the {@link PhysicalBody} which should be above
+     * @param belowBody the {@link PhysicalBody} which should be below
+     * @param yContact the y coordinate of the contact point in world coordinates
+     * @return True if the first {@link PhysicalBody} is above the second {@link PhysicalBody} below 
      */
     public static boolean isBodyAbove(final PhysicalBody aboveBody, final PhysicalBody belowBody, final double yContact) {
         return (Math.abs(aboveBody.getPosition().getRight() - aboveBody.getDimensions().getRight() / 2) - yContact) < PRECISION

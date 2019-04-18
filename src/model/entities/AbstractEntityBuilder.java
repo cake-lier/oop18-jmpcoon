@@ -143,7 +143,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
         if (this.powerUpType.isPresent()) {
             return this.powerUpType.get();
         } else {
-            throw new IllegalStateException("Not all the necessary fields have been initialized");
+            throw new IllegalStateException(INCOMPLETE_BUILDER_MSG);
         }
     }
 
@@ -156,7 +156,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
         if (this.walkingRange.isPresent()) {
             return this.walkingRange.get();
         } else {
-            throw new IllegalStateException("Not all the necessary fields have been initialized");
+            throw new IllegalStateException(INCOMPLETE_BUILDER_MSG);
         }
     }
 
@@ -169,7 +169,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
         if (this.factory.isPresent()) {
             return this.factory.get();
         } else {
-            throw new IllegalStateException("Not all the necessary fields have been initialized");
+            throw new IllegalStateException(INCOMPLETE_BUILDER_MSG);
         }
     }
 

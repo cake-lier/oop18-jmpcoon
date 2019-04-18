@@ -8,7 +8,7 @@ public interface ResizableView {
 
     /**
      * 
-     * @param screenIndex
+     * @param screenIndex 
      */
     void setScreenSize(int screenIndex);
 }

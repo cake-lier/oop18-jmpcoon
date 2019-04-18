@@ -2,7 +2,6 @@ package view.game;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -98,10 +97,10 @@ public final class GameViewImpl implements GameView {
     /**
      * Binds this game view to the instance of the {@link AppController}, acquires the {@link Stage} in which to draw the game,
      * creates an instance of the {@link GameController}.
-     * @param appController The application controller.
-     * @param view The application view.
-     * @param stage The stage in which to draw the game scene.
-     * @param music The music to play in background.
+     * @param appController the application controller
+     * @param view the application view
+     * @param stage the stage in which to draw the game scene
+     * @param music the music to play in background
      */
     public GameViewImpl(final AppController appController, final View view, final Stage stage, final MediaPlayer music) {
         this.appController = Objects.requireNonNull(appController);
