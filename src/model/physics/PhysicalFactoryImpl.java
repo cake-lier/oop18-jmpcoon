@@ -68,7 +68,6 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                                                                                         | CATEGORY_ROLLING_ENEMY 
                                                                                         | CATEGORY_PLATFORM
                                                                                         | CATEGORY_PLAYER);
-
     private static final CategoryFilter POWERUP_FILTER = new CategoryFilter(CATEGORY_POWERUP, CATEGORY_PLATFORM 
                                                                                               | CATEGORY_PLAYER
                                                                                               | CATEGORY_POWERUP);
@@ -93,8 +92,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         this.worldDimensions.setLeft(width);
         this.worldDimensions.setRight(height);
         this.physicalWorld 
-            = Optional.of(new PhysicalWorldImpl(outerWorld, 
-                                                     new SerializableWorld(new AxisAlignedBounds(width * 2, height * 2))));
+            = Optional.of(new PhysicalWorldImpl(outerWorld,
+                                                new SerializableWorld(new AxisAlignedBounds(width * 2, height * 2))));
         return this.physicalWorld.get();
     }
 

@@ -36,7 +36,7 @@ public enum Sounds {
     END_GAME("end");
 
     private static final String SOUNDS_PATH = "sounds/";
-    private static final String SOUNDS_EXT = ".wav";
+    private static final String SOUNDS_EXT = ".mp3";
 
     private final AudioClip sound;
 

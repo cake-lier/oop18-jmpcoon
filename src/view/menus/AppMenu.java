@@ -14,9 +14,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -40,6 +40,8 @@ public final class AppMenu implements Menu {
     private static final String NO_SAVE_MSG = "No save game in this slot";
     private static final String FONT_SIZE = "-fx-font-size: ";
     private static final String TICK_FONT_SIZE = "-fx-tick-label-font: ";
+    private static final String MUTED_LABEL = "I";
+    private static final String UNMUTED_LABEL = "O";
     private static final String FONT = "\"dark forest\"";
     private static final String SIZE_UNIT = "em";
     private static final int VOLUME_RATIO = 100;
@@ -49,6 +51,7 @@ public final class AppMenu implements Menu {
     private static final int LOAD_BUTTONS_RATIO = 135;
     private static final int DELETE_BUTTONS_RATIO = 250;
     private static final int LABELS_RATIO = 175;
+    private static final int MUTE_RATIO = 200;
     private static final int TICK_RATIO = 655;
 
     private final AppController controller;
@@ -83,7 +86,7 @@ public final class AppMenu implements Menu {
     @FXML
     private Label muteLabel;
     @FXML
-    private CheckBox muteCheck;
+    private ToggleButton muteCheck;
     @FXML
     private Button backSettingsButton;
     @FXML
@@ -210,10 +213,12 @@ public final class AppMenu implements Menu {
                 this.music.setVolume(this.volumeControl.getValue() / VOLUME_RATIO);
             });
             this.muteLabel.setStyle(FONT_SIZE + this.stageHeight / LABELS_RATIO + SIZE_UNIT);
-            this.muteCheck.setAllowIndeterminate(false);
+            this.muteCheck.setStyle(FONT_SIZE + this.stageHeight / MUTE_RATIO + SIZE_UNIT);
             this.muteCheck.setSelected(this.music.isMute());
+            this.muteCheck.setText(this.music.isMute() ? MUTED_LABEL : UNMUTED_LABEL);
             this.muteCheck.selectedProperty().addListener(e -> {
                 this.music.setMute(this.muteCheck.isSelected());
+                this.muteCheck.setText(this.muteCheck.isSelected() ? MUTED_LABEL : UNMUTED_LABEL);
             });
             this.backSettingsButton.setStyle(FONT_SIZE + this.stageHeight / BACK_BUTTONS_RATIO + SIZE_UNIT);
             this.backSettingsButton.setOnMouseClicked(e -> {
