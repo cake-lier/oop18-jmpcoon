@@ -10,18 +10,18 @@ W-S to climb up-down the ladders
 SPACE to jump  
 ESC to open in-game menu  
 
-_Credits:_
-Made with love and sweat from GEMY Studios:
-Giorgia Rondinini
-Elena Rughi
-Matteo Castellucci
-Yuqi Sun
+_Credits:_  
+Made with love and sweat from GEMY Studios:  
+Giorgia Rondinini  
+Elena Rughi  
+Matteo Castellucci  
+Yuqi Sun  
 
 _Art Credits:_  
 Menu background: Hahul  
-Game background, platform tiles: Tio Aimar
-Menu music: Still Alive by Ellen McLain and Johnathan Coulton
-Game music: Pixelland by Kevin MacLeod, Incompetech
+Game background, platform tiles: Tio Aimar  
+Menu music: Still Alive by Ellen McLain and Johnathan Coulton  
+Game music: Pixelland by Kevin MacLeod, Incompetech  
 Raccoon, ladders, trunks and mushrooms sprites: Giorgia Rondinini  
 
 This game needs Java 8 and JavaFX 8 to run.
