@@ -26,7 +26,7 @@ import model.world.NotifiableWorld;
  * The class implementation of {@link PhysicalWorld}. It's package protected so the only class which can build it is the 
  * {@link PhysicalFactory}, the factory class for each one of the physical entities of this game.
  */
-final class WholePhysicalWorldImpl implements WholePhysicalWorld {
+final class PhysicalWorldImpl implements PhysicalWorld {
     private static final long serialVersionUID = -8486558535164534658L;
     private static final int INVINCIBILITY_DURATION = 400;
     private static final int HIT_COOLDOWN = 60;
@@ -47,7 +47,7 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
      * @param outerWorld the {@link model.world.World} that wraps this {@link PhysicalWorld}
      * @param world the {@link SerializableWorld} to wrap
      */
-    WholePhysicalWorldImpl(final NotifiableWorld outerWorld, final SerializableWorld world) {
+    PhysicalWorldImpl(final NotifiableWorld outerWorld, final SerializableWorld world) {
         this.world = world;
         final PhysicsRulesFactory physics = new PhysicsRulesFactoryImpl();
         this.world.addListener(physics.createContactRules(this));

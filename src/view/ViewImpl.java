@@ -15,12 +15,12 @@ import javafx.stage.Stage;
 import view.game.GameView;
 import view.game.GameViewImpl;
 import view.menus.AppMenu;
-import view.menus.AppMenuImpl;
+import view.menus.Menu;
 
 /**
  * The class implementation of {@link View}.
  */
-public final class ViewImpl implements View, ResizableView {
+public final class ViewImpl implements View {
     private static final String TITLE = "Jumping Raccoon Adventures";
     private static final Media MENU_MUSIC = new Media(ClassLoader.getSystemResource("sounds/stillalive.mp3").toExternalForm());
     private static final Media GAME_MUSIC = new Media(ClassLoader.getSystemResource("sounds/pixelland.mp3").toExternalForm());
@@ -44,7 +44,7 @@ public final class ViewImpl implements View, ResizableView {
         this.stage = stage;
         this.stage.setTitle(TITLE);
         this.stage.getIcons().add(ICON);
-        this.setScreenSize(Screen.getScreens().indexOf(Screen.getPrimary()));
+        this.setScreenSize();
         this.stage.setScene(new Scene(new Pane()));
         this.player = new MediaPlayer(MENU_MUSIC);
         this.player.setVolume(INIT_VOLUME);
@@ -52,13 +52,8 @@ public final class ViewImpl implements View, ResizableView {
         this.stage.show();
     }
 
-    /**
-     * Sets the stage size to the appropriate values, so as to make it always the biggest possible and with an aspect ratio of
-     * 16:9. It is also not resizable, so the ratio cannot be changed in any way.
-     */
-    @Override
-    public void setScreenSize(final int screenIndex) {
-        final Rectangle2D screenBounds = Screen.getScreens().get(screenIndex).getVisualBounds();
+    private void setScreenSize() {
+        final Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         this.stage.setX(screenBounds.getMinX());
         this.stage.setY(screenBounds.getMinY());
         this.stage.centerOnScreen();
@@ -95,7 +90,7 @@ public final class ViewImpl implements View, ResizableView {
     @Override
     public void displayMenu() {
         this.createNewTrack(MENU_MUSIC);
-        final AppMenu menu = new AppMenuImpl(this.controller, this, this.stage, this.stage.getHeight(), this.player);
+        final Menu menu = new AppMenu(this.controller, this.stage, this.stage.getHeight(), this.player);
         menu.draw();
         menu.show();
     }

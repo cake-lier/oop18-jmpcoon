@@ -4,7 +4,6 @@ package model.entities;
  * An enumeration representing the possible states an {@link Entity} can be in.
  */
 public enum EntityState {
-
     /**
      * It's the state of an {@link Entity} while climbing down a {@link Ladder}. It's used only by the {@link Player}.
      */

@@ -21,10 +21,9 @@ public enum PowerUpType {
 
     private final CollisionEvent associatedEvent;
 
-    /**
-     * Creates the type of the power up while binding to it the {@link CollisionEvent} which the {@link model.world.World}
-     * should receive when the {@link Player} hits it.
-     * @param associatedEvent the {@link CollisionEvent} associated with this power up type
+    /*
+     * Creates the type of the power up while binding to it the CollisionEvent which the World should receive when the
+     * Player hits it.
      */
     PowerUpType(final CollisionEvent associatedEvent) {
         this.associatedEvent = associatedEvent;

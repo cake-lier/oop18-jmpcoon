@@ -80,7 +80,6 @@ public class CollisionRules extends CollisionAdapter implements Serializable {
                 final Triple<Body, PhysicalBody, EntityType> otherTriple
                     = firstTriple.getRight() != EntityType.PLAYER ? firstTriple : secondTriple;
                 final PlayerPhysicalBody playerPhysicalBody = playerPhysicalBodyOpt.get();
-                final Body playerBody = firstTriple.getRight() == EntityType.PLAYER ? firstBody : secondBody;
                 final Vector2 point = contactConstraint.getContacts().get(0).getPoint();
                 final Pair<Double, Double> collisionPoint = new ImmutablePair<>(point.x, point.y);
                 final EntityState playerState = playerPhysicalBody.getState();
@@ -88,10 +87,9 @@ public class CollisionRules extends CollisionAdapter implements Serializable {
                     this.processPowerUp(playerPhysicalBody, otherTriple.getLeft());
                 } else if (otherTriple.getRight() == EntityType.WALKING_ENEMY
                            || otherTriple.getRight() == EntityType.ROLLING_ENEMY) {
-                    return this.processEnemyCollision(playerBody, playerPhysicalBody, playerState, otherTriple, collisionPoint);
+                    return this.processEnemyCollision(playerPhysicalBody, playerState, otherTriple, collisionPoint);
                 } else if (otherTriple.getRight() == EntityType.PLATFORM) {
-                    this.processPlatform(playerBody, playerPhysicalBody, playerState, otherTriple.getLeft(),
-                                         otherTriple.getMiddle(), collisionPoint);
+                    this.processPlatform(playerPhysicalBody, playerState, otherTriple.getMiddle(), collisionPoint);
                 }
             }
         }
@@ -113,8 +111,7 @@ public class CollisionRules extends CollisionAdapter implements Serializable {
     /*
      * Method for elaborating collision rules in a collision between the player and an enemy.
      */
-    private boolean processEnemyCollision(final Body playerBody, final PlayerPhysicalBody playerPhysicalBody,
-                                          final EntityState playerState, 
+    private boolean processEnemyCollision(final PlayerPhysicalBody playerPhysicalBody, final EntityState playerState, 
                                           final Triple<Body, PhysicalBody, EntityType> enemyTriple,
                                           final Pair<Double, Double> collisionPoint) {
         if (playerState == EntityState.CLIMBING_UP || playerState == EntityState.CLIMBING_DOWN) {
@@ -143,8 +140,7 @@ public class CollisionRules extends CollisionAdapter implements Serializable {
     /*
      * Method for elaborating collision rules in a collision between the player and a platform.
      */
-    private void processPlatform(final Body playerBody, final PlayerPhysicalBody playerPhysicalBody,
-                                 final EntityState playerState, final Body platformBody, 
+    private void processPlatform(final PlayerPhysicalBody playerPhysicalBody, final EntityState playerState,
                                  final PhysicalBody platformPhysicalBody, final Pair<Double, Double> collisionPoint) {
         final Optional<PhysicalBody> collidingLadder = this.physicalWorld.getCollidingLadder();
         if ((playerState == EntityState.CLIMBING_DOWN || playerState == EntityState.CLIMBING_UP)

@@ -7,7 +7,7 @@ import model.physics.DynamicPhysicalBody;
 import model.physics.PhysicalFactory;
 import model.physics.PlayerPhysicalBody;
 import model.physics.StaticPhysicalBody;
-import model.world.World;
+import model.world.ModifiableWorld;
 
 import com.google.common.base.Optional;
 
@@ -26,7 +26,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     private Optional<PhysicalFactory> factory;
     private Optional<PowerUpType> powerUpType;
     private Optional<Double> walkingRange;
-    private Optional<World> world;
+    private Optional<ModifiableWorld> world;
     private boolean built;
 
     /**
@@ -128,7 +128,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
      * an empty {@link Optional} if a WalkingEnemy isn't being built
      * @return a reference to this {@link AbstractEntityBuilder}
      */
-    public AbstractEntityBuilder<E> setWorld(final Optional<World> world) {
+    public AbstractEntityBuilder<E> setWorld(final Optional<ModifiableWorld> world) {
         this.world = world;
         return this;
     }
@@ -187,7 +187,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
      * @return the {@link World} set
      * @throws IllegalStateException if the World for this {@link AbstractEntityBuilder} has not been set
      */
-    protected World getWorld() throws IllegalStateException {
+    protected ModifiableWorld getWorld() throws IllegalStateException {
         return this.returnIfPresent(this.world);
     }
 

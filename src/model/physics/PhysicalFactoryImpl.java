@@ -73,7 +73,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                                                                                               | CATEGORY_PLAYER
                                                                                               | CATEGORY_POWERUP);
 
-    private Optional<WholePhysicalWorld> physicalWorld;
+    private Optional<PhysicalWorld> physicalWorld;
     private final MutablePair<Double, Double> worldDimensions;
 
     /**
@@ -88,12 +88,12 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
      * {@inheritDoc}
      */
     @Override
-    public PhysicalWorld createPhysicalWorld(final NotifiableWorld outerWorld, final double width, final double height) {
+    public UpdatablePhysicalWorld createPhysicalWorld(final NotifiableWorld outerWorld, final double width, final double height) {
         this.throwException(this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_TWO_WORLDS_MSG));
         this.worldDimensions.setLeft(width);
         this.worldDimensions.setRight(height);
         this.physicalWorld 
-            = Optional.of(new WholePhysicalWorldImpl(outerWorld, 
+            = Optional.of(new PhysicalWorldImpl(outerWorld, 
                                                      new SerializableWorld(new AxisAlignedBounds(width * 2, height * 2))));
         return this.physicalWorld.get();
     }

@@ -17,5 +17,5 @@ public interface WorldFactory {
      * @return the created {@link World}
      * @throws IllegalStateException if the {@link World} has already been created
      */
-    World create() throws IllegalStateException;
+    UpdatableWorld create() throws IllegalStateException;
 }

@@ -26,7 +26,7 @@ import model.entities.EntityType;
 import model.world.CollisionEvent;
 import view.View;
 import view.menus.GameMenu;
-import view.menus.GameMenuImpl;
+import view.menus.Menu;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public final class GameViewImpl implements GameView {
     private EventHandler<WindowEvent> closeHandler;
     private GameController gameController;
     private MemoizedEntityConverter entityConverter;
-    private GameMenu gameMenu;
+    private Menu gameMenu;
     private StackPane root;
     private boolean isMenuVisible;
     private boolean isGameEnded;
@@ -126,8 +126,8 @@ public final class GameViewImpl implements GameView {
         this.entityConverter = new MemoizedEntityConverterImpl(this.gameController.getWorldDimensions(),
                                                                new ImmutablePair<>(this.stage.getScene().getWidth(),
                                                                                    this.stage.getScene().getHeight()));
-        this.gameMenu = new GameMenuImpl(this.root, this.stage.getHeight(), this.appController,
-                                         this.appView, this.gameController, this);
+        this.gameMenu = new GameMenu(this.root, this.stage.getHeight(), this.appController, this.appView, this.gameController,
+                                     this);
         this.closeHandler = e -> this.gameController.stopGame();
     }
 
@@ -225,8 +225,8 @@ public final class GameViewImpl implements GameView {
             this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
             this.drawAliveEntities();
             this.gameController.getCurrentEvents().forEach(e -> this.notifyEvent(e));
-            this.score.setText(SCORE_STR + this.gameController.getCurrentScore() 
-                               + LIVES_STR + this.gameController.getPlayerLives());
+            this.score.setText(SCORE_STR + this.gameController.getCurrentScore() + LIVES_STR 
+                               + this.gameController.getPlayerLives());
         });
     }
 

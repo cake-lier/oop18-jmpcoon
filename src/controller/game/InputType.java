@@ -6,7 +6,6 @@ import model.entities.MovementType;
  * An enumeration representing the types of input a {@link GameController} can process.
  */
 public enum InputType {
-
     /**
      * An {@link InputType} that indicates a {@link MovementType#CLIMB_DOWN} should be transmitted to the game.
      */
@@ -30,7 +29,7 @@ public enum InputType {
 
     private final MovementType associatedMovementType;
 
-     InputType(final MovementType associatedMovementType) {
+    InputType(final MovementType associatedMovementType) {
         this.associatedMovementType = associatedMovementType;
     }
 
@@ -41,5 +40,4 @@ public enum InputType {
     public MovementType getAssociatedMovementType() {
         return this.associatedMovementType;
     }
-
 }

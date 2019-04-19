@@ -3,11 +3,9 @@ package model.entities;
 import model.physics.BodyShape;
 import model.physics.PhysicalFactory;
 import model.physics.StaticPhysicalBody;
-import model.world.World;
+import model.world.ModifiableWorld;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-
-import com.google.common.base.Optional;
 
 /**
  * An enemy generator inside the {@link model.world.World} of the game.
@@ -19,8 +17,8 @@ public final class EnemyGenerator extends StaticEntity {
     private static final int DELTA = 280;
 
     private final PhysicalFactory factory;
+    private final ModifiableWorld world;
     private int count;
-    private final World world;
 
     /**
      * Creates a new {@link EnemyGenerator} with the given {@link StaticPhysicalBody}. This constructor is package protected
@@ -29,7 +27,7 @@ public final class EnemyGenerator extends StaticEntity {
      * @param factory the {@link PhysicalFactory} that generates the RollingEnemy {@link PhysicalBody}
      * @param world the {@link World} to notify when a {@link RollingEnemy} is created
      */
-    EnemyGenerator(final StaticPhysicalBody body, final PhysicalFactory factory, final World world) {
+    EnemyGenerator(final StaticPhysicalBody body, final PhysicalFactory factory, final ModifiableWorld world) {
         super(body);
         this.factory = factory;
         this.count = -1;
@@ -47,16 +45,17 @@ public final class EnemyGenerator extends StaticEntity {
     /**
      * It checks if this {@link EnemyGenerator} has created a new instance of enemy. Returns a collection of {@link RollingEnemy}
      * in case this {@link EnemyGenerator} has created a new enemy; otherwise returns an empty collection.
-     * @return a collection of {@link RollingEnemy}
      */
-    public Optional<RollingEnemy> onTimeAdvanced() {
-        return this.checkTime() ? this.createCompleteRollingEnemy() : Optional.absent();
+    public void onTimeAdvanced() {
+        if (this.checkTime()) {
+            this.world.addGeneratedRollingEnemy(this.createCompleteRollingEnemy());
+        }
     }
 
-    private Optional<RollingEnemy> createCompleteRollingEnemy() {
+    private RollingEnemy createCompleteRollingEnemy() {
         final RollingEnemy enemy = this.createRollingEnemy();
         enemy.applyImpulse();
-        return Optional.of(enemy);
+        return enemy;
     }
 
     private boolean checkTime() {

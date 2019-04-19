@@ -27,7 +27,8 @@ public interface PhysicalFactory extends Serializable {
      * @return the {@link PhysicalWorld} with the given dimensions
      * @throws IllegalStateException if a {@link PhysicalWorld} has already been created
      */
-    PhysicalWorld createPhysicalWorld(NotifiableWorld outerWorld, double width, double height) throws IllegalStateException;
+    UpdatablePhysicalWorld createPhysicalWorld(NotifiableWorld outerWorld, double width, double height)
+                                               throws IllegalStateException;
 
     /**
      * Creates a {@link StaticPhysicalBody} living inside the {@link PhysicalWorld} created by the same {@link PhysicalFactory}.

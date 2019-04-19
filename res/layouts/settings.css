@@ -4,7 +4,6 @@
 
 .descriptions {
     -fx-font-family: "dark forest";
-    -fx-font-size: 500%;
     -fx-text-fill: rgb(143,89,2);
     -fx-background-color: #C3DC93;
     -fx-max-width: infinity;
@@ -19,7 +18,6 @@
     -fx-show-tick-labels: true;
     -fx-minor-tick-count: 0;
     -fx-major-tick-unit: 5;
-    -fx-tick-label-font: 150% "dark forest";
     -fx-tick-label-fill: floralwhite;
 }
 

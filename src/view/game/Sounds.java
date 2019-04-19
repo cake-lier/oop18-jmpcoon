@@ -3,7 +3,7 @@ package view.game;
 import javafx.scene.media.AudioClip;
 
 /**
- * An enumeration associating possible events in the game to sounds.
+ * An enumeration associating possible game events to their correlated sound.
  */
 public enum Sounds {
     /**
@@ -15,7 +15,7 @@ public enum Sounds {
      */
     ROLLING_DESTROY("rollDestroy"),
     /**
-     * A sound associated to the death of a {@link RollingEnemy}.
+     * A sound associated to the death of a {@link WalkingEnemy}.
      */
     WALKING_DESTROY("walkDestroy"),
     /**
@@ -23,15 +23,15 @@ public enum Sounds {
      */
     PLAYER_DEATH("death"),
     /**
-     * A sound associated to an invincible {@link Player}.
+     * A sound associated to the {@link Player} getting the {@link PowerUp} that makes invincible.
      */
     INVINCIBIITY("invincible"),
     /**
-     * A sound associated to the {@link Player} getting a {@link PowerUp}.
+     * A sound associated to the {@link Player} getting a generic {@link PowerUp}.
      */
     POWER_UP_GOT("powerUp"),
     /**
-     * A sound associated to the end of the game.
+     * A sound associated to the {@link Player} winning and terminating the game.
      */
     END_GAME("end");
 
@@ -45,8 +45,8 @@ public enum Sounds {
     }
 
     /**
-     * Returns the sound associated to this value.
-     * @return the sound associated to this enum value
+     * Gets the sound associated to the value of the enumeration.
+     * @return an {@link AudioClip} of the sound associated with the enumeration value
      */
     public AudioClip getSound() {
         return this.sound;

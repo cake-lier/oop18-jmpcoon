@@ -54,7 +54,8 @@ public final class PhysicsUtils {
      * @return true if the first {@link PhysicalBody} is at the bottom half of the second {@link PhysicalBody}
      */
     public static boolean isBodyAtBottomHalf(final PhysicalBody bottomBody, final PhysicalBody topBody) {
-        return bottomBody.getPosition().getRight() + bottomBody.getDimensions().getRight() / 2 <= topBody.getPosition().getRight();
+        return (bottomBody.getPosition().getRight() + bottomBody.getDimensions().getRight() / 2)
+               <= topBody.getPosition().getRight();
     }
 
     /**

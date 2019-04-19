@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 import model.entities.EntityProperties;
 import model.entities.UnmodifiableEntity;
 import model.world.CollisionEvent;
-import model.world.World;
+import model.world.UpdatableWorld;
 import model.world.WorldFactoryImpl;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -39,7 +39,7 @@ public class GameControllerImpl implements GameController {
     private static final long DELTA_UPDATE = 15;
     private static final URL LEVEL_FILE = ClassLoader.getSystemResource("level1.lev");
 
-    private World gameWorld;
+    private UpdatableWorld gameWorld;
     private final GameView gameView;
     private ScheduledThreadPoolExecutor timer;
     private boolean running;
@@ -103,7 +103,7 @@ public class GameControllerImpl implements GameController {
         try (ObjectInputStream in = new ObjectInputStream(
                                         new BufferedInputStream(
                                             new FileInputStream(SaveFile.values()[saveFileIndex].getSavePath())))) {
-            this.gameWorld = (World) in.readObject();
+            this.gameWorld = (UpdatableWorld) in.readObject();
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException(INCOMPATIBLE_FILE_MSG);
         }

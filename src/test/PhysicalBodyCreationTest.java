@@ -22,8 +22,8 @@ import model.physics.DynamicPhysicalBody;
 import model.physics.PhysicalBody;
 import model.physics.PhysicalFactory;
 import model.physics.PhysicalFactoryImpl;
-import model.physics.PhysicalWorld;
 import model.physics.StaticPhysicalBody;
+import model.world.World;
 import model.world.WorldFactoryImpl;
 import model.world.WorldImpl;
 
@@ -78,7 +78,7 @@ public class PhysicalBodyCreationTest {
         assertTrue("Not all possible types have been considered", 
                    consideredTypes.containsAll(Arrays.asList(EntityType.values())));
         final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
-        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
+        final World world = World.class.cast(new WorldFactoryImpl().create());
         physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
         try {
             this.createStandardPlatform(physicalFactory);

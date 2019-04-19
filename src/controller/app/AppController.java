@@ -28,16 +28,18 @@ public interface AppController {
     void startGame(Optional<Integer> saveFileIndex);
 
     /**
-     * Returns the availability of the save files.
-     * @return a list of Optional. The nth element of the list is present if the nth possible save file exist, and it's the time
-     * at which the file was last modified, it's not present if the nth possible file doesn't exist yet
+     * Produces a list which represents the files which hold the saves. Every item in the list is present if the
+     * file of corresponding index is present on disk. An item in the list is the time at which the file was last modified
+     * in milliseconds from 01/01/1970 at 00:00.
+     * @return a list of {@link Optional}s, representing the possible save files. If the file is on disk, the {@link Optional}
+     * holds its time of last modification, otherwise it holds an {@link Optional#absent()}
      */
     List<Optional<Long>> getSaveFileAvailability();
 
     /**
-     * Deletes a save file. 
+     * Deletes a save file given its index.
      * @param saveFileIndex the index of the save file to delete
-     * @return if the deletion was successful or not
+     * @return true if the deletion was successful, false otherwise
      */
     boolean deleteSaveFile(int saveFileIndex);
 }

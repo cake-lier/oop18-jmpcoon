@@ -7,28 +7,42 @@ public enum SaveFile {
     /**
      * The first available save file.
      */
-    SAVE_FILE_1("save1.sav"),
+    SAVE_FILE_1(1),
     /**
      * The second available save file.
      */
-    SAVE_FILE_2("save2.sav"),
+    SAVE_FILE_2(2),
     /**
      * The third available save file.
      */
-    SAVE_FILE_3("save3.sav");
+    SAVE_FILE_3(3);
 
-    private final String savePath;
+    private static final String FOLDER = "jmpcoon";
+    private static final String FILE_NAME = "save";
+    private static final String EXTENSION = ".sav";
 
-    SaveFile(final String savePath) {
-        this.savePath = savePath;
+    private final int index;
+
+    /*
+     * Creates an enumeration value from the index of the save file the value is associated to.
+     */
+    SaveFile(final int index) {
+        this.index = index;
     }
 
     /**
-     * Returns the path of the save file.
-     * @return the path of this saving file
+     * Gets the path to the save file the value of this enumeration is associated to.
+     * @return a string representing the path of the saved file the value of this enumeration is associated to.
      */
     public String getSavePath() {
-        return System.getProperty("user.home") + System.getProperty("file.separator") 
-               + "jmpcoon" + System.getProperty("file.separator") + this.savePath;
+        return getSaveFilesPrefix() + this.index + EXTENSION;
+    }
+
+    /*
+     * Produces the prefix in the path common to all saves files.
+     */
+    private String getSaveFilesPrefix() {
+        return System.getProperty("user.home") + System.getProperty("file.separator")  + FOLDER
+               + System.getProperty("file.separator") + FILE_NAME;
     }
 }

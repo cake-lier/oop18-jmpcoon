@@ -4,7 +4,6 @@ package model.entities;
  * Collects all the possible types an {@link Entity} can be.
  */
 public enum EntityType {
-
     /**
      * An {@link Entity} which tries to kill the {@link Player} by generating other enemies, specifically {@link RollingEnemy}.
      * It can't move by itself.

@@ -78,7 +78,7 @@ public final class AppControllerImpl implements AppController {
     public List<Optional<Long>> getSaveFileAvailability() {
         final List<Optional<Long>> list = new LinkedList<>();
         Arrays.asList(SaveFile.values()).stream()
-                                        .map(v -> v.getSavePath())
+                                        .map(SaveFile::getSavePath)
                                         .map(File::new)
                                         .forEach(f -> list.add(f.exists() ? Optional.of(f.lastModified()) : Optional.absent()));
         return list;
@@ -89,8 +89,8 @@ public final class AppControllerImpl implements AppController {
      */
     @Override
     public boolean deleteSaveFile(final int saveFileIndex) {
-        return saveFileIndex >= 0
-               && saveFileIndex < SaveFile.values().length
+        return saveFileIndex > 0
+               && saveFileIndex <= SaveFile.values().length
                && new File(SaveFile.values()[saveFileIndex].getSavePath()).delete();
     }
 }

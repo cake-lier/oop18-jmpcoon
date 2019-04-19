@@ -31,8 +31,8 @@ import model.entities.UnmodifiableEntityImpl;
 import model.entities.EntityState;
 import model.entities.WalkingEnemy;
 import model.physics.PhysicalBody;
-import model.physics.PhysicalWorld;
 import model.physics.PhysicsUtils;
+import model.physics.UpdatablePhysicalWorld;
 import model.physics.PhysicalFactory;
 import model.physics.PhysicalFactoryImpl;
 
@@ -45,7 +45,7 @@ import com.google.common.collect.MultimapBuilder;
 /**
  * The class implementation of {@link World}.
  */
-public final class WorldImpl implements World, NotifiableWorld {
+public final class WorldImpl implements World {
     private static final long serialVersionUID = 4663479513512261181L;
     private static final double WORLD_WIDTH = 8;
     private static final double WORLD_HEIGHT = 4.5;
@@ -54,7 +54,7 @@ public final class WorldImpl implements World, NotifiableWorld {
     private static final String NO_INIT_MSG = "It's needed to initialize this world by initLevel() before using it";
 
     private final PhysicalFactory physicsFactory;
-    private final PhysicalWorld innerWorld;
+    private final UpdatablePhysicalWorld innerWorld;
     private final Pair<Double, Double> worldDimensions;
     private final ClassToInstanceMultimap<Entity> aliveEntities;
     private final ClassToInstanceMultimap<Entity> deadEntities;
@@ -120,6 +120,14 @@ public final class WorldImpl implements World, NotifiableWorld {
         this.initialized = true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addGeneratedRollingEnemy(final RollingEnemy generatedEnemy) {
+        this.aliveEntities.putInstance(RollingEnemy.class, generatedEnemy);
+    }
+
     private void checkInitialization() {
         if (!this.initialized) {
             throw new IllegalStateException(NO_INIT_MSG);
@@ -153,9 +161,7 @@ public final class WorldImpl implements World, NotifiableWorld {
             this.currentState = GameState.GAME_OVER;
         }
         this.aliveEntities.getInstances(WalkingEnemy.class).forEach(WalkingEnemy::computeMovement);
-        this.aliveEntities.getInstances(EnemyGenerator.class)
-                          .forEach(enemyGenerator -> this.aliveEntities.putAll(RollingEnemy.class,
-                                                                               enemyGenerator.onTimeAdvanced().asSet()));
+        this.aliveEntities.getInstances(EnemyGenerator.class).forEach(EnemyGenerator::onTimeAdvanced);
     }
 
     /*
@@ -171,7 +177,7 @@ public final class WorldImpl implements World, NotifiableWorld {
                               .parallelStream()
                               .filter(collision -> platformsBodies.contains(collision.getLeft()))
                               .anyMatch(platformStand -> PhysicsUtils.isBodyOnTop(body, platformStand.getLeft(), 
-                                                                                            platformStand.getRight()));
+                                                                                  platformStand.getRight()));
     }
 
     /*

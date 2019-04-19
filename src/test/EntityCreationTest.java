@@ -53,7 +53,8 @@ public class EntityCreationTest {
      */
     public EntityCreationTest() {
         this.factory = new PhysicalFactoryImpl();
-        this.factory.createPhysicalWorld(WorldImpl.class.cast(new WorldFactoryImpl().create()), WORLD_WIDTH, WORLD_HEIGHT);
+        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
+        this.factory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
     }
 
     /**

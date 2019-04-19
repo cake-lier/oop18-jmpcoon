@@ -38,5 +38,4 @@ public enum MovementType {
     public EntityState convert() {
         return this.correspondingState;
     }
-
 }
