@@ -89,8 +89,8 @@ public final class AppControllerImpl implements AppController {
      */
     @Override
     public boolean deleteSaveFile(final int saveFileIndex) {
-        return saveFileIndex > 0
-               && saveFileIndex <= SaveFile.values().length
+        return saveFileIndex >= 0
+               && saveFileIndex < SaveFile.values().length
                && new File(SaveFile.values()[saveFileIndex].getSavePath()).delete();
     }
 }

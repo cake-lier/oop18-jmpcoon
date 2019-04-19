@@ -1,16 +1,10 @@
 package view.menus;
 
-import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-
 import com.google.common.base.Optional;
 
+import controller.SaveFile;
 import controller.app.AppController;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -18,40 +12,32 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import view.Sizes;
+import view.ViewUtils;
 
 /**
- * The class implementation of the {@link AppMenu} interface.
+ * Represents the menu which will be launched before the game.
  */
 public final class AppMenu implements Menu {
     private static final String LAYOUT_PATH = "layouts/";
-    private static final String MENU_LAYOUT = LAYOUT_PATH + "menu.fxml";
-    private static final String SETTINGS_LAYOUT = LAYOUT_PATH + "settings.fxml";
-    private static final String LOADER_LAYOUT = LAYOUT_PATH + "savesLoader.fxml";
-    private static final String TIME_FORMAT = "d MMMM yyyy HH:mm";
+    private static final String LAYOUT_EXT = ".fxml";
+    private static final String MENU_LAYOUT = LAYOUT_PATH + "menu" + LAYOUT_EXT;
+    private static final String SETTINGS_LAYOUT = LAYOUT_PATH + "settings" + LAYOUT_EXT;
+    private static final String LOADER_LAYOUT = LAYOUT_PATH + "savesLoader" + LAYOUT_EXT;
     private static final String DEL_MSG = "Are you sure you want to delete this game save?";
     private static final String DEL_ERR_MSG = " was not correctly deleted!";
     private static final String NO_SAVE_MSG = "No save game in this slot";
-    private static final String FONT_SIZE = "-fx-font-size: ";
-    private static final String TICK_FONT_SIZE = "-fx-tick-label-font: ";
+    private static final String TICK_FONT_SIZE_PREF = "-fx-tick-label-font: ";
+    private static final String TICK_FONT_SIZE_SUFF = "em \"dark forest\"";
     private static final String MUTED_LABEL = "I";
     private static final String UNMUTED_LABEL = "O";
-    private static final String FONT = "\"dark forest\"";
-    private static final String SIZE_UNIT = "em";
     private static final int VOLUME_RATIO = 100;
-    private static final int TITLE_RATIO = 105;
-    private static final int MAIN_BUTTONS_RATIO = 200;
-    private static final int BACK_BUTTONS_RATIO = 300;
-    private static final int LOAD_BUTTONS_RATIO = 135;
-    private static final int DELETE_BUTTONS_RATIO = 250;
-    private static final int LABELS_RATIO = 175;
-    private static final int MUTE_RATIO = 200;
     private static final int TICK_RATIO = 655;
 
     private final AppController controller;
@@ -60,7 +46,6 @@ public final class AppMenu implements Menu {
     private final double stageHeight;
     private boolean drawn;
     private boolean showed;
-
     @FXML
     private GridPane frontPage;
     @FXML
@@ -121,54 +106,6 @@ public final class AppMenu implements Menu {
         this.showed = false;
     }
 
-    private void drawFromURL(final String drawableResource, final StackPane root) {
-        final FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource(drawableResource));
-        loader.setController(this);
-        try {
-            final Pane page = loader.load();
-            page.setVisible(false);
-            root.getChildren().add(page);
-        } catch (final IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void initLoadDeleteButton(final Button load, final Button delete, final int saveFileIndex) {
-        load.setStyle(FONT_SIZE + this.stageHeight / LOAD_BUTTONS_RATIO + SIZE_UNIT);
-        delete.setStyle(FONT_SIZE + this.stageHeight / DELETE_BUTTONS_RATIO + SIZE_UNIT);
-        if (this.controller.getSaveFileAvailability().get(saveFileIndex).isPresent()) {
-            final String created = LocalDateTime.ofEpochSecond(
-                                                    this.controller.getSaveFileAvailability().get(saveFileIndex).get() / 1000, 0, 
-                                                    ZoneOffset.of(ZoneOffset.systemDefault()
-                                                                            .getRules()
-                                                                            .getOffset(Instant.now())
-                                                                            .getId()))
-                                                .format(DateTimeFormatter.ofPattern(TIME_FORMAT));
-            load.setText(created);
-            load.setOnMouseClicked(e -> {
-                this.music.stop();
-                this.controller.startGame(Optional.of(saveFileIndex));
-            });
-            delete.setOnMouseClicked(e -> {
-                final Alert deleteAlert = new Alert(AlertType.CONFIRMATION, DEL_MSG);
-                deleteAlert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-                final Optional<ButtonType> choice = Optional.fromJavaUtil(deleteAlert.showAndWait());
-                if (choice.isPresent() && choice.get().equals(ButtonType.OK)) {
-                    if (!this.controller.deleteSaveFile(saveFileIndex)) {
-                        new Alert(AlertType.ERROR, "save file " + saveFileIndex + DEL_ERR_MSG).show();
-                    }
-                    load.setDisable(true);
-                    load.setText(NO_SAVE_MSG);
-                    delete.setDisable(true);
-                }
-            });
-        } else {
-            load.setDisable(true);
-            delete.setDisable(true);
-            load.setText(NO_SAVE_MSG);
-        }
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -177,61 +114,93 @@ public final class AppMenu implements Menu {
         if (!this.drawn) {
             final StackPane root = new StackPane();
             this.stage.getScene().setRoot(root);
-            this.drawFromURL(MENU_LAYOUT, root);
+            ViewUtils.drawFromURL(MENU_LAYOUT, this, root);
             this.frontPage.setVisible(false);
-            this.firstTitle.setStyle(FONT_SIZE + this.stageHeight / TITLE_RATIO + SIZE_UNIT);
-            this.secondTitle.setStyle(FONT_SIZE + this.stageHeight / TITLE_RATIO + SIZE_UNIT);
-            this.startButton.setStyle(FONT_SIZE + this.stageHeight / MAIN_BUTTONS_RATIO + SIZE_UNIT);
+            Sizes.TITLE_RATIO.styleNodeToRatio(this.stageHeight, this.firstTitle);
+            Sizes.TITLE_RATIO.styleNodeToRatio(this.stageHeight, this.secondTitle);
+            Sizes.MAIN_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.startButton);
             this.startButton.setOnMouseClicked(e -> {
                 this.music.stop();
                 this.hide();
                 this.controller.startGame(Optional.absent());
             });
-            this.quitButton.setStyle(FONT_SIZE + this.stageHeight / MAIN_BUTTONS_RATIO + SIZE_UNIT);
+            Sizes.MAIN_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.quitButton);
             this.quitButton.setOnMouseClicked(e -> this.controller.exitApp());
-            this.drawFromURL(LOADER_LAYOUT, root);
+            ViewUtils.drawFromURL(LOADER_LAYOUT, this, root);
             this.savesPage.setVisible(false);
             this.initLoadDeleteButton(this.firstSave, this.firstDelete, 0);
             this.initLoadDeleteButton(this.secondSave, this.secondDelete, 1);
             this.initLoadDeleteButton(this.thirdSave, this.thirdDelete, 2);
-            this.backSavesButton.setStyle(FONT_SIZE + this.stageHeight / BACK_BUTTONS_RATIO + SIZE_UNIT);
-            this.backSavesButton.setOnMouseClicked(e -> {
-                this.savesPage.setVisible(false);
-                this.frontPage.setVisible(true);
-            });
-            this.savesButton.setStyle(FONT_SIZE + this.stageHeight / MAIN_BUTTONS_RATIO + SIZE_UNIT);
-            this.savesButton.setOnMouseClicked(e -> {
-                this.frontPage.setVisible(false);
-                this.savesPage.setVisible(true);
-            });
-            this.drawFromURL(SETTINGS_LAYOUT, root);
+            Sizes.BACK_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.backSavesButton);
+            this.backSavesButton.setOnMouseClicked(e -> ViewUtils.hideFirstNodeShowSecondNode(this.savesPage, this.frontPage));
+            Sizes.MAIN_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.savesButton);
+            this.savesButton.setOnMouseClicked(e -> ViewUtils.hideFirstNodeShowSecondNode(this.frontPage, this.savesPage));
+            ViewUtils.drawFromURL(SETTINGS_LAYOUT, this, root);
             this.settingsPage.setVisible(false);
-            this.volumeLabel.setStyle(FONT_SIZE + this.stageHeight / LABELS_RATIO + SIZE_UNIT);
-            this.volumeControl.setStyle(TICK_FONT_SIZE + this.stageHeight / TICK_RATIO + SIZE_UNIT + FONT);
+            Sizes.LABELS_RATIO.styleNodeToRatio(this.stageHeight, this.volumeLabel);
+            this.volumeControl.setStyle(TICK_FONT_SIZE_PREF + this.stageHeight / TICK_RATIO + TICK_FONT_SIZE_SUFF);
             this.volumeControl.setValue(this.music.getVolume() * VOLUME_RATIO);
-            this.volumeControl.valueProperty().addListener(c -> {
-                this.music.setVolume(this.volumeControl.getValue() / VOLUME_RATIO);
-            });
-            this.muteLabel.setStyle(FONT_SIZE + this.stageHeight / LABELS_RATIO + SIZE_UNIT);
-            this.muteCheck.setStyle(FONT_SIZE + this.stageHeight / MUTE_RATIO + SIZE_UNIT);
+            this.volumeControl.valueProperty()
+                              .addListener(e -> this.music.setVolume(this.volumeControl.getValue() / VOLUME_RATIO));
+            Sizes.LABELS_RATIO.styleNodeToRatio(this.stageHeight, this.muteLabel);
+            Sizes.MUTE_RATIO.styleNodeToRatio(this.stageHeight, this.muteCheck);
             this.muteCheck.setSelected(this.music.isMute());
             this.muteCheck.setText(this.music.isMute() ? MUTED_LABEL : UNMUTED_LABEL);
             this.muteCheck.selectedProperty().addListener(e -> {
                 this.music.setMute(this.muteCheck.isSelected());
                 this.muteCheck.setText(this.muteCheck.isSelected() ? MUTED_LABEL : UNMUTED_LABEL);
             });
-            this.backSettingsButton.setStyle(FONT_SIZE + this.stageHeight / BACK_BUTTONS_RATIO + SIZE_UNIT);
-            this.backSettingsButton.setOnMouseClicked(e -> {
-                this.settingsPage.setVisible(false);
-                this.frontPage.setVisible(true);
-            });
-            this.settingsButton.setStyle(FONT_SIZE + this.stageHeight / MAIN_BUTTONS_RATIO + SIZE_UNIT);
-            this.settingsButton.setOnMouseClicked(e -> {
-                this.frontPage.setVisible(false);
-                this.settingsPage.setVisible(true);
-            });
+            Sizes.BACK_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.backSettingsButton);
+            this.backSettingsButton.setOnMouseClicked(e -> ViewUtils.hideFirstNodeShowSecondNode(this.settingsPage, this.frontPage));
+            Sizes.MAIN_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.settingsButton);
+            this.settingsButton.setOnMouseClicked(e -> ViewUtils.hideFirstNodeShowSecondNode(this.frontPage, this.settingsPage));
             this.drawn = true;
         }
+    }
+
+    private void initLoadDeleteButton(final Button load, final Button delete, final int saveFileIndex) {
+        Sizes.LOAD_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, load);
+        Sizes.DELETE_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, delete);
+        final Optional<Long> optTime = this.controller.getSaveFileAvailability().get(saveFileIndex);
+        if (optTime.isPresent()) {
+            ViewUtils.setTextToTime(load, optTime.get());
+            load.setOnMouseClicked(e -> {
+                this.music.stop();
+                this.controller.startGame(Optional.of(saveFileIndex));
+            });
+            delete.setOnMouseClicked(e -> {
+                final Alert deleteAlert = this.createCorrectlySizedAlert(AlertType.CONFIRMATION, DEL_MSG);
+                final Optional<ButtonType> choice = Optional.fromJavaUtil(deleteAlert.showAndWait());
+                if (choice.isPresent() && choice.get().equals(ButtonType.OK)) {
+                    if (!this.controller.deleteSaveFile(saveFileIndex)) {
+                        final Alert errorDeleteAlert 
+                            = this.createCorrectlySizedAlert(AlertType.ERROR, SaveFile.values()[saveFileIndex] + DEL_ERR_MSG);
+                        errorDeleteAlert.show();
+                    }
+                    this.setEmptySaveState(load, delete);
+                }
+            });
+        } else {
+            this.setEmptySaveState(load, delete);
+        }
+    }
+
+    /*
+     * Creates a new alert but with the dialog pane sufficiently large to display all the text.
+     */
+    private Alert createCorrectlySizedAlert(final AlertType type, final String message) {
+        final Alert alert = new Alert(type, message);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        return alert;
+    }
+
+    /*
+     * Sets a couple of load save/delete save buttons to a graphical state associated with an empty save slot.
+     */
+    private void setEmptySaveState(final Button load, final Button delete) {
+        load.setDisable(true);
+        load.setText(NO_SAVE_MSG);
+        delete.setDisable(true);
     }
 
     /**

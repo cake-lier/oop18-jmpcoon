@@ -87,9 +87,9 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public void saveGame(final int saveFileIndex) throws FileNotFoundException, IOException {
-        try (ObjectOutputStream out = new ObjectOutputStream(
-                                        new BufferedOutputStream(
-                                            new FileOutputStream(SaveFile.values()[saveFileIndex].getSavePath())))) {
+        try (ObjectOutputStream out 
+                 = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(SaveFile.values()[saveFileIndex]
+                                                                                                .getSavePath())))) {
             out.writeObject(this.gameWorld);
         }
     }
@@ -99,9 +99,9 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public void loadGame(final int saveFileIndex) throws IOException, IllegalArgumentException {
-        try (ObjectInputStream in = new ObjectInputStream(
-                                        new BufferedInputStream(
-                                            new FileInputStream(SaveFile.values()[saveFileIndex].getSavePath())))) {
+        try (ObjectInputStream in 
+                 = new ObjectInputStream(new BufferedInputStream(new FileInputStream(SaveFile.values()[saveFileIndex]
+                                                                                             .getSavePath())))) {
             this.gameWorld = (UpdatableWorld) in.readObject();
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException(INCOMPATIBLE_FILE_MSG);

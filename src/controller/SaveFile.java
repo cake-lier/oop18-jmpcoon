@@ -35,14 +35,15 @@ public enum SaveFile {
      * @return a string representing the path of the saved file the value of this enumeration is associated to
      */
     public String getSavePath() {
-        return getSaveFilesPrefix() + this.index + EXTENSION;
+        return System.getProperty("user.home") + System.getProperty("file.separator") + FOLDER
+               + System.getProperty("file.separator") + this.getFileName();
     }
 
-    /*
-     * Produces the prefix in the path common to all saves files.
+    /**
+     * Gets the name of the file associated with the value of this enumeration.
+     * @return a string representing the name of the file associated with this enumeration
      */
-    private String getSaveFilesPrefix() {
-        return System.getProperty("user.home") + System.getProperty("file.separator")  + FOLDER
-               + System.getProperty("file.separator") + FILE_NAME;
+    public String getFileName() {
+        return FILE_NAME + this.index + EXTENSION;
     }
 }
