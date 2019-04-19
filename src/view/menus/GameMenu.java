@@ -71,12 +71,12 @@ public final class GameMenu implements Menu {
      * The default constructor. It accepts the pane element in which to add itself, the {@link AppController}, the {@link View}
      * and the {@link GameController} of this particular instance of the game so as to save a game, go back to the main menu and
      * exit the game.
-     * @param root The {@link Pane} in which to draw this menu.
-     * @param stageHeight The height of {@link Stage} which contains the root.
-     * @param appController The controller of this application.
-     * @param appView The view of this application.
-     * @param gameController The controller of this game.
-     * @param gameView The view of this game.
+     * @param root the {@link Pane} in which to draw this menu
+     * @param stageHeight the height of {@link Stage} which contains the root
+     * @param appController the controller of this application
+     * @param appView the view of this application
+     * @param gameController the controller of this game
+     * @param gameView the view of this game
      */
     public GameMenu(final Pane root, final double stageHeight, final AppController appController, final View appView,
                             final GameController gameController, final GameView gameView) {

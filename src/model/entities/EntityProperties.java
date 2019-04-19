@@ -13,7 +13,6 @@ import com.google.common.base.Optional;
  * the {@link BodyShape}, the current position in the {@link model.world.World} and its angle with the x axis.
  */
 public interface EntityProperties extends Serializable {
-
     /**
      * Getter for the {@link EntityType} property.
      * @return the {@link EntityType} property value

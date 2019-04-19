@@ -11,11 +11,10 @@ import javafx.scene.image.WritableImage;
 import javafx.util.Duration;
 
 /**
- * A class that creates an animation. taken from:
+ * A class that creates an animation. Based on the class taken from:
  * https://netopyr.com/2012/03/09/creating-a-sprite-animation-with-javafx/
  */
 public class SpriteAnimation extends Transition {
-
     private final PixelReader pixelReader;
     private final List<Image> list = new ArrayList<>();
     private Image image;

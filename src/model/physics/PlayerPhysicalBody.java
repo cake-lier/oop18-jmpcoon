@@ -21,7 +21,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     /**
      * Builds a new {@link PlayerPhysicalBody}. This constructor is package protected because it should be only invoked 
      * by the {@link PhysicalFactoryImpl} when creating a new instance of it and no one else.
-     * @param body The {@link SerializableBody} encapsulated by this {@link PlayerPhysicalBody}.
+     * @param body the {@link SerializableBody} encapsulated by this {@link PlayerPhysicalBody}
      */
     PlayerPhysicalBody(final SerializableBody body) {
         super(body);
@@ -47,7 +47,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
 
     /**
      * Gives the specified {@link PowerUp} to the {@link PlayerPhysicalBody}.
-     * @param powerUpType The {@link PowerUpType} of the power-up.
+     * @param powerUpType the {@link PowerUpType} of the power-up
      */
     public void givePowerUp(final PowerUpType powerUpType) {
         if (powerUpType == PowerUpType.EXTRA_LIFE) {
@@ -59,7 +59,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     }
 
     /**
-     * @return the number of lives of this {@link PlayerPhysicalBody}.
+     * @return the number of lives of this {@link PlayerPhysicalBody}
      */
     public int getLives() {
         return this.lives;
@@ -67,8 +67,8 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
 
     /**
      * Modifies the maximum velocity of this {@link PlayerPhysicalBody}.
-     * @param multiplierX The multiplier for the horizontal maximum velocity
-     * @param multiplierY The multiplier for the vertical maximum velocity
+     * @param multiplierX the multiplier for the horizontal maximum velocity
+     * @param multiplierY the multiplier for the vertical maximum velocity
      */
     public void modifyMaxVelocity(final double multiplierX, final double multiplierY) {
         this.setMaxVelocity(multiplierX, multiplierY);

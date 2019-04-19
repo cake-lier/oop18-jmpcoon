@@ -7,7 +7,6 @@ import model.entities.EntityType;
  * An interface representing an {@link model.entities.Entity} that can be drawn.
  */
 public interface DrawableEntity {
-
     /**
      * Returns the {@link ImageView} representing the {@link model.entities.Entity} contained.
      * @return the {@link ImageView} representing the {@link model.entities.Entity}

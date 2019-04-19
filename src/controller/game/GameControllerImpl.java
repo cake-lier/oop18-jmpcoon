@@ -34,7 +34,6 @@ import view.game.GameView;
  * A {@link GameController} for a game set in a {@link World}.
  */
 public class GameControllerImpl implements GameController {
-
     private static final String INCOMPATIBLE_FILE_MSG = "The file read isn't compatible";
     private static final long DELTA_UPDATE = 15;
     private static final URL LEVEL_FILE = ClassLoader.getSystemResource("level1.lev");
@@ -46,7 +45,7 @@ public class GameControllerImpl implements GameController {
     private final Set<InputType> inputs;
 
     /**
-     * builds a new {@link GameControllerImpl}.
+     * Builds a new {@link GameControllerImpl}.
      * @param view the {@link GameView} relative to the game controlled by this {@link GameController}
      */
     public GameControllerImpl(final GameView view) {

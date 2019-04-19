@@ -43,8 +43,8 @@ public final class EnemyGenerator extends StaticEntity {
     }
 
     /**
-     * It checks if this {@link EnemyGenerator} has created a new instance of enemy. Returns a collection of {@link RollingEnemy}
-     * in case this {@link EnemyGenerator} has created a new enemy; otherwise returns an empty collection.
+     * It notifies that a lapse of time have passed. If this {@link EnemyGenerator} has created a new {@link RollingEnemy},
+     * it adds it to the world.
      */
     public void onTimeAdvanced() {
         if (this.checkTime()) {

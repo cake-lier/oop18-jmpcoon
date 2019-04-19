@@ -6,7 +6,6 @@ import model.physics.StaticPhysicalBody;
  * A class representing an immovable {@link Entity}.
  */
 public abstract class StaticEntity extends AbstractEntity {
-
     private static final long serialVersionUID = 9104210526680101510L;
 
     /**
@@ -19,5 +18,4 @@ public abstract class StaticEntity extends AbstractEntity {
 
     @Override
     public abstract EntityType getType();
-
 }

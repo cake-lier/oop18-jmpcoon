@@ -7,10 +7,9 @@ import model.entities.UnmodifiableEntity;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * a {@link StaticEntity} that can be drawn.
+ * A {@link StaticEntity} that can be drawn.
  */
 public class StaticDrawableEntity extends AbstractDrawableEntity {
-
     /**
      * Builds a new {@link StaticDrawableEntity}.
      * @param image the image representing the entity in the view

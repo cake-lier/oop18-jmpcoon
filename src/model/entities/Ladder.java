@@ -6,7 +6,6 @@ import model.physics.StaticPhysicalBody;
  * A ladder inside the {@link model.world.World} of the game.
  */
 public final class Ladder extends StaticEntity {
-
     private static final long serialVersionUID = -1338548627689639626L;
 
     /**
@@ -25,5 +24,4 @@ public final class Ladder extends StaticEntity {
     public EntityType getType() {
         return EntityType.LADDER;
     }
-
 }

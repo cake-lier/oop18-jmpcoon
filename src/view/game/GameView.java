@@ -6,7 +6,6 @@ import com.google.common.base.Optional;
  * Visual component of the game.
  */
 public interface GameView {
-
     /**
      * Updates the game scene.
      */

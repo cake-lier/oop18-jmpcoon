@@ -14,7 +14,6 @@ import model.world.CollisionEvent;
  * A controller for the game playing.
  */
 public interface GameController {
-
     /**
      * Starts the game.
      */

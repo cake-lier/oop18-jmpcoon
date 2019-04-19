@@ -6,7 +6,6 @@ import model.physics.StaticPhysicalBody;
  * A platform inside the {@link model.world.World} of the game.
  */
 public final class Platform extends StaticEntity {
-
     private static final long serialVersionUID = 2006372527364015609L;
 
     /**
@@ -25,5 +24,4 @@ public final class Platform extends StaticEntity {
     public EntityType getType() {
         return EntityType.PLATFORM;
     }
-
 }
