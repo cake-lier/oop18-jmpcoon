@@ -25,14 +25,14 @@ public final class EntityPropertiesImpl implements EntityProperties {
     private final Optional<Double> walkingRange;
 
     /**
-     * Collects the properties of the associated {@link Entity}.
-     * @param type the {@link EntityType} of the associated {@link Entity}
-     * @param shape the {@link BodyShape} of the associated {@link Entity}
-     * @param xCoord the x coordinate of the associated {@link Entity}
-     * @param yCoord the y coordinate of the associated {@link Entity}
-     * @param width the width of the associated {@link Entity}
-     * @param height the height of the associated {@link Entity}
-     * @param angle the angle of the associated entity
+     * Collects the properties of the associated {@link model.entities.Entity}.
+     * @param type the {@link EntityType} of the associated {@link model.entities.Entity}
+     * @param shape the {@link BodyShape} of the associated {@link model.entities.Entity}
+     * @param xCoord the x coordinate of the associated {@link model.entities.Entity}
+     * @param yCoord the y coordinate of the associated {@link model.entities.Entity}
+     * @param width the width of the associated {@link model.entities.Entity}
+     * @param height the height of the associated {@link model.entities.Entity}
+     * @param angle the angle of the associated {@link model.entities.Entity}
      * @param powerUpType the type of the {@link PowerUp}, if these are the properties of a {@link PowerUp}
      * @param walkingRange the distance the {@link WalkingEnemy} should walk across, if these are properties 
      * of a {@link WalkingEnemy} 

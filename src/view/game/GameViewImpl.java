@@ -124,9 +124,10 @@ public final class GameViewImpl implements GameView {
         this.root = new StackPane();
         this.gameController = new GameControllerImpl(this);
         this.entityConverter = new MemoizedEntityConverterImpl(this.gameController.getWorldDimensions(),
-                                                           new ImmutablePair<>(this.stage.getScene().getWidth(),
+                                                               new ImmutablePair<>(this.stage.getScene().getWidth(),
                                                                                    this.stage.getScene().getHeight()));
-        this.gameMenu = new GameMenuImpl(this.root, this.stage.getHeight(), this.appController, this.appView, this.gameController, this);
+        this.gameMenu = new GameMenuImpl(this.root, this.stage.getHeight(), this.appController,
+                                         this.appView, this.gameController, this);
         this.closeHandler = e -> this.gameController.stopGame();
     }
 
@@ -224,7 +225,8 @@ public final class GameViewImpl implements GameView {
             this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
             this.drawAliveEntities();
             this.gameController.getCurrentEvents().forEach(e -> this.notifyEvent(e));
-            this.score.setText(SCORE_STR + this.gameController.getCurrentScore() + LIVES_STR + this.gameController.getPlayerLives());
+            this.score.setText(SCORE_STR + this.gameController.getCurrentScore() 
+                               + LIVES_STR + this.gameController.getPlayerLives());
         });
     }
 

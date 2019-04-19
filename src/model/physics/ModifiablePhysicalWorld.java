@@ -11,10 +11,10 @@ import model.serializable.SerializableBody;
  */
 public interface ModifiablePhysicalWorld {
     /**
-     * Registers an association between a {@link PhysicalBody} and the {@link SerializableBody} contained within. It's done for safety and 
-     * style reasons, a {@link PhysicalBody} should not return the contained {@link Body} and if it did, the only object which
-     * should be able to see it is a {@link ModifiablePhysicalWorld}. The {@link EntityType} of the {@link model.entities.Entity}
-     * which contains the passed {@link PhysicalBody} is also registered for future cross-checks.
+     * Registers an association between a {@link PhysicalBody} and the {@link SerializableBody} contained within. It's done for 
+     * safety and style reasons, a {@link PhysicalBody} should not return the contained {@link Body} and if it did, the only 
+     * object which should be able to see it is a {@link ModifiablePhysicalWorld}. The {@link EntityType} of the 
+     * {@link model.entities.Entity} which contains the passed {@link PhysicalBody} is also registered for future cross-checks.
      * @param container the {@link PhysicalBody} which contains the {@link SerializableBody}
      * @param contained the {@link SerializableBody} which is contained in the {@link PhysicalBody}
      * @param type the {@link EntityType} of the {@link model.entities.Entity} containing the {@link PhysicalBody}

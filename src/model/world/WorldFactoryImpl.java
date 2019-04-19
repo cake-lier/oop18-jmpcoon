@@ -9,10 +9,9 @@ public final class WorldFactoryImpl implements WorldFactory {
     private boolean worldCreated;
 
     /**
-     * Default constructor, checks if the factory has already been instantiated and in that case, throws an exception.
-     * @throws IllegalStateException If this factory has already been instantiated.
+     * Default constructor, builds a new {@link WorldFactoryImpl}.
      */
-    public WorldFactoryImpl() throws IllegalStateException {
+    public WorldFactoryImpl() {
         this.worldCreated = false;
     }
 
@@ -27,5 +26,4 @@ public final class WorldFactoryImpl implements WorldFactory {
         }
         throw new IllegalStateException(NO_TWO_WORLDS_MSG);
     }
-
 }

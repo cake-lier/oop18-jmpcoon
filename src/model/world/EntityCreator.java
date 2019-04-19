@@ -59,14 +59,26 @@ enum EntityCreator {
         this.associatedClass = associatedClass;
     }
 
+    /**
+     * Getter for the {@link EntityType} associated.
+     * @return the {@link EntityType} associated
+     */
     public EntityType getAssociatedType() {
         return this.associatedType;
     }
 
+    /**
+     * Getter for the {@link AbstractEntityBuilder} associated.
+     * @return the {@link AbstractEntityBuilder} associated
+     */
     public AbstractEntityBuilder<? extends Entity> getEntityBuilder() {
         return this.supplier.get();
     }
 
+    /**
+     * Getter for the {@link Class} associated.
+     * @return the {@link Class} associated
+     */
     public Class<? extends Entity> getAssociatedClass() {
         return this.associatedClass;
     }

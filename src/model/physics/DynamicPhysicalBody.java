@@ -24,10 +24,11 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     private EntityState currentState;
 
     /**
-     * builds a new {@link DynamicPhysicalBody}.
+     * Builds a new {@link DynamicPhysicalBody}. This constructor is package protected because it should be only invoked 
+     * by the {@link PhysicalFactoryImpl} when creating a new instance of it and no one else.
      * @param body the {@link SerializableBody} encapsulated by this {@link DynamicPhysicalBody}
      */
-    public DynamicPhysicalBody(final SerializableBody body) {
+    DynamicPhysicalBody(final SerializableBody body) {
         super(body);
         this.body = body;
         this.currentState = EntityState.IDLE;

@@ -11,7 +11,7 @@ import javafx.scene.image.WritableImage;
 import javafx.util.Duration;
 
 /**
- * a class that creates an animation. taken from:
+ * A class that creates an animation. taken from:
  * https://netopyr.com/2012/03/09/creating-a-sprite-animation-with-javafx/
  */
 public class SpriteAnimation extends Transition {
@@ -25,18 +25,12 @@ public class SpriteAnimation extends Transition {
     private int lastIndex;
 
     /**
-     * creates a new {@link SpriteAnimation}.
-     * 
-     * @param image
-     *            image
-     * @param duration
-     *            duration
-     * @param frame
-     *            number of frame of the animation
-     * @param width
-     *            width of the image
-     * @param height
-     *            height of the image
+     * Creates a new {@link SpriteAnimation}.
+     * @param image the sprite sheets of the animation
+     * @param duration duration of the animation
+     * @param frame number of frames of the animation
+     * @param width width of a single frame
+     * @param height height of a single frame
      */
     public SpriteAnimation(final Image image, final Duration duration, final int frame, final int width,
             final int height) {

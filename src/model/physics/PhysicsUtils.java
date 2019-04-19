@@ -18,7 +18,7 @@ public final class PhysicsUtils {
      * @param aboveBody the {@link PhysicalBody} which should be above
      * @param belowBody the {@link PhysicalBody} which should be below
      * @param contactPoint the contact point in world coordinates
-     * @return True if the first {@link PhysicalBody} is above the second {@link PhysicalBody} below 
+     * @return true if the first {@link PhysicalBody} is above the second {@link PhysicalBody} below 
      */
     public static boolean isBodyOnTop(final PhysicalBody aboveBody, final PhysicalBody belowBody,
                                       final Pair<Double, Double> contactPoint) {
@@ -76,7 +76,7 @@ public final class PhysicsUtils {
      * @param aboveBody the {@link PhysicalBody} which should be above
      * @param belowBody the {@link PhysicalBody} which should be below
      * @param yContact the y coordinate of the contact point in world coordinates
-     * @return True if the first {@link PhysicalBody} is above the second {@link PhysicalBody} below 
+     * @return true if the first {@link PhysicalBody} is above the second {@link PhysicalBody} below 
      */
     public static boolean isBodyAbove(final PhysicalBody aboveBody, final PhysicalBody belowBody, final double yContact) {
         return (Math.abs(aboveBody.getPosition().getRight() - aboveBody.getDimensions().getRight() / 2) - yContact) < PRECISION

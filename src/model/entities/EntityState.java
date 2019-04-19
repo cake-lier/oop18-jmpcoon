@@ -1,7 +1,7 @@
 package model.entities;
 
 /**
- * an enumeration representing the possible states an {@link Entity} can be in.
+ * An enumeration representing the possible states an {@link Entity} can be in.
  */
 public enum EntityState {
 

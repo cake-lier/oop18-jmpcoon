@@ -7,7 +7,7 @@ import model.physics.BodyShape;
 import model.physics.DynamicPhysicalBody;
 
 /**
- * a walking enemy inside the {@link model.world.World} of the game.
+ * A walking enemy inside the {@link model.world.World} of the game.
  */
 public final class WalkingEnemy extends DynamicEntity {
 
@@ -49,7 +49,7 @@ public final class WalkingEnemy extends DynamicEntity {
     }
 
     /**
-     * computes the backward-and-forward movement.
+     * Computes the backward-and-forward movement.
      */
     public void computeMovement() {
         if (!this.checkDistanceFromExtreme()) {

@@ -4,7 +4,6 @@ import controller.game.InputType;
 
 import com.google.common.base.Optional;
 
-
 /**
  * The keyboard keys that control the {@link model.entities.Player}.
  */

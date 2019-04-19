@@ -31,7 +31,7 @@ import controller.SaveFile;
 import view.game.GameView;
 
 /**
- * a {@link GameController} for a game set in a {@link World}.
+ * A {@link GameController} for a game set in a {@link World}.
  */
 public class GameControllerImpl implements GameController {
 
@@ -56,14 +56,6 @@ public class GameControllerImpl implements GameController {
         this.timer = this.createTimer();
         this.running = false;
         this.inputs = Sets.newConcurrentHashSet(); 
-    }
-
-    private ScheduledThreadPoolExecutor createTimer() {
-        // Runtime.getRuntime().availableProcessors() + 1 is the size of the pool of threads
-        final int threadPoolSize = Runtime.getRuntime().availableProcessors() + 1;
-        final ScheduledThreadPoolExecutor t = new ScheduledThreadPoolExecutor(threadPoolSize);
-        t.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
-        return t;
     }
 
     /**
@@ -194,6 +186,14 @@ public class GameControllerImpl implements GameController {
     @Override
     public Queue<CollisionEvent> getCurrentEvents() {
         return this.gameWorld.getCurrentEvents();
+    }
+
+    private ScheduledThreadPoolExecutor createTimer() {
+        // Runtime.getRuntime().availableProcessors() + 1 is the size of the pool of threads
+        final int threadPoolSize = Runtime.getRuntime().availableProcessors() + 1;
+        final ScheduledThreadPoolExecutor t = new ScheduledThreadPoolExecutor(threadPoolSize);
+        t.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+        return t;
     }
 
     private void updateWorldAndView() {

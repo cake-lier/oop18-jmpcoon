@@ -38,10 +38,11 @@ public class CollisionRules extends CollisionAdapter implements Serializable {
      * which is a {@link model.world.World}, but with only methods to notify it of a particular collision that happened
      * between bodies. This constructor is package protected because only the {@link PhysicalWorld} should create an
      * instance of this object.
-     * @param physicalWorld The {@link PhysicalWorld} from which getting informations about the physical state of the game.
-     * @param outerWorld The {@link model.world.World} to be notified of {@link CollisionEvent}s.
+     * @param physicalWorld the {@link PhysicalWorld} from which getting informations about the physical state of the game
+     * @param outerWorld the {@link model.world.World} to be notified of {@link CollisionEvent}s
      */
     CollisionRules(final ReadablePhysicalWorld physicalWorld, final NotifiableWorld outerWorld) {
+        super();
         this.physicalWorld = physicalWorld;
         this.outerWorld = outerWorld;
     }

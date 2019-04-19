@@ -16,23 +16,23 @@ public interface PhysicsRulesFactory {
     /**
      * Create a new listener which rules contacts between the {@link model.physics.PhysicalBody}s of this
      * {@link model.physics.PhysicalWorld}.
-     * @param world The {@link model.physics.PhysicalWorld} from which getting the needed informations for physical
-     * calculations.
-     * @return A new {@link ContactRules} object which will manage contacts between {@link model.physics.PhysicalBody}s
-     * in this {@link model.physics.PhysicalWorld}.
-     * @throws IllegalStateException if the {@link ContactRules} have already been created.
+     * @param world the {@link model.physics.PhysicalWorld} from which getting the needed informations for physical
+     * calculations
+     * @return a new {@link ContactRules} object which will manage contacts between {@link model.physics.PhysicalBody}s
+     * in this {@link model.physics.PhysicalWorld}
+     * @throws IllegalStateException if the {@link ContactRules} have already been created
      */
     ContactRules createContactRules(ReadablePhysicalWorld world) throws IllegalStateException;
 
     /**
      * Create a new listener which rules collisions between the {@link model.physics.PhysicalBody}s of this
      * {@link model.physics.PhysicalWorld}.
-     * @param physicalWorld The {@link model.physics.PhysicalWorld} from which getting the needed informations for physical
-     * calculations.
-     * @param outerWorld The {@link model.world.World} to notify when a collision has happened.
-     * @return A new {@link ContactRules} object which will manage contacts between {@link model.physics.PhysicalBody}s
-     * in this {@link model.physics.PhysicalWorld}.
-     * @throws IllegalStateException if the {@link ContactRules} have already been created.
+     * @param physicalWorld the {@link model.physics.PhysicalWorld} from which getting the needed informations for physical
+     * calculations
+     * @param outerWorld the {@link model.world.World} to notify when a collision has happened
+     * @return a new {@link ContactRules} object which will manage contacts between {@link model.physics.PhysicalBody}s
+     * in this {@link model.physics.PhysicalWorld}
+     * @throws IllegalStateException if the {@link ContactRules} have already been created
      */
     CollisionRules createCollisionRules(ReadablePhysicalWorld physicalWorld, NotifiableWorld outerWorld) 
         throws IllegalStateException;

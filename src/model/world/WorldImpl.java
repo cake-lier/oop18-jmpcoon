@@ -109,6 +109,9 @@ public final class WorldImpl implements World, NotifiableWorld {
                                                        .setShape(entity.getEntityShape())
                                                        .setPowerUpType(entity.getPowerUpType())
                                                        .setWalkingRange(entity.getWalkingRange())
+                                                       .setWorld(entity.getEntityType() == EntityType.ENEMY_GENERATOR
+                                                                 ? Optional.of(this)
+                                                                 : Optional.absent())
                                                        .build());
             if (entity.getEntityType() == EntityType.PLAYER) {
                 this.player = Optional.fromJavaUtil(this.aliveEntities.getInstances(Player.class).stream().findFirst());
@@ -125,10 +128,10 @@ public final class WorldImpl implements World, NotifiableWorld {
 
     /**
      * {@inheritDoc}
-     * For first, it checks if the game has currently ended or not by checking if during this step the {@link Player} is no longer
-     * alive and has lost or if the "end level trigger" was reached and has consequently won. Then it separates all
-     * {@link Entity}s no longer alive from the others and for last it signals to all {@link model.entities.EnemyGenerator}s that
-     * a lapse of time has passed and asking if they have created any new {@link model.entities.RollingEnemy}.
+     * For first, it checks if the game has currently ended or not by checking if during this step the {@link Player} is no 
+     * longer alive and has lost or if the "end level trigger" was reached and has consequently won. Then it separates all
+     * {@link Entity}s no longer alive from the others and for last it signals to all {@link model.entities.EnemyGenerator}s 
+     * that a lapse of time has passed and asking if they have created any new {@link model.entities.RollingEnemy}.
      * The synchronization is required because an update of the {@link World} cannot be interleaved with a user movement,
      * otherwise these two operations could interfere and make the state of the {@link Player} entity inconsistent.
      */

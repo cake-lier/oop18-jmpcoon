@@ -77,8 +77,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
     private final MutablePair<Double, Double> worldDimensions;
 
     /**
-     * Default constructor for a {@link PhysicalFactory} builds a new {@link PhysicalFactoryImpl}.
-     * @param
+     * Default constructor, builds a new {@link PhysicalFactoryImpl}.
      */
     public PhysicalFactoryImpl() {
         this.physicalWorld = Optional.absent();
@@ -94,15 +93,15 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         this.worldDimensions.setLeft(width);
         this.worldDimensions.setRight(height);
         this.physicalWorld 
-            = Optional.of(new WholePhysicalWorldImpl(outerWorld, new SerializableWorld(new AxisAlignedBounds(width * 2, 
-                                                                                                             height * 2))));
+            = Optional.of(new WholePhysicalWorldImpl(outerWorld, 
+                                                     new SerializableWorld(new AxisAlignedBounds(width * 2, height * 2))));
         return this.physicalWorld.get();
     }
 
     /**
      * {@inheritDoc}
-     * @throws IllegalStateException If the {@link org.dyn4j.dynamics.Body} encapsulated is in an illegal state (specifically, if
-     * it has too many {@link org.dyn4j.collision.Fixture}.
+     * @throws IllegalStateException if the {@link org.dyn4j.dynamics.Body} encapsulated is in an illegal state (specifically, if
+     * it has too many {@link org.dyn4j.collision.Fixture}s
      */
     @Override
     public StaticPhysicalBody createStaticPhysicalBody(final Pair<Double, Double> position, final double angle,
@@ -111,7 +110,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                                                        throws IllegalStateException {
         this.checks(position, shape, type, true);
         final SerializableBody body = this.createBody(shape, position, angle, width, height);
-        this.throwException(body.getFixtureCount() != 1, () -> new IllegalStateException(TOO_MANY_FIXTURES_MSG));
+        this.checkFixtureCount(body);
         switch (type) {
             case LADDER:
                 body.getFixture(0).setFilter(LADDER_FILTER);
@@ -142,8 +141,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     /**
      * {@inheritDoc}
-     * @throws IllegalStateException If the {@link org.dyn4j.dynamics.Body} encapsulated is in an illegal state (specifically, if
-     * it has too many {@link org.dyn4j.collision.Fixture}.
+     * @throws IllegalStateException if the {@link org.dyn4j.dynamics.Body} encapsulated is in an illegal state (specifically, if
+     * it has too many {@link org.dyn4j.collision.Fixture}s
      */
     @Override
     public DynamicPhysicalBody createDynamicPhysicalBody(final Pair<Double, Double> position, final double angle,
@@ -151,7 +150,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                                                          final EntityType type) throws IllegalStateException {
         this.checks(position, shape, type, false);
         final SerializableBody body = this.createBody(shape, position, angle, width, height);
-        this.throwException(body.getFixtureCount() != 1, () -> new IllegalStateException(TOO_MANY_FIXTURES_MSG));
+        this.checkFixtureCount(body);
         switch (type) {
             case ROLLING_ENEMY:
                 body.getFixture(0).setFilter(ROLLING_ENEMY_FILTER);
@@ -175,8 +174,8 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
 
     /**
      * {@inheritDoc}
-     * @throws IllegalStateException If the {@link org.dyn4j.dynamics.Body} encapsulated is in an illegal state (specifically, if
-     * it has too many {@link org.dyn4j.collision.Fixture}.
+     * @throws IllegalStateException if the {@link org.dyn4j.dynamics.Body} encapsulated is in an illegal state (specifically, if
+     * it has too many {@link org.dyn4j.collision.Fixture}s
      */
     @Override
     public PlayerPhysicalBody createPlayerPhysicalBody(final Pair<Double, Double> position, final double angle,
@@ -184,7 +183,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                                                        throws IllegalStateException {
         this.checks(position, shape, EntityType.PLAYER, false);
         final SerializableBody body = this.createBody(shape, position, angle, width, height);
-        this.throwException(body.getFixtureCount() != 1, () -> new IllegalStateException(TOO_MANY_FIXTURES_MSG));
+        this.checkFixtureCount(body);
         body.getFixture(0).setFilter(PLAYER_FILTER);
         body.getFixture(0).setFriction(PLAYER_FRICTION);
         body.setMass(MassType.FIXED_ANGULAR_VELOCITY);
@@ -227,13 +226,13 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         return (shape == BodyShape.RECTANGLE && (type == EntityType.PLATFORM 
                                                  || type == EntityType.LADDER
                                                  || type == EntityType.POWERUP))
-               || (shape == BodyShape.CIRCLE && type == EntityType.ENEMY_GENERATOR);
+                || (shape == BodyShape.CIRCLE && type == EntityType.ENEMY_GENERATOR);
     }
 
     private boolean isDynamicBodyAllowed(final BodyShape shape, final EntityType type) {
         /* other allowed combinations could be added in the future */
         return (shape == BodyShape.CIRCLE && type == EntityType.ROLLING_ENEMY) 
-               || (shape == BodyShape.RECTANGLE && (type == EntityType.WALKING_ENEMY || type == EntityType.PLAYER));
+                || (shape == BodyShape.RECTANGLE && (type == EntityType.WALKING_ENEMY || type == EntityType.PLAYER));
     }
 
     private boolean isPositionInsideWorld(final Pair<Double, Double> position) {
@@ -248,8 +247,12 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         this.throwException(!this.physicalWorld.isPresent(), () -> new IllegalStateException(NO_WORLD_MSG));
         this.throwException(!this.isPositionInsideWorld(position), () -> new IllegalArgumentException(OUTSIDE_WORLD_MSG));
         this.throwException((isStatic && !this.isStaticBodyAllowed(shape, type)) 
-                            || (!isStatic && !this.isDynamicBodyAllowed(shape, type)),
-                                () -> new IllegalArgumentException(ILLEGAL_ENTITY_MSG));
+                             || (!isStatic && !this.isDynamicBodyAllowed(shape, type)),
+                            () -> new IllegalArgumentException(ILLEGAL_ENTITY_MSG));
+    }
+
+    private void checkFixtureCount(final SerializableBody body) {
+        this.throwException(body.getFixtureCount() != 1, () -> new IllegalStateException(TOO_MANY_FIXTURES_MSG));
     }
 
     private void throwException(final boolean condition, final Supplier<RuntimeException> supplier) {

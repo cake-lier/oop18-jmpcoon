@@ -3,6 +3,7 @@ package model.entities;
 import model.physics.BodyShape;
 import model.physics.PhysicalFactory;
 import model.physics.StaticPhysicalBody;
+import model.world.World;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
@@ -19,17 +20,20 @@ public final class EnemyGenerator extends StaticEntity {
 
     private final PhysicalFactory factory;
     private int count;
+    private final World world;
 
     /**
      * Creates a new {@link EnemyGenerator} with the given {@link StaticPhysicalBody}. This constructor is package protected
      * because it should be only invoked by the {@link AbstractEntityBuilder} when creating a new instance of it and no one else.
      * @param body the {@link StaticPhysicalBody} that should be contained in this {@link EnemyGenerator}
      * @param factory the {@link PhysicalFactory} that generates the RollingEnemy {@link PhysicalBody}
+     * @param world the {@link World} to notify when a {@link RollingEnemy} is created
      */
-    public EnemyGenerator(final StaticPhysicalBody body, final PhysicalFactory factory) {
+    EnemyGenerator(final StaticPhysicalBody body, final PhysicalFactory factory, final World world) {
         super(body);
         this.factory = factory;
         this.count = -1;
+        this.world = world;
     }
 
     /**

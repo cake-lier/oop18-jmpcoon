@@ -18,7 +18,7 @@ import com.google.common.primitives.Primitives;
  * {@link Object} and because of that a type of an object can't be unknown. As for the values of the entries, they also can't be
  * null, because the idea behind this data structure is that it should contain instances of some class and {@code null} is not an
  * instance, is an absence of instance, because it references to nothing. Hence, a {@code null} as a value can't be inserted.
- * @param <B> An upper bound supertype shared by all the instances in the multimap.
+ * @param <B> an upper bound supertype shared by all the instances in the multimap
  */
 public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Class<? extends B>, B> 
                                                   implements ClassToInstanceMultimap<B> {
@@ -30,8 +30,8 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
      * General constructor which accepts a backing map to wrap and use as a support. For consistency reasons, it rejects from
      * being a backing map all multimaps which entries don't respect the rule for which the key is the class of the value
      * instance before using the map.
-     * @param backingMap The backing map to wrap.
-     * @throws ClassCastException If the multimap passed doesn't respect the rule underlined before.
+     * @param backingMap the backing map to wrap
+     * @throws ClassCastException if the multimap passed doesn't respect the rule underlined before
      */
     public ClassToInstanceMultimapImpl(final Multimap<Class<? extends B>, B> backingMap) throws ClassCastException {
         super();
@@ -78,8 +78,8 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
      * understandability, use {@link #putInstance(Class, Object)} instead. For "overwriting" the contract placed by
      * {@link ForwardingMultimap}, input {@code null} values can't throw a {@link NullPointerException}, because they were
      * accepted, they have to be specifically rejected by a {@link IllegalArgumentException}.
-     * @throws ClassCastException If the value passed isn't of the type specified by key.
-     * @throws IllegalArgumentException If the key passed is {@code null}.
+     * @throws ClassCastException if the value passed isn't of the type specified by key
+     * @throws IllegalArgumentException if the key passed is {@code null}
      */
     @Override
     public boolean put(final Class<? extends B> key, final B value) throws ClassCastException, IllegalArgumentException {
@@ -91,8 +91,8 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
 
     /**
      * {@inheritDoc}
-     * @throws ClassCastException If the multimap passed doesn't respect the rule which states that every value should be of the
-     * type of the key associated with it.
+     * @throws ClassCastException if the multimap passed doesn't respect the rule which states that every value should be of the
+     * type of the key associated with it
      */
     @Override
     public boolean putAll(final Multimap<? extends Class<? extends B>, ? extends B> multimap) throws ClassCastException {
@@ -113,7 +113,7 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
 
     /**
      * {@inheritDoc}
-     * @throws ClassCastException If the values inside the iterable aren't all of the same type specified by key.
+     * @throws ClassCastException if the values inside the iterable aren't all of the same type specified by key
      */
     @Override
     public boolean putAll(final Class<? extends B> key, final Iterable<? extends B> values) throws ClassCastException {
@@ -123,7 +123,7 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
 
     /**
      * {@inheritDoc}
-     * @throws ClassCastException If the values inside the iterable aren't all of the same type specified by key.
+     * @throws ClassCastException if the values inside the iterable aren't all of the same type specified by key
      */
     @Override
     public Collection<B> replaceValues(final Class<? extends B> key, final Iterable<? extends B> values)

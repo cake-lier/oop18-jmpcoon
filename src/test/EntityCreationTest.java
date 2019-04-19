@@ -47,15 +47,13 @@ public class EntityCreationTest {
                                                         + "one set to the Entity";
 
     private final PhysicalFactory factory;
-    private final WorldImpl world;
 
     /**
      * Builds a new {@link EntityCreationTest}.
      */
     public EntityCreationTest() {
         this.factory = new PhysicalFactoryImpl();
-        this.world = WorldImpl.class.cast(new WorldFactoryImpl().create());
-        this.factory.createPhysicalWorld(this.world, WORLD_WIDTH, WORLD_HEIGHT);
+        this.factory.createPhysicalWorld(WorldImpl.class.cast(new WorldFactoryImpl().create()), WORLD_WIDTH, WORLD_HEIGHT);
     }
 
     /**

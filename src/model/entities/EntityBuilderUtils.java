@@ -1,7 +1,7 @@
 package model.entities;
 
 /**
- * A utility class for producing builders for each {@link Entity} of this game.
+ * A utility class for producing builders for each {@link model.entities.Entity} of this game.
  */
 public final class EntityBuilderUtils {
 
@@ -10,21 +10,22 @@ public final class EntityBuilderUtils {
 
     /**
      * Produces a new {@link AbstractEntityBuilder} for creating a new {@link EnemyGenerator}.
-     * @return A {@link AbstractEntityBuilder} for creating a {@link EnemyGenerator}.
+     * @return a {@link AbstractEntityBuilder} for creating a {@link EnemyGenerator}
      */
     public static AbstractEntityBuilder<EnemyGenerator> getEnemyGeneratorBuilder() {
         return new AbstractEntityBuilder<EnemyGenerator>() {
             @Override
             protected EnemyGenerator buildEntity() {
                 return new EnemyGenerator(super.createStaticPhysicalBody(EntityType.ENEMY_GENERATOR),
-                                          super.getPhysicalFactory());
+                                          super.getPhysicalFactory(),
+                                          super.getWorld());
             }
         };
     }
 
     /**
      * Produces a new {@link AbstractEntityBuilder} for creating a new {@link Ladder}.
-     * @return a {@link AbstractEntityBuilder} for creating a {@link Ladder}.
+     * @return a {@link AbstractEntityBuilder} for creating a {@link Ladder}
      */
     public static AbstractEntityBuilder<Ladder> getLadderBuilder() {
         return new AbstractEntityBuilder<Ladder>() {
@@ -37,7 +38,7 @@ public final class EntityBuilderUtils {
 
     /**
      * Produces a new {@link AbstractEntityBuilder} for creating a new {@link Player}.
-     * @return a {@link AbstractEntityBuilder} for creating a {@link Player}.
+     * @return a {@link AbstractEntityBuilder} for creating a {@link Player}
      */
     public static AbstractEntityBuilder<Player> getPlayerBuilder() {
         return new AbstractEntityBuilder<Player>() {
@@ -50,7 +51,7 @@ public final class EntityBuilderUtils {
 
     /**
      * Produces a new {@link AbstractEntityBuilder} for creating a new {@link Platform}.
-     * @return a {@link AbstractEntityBuilder} for creating a {@link Platform}.
+     * @return a {@link AbstractEntityBuilder} for creating a {@link Platform}
      */
     public static AbstractEntityBuilder<Platform> getPlatformBuilder() {
         return new AbstractEntityBuilder<Platform>() {
@@ -63,7 +64,7 @@ public final class EntityBuilderUtils {
 
     /**
      * Produces a new {@link AbstractEntityBuilder} for creating a new {@link PowerUp}.
-     * @return a {@link AbstractEntityBuilder} for creating a {@link PowerUp}.
+     * @return a {@link AbstractEntityBuilder} for creating a {@link PowerUp}
      */
     public static AbstractEntityBuilder<PowerUp> getPowerUpBuilder() {
         return new AbstractEntityBuilder<PowerUp>() {
@@ -76,7 +77,7 @@ public final class EntityBuilderUtils {
 
     /**
      * Produces a new {@link AbstractEntityBuilder} for creating a new {@link RollingEnemy}.
-     * @return a {@link AbstractEntityBuilder} for creating a {@link RollingEnemy}.
+     * @return a {@link AbstractEntityBuilder} for creating a {@link RollingEnemy}
      */
     public static AbstractEntityBuilder<RollingEnemy> getRollingEnemyBuilder() {
         return new AbstractEntityBuilder<RollingEnemy>() {
@@ -89,7 +90,7 @@ public final class EntityBuilderUtils {
 
     /**
      * Produces a new {@link AbstractEntityBuilder} for creating a new {@link WalkingEnemy}.
-     * @return a {@link AbstractEntityBuilder} for creating a {@link WalkingEnemy}.
+     * @return a {@link AbstractEntityBuilder} for creating a {@link WalkingEnemy}
      */
     public static AbstractEntityBuilder<WalkingEnemy> getWalkingEnemyBuilder() {
         return new AbstractEntityBuilder<WalkingEnemy>() {

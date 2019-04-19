@@ -9,8 +9,8 @@ public interface EntityConverter {
 
     /**
      * @param entity The {@link UnmodifiableEntity} to convert.
-     * @return The converted {@link DrawableEntity}.
-     * @throws IllegalArgumentException If the given {@link Entity} is not supported.
+     * @return the converted {@link DrawableEntity}
+     * @throws IllegalArgumentException if the given {@link UnmodifiableEntity} is not supported
      */
     DrawableEntity getDrawableEntity(UnmodifiableEntity entity) throws IllegalArgumentException;
 }

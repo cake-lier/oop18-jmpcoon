@@ -21,10 +21,10 @@ import com.google.common.hash.Hashing;
 import model.physics.BodyShape;
 
 /**
- * a {@link Body} that can be serialized.
+ * A {@link Body} that can be serialized. The serialization isn't complete, only the informations necessary for this
+ * game are serialized.
  */
 public class SerializableBody extends Body implements Serializable {
-
     private static final long serialVersionUID = 8243356758623109937L;
 
     private static final String NO_WRITABLE_MSG = "This body is in an illegal state, so it isn't serializable";

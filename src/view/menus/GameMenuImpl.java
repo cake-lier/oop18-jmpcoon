@@ -26,7 +26,6 @@ import javafx.scene.control.Alert.AlertType;
  * The class implementation of {@link GameMenu}.
  */
 public final class GameMenuImpl implements GameMenu {
-
     private static final String LAYOUT_PATH = "layouts/";
     private static final String GAME_MENU_SRC = LAYOUT_PATH + "gameMenu.fxml";
     private static final String SAVE_GAME_MENU_SRC = LAYOUT_PATH + "saveGameMenu.fxml";
@@ -72,15 +71,15 @@ public final class GameMenuImpl implements GameMenu {
      * The default constructor. It accepts the pane element in which to add itself, the {@link AppController}, the {@link View}
      * and the {@link GameController} of this particular instance of the game so as to save a game, go back to the main menu and
      * exit the game.
-     * @param root The {@link Pane} in which to draw this menu.
-     * @param stageHeight The height of {@link Stage} which contains the root.
-     * @param appController The controller of this application.
-     * @param appView The view of this application.
-     * @param gameController The controller of this game.
-     * @param gameView The view of this game.
+     * @param root the {@link Pane} in which to draw this menu
+     * @param stageHeight the height of {@link Stage} which contains the root
+     * @param appController the controller of this application
+     * @param appView the view of this application
+     * @param gameController the controller of this game
+     * @param gameView the view of this game
      */
     public GameMenuImpl(final Pane root, final double stageHeight, final AppController appController, final View appView,
-                            final GameController gameController, final GameView gameView) {
+                        final GameController gameController, final GameView gameView) {
         this.root = root;
         this.stageHeight = stageHeight;
         this.appController = appController;

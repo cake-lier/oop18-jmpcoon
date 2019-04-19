@@ -10,7 +10,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- *  a {@link Entity} that can be drawn.
+ * An implementation of {@link DrawableEntity}.
  */
 public abstract class AbstractDrawableEntity implements DrawableEntity {
 
@@ -20,16 +20,14 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
     private final Pair<Double, Double> sceneDimensions;
 
     /**
-     * builds a new {@link AbstractDrawableEntity}.
+     * Builds a new {@link AbstractDrawableEntity}.
      * @param image the {@link Image} representing the entity in the view
-     * @param entity the {@link AbstractEntity} represented by this {@link AbstractDrawableEntity}
-     * @param worldDimensions the dimensions of the {@link model.world.World} in which the {@link Entity} lives
+     * @param entity the {@link UnmodifiableEntity} represented by this {@link AbstractDrawableEntity}
+     * @param worldDimensions the dimensions of the {@link model.world.World} in which the {@link UnmodifiableEntity} lives
      * @param sceneDimensions the dimensions of the view in which this {@link AbstractDrawableEntity} will be drawn
      */
-    public AbstractDrawableEntity(final Image image, 
-                                    final UnmodifiableEntity entity, 
-                                        final Pair<Double, Double> worldDimensions,
-                                            final Pair<Double, Double> sceneDimensions) {
+    public AbstractDrawableEntity(final Image image, final UnmodifiableEntity entity, 
+                                  final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
         this.sprite = new ImageView(Objects.requireNonNull(image));
         this.entity = Objects.requireNonNull(entity);
         this.worldDimensions = Objects.requireNonNull(worldDimensions);
@@ -46,7 +44,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
     }
 
     /**
-     * updates properties like position, rotation, ... of the {@link ImageView} of this {@link DrawableEntity}
+     * Updates properties like position, rotation, ... of the {@link ImageView} of this {@link DrawableEntity}.
      */
     protected final void updateSpriteProperties() {
         final double entityWidth = this.getEntity().getDimensions().getLeft();
@@ -60,12 +58,14 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
         /* differences between the sizes of the ImageView and of the image really shown */
         final double diffX = this.getImageView().getImage().getWidth() - entityWidth * this.getXRatio();
         final double diffY = this.getImageView().getImage().getHeight() - entityHeight * this.getYRatio();
-        final Pair<Double, Double> sceneCoordinates = this.getConvertedCoordinates(new ImmutablePair<>(entityX - entityWidth / 2, entityY + entityHeight / 2));
+        final Pair<Double, Double> sceneCoordinates = 
+                this.getConvertedCoordinates(new ImmutablePair<>(entityX - entityWidth / 2, entityY + entityHeight / 2));
         this.getImageView().setX(sceneCoordinates.getLeft() - diffX / 2);
         this.getImageView().setY(sceneCoordinates.getRight() - diffY / 2);
     }
 
     /**
+     * Returns the {@link UnmodifiableEntity}represented by this {@link DrawableEntity}.
      * @return the {@link UnmodifiableEntity} represented by this {@link DrawableEntity}
      */
     protected UnmodifiableEntity getEntity() {
@@ -73,7 +73,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
     }
 
     /**
-     * converts the given world coordinates into scene coordinates.
+     * Converts the given world coordinates into scene coordinates.
      * @param worldCoordinates the coordinates to be converted
      * @return the converted coordinates 
      */
@@ -83,6 +83,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
     }
 
     /**
+     * Return the conversion ratio from world to scene dimensions along the x axis.
      * @return the ratio to convert world dimensions to scene dimensions along the x axis
      */
     protected final double getXRatio() {
@@ -90,6 +91,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
     }
 
     /**
+     * Return the conversion ratio from world to scene dimensions along the y axis.
      * @return the ratio to convert world dimensions to scene dimensions along the y axis
      */
     protected final double getYRatio() {

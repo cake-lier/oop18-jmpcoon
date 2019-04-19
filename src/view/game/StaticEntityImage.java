@@ -13,7 +13,7 @@ public enum StaticEntityImage {
      */
     PLATFORM("platform.png"),
     /**
-     * Image for a {@link PowerUpType#INVINCIBILITY}.
+     * Image for a {@link EnemyGenerator}.
      */
     ENEMY_GENERATOR("enemyGenerator.png");
 

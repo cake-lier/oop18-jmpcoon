@@ -44,8 +44,8 @@ final class WholePhysicalWorldImpl implements WholePhysicalWorld {
      * Binds the current instance of {@link WholePhysicalWorldImpl} with the instance of {@link World} which will be wrapped and 
      * used. This constructor is package protected because this class should be created only by the {@link PhysicalFactory}
      * contained in this package and no one else.
-     * @param outerWorld the {@link model.world.World} that wraps this {@link PhysicalWorld}.
-     * @param world the {@link SerializableWorld} to wrap.
+     * @param outerWorld the {@link model.world.World} that wraps this {@link PhysicalWorld}
+     * @param world the {@link SerializableWorld} to wrap
      */
     WholePhysicalWorldImpl(final NotifiableWorld outerWorld, final SerializableWorld world) {
         this.world = world;

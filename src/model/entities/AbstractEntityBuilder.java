@@ -7,16 +7,18 @@ import model.physics.DynamicPhysicalBody;
 import model.physics.PhysicalFactory;
 import model.physics.PlayerPhysicalBody;
 import model.physics.StaticPhysicalBody;
+import model.world.World;
 
 import com.google.common.base.Optional;
 
 /**
- * A class used to create builders for building all types of {@link Entity}.
- * @param <E> the type of {@link Entity} to create, which should be a subclass of this type.
+ * A class representing a general builder for building all types of {@link model.entities.Entity}.
+ * @param <E> the type of {@link model.entities.Entity} to create, which should be a subclass of {@link model.entities.Entity}
  */
 public abstract class AbstractEntityBuilder<E extends Entity> {
     private static final String INCOMPLETE_BUILDER_MSG = "Not all the fields have been initialized";
     private static final String ALREADY_BUILT_MSG = "This builder has already been used";
+
     private Optional<Pair<Double, Double>> center;
     private Optional<Pair<Double, Double>> dimensions;
     private Optional<BodyShape> shape;
@@ -24,6 +26,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     private Optional<PhysicalFactory> factory;
     private Optional<PowerUpType> powerUpType;
     private Optional<Double> walkingRange;
+    private Optional<World> world;
     private boolean built;
 
     /**
@@ -37,12 +40,13 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
         this.factory = Optional.absent();
         this.powerUpType = Optional.absent();
         this.walkingRange = Optional.absent();
+        this.world = Optional.absent();
         this.built = false;
     }
 
     /**
-     * Sets the position of the {@link Entity} that will be created by this {@link AbstractEntityBuilder}.
-     * @param center the position of the {@link Entity} that will be created
+     * Sets the position of the {@link model.entities.Entity} that will be created by this {@link AbstractEntityBuilder}.
+     * @param center the position of the {@link model.entities.Entity} that will be created
      * @return a reference to this {@link AbstractEntityBuilder}
      */
     public AbstractEntityBuilder<E> setPosition(final Pair<Double, Double> center) {
@@ -51,8 +55,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the dimensions of the {@link Entity} that will be created by this {@link AbstractEntityBuilder}.
-     * @param dimensions the dimensions (width and height) of the {@link Entity} that will be created
+     * Sets the dimensions of the {@link model.entities.Entity} that will be created by this {@link AbstractEntityBuilder}.
+     * @param dimensions the dimensions (width and height) of the {@link model.entities.Entity} that will be created
      * @return a reference to this {@link AbstractEntityBuilder}
      */
     public AbstractEntityBuilder<E> setDimensions(final Pair<Double, Double> dimensions) {
@@ -61,8 +65,9 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the {@link BodyShape} of the {@link Entity} that will be created by this {@link AbstractEntityBuilder}.
-     * @param shape the {@link BodyShape} of the {@link Entity} that will be created
+     * Sets the {@link BodyShape} of the {@link model.entities.Entity} that will be created by this 
+     * {@link AbstractEntityBuilder}.
+     * @param shape the {@link BodyShape} of the {@link model.entities.Entity} that will be created
      * @return a reference to this {@link AbstractEntityBuilder}
      */
     public AbstractEntityBuilder<E> setShape(final BodyShape shape) {
@@ -71,8 +76,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the angle of the {@link Entity} that will be created by this {@link AbstractEntityBuilder}.
-     * @param angle the angle of the {@link Entity} that will be created
+     * Sets the angle of the {@link model.entities.Entity} that will be created by this {@link AbstractEntityBuilder}.
+     * @param angle the angle of the {@link model.entities.Entity} that will be created
      * @return a reference to this {@link AbstractEntityBuilder}
      */
     public AbstractEntityBuilder<E> setAngle(final double angle) {
@@ -81,10 +86,10 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the {@link PhysicalFactory} that will be used to create the {@link model.physics.PhysicalBody} of the {@link Entity}
-     * that will be created by this {@link AbstractEntityBuilder}.
+     * Sets the {@link PhysicalFactory} that will be used to create the {@link model.physics.PhysicalBody} of the 
+     * {@link model.entities.Entity} that will be created by this {@link AbstractEntityBuilder}.
      * @param factory the {@link PhysicalFactory} that will be used to create the {@link model.physics.PhysicalBody} of the
-     * {@link Entity} that will be created
+     * {@link model.entities.Entity} that will be created
      * @return a reference to this {@link AbstractEntityBuilder}
      */
     public AbstractEntityBuilder<E> setFactory(final PhysicalFactory factory) {
@@ -93,8 +98,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the {@link PowerUpType} of the {@link Entity} that will be created by this {@link AbstractEntityBuilder}, if said Entity is 
-     * a {@link PowerUp}.
+     * Sets the {@link PowerUpType} of the {@link model.entities.Entity} that will be created by this 
+     * {@link AbstractEntityBuilder}, if said Entity is a {@link PowerUp}.
      * @param powerUpType an {@link Optional} containing the {@link PowerUpType} of the {@link PowerUp} being built, an empty
      * {@link Optional} if a PowerUp isn't being built
      * @return a reference to this {@link AbstractEntityBuilder}
@@ -105,8 +110,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the distance the {@link Entity} to be created by this {@link AbstractEntityBuilder} will walk across, if said Entity
-     * is a {@link WalkingEnemy}.
+     * Sets the distance the {@link model.entities.Entity} to be created by this {@link AbstractEntityBuilder} will walk across, 
+     * if said Entity is a {@link WalkingEnemy}.
      * @param walkingRange an {@link Optional} containing the distance the {@link WalkingEnemy} being built should walk across, 
      * an empty {@link Optional} if a WalkingEnemy isn't being built
      * @return a reference to this {@link AbstractEntityBuilder}
@@ -117,11 +122,25 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Builds the {@link Entity} with parameters as previously set. All the parameters are needed and, as a builder, once the
-     * build has happened this builder won't produce any other copies of the produced {@link Entity}.
-     * @return the {@link Entity} with parameters specified with the others methods
-     * @throws IllegalStateException if not every field has been initialized or if this {@link AbstractEntityBuilder} has already been
-     * built
+     * Sets the {@link World} the {@link model.entities.Entity} to be created by this {@link AbstractEntityBuilder} will notify
+     * when it creates a {@link RollingEnemy}, if the entity is a {@link EnemyGenerator}.
+     * @param world an {@link Optional} containing the world the {@link EnemyGenerator} will notify, 
+     * an empty {@link Optional} if a WalkingEnemy isn't being built
+     * @return a reference to this {@link AbstractEntityBuilder}
+     */
+    public AbstractEntityBuilder<E> setWorld(final Optional<World> world) {
+        this.world = world;
+        return this;
+    }
+
+    /**
+     * Builds the {@link model.entities.Entity} with the parameters previously set. All the parameters (except for walking range
+     * and {@link PowerUpType} that must be set only for {@link WalkingEnemy} and {@link PowerUp} respectively) are needed and, 
+     * as any builder, once the build has happened this builder won't produce any other copies of the produced 
+     * {@link model.entities.Entity}.
+     * @return the {@link model.entities.Entity} with parameters specified with the others methods
+     * @throws IllegalStateException if not every necessary field has been initialized or if this {@link AbstractEntityBuilder}
+     * has already been built
      */
     public E build() throws IllegalStateException {
         this.checkIfbuildable();
@@ -130,8 +149,9 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * The actual method the subclass of this class should implement to correctly create a new {@link Entity} of this type.
-     * @return the {@link Entity} that should be returned by the {@link #build()} method
+     * The actual method the subclass of this class should implement to correctly create a new {@link model.entities.Entity} 
+     * of this type.
+     * @return the {@link model.entities.Entity} that should be returned by the {@link #build()} method
      */
     protected abstract E buildEntity();
 
@@ -141,11 +161,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
      * @throws IllegalStateException if the {@link PowerUpType} for this {@link AbstractEntityBuilder} has not been set
      */
     protected PowerUpType getPowerUpType() throws IllegalStateException {
-        if (this.powerUpType.isPresent()) {
-            return this.powerUpType.get();
-        } else {
-            throw new IllegalStateException(INCOMPLETE_BUILDER_MSG);
-        }
+        return this.returnIfPresent(this.powerUpType);
     }
 
     /**
@@ -154,11 +170,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
      * @throws IllegalStateException if the walking distance for this {@link AbstractEntityBuilder} has not been set
      */
     protected double getWalkingRange() throws IllegalStateException {
-        if (this.walkingRange.isPresent()) {
-            return this.walkingRange.get();
-        } else {
-            throw new IllegalStateException(INCOMPLETE_BUILDER_MSG);
-        }
+        return this.returnIfPresent(this.walkingRange);
     }
 
     /**
@@ -167,8 +179,21 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
      * @throws IllegalStateException if the PhysicalFactory for this {@link AbstractEntityBuilder} has not been set
      */
     protected PhysicalFactory getPhysicalFactory() throws IllegalStateException {
-        if (this.factory.isPresent()) {
-            return this.factory.get();
+        return this.returnIfPresent(this.factory);
+    }
+
+    /**
+     * Method that allows the subclass of this class to get the {@link World} set.
+     * @return the {@link World} set
+     * @throws IllegalStateException if the World for this {@link AbstractEntityBuilder} has not been set
+     */
+    protected World getWorld() throws IllegalStateException {
+        return this.returnIfPresent(this.world);
+    }
+
+    private <O> O returnIfPresent(final Optional<O> optional) {
+        if (optional.isPresent()) {
+            return optional.get();
         } else {
             throw new IllegalStateException(INCOMPLETE_BUILDER_MSG);
         }
@@ -192,9 +217,9 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Creates a {@link StaticPhysicalBody} for this {@link Entity}.
-     * @param type The {@link EntityType} of this {@link Entity}
-     * @return the {@link StaticPhysicalBody} that this {@link Entity} should contain
+     * Creates a {@link StaticPhysicalBody} for the {@link model.entities.Entity} that will be created.
+     * @param type the {@link EntityType} of the {@link model.entities.Entity} that will be created
+     * @return the {@link StaticPhysicalBody} that the {@link model.entities.Entity} that will be created should contain
      */
     protected StaticPhysicalBody createStaticPhysicalBody(final EntityType type) {
         return this.factory.get().createStaticPhysicalBody(this.center.get(), 
@@ -207,9 +232,9 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Creates a {@link DynamicPhysicalBody} for this {@link Entity}.
-     * @param type The {@link EntityType} of this {@link Entity}
-     * @return the {@link DynamicPhysicalBody} that this {@link Entity} should contain
+     * Creates a {@link DynamicPhysicalBody} for the {@link model.entities.Entity} that will be created.
+     * @param type the {@link EntityType} of the {@link model.entities.Entity} that will be created
+     * @return the {@link DynamicPhysicalBody} that the {@link model.entities.Entity} that will be created should contain
      */
     protected DynamicPhysicalBody createDynamicPhysicalBody(final EntityType type) {
         return this.factory.get().createDynamicPhysicalBody(this.center.get(), 
@@ -221,8 +246,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Creates a {@link PlayerPhysicalBody} for this {@link Entity}.
-     * @return the {@link PlayerPhysicalBody} that this {@link Entity} should contain
+     * Creates a {@link PlayerPhysicalBody} for the {@link model.entities.Entity} that will be created.
+     * @return the {@link PlayerPhysicalBody} that the {@link model.entities.Entity} that will be created should contain
      */
     protected PlayerPhysicalBody createPlayerPhysicalBody() {
         return this.factory.get().createPlayerPhysicalBody(this.center.get(), 

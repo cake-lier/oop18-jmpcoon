@@ -29,6 +29,7 @@ public final class ContactRules extends ContactAdapter implements Serializable {
      * only the {@link PhysicalWorld} should create an instance of this object.
      */
     ContactRules(final ReadablePhysicalWorld world) {
+        super();
         this.world = world;
     }
 

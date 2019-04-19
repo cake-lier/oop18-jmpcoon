@@ -7,7 +7,7 @@ import model.world.CollisionEvent;
  */
 public enum PowerUpType {
     /**
-     * The end of level zone.
+     * The goal to reach of the level.
      */
     GOAL(CollisionEvent.GOAL_HIT),
     /**

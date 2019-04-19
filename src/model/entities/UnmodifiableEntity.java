@@ -13,7 +13,8 @@ import model.physics.BodyShape;
  */
 public interface UnmodifiableEntity {
     /**
-     * Gets current position of this {@link UnmodifiableEntity}, as a {@link Pair} of coordinates which represents the center of it.
+     * Gets current position of this {@link UnmodifiableEntity}, as a {@link Pair} of coordinates which represents the center of
+     * it.
      * @return the {@link Pair} of coordinates of the center of this {@link UnmodifiableEntity}
      */
     Pair<Double, Double> getPosition();
@@ -25,8 +26,8 @@ public interface UnmodifiableEntity {
     BodyShape getShape();
 
     /**
-     * Gets the angle of rotation around the center of this {@link UnmodifiableEntity} from its position aligned with the coordinate
-     * system of the world calculated in radians counterclockwise in the interval [-pi, pi].
+     * Gets the angle of rotation around the center of this {@link UnmodifiableEntity} from its position aligned with the 
+     * coordinate system of the world calculated in radians counterclockwise in the interval [-pi, pi].
      * @return the angle of rotation of this {@link UnmodifiableEntity}
      */
     double getAngle();
@@ -51,7 +52,7 @@ public interface UnmodifiableEntity {
 
     /**
      * Gets if the wrapped {@link Entity} is part of the subtype {@link DynamicEntity} or not.
-     * @return true if the wrapped {@link Entity} is a {@link DynamicEntity}
+     * @return true if the wrapped {@link Entity} is a {@link DynamicEntity}, false otherwise
      */
     boolean isDynamic();
 
@@ -63,7 +64,8 @@ public interface UnmodifiableEntity {
 
     /**
      * Gets the power-up type of the wrapped {@link Entity}, if it wraps a {@link PowerUp}, an absent value otherwise.
-     * @return an {@link Optional} containing the the {@link PowerUpType} if this instance wraps a {@link PowerUp}, absent otherwise
+     * @return an {@link Optional} containing the the {@link PowerUpType} if this instance wraps a {@link PowerUp}, absent 
+     * otherwise
      */
     Optional<PowerUpType> getPowerUpType();
 }

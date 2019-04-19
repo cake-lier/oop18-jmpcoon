@@ -25,7 +25,8 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
     private final SerializableBody body;
 
     /**
-     * builds a new {@link AbstractPhysicalBody}.
+     * Builds a new {@link AbstractPhysicalBody}. This constructor is package protected because it should be only invoked 
+     * by the {@link PhysicalFactoryImpl} when creating a new instance of it and no one else.
      * @param body the {@link SerializableBody} encapsulated by this {@link AbstractPhysicalBody}
      */
     public AbstractPhysicalBody(final SerializableBody body) {

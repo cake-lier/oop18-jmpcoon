@@ -9,8 +9,8 @@ package model.world;
 public enum CollisionEvent {
     /**
      * The collision in which is the {@link model.entities.Player} that gets killed. This can happen when a
-     * {@link model.entities.WalkingEnemy} or a {@link model.entities.RollingEnemy} touches the {@link model.entities.Player} from
-     * any angle except from below.
+     * {@link model.entities.WalkingEnemy} or a {@link model.entities.RollingEnemy} touches the {@link model.entities.Player} 
+     * from any angle except from below.
      */
     PLAYER_KILLED,
     /**

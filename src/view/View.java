@@ -17,7 +17,7 @@ public interface View {
      * This is decided by the {@link Optional} passed. If not present, it will be displayed a new game, otherwise it will be
      * loaded the game from the file with the associated index (the association is known by the {@link AppController}) and 
      * then displayed.
-     * @param saveFileIndex The index of the file from which the game will be loaded, if present.
+     * @param saveFileIndex the index of the file from which the game will be loaded, if present
      */
     void displayGame(Optional<Integer> saveFileIndex);
 }

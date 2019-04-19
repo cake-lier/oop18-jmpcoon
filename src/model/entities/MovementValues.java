@@ -22,14 +22,26 @@ enum MovementValues {
         this.impulseY = impulseY;
     }
 
+    /**
+     * Getter for the {@link MovementType} associated to this values.
+     * @return the {@link MovementType} associated
+     */
     public MovementType getMovementType() {
         return this.movementType;
     }
 
+    /**
+     * Getter for the value the impulse should have on the x axis.
+     * @return the x value of the impulse
+     */
     public double getImpulseX() {
         return this.impulseX;
     }
 
+    /**
+     * Getter for the value the impulse should have on the y axis.
+     * @return the y value of the impulse
+     */
     public double getImpulseY() {
         return this.impulseY;
     }

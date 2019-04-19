@@ -27,9 +27,9 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
      * @param spritesheets A map that matches the {@link EntityState} of the drawn {@link UnmodifiableEntity} to the sprite 
      * sheets that will represent it. The value of an entry is a pair with the sprite sheet and the number of frames it contains.
      * There must always be a sprite sheet for the {@link EntityState#IDLE}.
-     * @param entity The {@link UnmodifiableEntity}
-     * @param worldDimensions The dimensions of the {@link World}
-     * @param sceneDimensions The dimensions of the view in which this {@link UnmodifiableEntity} will be drawn
+     * @param entity the {@link UnmodifiableEntity}
+     * @param worldDimensions the dimensions of the {@link World}
+     * @param sceneDimensions the dimensions of the view in which this {@link UnmodifiableEntity} will be drawn
      */
     public DynamicDrawableEntity(final Map<EntityState, Pair<Image, Integer>> spritesheets, final UnmodifiableEntity entity,
                                  final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
@@ -90,6 +90,7 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
 
     private boolean isIdleWhileClimbing() {
         return ((this.currentState == EntityState.CLIMBING_UP || this.currentState == EntityState.CLIMBING_DOWN)
-               && (Math.abs(this.getEntity().getVelocity().getLeft()) <=  PRECISION && Math.abs(this.getEntity().getVelocity().getRight()) <= PRECISION));
+                && (Math.abs(this.getEntity().getVelocity().getLeft()) <=  PRECISION 
+                && Math.abs(this.getEntity().getVelocity().getRight()) <= PRECISION));
     }
 }

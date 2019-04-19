@@ -11,7 +11,7 @@ import model.entities.UnmodifiableEntity;
 import model.world.CollisionEvent;
 
 /**
- * a controller for the game playing.
+ * A controller for the game playing.
  */
 public interface GameController {
 
@@ -27,7 +27,7 @@ public interface GameController {
 
     /**
      * Saves the current game.
-     * @param saveFileIndex the index of {@link SaveFile} referring to the choosen save file.
+     * @param saveFileIndex the index of {@link SaveFile} referring to the chosen save file
      * @throws IOException if an I/O error occurs
      * @throws FileNotFoundException if the {@link URL} passed does not reference an existent file
      */
@@ -35,7 +35,7 @@ public interface GameController {
 
     /**
      * Load a previously saved game.
-     * @param saveFileIndex the index of {@link SaveFile} referring to the choosen save file.
+     * @param saveFileIndex the index of {@link SaveFile} referring to the choosen save file
      * @throws IOException if an I/O error occurs
      * @throws IllegalArgumentException if the file referenced by the {@link URL} isn't compatible with this application
      */
@@ -52,7 +52,7 @@ public interface GameController {
     int getCurrentScore();
 
     /**
-     * @return the number of {@link model.entities.Player}'s lives.
+     * @return the number of {@link model.entities.Player}'s lives
      */
     int getPlayerLives();
 
@@ -78,19 +78,19 @@ public interface GameController {
 
     /**
      * 
-     * @return alive entities.
+     * @return the alive entities in the {@link World} game
      */
     Collection<UnmodifiableEntity> getAliveEntities();
 
     /**
      * 
-     * @return dead entities.
+     * @return the dead entities in the {@link World} game
      */
     Collection<UnmodifiableEntity> getDeadEntities();
 
     /**
      * 
-     * @return A {@link Queue} of the last {@link EventType} that happened.
+     * @return a {@link Queue} of the last {@link EventType} that happened.
      */
     Queue<CollisionEvent> getCurrentEvents();
 }

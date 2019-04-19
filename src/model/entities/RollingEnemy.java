@@ -3,7 +3,7 @@ package model.entities;
 import model.physics.DynamicPhysicalBody;
 
 /**
- * a rolling enemy inside the {@link model.world.World} of the game.
+ * A rolling enemy inside the {@link model.world.World} of the game.
  */
 public final class RollingEnemy extends DynamicEntity {
 
@@ -13,10 +13,9 @@ public final class RollingEnemy extends DynamicEntity {
     private final DynamicPhysicalBody body;
 
     /**
-     * Creates a new {@link RollingEnemy} with the given {@link DynamicPhysicalBody}. This constructor is package protected because it
-     * should be only invoked by the {@link AbstractEntityBuilder} when creating a new instance of it and no one else.
-     * 
-     * @param body The {@link DynamicPhysicalBody} that should be contained in this {@link RollingEnemy}.
+     * Creates a new {@link RollingEnemy} with the given {@link DynamicPhysicalBody}. This constructor is package protected 
+     * because it should be only invoked by the {@link AbstractEntityBuilder} when creating a new instance of it and no one else.
+     * @param body the {@link DynamicPhysicalBody} that should be contained in this {@link RollingEnemy}
      */
     RollingEnemy(final DynamicPhysicalBody body) {
         super(body);

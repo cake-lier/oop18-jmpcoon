@@ -3,7 +3,7 @@ package model.entities;
 import model.physics.StaticPhysicalBody;
 
 /**
- * a ladder inside the {@link model.world.World} of the game.
+ * A ladder inside the {@link model.world.World} of the game.
  */
 public final class Ladder extends StaticEntity {
 
@@ -12,7 +12,7 @@ public final class Ladder extends StaticEntity {
     /**
      * Creates a new {@link Ladder} with the given {@link StaticPhysicalBody}. This constructor is package protected
      * because it should be only invoked by the {@link AbstractEntityBuilder} when creating a new instance of it and no one else.
-     * @param body The {@link StaticPhysicalBody} that should be contained in this {@link Ladder}.
+     * @param body the {@link StaticPhysicalBody} that should be contained in this {@link Ladder}
      */
     Ladder(final StaticPhysicalBody body) {
         super(body);

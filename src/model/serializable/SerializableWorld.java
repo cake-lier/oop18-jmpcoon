@@ -14,14 +14,14 @@ import model.physics.collisions.CollisionRules;
 import model.physics.collisions.ContactRules;
 
 /**
- * A version of {@link World} that is serializable.
+ * A version of {@link World} that is serializable. The serialization isn't complete, only the informations necessary for this
+ * game are serialized.
  */
 public class SerializableWorld extends World implements Serializable {
-
     private static final long serialVersionUID = -3797499068693856432L;
 
     /**
-     * builds a new {@link SerializableWorld}.
+     * Builds a new {@link SerializableWorld}.
      * @param axisAlignedBounds the {@link AxisAlignedBounds} of the {@link SerializableWorld} created
      */
     public SerializableWorld(final AxisAlignedBounds axisAlignedBounds) {

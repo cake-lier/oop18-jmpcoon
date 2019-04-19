@@ -10,15 +10,12 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Optional;
 
-
 /**
  * An interface representing the facade for the entire creation requested to the physical engine in order to create the
  * {@link PhysicalWorld} and populate the levels through {@link PhysicalBody}s. These last must be created after the 
- * {@link PhysicalWorld}. It creates other facades to maintain a degree of separation between the dyn4j library and the
- * implementation.
+ * {@link PhysicalWorld}.
  */
 public interface PhysicalFactory extends Serializable {
-
     /**
      * A {@link PhysicalWorld} that manages the physics simulation needed by the {@link model.world.World}. Notifies the
      * {@link model.world.World} of occurred events through the methods contained in the interface {@link AlertableWorld}. The
@@ -49,18 +46,21 @@ public interface PhysicalFactory extends Serializable {
      * @throws IllegalArgumentException if the given position is outside the {@link PhysicalWorld} bounds, or if the combination
      * of {@link EntityType}, {@link BodyShape} and dimensions is illegal
      */
-    StaticPhysicalBody createStaticPhysicalBody(Pair<Double, Double> position, double angle, BodyShape shape,
-                                                    double width, double height, EntityType type, Optional<PowerUpType> powerUpType)
-                                                            throws IllegalStateException, IllegalArgumentException;
+    StaticPhysicalBody createStaticPhysicalBody(Pair<Double, Double> position, double angle, BodyShape shape, double width, 
+                                                double height, EntityType type, Optional<PowerUpType> powerUpType)
+                                                throws IllegalStateException, IllegalArgumentException;
 
     /**
      * Creates a {@link DynamicPhysicalBody} living inside the {@link PhysicalWorld} created by the same {@link PhysicalFactory}.
      * @param position the center of the {@link DynamicPhysicalBody} created
      * @param angle the angle in radians of the {@link DynamicPhysicalBody} created
      * @param shape the {@link BodyShape} of {@link DynamicPhysicalBody} created
-     * @param width the width of the {@link PhysicalBody} (or the diameter, if the {@link PhysicalBody} will have a circular shape)
-     * @param height the height of the {@link PhysicalBody} (or the diameter, if the {@link PhysicalBody} will have a circular shape)
-     * @param type the {@link EntityType} of the {@link model.entities.Entity} that will use the created {@link DynamicPhysicalBody}
+     * @param width the width of the {@link PhysicalBody} (or the diameter, if the {@link PhysicalBody} will have a circular 
+     * shape)
+     * @param height the height of the {@link PhysicalBody} (or the diameter, if the {@link PhysicalBody} will have a circular
+     * shape)
+     * @param type the {@link EntityType} of the {@link model.entities.Entity} that will use the created 
+     * {@link DynamicPhysicalBody}
      * @return a {@link DynamicPhysicalBody} with the given characteristics
      * @throws IllegalStateException if a {@link PhysicalWorld} has yet to be created
      * @throws IllegalArgumentException if the given position is outside the {@link PhysicalWorld} bounds, or if the combination

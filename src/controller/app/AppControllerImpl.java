@@ -15,7 +15,7 @@ import controller.SaveFile;
 import view.View;
 
 /**
- * Class implementation of the {@link AppController}.
+ * Class implementation of {@link AppController}.
  */
 public final class AppControllerImpl implements AppController {
     private static final String FOLDER = "jmpcoon";
@@ -24,8 +24,8 @@ public final class AppControllerImpl implements AppController {
     private final View view;
 
     /**
-     * Acquires a new {@link View} to call when it's needed to display something.
-     * @param view The view element responsible for the application.
+     * Builds a new {@link AppControllerImpl}.
+     * @param view the {@link View} element responsible for the application
      */
     public AppControllerImpl(final View view) {
         this.view = view;
@@ -71,6 +71,9 @@ public final class AppControllerImpl implements AppController {
         this.view.displayGame(saveFileIndex);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Optional<Long>> getSaveFileAvailability() {
         final List<Optional<Long>> list = new LinkedList<>();

@@ -34,10 +34,10 @@ public final class ViewImpl implements View, ResizableView {
     private MediaPlayer player;
 
     /**
-     * Acquires the {@link Stage} in which to draw all the visual elements of this application and it initializes it appropriately.
-     * Constructs the controller of this application with this view, so as to let it call this view when the user instructs
-     * it to perform some operation, then starts the application via the {@link AppController}.
-     * @param stage The {@link Stage} in which to draw all visual elements.
+     * Acquires the {@link Stage} in which to draw all the visual elements of this application and it initializes it 
+     * appropriately. Constructs the controller of this application with this view, so as to let it call this view when the user
+     * instructs it to perform some operation, then starts the application via the {@link AppController}.
+     * @param stage the {@link Stage} in which to draw all visual elements
      */
     public ViewImpl(final Stage stage) {
         this.controller = new AppControllerImpl(this);
@@ -54,7 +54,7 @@ public final class ViewImpl implements View, ResizableView {
 
     /**
      * Sets the stage size to the appropriate values, so as to make it always the biggest possible and with an aspect ratio of
-     * 16:9. It is also unresizable, so the ratio cannot be changed in any way.
+     * 16:9. It is also not resizable, so the ratio cannot be changed in any way.
      */
     @Override
     public void setScreenSize(final int screenIndex) {

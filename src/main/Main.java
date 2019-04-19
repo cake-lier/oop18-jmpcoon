@@ -11,7 +11,7 @@ public final class Main extends Application {
 
     /**
      * Main method which starts the application as requested by JavaFX.
-     * @param args Unused.
+     * @param args unused
      */
     public static void main(final String... args) {
         launch();
@@ -20,6 +20,7 @@ public final class Main extends Application {
     /**
      * The method used by JavaFX to start the application. It creates the View of this
      * application so as to manage its initial visualization.
+     * @param stage the {@link Stage} to use for this application
      */
     @Override
     public void start(final Stage stage) throws Exception {

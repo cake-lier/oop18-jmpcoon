@@ -9,11 +9,10 @@ import java.io.Serializable;
  * interfere with other operations.
  */
 public interface NotifiableWorld extends Serializable {
-
     /**
      * Notifies this world that a collision has happened by specifying the type of the collision as a value of type
      * {@link CollisionEvent}.
-     * @param collisionType the type of the collision that happened.
+     * @param collisionType the type of the collision that happened
      */
     void notifyCollision(CollisionEvent collisionType);
 }
