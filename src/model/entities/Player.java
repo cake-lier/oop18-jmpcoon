@@ -32,7 +32,7 @@ public final class Player extends DynamicEntity {
 
     /**
      * Moves the Player.
-     * @param movement the {@link MovementType} to apply to this Player
+     * @param movement the {@link MovementType} to apply to this {@link Player}
      */
     public void move(final MovementType movement) {
         final MovementValues moveValues = Arrays.asList(MovementValues.values())
@@ -49,5 +49,4 @@ public final class Player extends DynamicEntity {
     public int getLives() {
         return this.body.getLives();
     }
-
 }

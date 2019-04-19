@@ -10,7 +10,6 @@ import org.apache.commons.lang3.tuple.Pair;
  * An interface representing the physical body of an {@link model.entities.Entity}.
  */
 public interface PhysicalBody extends Serializable {
-
     /**
      * @return the center of the {@link PhysicalBody}, as a {@link Pair} where the first element is the x coordinate and the 
      * second element is the y one
@@ -48,5 +47,4 @@ public interface PhysicalBody extends Serializable {
      * @return the velocity of this {@link PhysicalBody}, divided in its x and y components
      */
     Pair<Double, Double> getVelocity();
-
 }

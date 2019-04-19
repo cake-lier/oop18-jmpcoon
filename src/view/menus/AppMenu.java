@@ -107,10 +107,10 @@ public final class AppMenu implements Menu {
     /**
      * Binds this menu to the instance who has to be the controller of the menu, which is the controller of the application.
      * Furthermore, it acquires the {@link Scene} in which to draw the menu.
-     * @param controller The controller of this application.
-     * @param stage The {@link Stage} in which adding this menu and all its pages.
-     * @param stageHeight The height of the {@link javafx.stage.Stage} which contains the scene.
-     * @param music The {@link MediaPlayer} from which play music while the menu is showed.
+     * @param controller the controller of this application
+     * @param stage the {@link Stage} in which adding this menu and all its pages
+     * @param stageHeight the height of the {@link javafx.stage.Stage} which contains the scene
+     * @param music the {@link MediaPlayer} from which play music while the menu is showed
      */
     public AppMenu(final AppController controller, final Stage stage, final double stageHeight, final MediaPlayer music) {
         this.controller = controller;

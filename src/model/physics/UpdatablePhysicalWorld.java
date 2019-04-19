@@ -9,12 +9,11 @@ import org.apache.commons.lang3.tuple.Pair;
  * An interface for the class providing physics management of the {@link PhysicalBody} to the {@link World}.
  */
 public interface UpdatablePhysicalWorld extends Serializable {
-
     /**
      * Checks if two {@link PhysicalBody}s are currently colliding.
      * @param first the first {@link PhysicalBody} to check against
      * @param second the second {@link PhysicalBody} to check against
-     * @return true if the two are colliding, false otherwise.
+     * @return true if the two are colliding, false otherwise
      */
     boolean areBodiesInContact(PhysicalBody first, PhysicalBody second);
 

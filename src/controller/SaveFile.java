@@ -32,7 +32,7 @@ public enum SaveFile {
 
     /**
      * Gets the path to the save file the value of this enumeration is associated to.
-     * @return a string representing the path of the saved file the value of this enumeration is associated to.
+     * @return a string representing the path of the saved file the value of this enumeration is associated to
      */
     public String getSavePath() {
         return getSaveFilesPrefix() + this.index + EXTENSION;

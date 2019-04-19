@@ -49,7 +49,6 @@ public abstract class AbstractPhysicalBody implements PhysicalBody {
         return this.body.getLocalPoint(this.body.getWorldCenter().add(1, 0)).getAngleBetween(new Vector2(1, 0));
     }
 
-
     /**
      * {@inheritDoc}
      */

@@ -4,7 +4,6 @@ package model.entities;
  * A utility class for producing builders for each {@link model.entities.Entity} of this game.
  */
 public final class EntityBuilderUtils {
-
     private EntityBuilderUtils() {
     }
 

@@ -8,7 +8,6 @@ import view.ViewImpl;
  * The main class which starts the whole application.
  */
 public final class Main extends Application {
-
     /**
      * Main method which starts the application as requested by JavaFX.
      * @param args unused

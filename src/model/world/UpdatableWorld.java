@@ -14,7 +14,6 @@ import org.apache.commons.lang3.tuple.Pair;
  * the game world.
  */
 public interface UpdatableWorld extends Serializable {
-
     /**
      * Gets the dimensions of the world.
      * @return a pair containing the dimensions of the game world in meters

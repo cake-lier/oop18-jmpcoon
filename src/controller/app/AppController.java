@@ -9,7 +9,6 @@ import com.google.common.base.Optional;
  * so it should stop it and start the game when asked to do so.
  */
 public interface AppController {
-
     /**
      * Starts the application.
      */

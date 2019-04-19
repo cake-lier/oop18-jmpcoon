@@ -58,7 +58,7 @@ public interface UnmodifiableEntity {
 
     /**
      * Gets a {@link Pair} of values which represents the x and y value of the velocity of this {@link UnmodifiableEntity}.
-     * @return true if the wrapped {@link Entity} is a {@link DynamicEntity}
+     * @return the velocity of this {@link UnmodifiableEntity} as a {@link Pair}
      */
     Pair<Double, Double> getVelocity();
 

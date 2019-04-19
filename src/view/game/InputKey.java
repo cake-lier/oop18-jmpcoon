@@ -41,7 +41,7 @@ public enum InputKey {
 
     /**
      * Converts the {@link InputKey} on which it's called to a {@link InputType}.
-     * @return the corresponding {@link InputType}.
+     * @return the corresponding {@link InputType}
      */
     public Optional<InputType> convert() {
         return this.correspondingInputType;

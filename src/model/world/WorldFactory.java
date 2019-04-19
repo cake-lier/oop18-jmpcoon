@@ -10,7 +10,6 @@ package model.world;
  * responsibility to create no more than one {@link WorldFactory} for each game.
  */
 public interface WorldFactory {
-
     /**
      * Creates a new instance of {@link World}. Only one instance will be produced, trying to call this method again will result
      * in an {@link IllegalStateException}. It needs a controller to be created so as to notify it when events occur.

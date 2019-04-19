@@ -13,7 +13,6 @@ import org.apache.commons.lang3.tuple.Pair;
  * An implementation of {@link DrawableEntity}.
  */
 public abstract class AbstractDrawableEntity implements DrawableEntity {
-
     private final ImageView sprite;
     private final UnmodifiableEntity entity;
     private final Pair<Double, Double> worldDimensions;
@@ -65,7 +64,7 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
     }
 
     /**
-     * Returns the {@link UnmodifiableEntity}represented by this {@link DrawableEntity}.
+     * Returns the {@link UnmodifiableEntity} represented by this {@link DrawableEntity}.
      * @return the {@link UnmodifiableEntity} represented by this {@link DrawableEntity}
      */
     protected UnmodifiableEntity getEntity() {

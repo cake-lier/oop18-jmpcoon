@@ -15,7 +15,6 @@ import com.google.common.collect.Multimap;
  * @param <B> an upper bound supertype shared by all the instances in the multimap
  */
 public interface ClassToInstanceMultimap<B> extends Multimap<Class<? extends B>, B>, Serializable {
-
     /**
      * Gets the {@link Collection} of instances contained within this multimap with the given type T.
      * @param <T> the type of the instances to be returned
