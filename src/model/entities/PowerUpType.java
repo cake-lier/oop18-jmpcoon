@@ -30,7 +30,7 @@ public enum PowerUpType {
     }
 
     /**
-     * Gets the {@link CollisionEvent} which is generated when the {@link Player} hits a power up with this type.
+     * Returns the {@link CollisionEvent} which is generated when the {@link Player} hits a power up with this type.
      * @return the {@link CollisionEvent} associated with this power up type
      */
     public CollisionEvent getAssociatedEvent() {

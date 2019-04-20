@@ -16,7 +16,7 @@ import com.google.common.collect.Multimap;
  */
 public interface ClassToInstanceMultimap<B> extends Multimap<Class<? extends B>, B>, Serializable {
     /**
-     * Gets the {@link Collection} of instances contained within this multimap with the given type T.
+     * Returns the {@link Collection} of instances contained within this multimap with the given type T.
      * @param <T> the type of the instances to be returned
      * @param type the {@link Class} object representing the type of the instances to be returned
      * @return the {@link Collection} of instances with the given type

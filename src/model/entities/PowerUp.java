@@ -30,6 +30,7 @@ public final class PowerUp extends StaticEntity {
     }
 
     /**
+     * Returns the {@link PowerUpType} of this PowerUp.
      * @return the {@link PowerUpType} of this {@link PowerUp}
      */
     public PowerUpType getPowerUpType() {

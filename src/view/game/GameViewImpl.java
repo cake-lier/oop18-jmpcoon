@@ -142,7 +142,7 @@ public final class GameViewImpl implements GameView {
             }
         }
         this.drawAliveEntities();
-        this.music.play();
+        // this.music.play();
         this.isInitialized = true;
         this.gameController.startGame();
     }

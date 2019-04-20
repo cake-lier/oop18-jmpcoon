@@ -204,7 +204,7 @@ public class GameControllerImpl implements GameController {
             this.stopGame();
         } else {
             this.inputs.stream()
-                       .map(i -> i.getAssociatedMovementType())
+                       .map(i -> i.getAssociatedMovementType()) 
                        .forEach(this.gameWorld::movePlayer);
             this.gameWorld.update();
             this.gameView.update();

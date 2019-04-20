@@ -158,35 +158,6 @@ public final class WorldImpl implements World {
         this.aliveEntities.getInstances(EnemyGenerator.class).forEach(EnemyGenerator::onTimeAdvanced);
     }
 
-    /*
-     * Gets if the Player is currently standing on a platform or not. This is true only if is currently in contact with
-     * a Platform and the contact point is at the bottom of the player bounding box and at the top of the platform bounding box.
-     */
-    private boolean isBodyStanding(final PhysicalBody body) {
-        final Collection<PhysicalBody> platformsBodies = this.aliveEntities.getInstances(Platform.class)
-                                                                           .parallelStream()
-                                                                           .map(Platform::getPhysicalBody)
-                                                                           .collect(Collectors.toSet());
-        return this.innerWorld.getCollidingBodies(body)
-                              .parallelStream()
-                              .filter(collision -> platformsBodies.contains(collision.getLeft()))
-                              .anyMatch(platformStand -> PhysicsUtils.isBodyOnTop(body, platformStand.getLeft(), 
-                                                                                  platformStand.getRight()));
-    }
-
-    /*
-     * Gets if the Player is currently standing in front of a ladder and it could be specified where to check the player
-     * is with respect to the ladder.
-     */
-    private boolean isBodyInFrontLadder(final PhysicalBody body, final Predicate<PhysicalBody> where) {
-        return this.aliveEntities.getInstances(Ladder.class).parallelStream()
-                                                            .map(Ladder::getPhysicalBody)
-                                                            .anyMatch(ladderBody -> 
-                                                                      this.innerWorld.areBodiesInContact(body, ladderBody)
-                                                                      && where.test(ladderBody)
-                                                                      && PhysicsUtils.isBodyInside(body, ladderBody));
-    }
-
     /**
      * {@inheritDoc}
      * The synchronization is required because an update of the {@link World} cannot be interleaved with a user movement,
@@ -210,6 +181,7 @@ public final class WorldImpl implements World {
                             || (playerState == EntityState.CLIMBING_UP || playerState == EntityState.CLIMBING_DOWN)))
                     || ((movement == MovementType.MOVE_LEFT || movement == MovementType.MOVE_RIGHT)
                         && (playerState != EntityState.CLIMBING_DOWN && playerState != EntityState.CLIMBING_UP)))) {
+                System.out.println(movement);
                 this.player.get().move(movement);
                 return true;
             }
@@ -256,28 +228,6 @@ public final class WorldImpl implements World {
                      .collect(ImmutableSet.toImmutableSet());
     }
 
-    private Stream<UnmodifiableEntity> getDynamicEntitiesStream(final ClassToInstanceMultimap<Entity> multimap) {
-        return this.getEntitiesStream(multimap,
-                                      UnmodifiableEntityImpl::ofDynamicEntity,
-                                      Arrays.asList(Player.class, RollingEnemy.class, WalkingEnemy.class));
-    }
-
-    private <E extends Entity> Stream<UnmodifiableEntity> getEntitiesStream(final ClassToInstanceMultimap<Entity> multimap,
-                                                                            final Function<E, UnmodifiableEntity> mapper,
-                                                                            final Collection<Class<? extends E>> keys) {
-        return keys.parallelStream().flatMap(type -> this.getEntityKeyStream(multimap, mapper, type));
-    }
-
-    private Stream<UnmodifiableEntity> getPowerUpStream(final ClassToInstanceMultimap<Entity> multimap) {
-        return this.getEntityKeyStream(multimap, UnmodifiableEntityImpl::ofPowerUp, PowerUp.class);
-    }
-
-    private <E extends Entity> Stream<UnmodifiableEntity> getEntityKeyStream(final ClassToInstanceMultimap<Entity> multimap,
-                                                                             final Function<E, UnmodifiableEntity> mapper,
-                                                                             final Class<? extends E> key) {
-        return multimap.getInstances(key).parallelStream().map(mapper::apply);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -319,20 +269,73 @@ public final class WorldImpl implements World {
         return this.player.isPresent() ? this.player.get().getLives() : 0;
     }
 
-    /*
-     * Checks if initialization has occurred and if not, throws an exception.
-     */
-    private void checkInitialization() {
-        if (!this.initialized) {
-            throw new IllegalStateException(NO_INIT_MSG);
-        }
-    }
-
     /**
      * {@inheritDoc}
      */
     @Override
     public Queue<CollisionEvent> getCurrentEvents() {
         return UnmodifiableQueue.unmodifiableQueue(this.currentEvents);
+    }
+
+    private void checkInitialization() {
+        if (!this.initialized) {
+            throw new IllegalStateException(NO_INIT_MSG);
+        }
+    }
+
+    /*
+     * Gets if the Player is currently standing on a platform or not. This is true only if is currently in contact with
+     * a Platform and the contact point is at the bottom of the player bounding box and at the top of the platform bounding box.
+     */
+    private boolean isBodyStanding(final PhysicalBody body) {
+        final Collection<PhysicalBody> platformsBodies = this.aliveEntities.getInstances(Platform.class)
+                                                                           .parallelStream()
+                                                                           .map(Platform::getPhysicalBody)
+                                                                           .collect(Collectors.toSet());
+        /* 
+         * If it's in contact with the platform, but still jumping, it means the player has yet to complete (or start)
+         * the previous jump, so it isn't standing.
+         */
+        return this.innerWorld.getCollidingBodies(body)
+                              .parallelStream()
+                              .filter(collision -> platformsBodies.contains(collision.getLeft()))
+                              .anyMatch(platformStand -> PhysicsUtils.isBodyOnTop(body, platformStand.getLeft(), 
+                                                                                  platformStand.getRight()))
+               && body.getState() != EntityState.JUMPING;
+    }
+
+    /*
+     * Gets if the Player is currently standing in front of a ladder and it could be specified where to check the player
+     * is with respect to the ladder.
+     */
+    private boolean isBodyInFrontLadder(final PhysicalBody body, final Predicate<PhysicalBody> where) {
+        return this.aliveEntities.getInstances(Ladder.class).parallelStream()
+                                                            .map(Ladder::getPhysicalBody)
+                                                            .anyMatch(ladderBody -> 
+                                                                      this.innerWorld.areBodiesInContact(body, ladderBody)
+                                                                      && where.test(ladderBody)
+                                                                      && PhysicsUtils.isBodyInside(body, ladderBody));
+    }
+
+    private Stream<UnmodifiableEntity> getDynamicEntitiesStream(final ClassToInstanceMultimap<Entity> multimap) {
+        return this.getEntitiesStream(multimap,
+                                      UnmodifiableEntityImpl::ofDynamicEntity,
+                                      Arrays.asList(Player.class, RollingEnemy.class, WalkingEnemy.class));
+    }
+
+    private <E extends Entity> Stream<UnmodifiableEntity> getEntitiesStream(final ClassToInstanceMultimap<Entity> multimap,
+                                                                            final Function<E, UnmodifiableEntity> mapper,
+                                                                            final Collection<Class<? extends E>> keys) {
+        return keys.parallelStream().flatMap(type -> this.getEntityKeyStream(multimap, mapper, type));
+    }
+
+    private Stream<UnmodifiableEntity> getPowerUpStream(final ClassToInstanceMultimap<Entity> multimap) {
+        return this.getEntityKeyStream(multimap, UnmodifiableEntityImpl::ofPowerUp, PowerUp.class);
+    }
+
+    private <E extends Entity> Stream<UnmodifiableEntity> getEntityKeyStream(final ClassToInstanceMultimap<Entity> multimap,
+                                                                             final Function<E, UnmodifiableEntity> mapper,
+                                                                             final Class<? extends E> key) {
+        return multimap.getInstances(key).parallelStream().map(mapper::apply);
     }
 }

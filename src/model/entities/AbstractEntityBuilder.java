@@ -156,7 +156,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     protected abstract E buildEntity();
 
     /**
-     * Method that allows the subclass of this class to get the {@link PowerUpType} set.
+     * Returns the {@link PowerUpType} set.
      * @return the {@link PowerUpType} set
      * @throws IllegalStateException if the {@link PowerUpType} for this {@link AbstractEntityBuilder} has not been set
      */
@@ -165,7 +165,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Method that allows the subclass of this class to get the walking distance set.
+     * Returns the walking distance set.
      * @return the walking distance set
      * @throws IllegalStateException if the walking distance for this {@link AbstractEntityBuilder} has not been set
      */
@@ -174,7 +174,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Method that allows the subclass of this class to get the {@link PhysicalFactory} set.
+     * Returns the {@link PhysicalFactory} set.
      * @return the {@link PhysicalFactory} set
      * @throws IllegalStateException if the PhysicalFactory for this {@link AbstractEntityBuilder} has not been set
      */
@@ -183,12 +183,54 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Method that allows the subclass of this class to get the {@link World} set.
+     * Returns the {@link World} set.
      * @return the {@link World} set
      * @throws IllegalStateException if the World for this {@link AbstractEntityBuilder} has not been set
      */
     protected ModifiableWorld getWorld() throws IllegalStateException {
         return this.returnIfPresent(this.world);
+    }
+
+
+    /**
+     * Returns a {@link StaticPhysicalBody} for the {@link model.entities.Entity} that will be created.
+     * @param type the {@link EntityType} of the {@link model.entities.Entity} that will be created
+     * @return the {@link StaticPhysicalBody} that the {@link model.entities.Entity} that will be created should contain
+     */
+    protected StaticPhysicalBody createStaticPhysicalBody(final EntityType type) {
+        return this.factory.get().createStaticPhysicalBody(this.center.get(), 
+                                                           this.angle.get(), 
+                                                           this.shape.get(), 
+                                                           this.dimensions.get().getLeft(), 
+                                                           this.dimensions.get().getRight(), 
+                                                           type,
+                                                           this.powerUpType);
+    }
+
+    /**
+     * Returns a {@link DynamicPhysicalBody} for the {@link model.entities.Entity} that will be created.
+     * @param type the {@link EntityType} of the {@link model.entities.Entity} that will be created
+     * @return the {@link DynamicPhysicalBody} that the {@link model.entities.Entity} that will be created should contain
+     */
+    protected DynamicPhysicalBody createDynamicPhysicalBody(final EntityType type) {
+        return this.factory.get().createDynamicPhysicalBody(this.center.get(), 
+                                                            this.angle.get(), 
+                                                            this.shape.get(), 
+                                                            this.dimensions.get().getLeft(), 
+                                                            this.dimensions.get().getRight(), 
+                                                            type);
+    }
+
+    /**
+     * Returns a {@link PlayerPhysicalBody} for the {@link model.entities.Entity} that will be created.
+     * @return the {@link PlayerPhysicalBody} that the {@link model.entities.Entity} that will be created should contain
+     */
+    protected PlayerPhysicalBody createPlayerPhysicalBody() {
+        return this.factory.get().createPlayerPhysicalBody(this.center.get(), 
+                                                           this.angle.get(), 
+                                                           this.shape.get(), 
+                                                           this.dimensions.get().getLeft(), 
+                                                           this.dimensions.get().getRight());
     }
 
     private <O> O returnIfPresent(final Optional<O> optional) {
@@ -214,46 +256,5 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
                && this.shape.isPresent()
                && this.angle.isPresent()
                && this.factory.isPresent();
-    }
-
-    /**
-     * Creates a {@link StaticPhysicalBody} for the {@link model.entities.Entity} that will be created.
-     * @param type the {@link EntityType} of the {@link model.entities.Entity} that will be created
-     * @return the {@link StaticPhysicalBody} that the {@link model.entities.Entity} that will be created should contain
-     */
-    protected StaticPhysicalBody createStaticPhysicalBody(final EntityType type) {
-        return this.factory.get().createStaticPhysicalBody(this.center.get(), 
-                                                           this.angle.get(), 
-                                                           this.shape.get(), 
-                                                           this.dimensions.get().getLeft(), 
-                                                           this.dimensions.get().getRight(), 
-                                                           type,
-                                                           this.powerUpType);
-    }
-
-    /**
-     * Creates a {@link DynamicPhysicalBody} for the {@link model.entities.Entity} that will be created.
-     * @param type the {@link EntityType} of the {@link model.entities.Entity} that will be created
-     * @return the {@link DynamicPhysicalBody} that the {@link model.entities.Entity} that will be created should contain
-     */
-    protected DynamicPhysicalBody createDynamicPhysicalBody(final EntityType type) {
-        return this.factory.get().createDynamicPhysicalBody(this.center.get(), 
-                                                            this.angle.get(), 
-                                                            this.shape.get(), 
-                                                            this.dimensions.get().getLeft(), 
-                                                            this.dimensions.get().getRight(), 
-                                                            type);
-    }
-
-    /**
-     * Creates a {@link PlayerPhysicalBody} for the {@link model.entities.Entity} that will be created.
-     * @return the {@link PlayerPhysicalBody} that the {@link model.entities.Entity} that will be created should contain
-     */
-    protected PlayerPhysicalBody createPlayerPhysicalBody() {
-        return this.factory.get().createPlayerPhysicalBody(this.center.get(), 
-                                                           this.angle.get(), 
-                                                           this.shape.get(), 
-                                                           this.dimensions.get().getLeft(), 
-                                                           this.dimensions.get().getRight());
     }
 }

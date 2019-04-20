@@ -103,14 +103,6 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
         return super.putAll(copy);
     }
 
-    /*
-     * Given an iterable and a type, checks if all the values inside the iterable are of the same type specified.
-     */
-    private void checkIterableValues(final Class<? extends B> type, final Iterable<? extends B> values) {
-        StreamSupport.stream(Objects.requireNonNull(values).spliterator(), true)
-                     .forEach(value -> this.cast(Objects.requireNonNull(type), value));
-    }
-
     /**
      * {@inheritDoc}
      * @throws ClassCastException if the values inside the iterable aren't all of the same type specified by key
@@ -149,5 +141,13 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
     @Override
     public <T extends B> boolean putInstance(final Class<T> type, final T value) {
         return this.put(Objects.requireNonNull(type), Objects.requireNonNull(value));
+    }
+
+    /*
+     * Given an iterable and a type, checks if all the values inside the iterable are of the same type specified.
+     */
+    private void checkIterableValues(final Class<? extends B> type, final Iterable<? extends B> values) {
+        StreamSupport.stream(Objects.requireNonNull(values).spliterator(), true)
+                     .forEach(value -> this.cast(Objects.requireNonNull(type), value));
     }
 }

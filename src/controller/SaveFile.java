@@ -31,7 +31,7 @@ public enum SaveFile {
     }
 
     /**
-     * Gets the path to the save file the value of this enumeration is associated to.
+     * Returns the path to the save file the value of this enumeration is associated to.
      * @return a string representing the path of the saved file the value of this enumeration is associated to
      */
     public String getSavePath() {
@@ -40,7 +40,7 @@ public enum SaveFile {
     }
 
     /**
-     * Gets the name of the file associated with the value of this enumeration.
+     * Returns the name of the file associated with the value of this enumeration.
      * @return a string representing the name of the file associated with this enumeration
      */
     public String getFileName() {

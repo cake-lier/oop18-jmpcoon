@@ -13,33 +13,33 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public interface Entity extends Serializable {
     /**
-     * Getter for the position of this {@link model.entities.Entity}.
+     * Returns the position of this {@link model.entities.Entity}.
      * @return the position of the entity, as a {@link Pair} where the first element is the x coordinate
      * and the second element is the y one of center of the {@link model.entities.Entity}
      */
     Pair<Double, Double> getPosition();
 
     /**
-     * Getter for the {@link BodyShape} of this {@link model.entities.Entity}.
+     * Returns the {@link BodyShape} of this {@link model.entities.Entity}.
      * @return the shape of this {@link model.entities.Entity}
      */
     BodyShape getShape();
 
     /**
-     * Getter for the angle of this {@link model.entities.Entity}.
+     * Returns the angle of this {@link model.entities.Entity}.
      * @return the angle of rotation around the center of the {@link model.entities.Entity} from its position aligned
      * with the coordinate system of the world calculated in radians counterclockwise
      */
     double getAngle();
 
     /**
-     * Getter for the {@link EntityType} of this {@link model.entities.Entity}.
+     * Returns the {@link EntityType} of this {@link model.entities.Entity}.
      * @return the type of this {@link model.entities.Entity}
      */
     EntityType getType();
 
     /**
-     * Getter for the {@link model.entities.EntityState} of this {@link model.entities.Entity}.
+     * Returns the {@link model.entities.EntityState} of this {@link model.entities.Entity}.
      * @return the state this {@link model.entities.Entity} is in
      */
     EntityState getState();
@@ -51,19 +51,19 @@ public interface Entity extends Serializable {
     boolean isAlive();
 
     /**
-     * Getter for the dimensions of this {@link model.entities.Entity}.
+     * Returns the dimensions of this {@link model.entities.Entity}.
      * @return the dimensions (width and height) of this {@link model.entities.Entity}
      */
     Pair<Double, Double> getDimensions();
 
     /**
-     * Getter for the velocity of this {@link model.entities.Entity}.
+     * Returns the velocity of this {@link model.entities.Entity}.
      * @return the velocity of this {@link model.entities.Entity}
      */
     Pair<Double, Double> getVelocity();
 
     /**
-     * Getter for the {@link PhysicalBody} of this {@link model.entities.Entity}.
+     * Returns the {@link PhysicalBody} of this {@link model.entities.Entity}.
      * @return the internal {@link PhysicalBody} inside this {@link model.entities.Entity}
      */
     PhysicalBody getPhysicalBody();

@@ -16,6 +16,9 @@ public abstract class StaticEntity extends AbstractEntity {
         super(body);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public abstract EntityType getType();
 }

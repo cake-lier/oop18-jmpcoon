@@ -34,7 +34,7 @@ public enum InputType {
     }
 
     /**
-     * Getter for the {@link MovementType} associated to this {@link InputType}.
+     * Returns the {@link MovementType} associated to this {@link InputType}.
      * @return the {@link MovementType} associated to this {@link InputType}
      */
     public MovementType getAssociatedMovementType() {
