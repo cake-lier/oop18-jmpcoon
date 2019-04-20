@@ -19,7 +19,6 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
 
     private double maxVelocityX = MAXVELOCITY_X;
     private double maxVelocityY = MAXVELOCITY_Y;
-
     private final SerializableBody body;
     private EntityState currentState;
 
@@ -98,10 +97,12 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
 
      /**
      * Modifies the maximum velocity of this {@link DynamicPhysicalBody} to a custom one.
+     * This method is protected because the physical parameters of a body shouldn't be changed 
+     * by classes that do not manage the physics of the game.
      * @param multiplierX the multiplier for the horizontal maximum velocity
      * @param multiplierY the multiplier for the vertical maximum velocity
      */
-    public void setMaxVelocity(final double multiplierX, final double multiplierY) {
+    protected void setMaxVelocity(final double multiplierX, final double multiplierY) {
         this.maxVelocityX = MAXVELOCITY_X * multiplierX;
         this.maxVelocityY = MAXVELOCITY_Y * multiplierY;
     }

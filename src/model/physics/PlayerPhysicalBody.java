@@ -69,15 +69,6 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     }
 
     /**
-     * Modifies the maximum velocity of this {@link PlayerPhysicalBody}.
-     * @param multiplierX the multiplier for the horizontal maximum velocity
-     * @param multiplierY the multiplier for the vertical maximum velocity
-     */
-    public void modifyMaxVelocity(final double multiplierX, final double multiplierY) {
-        this.setMaxVelocity(multiplierX, multiplierY);
-    }
-
-    /**
      * Registers a hit from an enemy on this {@link PlayerPhysicalBody} if it is not invulnerable to hits.
      * If the lives count reaches zero, the {@link PlayerPhysicalBody} dies.
      */
@@ -100,7 +91,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     }
 
     /**
-     * The effect of the Super Star {@link PowerUp} ends.
+     * The effect of the Invincibility {@link PowerUp} ends.
      */
     public void endInvincibility() {
         this.invincible = false;
@@ -113,5 +104,14 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
      */
     public void endInvulnerability() {
         this.invulnerable = false;
+    }
+
+    /*
+     * Modifies the maximum velocity of this {@link PlayerPhysicalBody}.
+     * multiplierX is the multiplier for the default horizontal maximum velocity
+     * multiplierY is the multiplier for the default vertical maximum velocity
+     */
+    private void modifyMaxVelocity(final double multiplierX, final double multiplierY) {
+        this.setMaxVelocity(multiplierX, multiplierY);
     }
 }
