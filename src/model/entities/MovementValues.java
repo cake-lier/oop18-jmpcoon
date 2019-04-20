@@ -23,7 +23,7 @@ enum MovementValues {
     }
 
     /**
-     * Returns the {@link MovementType} associated to this values.
+     * Returns the {@link MovementType} associated to this value.
      * @return the {@link MovementType} associated
      */
     public MovementType getMovementType() {

@@ -32,7 +32,6 @@ public interface PhysicalBody extends Serializable {
      */
     boolean exists();
 
-
     /**
      * @return the shape of this {@link PhysicalBody}
      */

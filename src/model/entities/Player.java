@@ -13,9 +13,9 @@ public final class Player extends DynamicEntity {
     private final PlayerPhysicalBody body;
 
     /**
-     * Creates a new {@link Player} with the given {@link DynamicPhysicalBody}. This constructor is package protected
+     * Creates a new {@link Player} with the given {@link PlayerPhysicalBody}. This constructor is package protected
      * because it should be only invoked by the {@link AbstractEntityBuilder} when creating a new instance of it and no one else.
-     * @param body the {@link DynamicPhysicalBody} that should be contained in this {@link Player}
+     * @param body the {@link PlayerPhysicalBody} that should be contained in this {@link Player}
      */
     Player(final PlayerPhysicalBody body) {
         super(body);
@@ -31,7 +31,7 @@ public final class Player extends DynamicEntity {
     }
 
     /**
-     * Moves the Player.
+     * Moves the player.
      * @param movement the {@link MovementType} to apply to this {@link Player}
      */
     public void move(final MovementType movement) {
@@ -43,7 +43,7 @@ public final class Player extends DynamicEntity {
     }
 
     /**
-     * Returns the number of lives of this Player.
+     * Returns the number of lives of this player.
      * @return the number of lives of this {@link Player}
      */
     public int getLives() {

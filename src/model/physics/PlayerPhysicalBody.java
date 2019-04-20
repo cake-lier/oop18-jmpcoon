@@ -9,7 +9,6 @@ import model.serializable.SerializableBody;
  */
 public class PlayerPhysicalBody extends DynamicPhysicalBody {
     private static final long serialVersionUID = -6099710781272943170L;
-
     private static final double INVINCIBILITY_VELOCITY_X = 1.60;
     private static final double INVINCIBILITY_VELOCITY_Y = 1.50;
 
@@ -32,14 +31,17 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     }
 
     /**
-     * @return true if {@link Player} is immune to hits.
+     * Returns true if {@link PlayerPhysicalBody} is immune to hits.
+     * @return true if player is immune to hits from enemies
      */
     public boolean isInvulnerable() {
         return this.invulnerable;
     }
-   /**
-     * When {@link PlayerPhysicalBody} is invincible, enemies that collide with it die.
-     * @return true if {@link Player} is invincible.
+
+    /**
+     * Returns true if {@link PlayerPhysicalBody} is invincible.
+     * When the player is invincible, enemies that collide with it die.
+     * @return true if the player is invincible.
      */
     public boolean isInvincible() {
         return this.invincible;
@@ -59,7 +61,8 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     }
 
     /**
-     * @return the number of lives of this {@link PlayerPhysicalBody}
+     * Returns the number of lives of this {@link PlayerPhysicalBody}.
+     * @return the number of lives of the player
      */
     public int getLives() {
         return this.lives;
@@ -75,7 +78,8 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     }
 
     /**
-     * If the {@link Player} is hit by and enemy, loses one life, and if the count goes to zero, the {@link Player} dies.
+     * Registers a hit from an enemy on this {@link PlayerPhysicalBody} if it is not invulnerable to hits.
+     * If the lives count reaches zero, the {@link PlayerPhysicalBody} dies.
      */
     public void hit() {
         if (!this.invulnerable) {
@@ -88,7 +92,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     }
 
     /**
-     * Kills the {@link Player}.
+     * Kills the {@link PlayerPhysicalBody}.
      */
     public void kill() {
         this.lives = 0;
@@ -104,8 +108,8 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     }
 
     /**
-     * Ends {@link Player} immunity, which is set after player takes one hit
-     * for a short period of time.
+     * Ends {@link PlayerPhysicalBody} immunity, which is set after player takes one hit
+     * and lasts for a short period of time.
      */
     public void endInvulnerability() {
         this.invulnerable = false;
