@@ -6,11 +6,11 @@ package model.entities;
  * be only used by the {@link Entity} associated with the {@link DynamicPhysicalBody} to be moved.
  */
 enum MovementValues {
-    CLIMB_DOWN(MovementType.CLIMB_DOWN, 0, -0.5),
-    CLIMB_UP(MovementType.CLIMB_UP, 0, 0.5),
-    JUMP(MovementType.JUMP, 0, 0.26),
-    MOVE_RIGHT(MovementType.MOVE_RIGHT, 0.5, 0),
-    MOVE_LEFT(MovementType.MOVE_LEFT, -0.5, 0);
+    CLIMB_DOWN(MovementType.CLIMB_DOWN, 0, -0.6),
+    CLIMB_UP(MovementType.CLIMB_UP, 0, 0.6),
+    JUMP(MovementType.JUMP, 0, 11),
+    MOVE_RIGHT(MovementType.MOVE_RIGHT, 1.1, 0),
+    MOVE_LEFT(MovementType.MOVE_LEFT, -1.1, 0);
 
     private final MovementType movementType;
     private final double impulseX;

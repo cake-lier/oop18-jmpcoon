@@ -9,8 +9,8 @@ import model.serializable.SerializableBody;
  */
 public class PlayerPhysicalBody extends DynamicPhysicalBody {
     private static final long serialVersionUID = -6099710781272943170L;
-    private static final double INVINCIBILITY_VELOCITY_X = 1.60;
-    private static final double INVINCIBILITY_VELOCITY_Y = 1.50;
+    private static final double INVINCIBILITY_VELOCITY_X = 2;
+    private static final double INVINCIBILITY_VELOCITY_Y = 2;
 
     private final SerializableBody body;
     private boolean invincible;

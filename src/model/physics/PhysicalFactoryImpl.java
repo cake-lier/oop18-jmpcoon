@@ -26,7 +26,8 @@ import model.world.NotifiableWorld;
 public class PhysicalFactoryImpl implements PhysicalFactory {
     private static final long serialVersionUID = -3251686827966500039L;
     private static final double PLATFORM_FRICTION = 0.25;
-    private static final double PLAYER_FRICTION = 0.1;
+    private static final double PLAYER_FRICTION = 0.8;
+    private static final double PLAYER_DENSITY = 48;
     private static final double ROLLING_ENEMY_ANGULAR_DAMPING = 1.2;
     private static final double ROLLING_ENEMY_GRAVITY_SCALE = 1.9;
     private static final double ROLLING_ENEMY_LINEAR_DAMPING = 0.5;
@@ -153,6 +154,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         switch (type) {
             case ROLLING_ENEMY:
                 body.getFixture(0).setFilter(ROLLING_ENEMY_FILTER);
+                body.getFixture(0).setFriction(0.5);
                 body.setMass(new Mass(body.getLocalCenter(), ROLLING_ENEMY_MASS, ROLLING_ENEMY_INERTIA));
                 body.setGravityScale(ROLLING_ENEMY_GRAVITY_SCALE);
                 body.setAngularDamping(ROLLING_ENEMY_ANGULAR_DAMPING);
@@ -160,7 +162,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
                 break;
             case WALKING_ENEMY:
                 body.getFixture(0).setFilter(WALKING_ENEMY_FILTER);
-                body.setMass(MassType.NORMAL);
+                body.setMass(MassType.FIXED_ANGULAR_VELOCITY);
                 break;
             default:
                 this.throwException(true, () -> new IllegalArgumentException(ILLEGAL_ENTITY_MSG));
@@ -185,6 +187,7 @@ public class PhysicalFactoryImpl implements PhysicalFactory {
         this.checkFixtureCount(body);
         body.getFixture(0).setFilter(PLAYER_FILTER);
         body.getFixture(0).setFriction(PLAYER_FRICTION);
+        body.getFixture(0).setDensity(PLAYER_DENSITY);
         body.setMass(MassType.FIXED_ANGULAR_VELOCITY);
         this.physicalWorld.get().getWorld().addBody(body);
         final PlayerPhysicalBody playerBody = new PlayerPhysicalBody(body);

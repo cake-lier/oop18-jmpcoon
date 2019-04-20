@@ -15,7 +15,7 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     private static final double PRECISION = 0.1;
     private static final double MAXVELOCITY_X = 1;
     private static final double MAXVELOCITY_Y = 0.5;
-    private static final double CLIMB_DAMPING = 3.7;
+    private static final double CLIMB_DAMPING = 7;
 
     private double maxVelocityX = MAXVELOCITY_X;
     private double maxVelocityY = MAXVELOCITY_Y;
