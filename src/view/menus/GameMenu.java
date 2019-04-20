@@ -13,7 +13,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import view.Sizes;
+import view.Ratios;
 import view.View;
 import view.ViewUtils;
 import view.game.GameView;
@@ -88,17 +88,17 @@ public final class GameMenu implements Menu {
     public void draw() {
         if (!this.drawn) {
             ViewUtils.drawFromURL(GAME_MENU_SRC, this, this.root);
-            Sizes.GAME_MENU_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.backMenuButton);
+            Ratios.GAME_MENU_BUTTONS.styleNodeToRatio(this.stageHeight, this.backMenuButton);
             this.backMenuButton.setOnMouseClicked(e -> {
                 this.gameView.clean();
                 this.appView.displayMenu();
             });
-            Sizes.GAME_MENU_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.quitButton);
+            Ratios.GAME_MENU_BUTTONS.styleNodeToRatio(this.stageHeight, this.quitButton);
             this.quitButton.setOnMouseClicked(e -> this.appController.exitApp());
-            Sizes.GAME_MENU_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.saveButton);
+            Ratios.GAME_MENU_BUTTONS.styleNodeToRatio(this.stageHeight, this.saveButton);
             this.saveButton.setOnMouseClicked(e -> ViewUtils.hideFirstNodeShowSecondNode(this.menu, this.saveMenu));
             ViewUtils.drawFromURL(SAVE_GAME_MENU_SRC, this, this.root);
-            Sizes.BACK_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.backButton);
+            Ratios.BACK_BUTTONS.styleNodeToRatio(this.stageHeight, this.backButton);
             this.backButton.setOnMouseClicked(e -> ViewUtils.hideFirstNodeShowSecondNode(this.saveMenu, this.menu));
             this.initSaveButton(this.firstSave, 0);
             this.initSaveButton(this.secondSave, 1);
@@ -111,7 +111,7 @@ public final class GameMenu implements Menu {
      * Initializes a generic save game button present in this menu.
      */
     private void initSaveButton(final Button save, final int saveFileIndex) {
-        Sizes.SAVE_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, save);
+        Ratios.SAVE_BUTTONS.styleNodeToRatio(this.stageHeight, save);
         if (this.appController.getSaveFileAvailability().get(saveFileIndex).isPresent()) {
             ViewUtils.setTextToTime(save, this.appController.getSaveFileAvailability().get(saveFileIndex).get());
             this.styleToOverwritableButton(save, saveFileIndex);

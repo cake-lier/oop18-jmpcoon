@@ -138,9 +138,9 @@ public final class EntityPropertiesImpl implements EntityProperties {
         }
         final EntityPropertiesImpl other = (EntityPropertiesImpl) obj;
         return Double.doubleToLongBits(this.angle) == Double.doubleToLongBits(other.angle)
-                && Objects.equals(this.position, other.position)
-                && Objects.equals(this.size, other.size)
-                && this.shape == other.shape && this.type == other.type;
+               && Objects.equals(this.position, other.position)
+               && Objects.equals(this.size, other.size)
+               && this.shape == other.shape && this.type == other.type;
     }
 
     /** 
@@ -148,7 +148,7 @@ public final class EntityPropertiesImpl implements EntityProperties {
      */
     @Override
     public String toString() {
-        return "EntityPropertiesImpl [type=" + this.type + ", shape=" + this.shape
-               + ", position=" + this.position + ", dimensions=" + this.size + ", angle=" + this.angle + "]";
+        return "EntityPropertiesImpl [type=" + this.type + ", shape=" + this.shape + ", position=" + this.position
+               + ", dimensions=" + this.size + ", angle=" + this.angle + "]";
     }
 }

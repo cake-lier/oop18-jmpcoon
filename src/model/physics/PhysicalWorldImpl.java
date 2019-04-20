@@ -1,8 +1,8 @@
 package model.physics;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -160,7 +160,7 @@ final class PhysicalWorldImpl implements PhysicalWorld {
      * {@inheritDoc}
      */
     @Override
-    public Set<Pair<PhysicalBody, Pair<Double, Double>>> getCollidingBodies(final PhysicalBody body) {
+    public Collection<Pair<PhysicalBody, Pair<Double, Double>>> getCollidingBodies(final PhysicalBody body) {
         final Body innerBody = this.physicalToBodyAssociations.get(body);
         return innerBody.getContacts(false)
                         .parallelStream()
@@ -194,7 +194,7 @@ final class PhysicalWorldImpl implements PhysicalWorld {
             if (player.isInvulnerable() && this.hitEnded()) {
                 player.endInvulnerability();
             }
-            if ((player.getPosition().getLeft() + player.getDimensions().getLeft() / 2 < 0)
+            if ((player.getPosition().getLeft() + player.getDimensions().getLeft() / 2) < 0
                 || (player.getPosition().getRight() + player.getDimensions().getRight() / 2) < 0) {
                     player.kill();
             }
@@ -231,9 +231,4 @@ final class PhysicalWorldImpl implements PhysicalWorld {
     private boolean counterEnded(final int currentValue) {
         return currentValue == 0;
     }
-
-  /*  private void readObject(final ObjectInputStream in) throws ClassNotFoundException, IOException {
-        in.defaultReadObject();
-        this.addPhysicalRules();
-    }*/
 }

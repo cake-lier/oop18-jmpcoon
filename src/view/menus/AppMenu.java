@@ -18,7 +18,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import view.Sizes;
+import view.Ratios;
 import view.ViewUtils;
 
 /**
@@ -116,51 +116,51 @@ public final class AppMenu implements Menu {
             this.stage.getScene().setRoot(root);
             ViewUtils.drawFromURL(MENU_LAYOUT, this, root);
             this.frontPage.setVisible(false);
-            Sizes.TITLE_RATIO.styleNodeToRatio(this.stageHeight, this.firstTitle);
-            Sizes.TITLE_RATIO.styleNodeToRatio(this.stageHeight, this.secondTitle);
-            Sizes.MAIN_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.startButton);
+            Ratios.TITLE.styleNodeToRatio(this.stageHeight, this.firstTitle);
+            Ratios.TITLE.styleNodeToRatio(this.stageHeight, this.secondTitle);
+            Ratios.MAIN_BUTTONS.styleNodeToRatio(this.stageHeight, this.startButton);
             this.startButton.setOnMouseClicked(e -> {
                 this.music.stop();
                 this.hide();
                 this.controller.startGame(Optional.absent());
             });
-            Sizes.MAIN_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.quitButton);
+            Ratios.MAIN_BUTTONS.styleNodeToRatio(this.stageHeight, this.quitButton);
             this.quitButton.setOnMouseClicked(e -> this.controller.exitApp());
             ViewUtils.drawFromURL(LOADER_LAYOUT, this, root);
             this.savesPage.setVisible(false);
             this.initLoadDeleteButton(this.firstSave, this.firstDelete, 0);
             this.initLoadDeleteButton(this.secondSave, this.secondDelete, 1);
             this.initLoadDeleteButton(this.thirdSave, this.thirdDelete, 2);
-            Sizes.BACK_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.backSavesButton);
+            Ratios.BACK_BUTTONS.styleNodeToRatio(this.stageHeight, this.backSavesButton);
             this.backSavesButton.setOnMouseClicked(e -> ViewUtils.hideFirstNodeShowSecondNode(this.savesPage, this.frontPage));
-            Sizes.MAIN_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.savesButton);
+            Ratios.MAIN_BUTTONS.styleNodeToRatio(this.stageHeight, this.savesButton);
             this.savesButton.setOnMouseClicked(e -> ViewUtils.hideFirstNodeShowSecondNode(this.frontPage, this.savesPage));
             ViewUtils.drawFromURL(SETTINGS_LAYOUT, this, root);
             this.settingsPage.setVisible(false);
-            Sizes.LABELS_RATIO.styleNodeToRatio(this.stageHeight, this.volumeLabel);
+            Ratios.LABELS.styleNodeToRatio(this.stageHeight, this.volumeLabel);
             this.volumeControl.setStyle(TICK_FONT_SIZE_PREF + this.stageHeight / TICK_RATIO + TICK_FONT_SIZE_SUFF);
             this.volumeControl.setValue(this.music.getVolume() * VOLUME_RATIO);
             this.volumeControl.valueProperty()
                               .addListener(e -> this.music.setVolume(this.volumeControl.getValue() / VOLUME_RATIO));
-            Sizes.LABELS_RATIO.styleNodeToRatio(this.stageHeight, this.muteLabel);
-            Sizes.MUTE_RATIO.styleNodeToRatio(this.stageHeight, this.muteCheck);
+            Ratios.LABELS.styleNodeToRatio(this.stageHeight, this.muteLabel);
+            Ratios.MUTE_TOGGLES.styleNodeToRatio(this.stageHeight, this.muteCheck);
             this.muteCheck.setSelected(this.music.isMute());
             this.muteCheck.setText(this.music.isMute() ? MUTED_LABEL : UNMUTED_LABEL);
             this.muteCheck.selectedProperty().addListener(e -> {
                 this.music.setMute(this.muteCheck.isSelected());
                 this.muteCheck.setText(this.muteCheck.isSelected() ? MUTED_LABEL : UNMUTED_LABEL);
             });
-            Sizes.BACK_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.backSettingsButton);
+            Ratios.BACK_BUTTONS.styleNodeToRatio(this.stageHeight, this.backSettingsButton);
             this.backSettingsButton.setOnMouseClicked(e -> ViewUtils.hideFirstNodeShowSecondNode(this.settingsPage, this.frontPage));
-            Sizes.MAIN_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, this.settingsButton);
+            Ratios.MAIN_BUTTONS.styleNodeToRatio(this.stageHeight, this.settingsButton);
             this.settingsButton.setOnMouseClicked(e -> ViewUtils.hideFirstNodeShowSecondNode(this.frontPage, this.settingsPage));
             this.drawn = true;
         }
     }
 
     private void initLoadDeleteButton(final Button load, final Button delete, final int saveFileIndex) {
-        Sizes.LOAD_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, load);
-        Sizes.DELETE_BUTTONS_RATIO.styleNodeToRatio(this.stageHeight, delete);
+        Ratios.LOAD_BUTTONS.styleNodeToRatio(this.stageHeight, load);
+        Ratios.DELETE_BUTTONS.styleNodeToRatio(this.stageHeight, delete);
         final Optional<Long> optTime = this.controller.getSaveFileAvailability().get(saveFileIndex);
         if (optTime.isPresent()) {
             ViewUtils.setTextToTime(load, optTime.get());

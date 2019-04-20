@@ -1,7 +1,7 @@
 package model.physics;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -27,10 +27,10 @@ public interface UpdatablePhysicalWorld extends Serializable {
      * Gets all bodies currently colliding with this {@link PhysicalBody} associated with the points in world coordinates in
      * which they are colliding with this body.
      * @param body the {@link PhysicalBody} from which to get all {@link PhysicalBody}s colliding with it
-     * @return a {@link Set} made with {@link Pair}s of a colliding {@link PhysicalBody} and the point in which is colliding with
-     * the passed {@link PhysicalBody}
+     * @return a {@link Collection} made with {@link Pair}s of a colliding {@link PhysicalBody} and the point in which is
+     * colliding with the passed {@link PhysicalBody}
      */
-    Set<Pair<PhysicalBody, Pair<Double, Double>>> getCollidingBodies(PhysicalBody body);
+    Collection<Pair<PhysicalBody, Pair<Double, Double>>> getCollidingBodies(PhysicalBody body);
 
     /**
      * Updates the current state of the {@link PhysicalWorld} by advancing to the next simulation step.

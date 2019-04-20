@@ -128,12 +128,6 @@ public final class WorldImpl implements World {
         this.aliveEntities.putInstance(RollingEnemy.class, generatedEnemy);
     }
 
-    private void checkInitialization() {
-        if (!this.initialized) {
-            throw new IllegalStateException(NO_INIT_MSG);
-        }
-    }
-
     /**
      * {@inheritDoc}
      * For first, it checks if the game has currently ended or not by checking if during this step the {@link Player} is no 
@@ -322,7 +316,16 @@ public final class WorldImpl implements World {
     @Override
     public int getPlayerLives() {
         this.checkInitialization();
-        return this.player.get().getLives();
+        return this.player.isPresent() ? this.player.get().getLives() : 0;
+    }
+
+    /*
+     * Checks if initialization has occurred and if not, throws an exception.
+     */
+    private void checkInitialization() {
+        if (!this.initialized) {
+            throw new IllegalStateException(NO_INIT_MSG);
+        }
     }
 
     /**

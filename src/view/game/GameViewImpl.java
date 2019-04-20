@@ -23,8 +23,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.entities.EntityType;
-import model.world.CollisionEvent;
+import view.Ratios;
 import view.View;
+import view.ViewUtils;
 import view.menus.GameMenu;
 import view.menus.Menu;
 
@@ -53,21 +54,18 @@ public final class GameViewImpl implements GameView {
     private static final String INIT_ERR = "You can't call this method before initializing the instance";
     private static final String BG_IMAGE = "images/bg_game.png";
     private static final String LAYOUT_PATH = "layouts/";
-    private static final String SCORE_SRC = LAYOUT_PATH + "score.fxml";
-    private static final String END_MSG_SRC = LAYOUT_PATH + "endMessage.fxml";
+    private static final String LAYOUT_EXT = ".fxml";
+    private static final String SCORE_SRC = LAYOUT_PATH + "score" + LAYOUT_EXT;
+    private static final String END_MSG_SRC = LAYOUT_PATH + "endMessage" + LAYOUT_EXT;
     private static final String WIN_COLOR = "#FFB100";
     private static final String LOSE_COLOR = "#BB29BB";
     private static final String SCORE_STR = "Score: ";
     private static final String LIVES_STR = " - Lives: ";
     private static final String WIN_MSG = "YOU WON";
     private static final String LOSE_MSG = "GAME OVER";
-    private static final String FONT_SIZE = "-fx-font-size: ";
     private static final String PADDING = "-fx-padding: ";
     private static final String SIZE_UNIT = "em";
-    private static final int SCORE_RATIO = 255;
     private static final int SCORE_PADDING_RATIO = 2500;
-    private static final int END_MSG_RATIO = 40;
-    private static final int END_BUTTONS_RATIO = 200;
 
     private final AppController appController;
     private final View appView;
@@ -84,7 +82,6 @@ public final class GameViewImpl implements GameView {
     private boolean isMenuVisible;
     private boolean isGameEnded;
     private boolean isInitialized;
-
     @FXML
     private Text score;
     @FXML
@@ -131,26 +128,12 @@ public final class GameViewImpl implements GameView {
         this.closeHandler = e -> this.gameController.stopGame();
     }
 
-    /*
-     * Checks if this instance has already been initialized and if not, throws an exception.
-     */
-    private void checkInitialization() {
-        if (!this.isInitialized) {
-            throw new IllegalStateException(INIT_ERR);
-        }
-    }
-
     /**
      * {@inheritDoc}
      */
     public void initialize(final Optional<Integer> saveFileIndex) {
         this.setupStage();
         this.gameMenu.draw();
-        Arrays.asList(Sounds.values()).parallelStream()
-                                      .map(value -> value.getSound())
-                                      .forEach(sound -> {
-                                          sound.setVolume(this.music.isMute() ? 0 : this.music.getVolume());
-                                      });
         if (saveFileIndex.isPresent()) {
             try {
                 this.gameController.loadGame(saveFileIndex.get());
@@ -180,7 +163,7 @@ public final class GameViewImpl implements GameView {
             final FlowPane scorePane = scoreLoader.load();
             scorePane.setStyle(PADDING + this.stage.getHeight() / SCORE_PADDING_RATIO + SIZE_UNIT);
             this.root.getChildren().add(scorePane);
-            this.score.setStyle(FONT_SIZE + this.stage.getHeight() / SCORE_RATIO + SIZE_UNIT);
+            Ratios.SCORES.styleNodeToRatio(this.stage.getHeight(), this.score);
         } catch (final IOException ex) {
             ex.printStackTrace();
         }
@@ -224,7 +207,13 @@ public final class GameViewImpl implements GameView {
         Platform.runLater(() -> {
             this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
             this.drawAliveEntities();
-            this.gameController.getCurrentEvents().forEach(e -> this.notifyEvent(e));
+            this.gameController.getCurrentEvents()
+                               .forEach(event -> Arrays.asList(Sounds.values())
+                                                       .parallelStream()
+                                                       .filter(sounds -> sounds.getAssociatedEvent().isPresent())
+                                                       .filter(eventSounds -> eventSounds.getAssociatedEvent().get() == event)
+                                                       .findFirst()
+                                                       .ifPresent(sound -> sound.getSound().play(this.music.getVolume())));
             this.score.setText(SCORE_STR + this.gameController.getCurrentScore() + LIVES_STR 
                                + this.gameController.getPlayerLives());
         });
@@ -265,8 +254,7 @@ public final class GameViewImpl implements GameView {
                   } else {
                       if (input.convert().isPresent()) {
                           final InputType type = input.convert().get();
-                          if (forward && this.gameController.processInput(type) 
-                              && type == InputType.UP && !this.music.isMute()) {
+                          if (forward && this.gameController.processInput(type) && type == InputType.UP) {
                               Sounds.JUMP.getSound().play(this.volume);
                           } else if (!forward) {
                               this.gameController.stopInput(type);
@@ -282,9 +270,7 @@ public final class GameViewImpl implements GameView {
     public void showGameOver() {
         this.checkInitialization();
         Platform.runLater(() -> {
-            if (!this.music.isMute()) {
-                Sounds.PLAYER_DEATH.getSound().play(this.volume);
-            }
+            Sounds.PLAYER_DEATH.getSound().play(this.music.getVolume());
             this.showMessage(LOSE_MSG);
         });
     }
@@ -295,10 +281,7 @@ public final class GameViewImpl implements GameView {
     public void showPlayerWin() {
         this.checkInitialization();
         Platform.runLater(() -> {
-            if (!this.music.isMute()) {
-                Sounds.END_GAME.getSound().setVolume(this.volume);
-                Sounds.END_GAME.getSound().play();
-            }
+            Sounds.END_GAME.getSound().play(this.music.getVolume());
             this.showMessage(WIN_MSG);
         });
     }
@@ -306,34 +289,28 @@ public final class GameViewImpl implements GameView {
     private void showMessage(final String msg) {
         this.isGameEnded = true;
         this.music.stop();
-        final FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource(END_MSG_SRC));
-        loader.setController(this);
-        try {
-            this.root.getChildren().add(loader.load());
-            this.message.setText(msg);
-            this.message.setStyle(FONT_SIZE + this.stage.getHeight() / END_MSG_RATIO + SIZE_UNIT);
-            if (msg.equals(WIN_MSG)) {
-                this.message.setFill(Color.web(WIN_COLOR));
-            } else if (msg.equals(LOSE_MSG)) {
-                this.message.setFill(Color.web(LOSE_COLOR));
-            }
-            this.finalBackMenuButton.setStyle(FONT_SIZE + this.stage.getHeight() / END_BUTTONS_RATIO + SIZE_UNIT);
-            this.finalBackMenuButton.setOnMouseClicked(e -> {
-                this.clean();
-                this.appView.displayMenu();
-            });
-            this.restartButton.setStyle(FONT_SIZE + this.stage.getHeight() / END_BUTTONS_RATIO + SIZE_UNIT);
-            this.restartButton.setOnMouseClicked(e -> {
-                this.mutableInitialization();
-                this.initialize(Optional.absent());
-                this.isGameEnded = false;
-                this.gameController.startGame();
-            });
-        } catch (final IOException ex) {
-            ex.printStackTrace();
-        }
+        ViewUtils.drawFromURL(END_MSG_SRC, this, this.root);
+        this.message.setText(msg);
+        Ratios.END_MESSAGES.styleNodeToRatio(this.stage.getHeight(), this.message);
+        this.message.setFill(msg.equals(WIN_MSG) ? Color.web(WIN_COLOR) : Color.web(LOSE_COLOR));
+        Ratios.END_BUTTONS.styleNodeToRatio(this.stage.getHeight(), this.finalBackMenuButton);
+        this.finalBackMenuButton.setOnMouseClicked(e -> {
+            this.clean();
+            this.appView.displayMenu();
+        });
+        Ratios.END_BUTTONS.styleNodeToRatio(this.stage.getHeight(), this.restartButton);
+        this.restartButton.setOnMouseClicked(e -> {
+            this.mutableInitialization();
+            this.initialize(Optional.absent());
+            this.isGameEnded = false;
+            this.gameController.startGame();
+       });
+       this.root.getChildren().get(this.root.getChildren().size() - 1).setVisible(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void clean() {
         this.checkInitialization();
@@ -341,30 +318,12 @@ public final class GameViewImpl implements GameView {
         this.stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this.closeHandler);
     }
 
-    private void notifyEvent(final CollisionEvent type) {
-        this.checkInitialization();
-        switch (type) {
-            case ROLLING_ENEMY_KILLED:
-                if (!this.music.isMute()) {
-                    Sounds.ROLLING_DESTROY.getSound().play(this.volume);
-                }
-                break;
-            case WALKING_ENEMY_KILLED:
-                if (!this.music.isMute()) {
-                    Sounds.WALKING_DESTROY.getSound().play(this.volume);
-                }
-                break;
-            case INVINCIBILITY_HIT:
-                if (!this.music.isMute()) {
-                    Sounds.INVINCIBIITY.getSound().play(this.volume);
-                }
-                break;
-            case POWER_UP_HIT:
-                if (!this.music.isMute()) {
-                    Sounds.POWER_UP_GOT.getSound().play(this.volume);
-                }
-                break;
-            default:
+    /*
+     * Checks if this instance has already been initialized and if not, throws an exception.
+     */
+    private void checkInitialization() {
+        if (!this.isInitialized) {
+            throw new IllegalStateException(INIT_ERR);
         }
     }
 }

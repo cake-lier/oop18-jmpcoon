@@ -47,7 +47,6 @@ public class PhysicalBodyCreationTest {
     private static final String SHOULD_BE_ADMISSIBLE_MSG = "This combination of EntityShape and EntityType should be admissible";
     private static final String SHOULD_NOT_BE_ADMISSIBLE_MSG = "This combination of EntityShape and EntityType should not be "
                                                                + "admissible";
-    private static final String NOT_NULL_MSG = "The message regarding the exception thrown is not present";
     private static final String EXCEPTION_THROWN_MSG = "This exception shouldn't have been launched";
     private static final String NULL_BODY_MSG = "Instead of a PhysicalBody, null was returned";
 
@@ -88,12 +87,11 @@ public class PhysicalBodyCreationTest {
             this.createStandardWalkingEnemy(physicalFactory);
             this.createStandardEnemyGenerator(physicalFactory);
             this.createStandardPowerUp(physicalFactory);
-        } catch (IllegalStateException | IllegalArgumentException e) {
+        } catch (final IllegalStateException | IllegalArgumentException e) {
             fail("No exception should have been launched");
         }
     }
 
-    // TODO: PMD signals an error because assert() and fail() are inside a lambda
     /**
      * Test for the creation of rectangular {@link StaticPhysicalBody}.
      */
@@ -102,18 +100,14 @@ public class PhysicalBodyCreationTest {
         final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
         final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
         physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        STATIC_TYPES.forEach(t -> {
-            if (this.allowedCombinations.get(t) == BodyShape.RECTANGLE) {
+        for (final EntityType type : STATIC_TYPES) {
+            if (this.allowedCombinations.get(type) == BodyShape.RECTANGLE) {
                 try {
-                    final StaticPhysicalBody body = physicalFactory.createStaticPhysicalBody(STD_POSITION, 
-                                                                                             0,
-                                                                                             BodyShape.RECTANGLE,
-                                                                                             STD_WIDTH,
-                                                                                             STD_HEIGHT,
-                                                                                             t,
-                                                                                             t == EntityType.POWERUP
-                                                                                                 ? Optional.of(PowerUpType.GOAL)
-                                                                                                 : Optional.absent());
+                    final StaticPhysicalBody body 
+                        = physicalFactory.createStaticPhysicalBody(STD_POSITION, 0, BodyShape.RECTANGLE, STD_WIDTH,
+                                                                   STD_HEIGHT, type, type == EntityType.POWERUP
+                                                                                     ? Optional.of(PowerUpType.GOAL)
+                                                                                     : Optional.absent());
                     assertNotNull(NULL_BODY_MSG, body);
                 } catch (final IllegalArgumentException e) {
                     fail(SHOULD_BE_ADMISSIBLE_MSG);
@@ -121,41 +115,32 @@ public class PhysicalBodyCreationTest {
                     fail(EXCEPTION_THROWN_MSG);
                 }
             }
-        });
+        }
     }
 
-    // TODO: PMD signals an error because assert() and fail() are inside a lambda
     /**
      * Test for the creation of circular {@link StaticPhysicalBody}.
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void staticNotAllowedCircularBodiesCreationTest() {
         final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
         final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
         physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        STATIC_TYPES.forEach(t -> {
-            if (this.allowedCombinations.get(t) == BodyShape.RECTANGLE) {
+        for (final EntityType type : STATIC_TYPES) {
+            if (this.allowedCombinations.get(type) == BodyShape.RECTANGLE) {
                 try {
-                    physicalFactory.createStaticPhysicalBody(STD_POSITION, 
-                                                             0,
-                                                             BodyShape.CIRCLE,
-                                                             STD_DIMENSION,
-                                                             STD_DIMENSION,
-                                                             t,
-                                                             t == EntityType.POWERUP
-                                                                 ? Optional.of(PowerUpType.GOAL)
-                                                                 : Optional.absent());
+                    physicalFactory.createStaticPhysicalBody(STD_POSITION, 0, BodyShape.CIRCLE, STD_DIMENSION, STD_DIMENSION,
+                                                             type, type == EntityType.POWERUP
+                                                                   ? Optional.of(PowerUpType.GOAL)
+                                                                   : Optional.absent());
                     fail(SHOULD_NOT_BE_ADMISSIBLE_MSG);
-                } catch (final IllegalArgumentException e) {
-                    assertNotNull(NOT_NULL_MSG, e.getMessage());
                 } catch (final IllegalStateException e1) {
                     fail(EXCEPTION_THROWN_MSG);
                 }
             }
-        });
+        }
     }
 
-    // TODO: PMD signals an error because assert() and fail() are inside a lambda
     /**
      * Test for the creation of circular {@link StaticPhysicalBody}.
      */
@@ -164,18 +149,14 @@ public class PhysicalBodyCreationTest {
         final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
         final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
         physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        STATIC_TYPES.forEach(t -> {
-            if (this.allowedCombinations.get(t) == BodyShape.CIRCLE) {
+        for (final EntityType type : STATIC_TYPES) {
+            if (this.allowedCombinations.get(type) == BodyShape.CIRCLE) {
                 try {
-                    final StaticPhysicalBody body = physicalFactory.createStaticPhysicalBody(STD_POSITION, 
-                                                                                             0,
-                                                                                             BodyShape.CIRCLE,
-                                                                                             STD_DIMENSION,
-                                                                                             STD_DIMENSION,
-                                                                                             t,
-                                                                                             t == EntityType.POWERUP
-                                                                                                 ? Optional.of(PowerUpType.GOAL)
-                                                                                                 : Optional.absent());
+                    final StaticPhysicalBody body 
+                        = physicalFactory.createStaticPhysicalBody(STD_POSITION, 0, BodyShape.CIRCLE, STD_DIMENSION,
+                                                                   STD_DIMENSION, type, type == EntityType.POWERUP
+                                                                                        ? Optional.of(PowerUpType.GOAL)
+                                                                                        : Optional.absent());
                     assertNotNull(NULL_BODY_MSG, body);
                 } catch (final IllegalArgumentException e) {
                     fail(SHOULD_BE_ADMISSIBLE_MSG);
@@ -183,41 +164,32 @@ public class PhysicalBodyCreationTest {
                     fail(EXCEPTION_THROWN_MSG);
                 }
             }
-        });
+        }
     }
 
-    // TODO: PMD signals an error because assert() and fail() are inside a lambda
     /**
      * Test for the creation of circular {@link StaticPhysicalBody}.
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void staticNotAllowedRectangularBodiesCreationTest() {
         final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
         final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
         physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        STATIC_TYPES.forEach(t -> {
-            if (this.allowedCombinations.get(t) == BodyShape.CIRCLE) {
+        for (final EntityType type : STATIC_TYPES) {
+            if (this.allowedCombinations.get(type) == BodyShape.CIRCLE) {
                 try {
-                    physicalFactory.createStaticPhysicalBody(STD_POSITION, 
-                                                             0,
-                                                             BodyShape.RECTANGLE,
-                                                             STD_WIDTH,
-                                                             STD_HEIGHT,
-                                                             t,
-                                                             t == EntityType.POWERUP
-                                                                 ? Optional.of(PowerUpType.GOAL)
-                                                                 : Optional.absent());
+                    physicalFactory.createStaticPhysicalBody(STD_POSITION,  0, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT,
+                                                             type, type == EntityType.POWERUP
+                                                                   ? Optional.of(PowerUpType.GOAL)
+                                                                   : Optional.absent());
                     fail(SHOULD_NOT_BE_ADMISSIBLE_MSG);
-                } catch (final IllegalArgumentException e) {
-                    assertNotNull(NOT_NULL_MSG, e.getMessage());
                 } catch (final IllegalStateException e1) {
                     fail(EXCEPTION_THROWN_MSG);
                 }
             }
-        });
+        }
     }
 
-    // TODO: PMD signals an error because assert() and fail() are inside a lambda
     /**
      * Test for the creation of rectangular {@link DynamicPhysicalBody}.
      */
@@ -226,15 +198,12 @@ public class PhysicalBodyCreationTest {
         final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
         final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
         physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        DYNAMIC_TYPES.forEach(t -> {
-            if (this.allowedCombinations.get(t) == BodyShape.RECTANGLE) {
+        for (final EntityType type : DYNAMIC_TYPES) {
+            if (this.allowedCombinations.get(type) == BodyShape.RECTANGLE) {
                 try {
-                    final DynamicPhysicalBody body = physicalFactory.createDynamicPhysicalBody(STD_POSITION, 
-                                                                                               0,
-                                                                                               BodyShape.RECTANGLE,
-                                                                                               STD_WIDTH,
-                                                                                               STD_HEIGHT,
-                                                                                               t);
+                    final DynamicPhysicalBody body 
+                        = physicalFactory.createDynamicPhysicalBody(STD_POSITION, 0, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT,
+                                                                    type);
                     assertNotNull(NULL_BODY_MSG, body);
                 } catch (final IllegalArgumentException e) {
                     fail(SHOULD_BE_ADMISSIBLE_MSG);
@@ -242,38 +211,30 @@ public class PhysicalBodyCreationTest {
                     fail(EXCEPTION_THROWN_MSG);
                 }
             }
-        });
+        }
     }
 
-    // TODO: PMD signals an error because assert() and fail() are inside a lambda
     /**
      * Test for the creation of circular {@link DynamicPhysicalBody}.
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void dynamicNotAllowedCircularBodiesCreationTest() {
         final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
         final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
         physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        DYNAMIC_TYPES.forEach(t -> {
-            if (this.allowedCombinations.get(t) == BodyShape.RECTANGLE) {
+        for (final EntityType type : DYNAMIC_TYPES) {
+            if (this.allowedCombinations.get(type) == BodyShape.RECTANGLE) {
                 try {
-                    physicalFactory.createDynamicPhysicalBody(STD_POSITION, 
-                                                             0,
-                                                             BodyShape.CIRCLE,
-                                                             STD_DIMENSION,
-                                                             STD_DIMENSION,
-                                                             t);
+                    physicalFactory.createDynamicPhysicalBody(STD_POSITION, 0, BodyShape.CIRCLE, STD_DIMENSION, STD_DIMENSION,
+                                                              type);
                     fail(SHOULD_NOT_BE_ADMISSIBLE_MSG);
-                } catch (final IllegalArgumentException e) {
-                    assertNotNull(NOT_NULL_MSG, e.getMessage());
                 } catch (final IllegalStateException e1) {
                     fail(EXCEPTION_THROWN_MSG);
                 }
             }
-        });
+        }
     }
 
-    // TODO: PMD signals an error because assert() and fail() are inside a lambda
     /**
      * Test for the creation of circular {@link DynamicPhysicalBody}.
      */
@@ -282,15 +243,12 @@ public class PhysicalBodyCreationTest {
         final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
         final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
         physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        DYNAMIC_TYPES.forEach(t -> {
-            if (this.allowedCombinations.get(t) == BodyShape.CIRCLE) {
+        for (final EntityType type : DYNAMIC_TYPES) {
+            if (this.allowedCombinations.get(type) == BodyShape.CIRCLE) {
                 try {
-                    final DynamicPhysicalBody body = physicalFactory.createDynamicPhysicalBody(STD_POSITION, 
-                                                                                             0,
-                                                                                             BodyShape.CIRCLE,
-                                                                                             STD_DIMENSION,
-                                                                                             STD_DIMENSION,
-                                                                                             t);
+                    final DynamicPhysicalBody body 
+                        = physicalFactory.createDynamicPhysicalBody(STD_POSITION, 0, BodyShape.CIRCLE, STD_DIMENSION,
+                                                                    STD_DIMENSION, type);
                     assertNotNull(NULL_BODY_MSG, body);
                 } catch (final IllegalArgumentException e) {
                     fail(SHOULD_BE_ADMISSIBLE_MSG);
@@ -298,41 +256,33 @@ public class PhysicalBodyCreationTest {
                     fail(EXCEPTION_THROWN_MSG);
                 }
             }
-        });
+        }
     }
 
-    // TODO: PMD signals an error because assert() and fail() are inside a lambda
     /**
      * Test for the creation of circular {@link StaticPhysicalBody}.
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void dynamicNotAllowedRectangularBodiesCreationTest() {
         final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
         final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
         physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        DYNAMIC_TYPES.forEach(t -> {
-            if (this.allowedCombinations.get(t) == BodyShape.CIRCLE) {
+        for (final EntityType type : DYNAMIC_TYPES) {
+            if (this.allowedCombinations.get(type) == BodyShape.CIRCLE) {
                 try {
-                    physicalFactory.createDynamicPhysicalBody(STD_POSITION, 
-                                                             0,
-                                                             BodyShape.RECTANGLE,
-                                                             STD_WIDTH,
-                                                             STD_HEIGHT,
-                                                             t);
+                    physicalFactory.createDynamicPhysicalBody(STD_POSITION, 0, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT, type);
                     fail(SHOULD_NOT_BE_ADMISSIBLE_MSG);
-                } catch (final IllegalArgumentException e) {
-                    assertNotNull(NOT_NULL_MSG, e.getMessage());
                 } catch (final IllegalStateException e1) {
                     fail(EXCEPTION_THROWN_MSG);
                 }
             }
-        });
+        }
     }
 
     /**
      * Test for the correct creation of a {@link PlayerPhysicalBody}.
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void playerBodyCreationTest() {
         final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
         final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
@@ -342,100 +292,60 @@ public class PhysicalBodyCreationTest {
         } catch (final IllegalArgumentException e) {
             fail(SHOULD_BE_ADMISSIBLE_MSG);
         }
-        try {
-            physicalFactory.createPlayerPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.CIRCLE, STD_WIDTH, STD_HEIGHT);
-            fail(SHOULD_NOT_BE_ADMISSIBLE_MSG);
-        } catch (final IllegalArgumentException e) {
-            assertNotNull(NOT_NULL_MSG, e.getMessage());
-        }
+        physicalFactory.createPlayerPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.CIRCLE, STD_WIDTH, STD_HEIGHT);
+        fail(SHOULD_NOT_BE_ADMISSIBLE_MSG);
     }
 
     /**
      * Test for the correct creation of a circular {@link PhysicalBody}.
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void circularBodyCreationTest() {
         final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
         final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
         physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
         try {
             physicalFactory.createDynamicPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.CIRCLE, 
-                                                        STD_WIDTH, STD_WIDTH, EntityType.ROLLING_ENEMY);
+                                                      STD_WIDTH, STD_WIDTH, EntityType.ROLLING_ENEMY);
         } catch (final IllegalArgumentException e) {
             fail("This exception shouldn't have been launched, width and height were the same");
         }
-        try {
-            physicalFactory.createDynamicPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.CIRCLE, 
-                                                        STD_WIDTH, STD_HEIGHT, EntityType.ROLLING_ENEMY);
-            fail("Width and height are not the same");
-        } catch (final IllegalArgumentException e) {
-            assertNotNull(NOT_NULL_MSG, e.getMessage());
-        }
+        physicalFactory.createDynamicPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.CIRCLE, 
+                                                  STD_WIDTH, STD_HEIGHT, EntityType.ROLLING_ENEMY);
+        fail("Width and height are not the same");
     }
 
     private PhysicalBody createStandardPlatform(final PhysicalFactory factory) {
-        return factory.createStaticPhysicalBody(STD_POSITION,
-                                                STD_ANGLE,
-                                                BodyShape.RECTANGLE,
-                                                STD_WIDTH,
-                                                STD_HEIGHT,
-                                                EntityType.PLATFORM,
-                                                Optional.absent());
+        return factory.createStaticPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.RECTANGLE, STD_WIDTH,  STD_HEIGHT,
+                                                EntityType.PLATFORM, Optional.absent());
     }
 
     private PhysicalBody createStandardLadder(final PhysicalFactory factory) {
-        return factory.createStaticPhysicalBody(STD_POSITION,
-                                                0,
-                                                BodyShape.RECTANGLE,
-                                                STD_WIDTH,
-                                                STD_HEIGHT,
-                                                EntityType.LADDER,
+        return factory.createStaticPhysicalBody(STD_POSITION, 0, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT, EntityType.LADDER,
                                                 Optional.absent());
     }
 
     private PhysicalBody createStandardEnemyGenerator(final PhysicalFactory factory) {
-        return factory.createStaticPhysicalBody(STD_POSITION,
-                                                0,
-                                                BodyShape.CIRCLE,
-                                                STD_WIDTH,
-                                                STD_WIDTH,
-                                                EntityType.ENEMY_GENERATOR,
-                                                Optional.absent());
+        return factory.createStaticPhysicalBody(STD_POSITION, 0, BodyShape.CIRCLE, STD_WIDTH, STD_WIDTH,
+                                                EntityType.ENEMY_GENERATOR, Optional.absent());
     }
 
     private PhysicalBody createStandardPowerUp(final PhysicalFactory factory) {
-        return factory.createStaticPhysicalBody(STD_POSITION,
-                                                0,
-                                                BodyShape.RECTANGLE,
-                                                STD_WIDTH,
-                                                STD_HEIGHT,
-                                                EntityType.POWERUP,
+        return factory.createStaticPhysicalBody(STD_POSITION, 0, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT, EntityType.POWERUP,
                                                 Optional.of(PowerUpType.EXTRA_LIFE));
     }
 
     private PhysicalBody createStandardPlayer(final PhysicalFactory factory) {
-        return factory.createPlayerPhysicalBody(STD_POSITION,
-                                                0,
-                                                BodyShape.RECTANGLE,
-                                                STD_WIDTH,
-                                                STD_HEIGHT);
+        return factory.createPlayerPhysicalBody(STD_POSITION, 0, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT);
     }
 
     private PhysicalBody createStandardRollingEnemy(final PhysicalFactory factory) {
-        return factory.createDynamicPhysicalBody(STD_POSITION,
-                                                 0,
-                                                 BodyShape.CIRCLE,
-                                                 STD_WIDTH,
-                                                 STD_WIDTH,
+        return factory.createDynamicPhysicalBody(STD_POSITION, 0, BodyShape.CIRCLE, STD_WIDTH, STD_WIDTH,
                                                  EntityType.ROLLING_ENEMY);
     }
 
     private PhysicalBody createStandardWalkingEnemy(final PhysicalFactory factory) {
-        return factory.createDynamicPhysicalBody(STD_POSITION,
-                                                 0,
-                                                 BodyShape.RECTANGLE,
-                                                 STD_WIDTH,
-                                                 STD_HEIGHT,
+        return factory.createDynamicPhysicalBody(STD_POSITION, 0, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT,
                                                  EntityType.WALKING_ENEMY);
     }
 }
