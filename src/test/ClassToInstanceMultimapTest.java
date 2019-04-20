@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Multimap;
@@ -27,6 +28,18 @@ public class ClassToInstanceMultimapTest {
     private final ClassToInstanceMultimap<Number> testMultimap = new ClassToInstanceMultimapImpl<>();
 
     /**
+     * Default initialization of a {@link ClassToInstanceMultimap}, it's emptied and then three dummy objects are added, 
+     * an {@link Integer} one and two {@link Double} ones.
+     */
+    @Before
+    public void initializeMultimap() {
+        this.testMultimap.clear();
+        this.testMultimap.putInstance(Integer.class, integer);
+        this.testMultimap.putInstance(Double.class, firstDouble);
+        this.testMultimap.putInstance(Double.class, secondDouble);
+    }
+
+    /**
      * Tests to check whether a newly created {@link ClassToInstanceMultimap} is initially empty or not.
      */
     @Test
@@ -41,24 +54,12 @@ public class ClassToInstanceMultimapTest {
     }
 
     /**
-     * Default initialization of a {@link ClassToInstanceMultimap}, it's emptied and then three dummy objects are added, 
-     * an {@link Integer} one and two {@link Double} ones.
-     */
-    private void initializeMultimap() {
-        this.testMultimap.clear();
-        this.testMultimap.putInstance(Integer.class, integer);
-        this.testMultimap.putInstance(Double.class, firstDouble);
-        this.testMultimap.putInstance(Double.class, secondDouble);
-    }
-
-    /**
      * Tests if the {@link ClassToInstanceMultimap} adds elements to itself correctly and return them as they originally were 
      * using {@link ClassToInstanceMultimap#putInstance(Class, Object)} and {@link ClassToInstanceMultimap#getInstances(Class)}
      * methods.
      */
     @Test
     public void instancesInsertionTest() {
-        this.initializeMultimap();
         assertEquals("There aren't three elements currently in the test multimap", 3, this.testMultimap.size());
         assertFalse("The multimap should not be empty", this.testMultimap.isEmpty());
         final Collection<Integer> integers = this.testMultimap.getInstances(Integer.class);
@@ -140,7 +141,6 @@ public class ClassToInstanceMultimapTest {
      */
     @Test
     public void removalTest() {
-        this.initializeMultimap();
         this.testMultimap.remove(Integer.class, this.integer);
         assertEquals("There aren't only two elements in the multimap now", 2, this.testMultimap.size());
         assertTrue("The two elements left aren't the two Double instances inserted before", 
@@ -159,7 +159,6 @@ public class ClassToInstanceMultimapTest {
      */
     @Test
     public void mapAndMultimapGettersTest() {
-        this.initializeMultimap();
         assertEquals("There aren't two distinct keys in the multimap",  2, this.testMultimap.keySet().size());
         assertTrue("The distinct keys in the multimap aren't the same as before",
                    this.testMultimap.keySet().containsAll(Arrays.asList(Integer.class, Double.class)));
@@ -194,7 +193,6 @@ public class ClassToInstanceMultimapTest {
      */
     @Test
     public void multimapToMapConversionTest() {
-        this.initializeMultimap();
         final Map<Class<? extends Number>, Collection<Number>> map = this.testMultimap.asMap();
         assertEquals("The distrinct keys in the map aren't in the same number as before", this.testMultimap.keySet().size(), 
                      map.keySet().size());
@@ -216,7 +214,6 @@ public class ClassToInstanceMultimapTest {
      */
     @Test
     public void containsMethodsTest() {
-        this.initializeMultimap();
         assertTrue("The multimap should contain the Integer class key", this.testMultimap.containsKey(Integer.class));
         assertFalse("The multimap shouldn't contain the Float class key", this.testMultimap.containsKey(Float.class));
         assertTrue("The multimap should contain the Double instance previously inserted",
@@ -236,7 +233,6 @@ public class ClassToInstanceMultimapTest {
      */
     @Test(expected = ClassCastException.class)
     public void replaceMethodTest() {
-        this.initializeMultimap();
         final Double newDouble = new Double(-1);
         this.testMultimap.replaceValues(Double.class, Arrays.asList(newDouble));
         assertEquals("There aren't two values in the multimap as it should be", 2, this.testMultimap.size());

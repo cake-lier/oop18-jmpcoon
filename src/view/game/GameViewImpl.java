@@ -72,7 +72,6 @@ public final class GameViewImpl implements GameView {
     private final Stage stage;
     private final Pane entities;
     private final MediaPlayer music;
-    private final double volume;
     private final EventHandler<KeyEvent> commandHandler;
     private EventHandler<WindowEvent> closeHandler;
     private GameController gameController;
@@ -104,7 +103,6 @@ public final class GameViewImpl implements GameView {
         this.appView = Objects.requireNonNull(view);
         this.music = Objects.requireNonNull(music);
         this.stage = Objects.requireNonNull(stage);
-        this.volume = this.music.getVolume();
         this.entities = new Pane();
         this.mutableInitialization();
         this.commandHandler = key -> this.processInput(key);
@@ -206,7 +204,7 @@ public final class GameViewImpl implements GameView {
      */
     @Override
     public void notifyJump() {
-        Platform.runLater(() -> Sounds.JUMP.getSound().play(this.volume)); 
+        Platform.runLater(() -> Sounds.JUMP.getSound().play(this.music.getVolume())); 
     }
 
     /*
@@ -297,7 +295,7 @@ public final class GameViewImpl implements GameView {
                       if (input.convert().isPresent()) {
                           final InputType type = input.convert().get();
                           if (forward && this.gameController.processInput(type) && type == InputType.UP) {
-                              Sounds.JUMP.getSound().play(this.volume);
+                              Sounds.JUMP.getSound().play(this.music.getVolume());
                           } else if (!forward) {
                               this.gameController.stopInput(type);
                           }

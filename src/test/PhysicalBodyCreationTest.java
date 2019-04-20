@@ -1,14 +1,9 @@
 package test;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Test;
@@ -18,52 +13,33 @@ import com.google.common.base.Optional;
 import model.entities.EntityType;
 import model.entities.PowerUpType;
 import model.physics.BodyShape;
-import model.physics.DynamicPhysicalBody;
 import model.physics.PhysicalBody;
 import model.physics.PhysicalFactory;
 import model.physics.PhysicalFactoryImpl;
-import model.physics.StaticPhysicalBody;
 import model.world.World;
 import model.world.WorldFactoryImpl;
-import model.world.WorldImpl;
 
 /**
- * Test for the creation of {@link PhyisicalBody}.
+ * Adjunctive tests over the creation of {@link PhysicalBody}s not covered into the {@link StaticPhysicalBodyCreationTest}
+ * and the {@link DynamicPhysicalBodyCreationTest} tests.
  */
 public class PhysicalBodyCreationTest {
     private static final double WORLD_WIDTH = 8;
     private static final double WORLD_HEIGHT = 4.5;
     private static final double STD_WIDTH = WORLD_WIDTH / 15;
     private static final double STD_HEIGHT = WORLD_HEIGHT / 15;
-    private static final double STD_ANGLE = Math.PI / 6;
-    private static final List<EntityType> STATIC_TYPES = Arrays.asList(EntityType.LADDER, 
-                                                                       EntityType.ENEMY_GENERATOR,
-                                                                       EntityType.POWERUP,
-                                                                       EntityType.PLATFORM);
-    private static final List<EntityType> DYNAMIC_TYPES = Arrays.asList(EntityType.ROLLING_ENEMY,
-                                                                        EntityType.WALKING_ENEMY);
     private static final ImmutablePair<Double, Double> STD_POSITION = new ImmutablePair<>(WORLD_WIDTH / 2, WORLD_HEIGHT / 2);
-    private static final double STD_DIMENSION = WORLD_WIDTH / 8;
-    private static final String SHOULD_BE_ADMISSIBLE_MSG = "This combination of EntityShape and EntityType should be admissible";
-    private static final String SHOULD_NOT_BE_ADMISSIBLE_MSG = "This combination of EntityShape and EntityType should not be "
-                                                               + "admissible";
-    private static final String EXCEPTION_THROWN_MSG = "This exception shouldn't have been launched";
-    private static final String NULL_BODY_MSG = "Instead of a PhysicalBody, null was returned";
+    private static final double STD_ANGLE = Math.PI / 6;
+    private static final String NOT_CONSIDERED_MSG = "Not all possible types have been considered";
 
-    private final Map<EntityType, BodyShape> allowedCombinations;
- 
+    private final PhysicalFactory factory;
+
     /**
-     * Builds a new {@link PhysicalBodyCreationTest}.
+     * Constructor for this test over {@link PhysicalBody}s.
      */
     public PhysicalBodyCreationTest() {
-        this.allowedCombinations = new HashMap<>();
-        this.allowedCombinations.put(EntityType.LADDER, BodyShape.RECTANGLE);
-        this.allowedCombinations.put(EntityType.PLATFORM, BodyShape.RECTANGLE);
-        this.allowedCombinations.put(EntityType.ENEMY_GENERATOR, BodyShape.CIRCLE);
-        this.allowedCombinations.put(EntityType.POWERUP, BodyShape.RECTANGLE);
-        this.allowedCombinations.put(EntityType.PLAYER, BodyShape.RECTANGLE);
-        this.allowedCombinations.put(EntityType.ROLLING_ENEMY, BodyShape.CIRCLE);
-        this.allowedCombinations.put(EntityType.WALKING_ENEMY, BodyShape.RECTANGLE);
+        this.factory = new PhysicalFactoryImpl();
+        this.factory.createPhysicalWorld(World.class.cast(new WorldFactoryImpl().create()), WORLD_WIDTH, WORLD_HEIGHT);
     }
 
     /**
@@ -71,252 +47,56 @@ public class PhysicalBodyCreationTest {
      */
     @Test
     public void correctClassInitialization() {
-        final List<EntityType> consideredTypes = new LinkedList<>(STATIC_TYPES);
-        consideredTypes.addAll(DYNAMIC_TYPES);
-        consideredTypes.add(EntityType.PLAYER);
-        assertTrue("Not all possible types have been considered", 
-                   consideredTypes.containsAll(Arrays.asList(EntityType.values())));
-        final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
-        final World world = World.class.cast(new WorldFactoryImpl().create());
-        physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        try {
-            this.createStandardPlatform(physicalFactory);
-            this.createStandardLadder(physicalFactory);
-            this.createStandardPlayer(physicalFactory);
-            this.createStandardRollingEnemy(physicalFactory);
-            this.createStandardWalkingEnemy(physicalFactory);
-            this.createStandardEnemyGenerator(physicalFactory);
-            this.createStandardPowerUp(physicalFactory);
-        } catch (final IllegalStateException | IllegalArgumentException e) {
-            fail("No exception should have been launched");
-        }
+        final List<EntityType> consideredTypes = Arrays.asList(EntityType.LADDER, EntityType.ENEMY_GENERATOR, 
+                                                               EntityType.POWERUP, EntityType.PLATFORM, EntityType.ROLLING_ENEMY,
+                                                               EntityType.WALKING_ENEMY, EntityType.PLAYER);
+        assertTrue(NOT_CONSIDERED_MSG, consideredTypes.containsAll(Arrays.asList(EntityType.values())));
+        this.createStandardPlatform(this.factory);
+        this.createStandardLadder(this.factory);
+        this.createStandardPlayer(this.factory);
+        this.createStandardRollingEnemy(this.factory);
+        this.createStandardWalkingEnemy(this.factory);
+        this.createStandardEnemyGenerator(this.factory);
+        this.createStandardPowerUp(this.factory);
     }
 
     /**
-     * Test for the creation of rectangular {@link StaticPhysicalBody}.
+     * Test for the correct creation of a {@link PlayerPhysicalBody} which has a rectangular shape.
      */
     @Test
-    public void staticAllowedRectangularBodiesCreationTest() {
-        final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
-        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
-        physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        for (final EntityType type : STATIC_TYPES) {
-            if (this.allowedCombinations.get(type) == BodyShape.RECTANGLE) {
-                try {
-                    final StaticPhysicalBody body 
-                        = physicalFactory.createStaticPhysicalBody(STD_POSITION, 0, BodyShape.RECTANGLE, STD_WIDTH,
-                                                                   STD_HEIGHT, type, type == EntityType.POWERUP
-                                                                                     ? Optional.of(PowerUpType.GOAL)
-                                                                                     : Optional.absent());
-                    assertNotNull(NULL_BODY_MSG, body);
-                } catch (final IllegalArgumentException e) {
-                    fail(SHOULD_BE_ADMISSIBLE_MSG);
-                } catch (final IllegalStateException e1) {
-                    fail(EXCEPTION_THROWN_MSG);
-                }
-            }
-        }
+    public void allowedPlayerBodyCreationTest() {
+        this.factory.createPlayerPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT);
     }
 
     /**
-     * Test for the creation of circular {@link StaticPhysicalBody}.
+     * Test for the correct failure resulting from creation of a {@link PlayerPhysicalBody} with a circular shape.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void staticNotAllowedCircularBodiesCreationTest() {
-        final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
-        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
-        physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        for (final EntityType type : STATIC_TYPES) {
-            if (this.allowedCombinations.get(type) == BodyShape.RECTANGLE) {
-                try {
-                    physicalFactory.createStaticPhysicalBody(STD_POSITION, 0, BodyShape.CIRCLE, STD_DIMENSION, STD_DIMENSION,
-                                                             type, type == EntityType.POWERUP
-                                                                   ? Optional.of(PowerUpType.GOAL)
-                                                                   : Optional.absent());
-                    fail(SHOULD_NOT_BE_ADMISSIBLE_MSG);
-                } catch (final IllegalStateException e1) {
-                    fail(EXCEPTION_THROWN_MSG);
-                }
-            }
-        }
+    public void notAllowedPlayerBodyCreationTest() {
+        this.factory.createPlayerPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.CIRCLE, STD_WIDTH, STD_HEIGHT);
     }
 
     /**
-     * Test for the creation of circular {@link StaticPhysicalBody}.
+     * Test for the creation of a circular {@link PhysicalBody} with the correct size, that is with same width and height.
      */
     @Test
-    public void staticAllowedCircularBodiesCreationTest() {
-        final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
-        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
-        physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        for (final EntityType type : STATIC_TYPES) {
-            if (this.allowedCombinations.get(type) == BodyShape.CIRCLE) {
-                try {
-                    final StaticPhysicalBody body 
-                        = physicalFactory.createStaticPhysicalBody(STD_POSITION, 0, BodyShape.CIRCLE, STD_DIMENSION,
-                                                                   STD_DIMENSION, type, type == EntityType.POWERUP
-                                                                                        ? Optional.of(PowerUpType.GOAL)
-                                                                                        : Optional.absent());
-                    assertNotNull(NULL_BODY_MSG, body);
-                } catch (final IllegalArgumentException e) {
-                    fail(SHOULD_BE_ADMISSIBLE_MSG);
-                } catch (final IllegalStateException e1) {
-                    fail(EXCEPTION_THROWN_MSG);
-                }
-            }
-        }
+    public void correctlySizedCircularBodyCreationTest() {
+        this.factory.createDynamicPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.CIRCLE, 
+                                               STD_WIDTH, STD_WIDTH, EntityType.ROLLING_ENEMY);
     }
 
     /**
-     * Test for the creation of circular {@link StaticPhysicalBody}.
+     * Test for the correct failure resulting from creation of a circular {@link PhysicalBody} with the wrong size, that is
+     * with same width different from height.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void staticNotAllowedRectangularBodiesCreationTest() {
-        final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
-        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
-        physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        for (final EntityType type : STATIC_TYPES) {
-            if (this.allowedCombinations.get(type) == BodyShape.CIRCLE) {
-                try {
-                    physicalFactory.createStaticPhysicalBody(STD_POSITION,  0, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT,
-                                                             type, type == EntityType.POWERUP
-                                                                   ? Optional.of(PowerUpType.GOAL)
-                                                                   : Optional.absent());
-                    fail(SHOULD_NOT_BE_ADMISSIBLE_MSG);
-                } catch (final IllegalStateException e1) {
-                    fail(EXCEPTION_THROWN_MSG);
-                }
-            }
-        }
-    }
-
-    /**
-     * Test for the creation of rectangular {@link DynamicPhysicalBody}.
-     */
-    @Test
-    public void dynamicAllowedRectangularBodiesCreationTest() {
-        final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
-        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
-        physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        for (final EntityType type : DYNAMIC_TYPES) {
-            if (this.allowedCombinations.get(type) == BodyShape.RECTANGLE) {
-                try {
-                    final DynamicPhysicalBody body 
-                        = physicalFactory.createDynamicPhysicalBody(STD_POSITION, 0, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT,
-                                                                    type);
-                    assertNotNull(NULL_BODY_MSG, body);
-                } catch (final IllegalArgumentException e) {
-                    fail(SHOULD_BE_ADMISSIBLE_MSG);
-                } catch (final IllegalStateException e1) {
-                    fail(EXCEPTION_THROWN_MSG);
-                }
-            }
-        }
-    }
-
-    /**
-     * Test for the creation of circular {@link DynamicPhysicalBody}.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void dynamicNotAllowedCircularBodiesCreationTest() {
-        final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
-        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
-        physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        for (final EntityType type : DYNAMIC_TYPES) {
-            if (this.allowedCombinations.get(type) == BodyShape.RECTANGLE) {
-                try {
-                    physicalFactory.createDynamicPhysicalBody(STD_POSITION, 0, BodyShape.CIRCLE, STD_DIMENSION, STD_DIMENSION,
-                                                              type);
-                    fail(SHOULD_NOT_BE_ADMISSIBLE_MSG);
-                } catch (final IllegalStateException e1) {
-                    fail(EXCEPTION_THROWN_MSG);
-                }
-            }
-        }
-    }
-
-    /**
-     * Test for the creation of circular {@link DynamicPhysicalBody}.
-     */
-    @Test
-    public void dynamicAllowedCircularBodiesCreationTest() {
-        final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
-        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
-        physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        for (final EntityType type : DYNAMIC_TYPES) {
-            if (this.allowedCombinations.get(type) == BodyShape.CIRCLE) {
-                try {
-                    final DynamicPhysicalBody body 
-                        = physicalFactory.createDynamicPhysicalBody(STD_POSITION, 0, BodyShape.CIRCLE, STD_DIMENSION,
-                                                                    STD_DIMENSION, type);
-                    assertNotNull(NULL_BODY_MSG, body);
-                } catch (final IllegalArgumentException e) {
-                    fail(SHOULD_BE_ADMISSIBLE_MSG);
-                } catch (final IllegalStateException e1) {
-                    fail(EXCEPTION_THROWN_MSG);
-                }
-            }
-        }
-    }
-
-    /**
-     * Test for the creation of circular {@link StaticPhysicalBody}.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void dynamicNotAllowedRectangularBodiesCreationTest() {
-        final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
-        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
-        physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        for (final EntityType type : DYNAMIC_TYPES) {
-            if (this.allowedCombinations.get(type) == BodyShape.CIRCLE) {
-                try {
-                    physicalFactory.createDynamicPhysicalBody(STD_POSITION, 0, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT, type);
-                    fail(SHOULD_NOT_BE_ADMISSIBLE_MSG);
-                } catch (final IllegalStateException e1) {
-                    fail(EXCEPTION_THROWN_MSG);
-                }
-            }
-        }
-    }
-
-    /**
-     * Test for the correct creation of a {@link PlayerPhysicalBody}.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void playerBodyCreationTest() {
-        final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
-        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
-        physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        try {
-            physicalFactory.createPlayerPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT);
-        } catch (final IllegalArgumentException e) {
-            fail(SHOULD_BE_ADMISSIBLE_MSG);
-        }
-        physicalFactory.createPlayerPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.CIRCLE, STD_WIDTH, STD_HEIGHT);
-        fail(SHOULD_NOT_BE_ADMISSIBLE_MSG);
-    }
-
-    /**
-     * Test for the correct creation of a circular {@link PhysicalBody}.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void circularBodyCreationTest() {
-        final PhysicalFactory physicalFactory = new PhysicalFactoryImpl();
-        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
-        physicalFactory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
-        try {
-            physicalFactory.createDynamicPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.CIRCLE, 
-                                                      STD_WIDTH, STD_WIDTH, EntityType.ROLLING_ENEMY);
-        } catch (final IllegalArgumentException e) {
-            fail("This exception shouldn't have been launched, width and height were the same");
-        }
-        physicalFactory.createDynamicPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.CIRCLE, 
-                                                  STD_WIDTH, STD_HEIGHT, EntityType.ROLLING_ENEMY);
-        fail("Width and height are not the same");
+    public void outOfSizeCircularBodyCreationTest() {
+        this.factory.createDynamicPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.CIRCLE, 
+                                               STD_WIDTH, STD_HEIGHT, EntityType.ROLLING_ENEMY);
     }
 
     private PhysicalBody createStandardPlatform(final PhysicalFactory factory) {
-        return factory.createStaticPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.RECTANGLE, STD_WIDTH,  STD_HEIGHT,
+        return factory.createStaticPhysicalBody(STD_POSITION, STD_ANGLE, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT,
                                                 EntityType.PLATFORM, Optional.absent());
     }
 
