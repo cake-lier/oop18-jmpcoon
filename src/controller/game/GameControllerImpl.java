@@ -19,10 +19,13 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import model.entities.EntityProperties;
+import model.entities.MovementType;
 import model.entities.UnmodifiableEntity;
 import model.world.CollisionEvent;
 import model.world.UpdatableWorld;
 import model.world.WorldFactoryImpl;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Sets;
@@ -203,10 +206,12 @@ public class GameControllerImpl implements GameController {
             this.gameView.showPlayerWin();
             this.stopGame();
         } else {
-            this.inputs.stream()
-                       .map(i -> i.getAssociatedMovementType()) 
-                       .forEach(this.gameWorld::movePlayer);
             this.gameWorld.update();
+            this.inputs.stream()
+                       .map(i -> i.getAssociatedMovementType())
+                       .map(m -> new ImmutablePair<MovementType, Boolean>(m, this.gameWorld.movePlayer(m)))
+                       .filter(p -> p.getRight() && p.getLeft() == MovementType.JUMP)
+                       .forEach(p -> this.gameView.notifyJump());
             this.gameView.update();
         }
     }

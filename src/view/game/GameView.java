@@ -34,4 +34,9 @@ public interface GameView {
      * created. It should be used only after putting it in an "unusable" state, such as removing it, deleting it, etc.
      */
     void clean();
+
+    /**
+     * Signals to the GameView that a jump happened in the model.
+     */
+    void notifyJump();
 }

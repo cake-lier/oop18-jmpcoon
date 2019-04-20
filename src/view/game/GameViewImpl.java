@@ -142,9 +142,71 @@ public final class GameViewImpl implements GameView {
             }
         }
         this.drawAliveEntities();
-        // this.music.play();
+        this.music.play();
         this.isInitialized = true;
         this.gameController.startGame();
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    public void update() {
+        this.checkInitialization();
+        Platform.runLater(() -> {
+            this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
+            this.drawAliveEntities();
+            this.gameController.getCurrentEvents()
+                               .forEach(event -> Arrays.asList(Sounds.values())
+                                                       .parallelStream()
+                                                       .filter(sounds -> sounds.getAssociatedEvent().isPresent())
+                                                       .filter(eventSounds -> eventSounds.getAssociatedEvent().get() == event)
+                                                       .findFirst()
+                                                       .ifPresent(sound -> sound.getSound().play(this.music.getVolume())));
+            this.score.setText(SCORE_STR + this.gameController.getCurrentScore() + LIVES_STR 
+                               + this.gameController.getPlayerLives());
+        });
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public void showGameOver() {
+        this.checkInitialization();
+        Platform.runLater(() -> {
+            Sounds.PLAYER_DEATH.getSound().play(this.music.getVolume());
+            this.showMessage(LOSE_MSG);
+        });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void showPlayerWin() {
+        this.checkInitialization();
+        Platform.runLater(() -> {
+            Sounds.END_GAME.getSound().play(this.music.getVolume());
+            this.showMessage(WIN_MSG);
+        });
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void clean() {
+        this.checkInitialization();
+        this.stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
+        this.stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this.closeHandler);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void notifyJump() {
+        Platform.runLater(() -> Sounds.JUMP.getSound().play(this.volume)); 
     }
 
     /*
@@ -177,7 +239,7 @@ public final class GameViewImpl implements GameView {
         this.stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, this.commandHandler);
     }
 
-    /**
+    /*
      * Draws only the alive entities of the specified types.
      */
     private void drawAliveEntities() {
@@ -197,26 +259,6 @@ public final class GameViewImpl implements GameView {
                                   .filter(entity -> entity.getEntityType() == type)
                                   .map(DrawableEntity::getImageView)
                                   .collect(Collectors.toList());
-    }
-
-    /**
-     *{@inheritDoc}
-     */
-    public void update() {
-        this.checkInitialization();
-        Platform.runLater(() -> {
-            this.entityConverter.removeUnusedEntities(this.gameController.getDeadEntities());
-            this.drawAliveEntities();
-            this.gameController.getCurrentEvents()
-                               .forEach(event -> Arrays.asList(Sounds.values())
-                                                       .parallelStream()
-                                                       .filter(sounds -> sounds.getAssociatedEvent().isPresent())
-                                                       .filter(eventSounds -> eventSounds.getAssociatedEvent().get() == event)
-                                                       .findFirst()
-                                                       .ifPresent(sound -> sound.getSound().play(this.music.getVolume())));
-            this.score.setText(SCORE_STR + this.gameController.getCurrentScore() + LIVES_STR 
-                               + this.gameController.getPlayerLives());
-        });
     }
 
     private void processInput(final KeyEvent event) {
@@ -264,28 +306,6 @@ public final class GameViewImpl implements GameView {
               });
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void showGameOver() {
-        this.checkInitialization();
-        Platform.runLater(() -> {
-            Sounds.PLAYER_DEATH.getSound().play(this.music.getVolume());
-            this.showMessage(LOSE_MSG);
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void showPlayerWin() {
-        this.checkInitialization();
-        Platform.runLater(() -> {
-            Sounds.END_GAME.getSound().play(this.music.getVolume());
-            this.showMessage(WIN_MSG);
-        });
-    }
-
     private void showMessage(final String msg) {
         this.isGameEnded = true;
         this.music.stop();
@@ -306,16 +326,6 @@ public final class GameViewImpl implements GameView {
             this.gameController.startGame();
        });
        this.root.getChildren().get(this.root.getChildren().size() - 1).setVisible(true);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void clean() {
-        this.checkInitialization();
-        this.stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
-        this.stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this.closeHandler);
     }
 
     /*

@@ -181,7 +181,6 @@ public final class WorldImpl implements World {
                             || (playerState == EntityState.CLIMBING_UP || playerState == EntityState.CLIMBING_DOWN)))
                     || ((movement == MovementType.MOVE_LEFT || movement == MovementType.MOVE_RIGHT)
                         && (playerState != EntityState.CLIMBING_DOWN && playerState != EntityState.CLIMBING_UP)))) {
-                System.out.println(movement);
                 this.player.get().move(movement);
                 return true;
             }

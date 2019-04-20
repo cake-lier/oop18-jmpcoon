@@ -1,5 +1,7 @@
 package model.entities;
 
+import java.util.Arrays;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import model.physics.BodyShape;
@@ -143,7 +145,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
      * has already been built
      */
     public E build() throws IllegalStateException {
-        this.checkIfbuildable();
+        this.checkIfBuildable();
         this.built = true;
         return this.buildEntity();
     }
@@ -157,38 +159,34 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
 
     /**
      * Returns the {@link PowerUpType} set.
-     * @return the {@link PowerUpType} set
-     * @throws IllegalStateException if the {@link PowerUpType} for this {@link AbstractEntityBuilder} has not been set
+     * @return an {@link Optional} containing the {@link PowerUpType} set if it was set, an empty Optional otherwise.
      */
-    protected PowerUpType getPowerUpType() throws IllegalStateException {
-        return this.returnIfPresent(this.powerUpType);
+    protected Optional<PowerUpType> getPowerUpType() {
+        return this.powerUpType;
     }
 
     /**
      * Returns the walking distance set.
-     * @return the walking distance set
-     * @throws IllegalStateException if the walking distance for this {@link AbstractEntityBuilder} has not been set
+     * @return an {@link Optional} containing the walking range set if it was set, an empty Optional otherwise.
      */
-    protected double getWalkingRange() throws IllegalStateException {
-        return this.returnIfPresent(this.walkingRange);
+    protected Optional<Double> getWalkingRange() {
+        return this.walkingRange;
     }
 
     /**
      * Returns the {@link PhysicalFactory} set.
-     * @return the {@link PhysicalFactory} set
-     * @throws IllegalStateException if the PhysicalFactory for this {@link AbstractEntityBuilder} has not been set
+     * @return an {@link Optional} containing the {@link PhysicalFactory} set if it was set, an empty Optional otherwise.
      */
-    protected PhysicalFactory getPhysicalFactory() throws IllegalStateException {
-        return this.returnIfPresent(this.factory);
+    protected Optional<PhysicalFactory> getPhysicalFactory() {
+        return this.factory;
     }
 
     /**
      * Returns the {@link World} set.
-     * @return the {@link World} set
-     * @throws IllegalStateException if the World for this {@link AbstractEntityBuilder} has not been set
+     * @return an {@link Optional} containing the {@link ModifiableWorld} set if it was set, an empty Optional otherwise.
      */
-    protected ModifiableWorld getWorld() throws IllegalStateException {
-        return this.returnIfPresent(this.world);
+    protected Optional<ModifiableWorld> getWorld() {
+        return this.world;
     }
 
 
@@ -233,28 +231,16 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
                                                            this.dimensions.get().getRight());
     }
 
-    private <O> O returnIfPresent(final Optional<O> optional) {
-        if (optional.isPresent()) {
-            return optional.get();
-        } else {
-            throw new IllegalStateException(INCOMPLETE_BUILDER_MSG);
-        }
-    }
-
-    private void checkIfbuildable() {
-        if (!this.areAllBasicFieldsFull()) {
-            throw new IllegalStateException(INCOMPLETE_BUILDER_MSG);
-        }
+    private void checkIfBuildable() {
+        this.checkFieldsPresence(this.factory, this.center, this.dimensions, this.shape, this.angle);
         if (this.built) {
             throw new IllegalStateException(ALREADY_BUILT_MSG);
         }
     }
 
-    private boolean areAllBasicFieldsFull() {
-        return this.center.isPresent()
-               && this.dimensions.isPresent()
-               && this.shape.isPresent()
-               && this.angle.isPresent()
-               && this.factory.isPresent();
+    private void checkFieldsPresence(final Optional<?>...optionals) {
+        if (!Arrays.asList(optionals).stream().allMatch(o -> o.isPresent())) {
+            throw new IllegalStateException(INCOMPLETE_BUILDER_MSG);
+        }
     }
 }

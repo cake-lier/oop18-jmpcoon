@@ -47,14 +47,15 @@ public class EntityCreationTest {
                                                         + "one set to the Entity";
 
     private final PhysicalFactory factory;
+    private final WorldImpl world;
 
     /**
      * Builds a new {@link EntityCreationTest}.
      */
     public EntityCreationTest() {
         this.factory = new PhysicalFactoryImpl();
-        final WorldImpl world = WorldImpl.class.cast(new WorldFactoryImpl().create());
-        this.factory.createPhysicalWorld(world, WORLD_WIDTH, WORLD_HEIGHT);
+        this.world = WorldImpl.class.cast(new WorldFactoryImpl().create());
+        this.factory.createPhysicalWorld(this.world, WORLD_WIDTH, WORLD_HEIGHT);
     }
 
     /**
@@ -318,9 +319,10 @@ public class EntityCreationTest {
             assertNotNull(NOT_NULL_MESSAGE, e.getMessage());
         }
         enemyGeneratorBuilder.setPosition(STD_POSITION)
-                           .setFactory(this.factory)
-                           .setAngle(STD_ANGLE)
-                           .setShape(BodyShape.CIRCLE);
+                             .setFactory(this.factory)
+                             .setAngle(STD_ANGLE)
+                             .setShape(BodyShape.CIRCLE)
+                             .setWorld(Optional.of(this.world));
         EnemyGenerator enemyGenerator = null;
         try {
             enemyGenerator = enemyGeneratorBuilder.build();

@@ -15,9 +15,14 @@ public final class EntityBuilderUtils {
         return new AbstractEntityBuilder<EnemyGenerator>() {
             @Override
             protected EnemyGenerator buildEntity() {
-                return new EnemyGenerator(super.createStaticPhysicalBody(EntityType.ENEMY_GENERATOR),
-                                          super.getPhysicalFactory(),
-                                          super.getWorld());
+                try {
+                    return new EnemyGenerator(super.createStaticPhysicalBody(EntityType.ENEMY_GENERATOR),
+                            super.getPhysicalFactory().get(),
+                            super.getWorld().get());
+                } catch (final IllegalStateException e) {
+                    throw new IllegalStateException("Not all the fields necessary to build an EnemyGenerator have been "
+                                                    + "initialized");
+                }
             }
         };
     }
@@ -69,7 +74,11 @@ public final class EntityBuilderUtils {
         return new AbstractEntityBuilder<PowerUp>() {
             @Override
             protected PowerUp buildEntity() {
-                return new PowerUp(super.createStaticPhysicalBody(EntityType.POWERUP), this.getPowerUpType());
+                try {
+                    return new PowerUp(super.createStaticPhysicalBody(EntityType.POWERUP), this.getPowerUpType().get());
+                } catch (final IllegalStateException e) {
+                    throw new IllegalStateException("Not all the fields to builds a PowerUp have been initialized");
+                }
             }
         };
     }
@@ -95,7 +104,13 @@ public final class EntityBuilderUtils {
         return new AbstractEntityBuilder<WalkingEnemy>() {
             @Override
             protected WalkingEnemy buildEntity() {
-                return new WalkingEnemy(super.createDynamicPhysicalBody(EntityType.WALKING_ENEMY), super.getWalkingRange());
+                try {
+                    return new WalkingEnemy(super.createDynamicPhysicalBody(EntityType.WALKING_ENEMY), 
+                                            super.getWalkingRange().get());
+                } catch (final IllegalArgumentException e) {
+                    throw new IllegalArgumentException("Not all the fields necessary to build a WalkingEnemy have been "
+                                                       + "initialized");
+                }
             }
         };
     }
