@@ -107,6 +107,30 @@ public final class GameMenu implements Menu {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void show() {
+        if (this.drawn && !this.shown) {
+            this.menu.setVisible(true);
+            this.shown = true;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void hide() {
+        if (this.shown) {
+            this.menu.setVisible(false);
+            this.saveMenu.setVisible(false);
+            this.shown = false;
+        }
+    }
+
+
     /*
      * Initializes a generic save game button present in this menu.
      */
@@ -149,29 +173,6 @@ public final class GameMenu implements Menu {
             ViewUtils.setTextToTime(save, this.appController.getSaveFileAvailability().get(saveFileIndex).get());
         } catch (final IOException ex) {
             ex.printStackTrace();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        if (this.drawn && !this.shown) {
-            this.menu.setVisible(true);
-            this.shown = true;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        if (this.shown) {
-            this.menu.setVisible(false);
-            this.saveMenu.setVisible(false);
-            this.shown = false;
         }
     }
 }

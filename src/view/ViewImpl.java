@@ -52,6 +52,28 @@ public final class ViewImpl implements View {
         this.stage.show();
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void displayMenu() {
+        this.createNewTrack(MENU_MUSIC);
+        final Menu menu = new AppMenu(this.controller, this.stage, this.stage.getHeight(), this.player);
+        menu.draw();
+        menu.show();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void displayGame(final Optional<Integer> saveFileIndex) {
+        this.createNewTrack(GAME_MUSIC);
+        final GameView gameView = new GameViewImpl(this.controller, this, this.stage, this.player);
+        gameView.initialize(saveFileIndex);
+    }
+
     private void setScreenSize() {
         final Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         this.stage.setX(screenBounds.getMinX());
@@ -82,26 +104,5 @@ public final class ViewImpl implements View {
         music.setMute(this.player.isMute());
         music.setCycleCount(MediaPlayer.INDEFINITE);
         this.player = music;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void displayMenu() {
-        this.createNewTrack(MENU_MUSIC);
-        final Menu menu = new AppMenu(this.controller, this.stage, this.stage.getHeight(), this.player);
-        menu.draw();
-        menu.show();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void displayGame(final Optional<Integer> saveFileIndex) {
-        this.createNewTrack(GAME_MUSIC);
-        final GameView gameView = new GameViewImpl(this.controller, this, this.stage, this.player);
-        gameView.initialize(saveFileIndex);
     }
 }

@@ -42,6 +42,14 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
         return this.sprite;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    public EntityType getEntityType() {
+        return this.entity.getType();
+    }
+
     /**
      * Updates properties like position, rotation, ... of the {@link ImageView} of this {@link DrawableEntity}.
      */
@@ -95,12 +103,5 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      */
     protected final double getYRatio() {
         return this.sceneDimensions.getRight() / this.worldDimensions.getRight();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public EntityType getEntityType() {
-        return this.entity.getType();
     }
 }

@@ -40,13 +40,12 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
         spritesheets.entrySet().forEach(entry -> {
             final int width = ((Double) entry.getValue().getLeft().getWidth()).intValue() / entry.getValue().getRight();
             this.mapAnimation(entry.getKey(), new SpriteAnimation(entry.getValue().getLeft(), 
-                                                                    Duration.millis(DURATION),
-                                                                    entry.getValue().getRight(),
-                                                                    width,
-                                                                    height));
+                                                                  Duration.millis(DURATION),
+                                                                  entry.getValue().getRight(),
+                                                                  width,
+                                                                  height));
         });
     }
-
 
     /**
      * Updates the image view.
@@ -91,6 +90,6 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
     private boolean isIdleWhileClimbing() {
         return ((this.currentState == EntityState.CLIMBING_UP || this.currentState == EntityState.CLIMBING_DOWN)
                 && (Math.abs(this.getEntity().getVelocity().getLeft()) <=  PRECISION 
-                && Math.abs(this.getEntity().getVelocity().getRight()) <= PRECISION));
+                    && Math.abs(this.getEntity().getVelocity().getRight()) <= PRECISION));
     }
 }

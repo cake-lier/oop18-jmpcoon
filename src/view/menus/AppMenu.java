@@ -158,6 +158,32 @@ public final class AppMenu implements Menu {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void show() {
+        if (this.drawn && !this.showed) {
+            this.frontPage.setVisible(true);
+            this.showed = true;
+            this.music.play();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void hide() {
+        if (this.showed) {
+            this.frontPage.setVisible(false);
+            this.settingsPage.setVisible(false);
+            this.savesPage.setVisible(false);
+            this.showed = false;
+        }
+    }
+
+
     private void initLoadDeleteButton(final Button load, final Button delete, final int saveFileIndex) {
         Ratios.LOAD_BUTTONS.styleNodeToRatio(this.stageHeight, load);
         Ratios.DELETE_BUTTONS.styleNodeToRatio(this.stageHeight, delete);
@@ -201,30 +227,5 @@ public final class AppMenu implements Menu {
         load.setDisable(true);
         load.setText(NO_SAVE_MSG);
         delete.setDisable(true);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        if (this.drawn && !this.showed) {
-            this.frontPage.setVisible(true);
-            this.showed = true;
-            this.music.play();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        if (this.showed) {
-            this.frontPage.setVisible(false);
-            this.settingsPage.setVisible(false);
-            this.savesPage.setVisible(false);
-            this.showed = false;
-        }
     }
 }

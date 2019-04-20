@@ -14,7 +14,8 @@ public class StaticDrawableEntity extends AbstractDrawableEntity {
      * Builds a new {@link StaticDrawableEntity}.
      * @param image the image representing the entity in the view
      * @param entity the {@link StaticEntity} represented by this {@link StaticDrawableEntity}
-     * @param worldDimensions the dimensions of the {@link model.world.World} in which the {@link model.entities.Entity} lives
+     * @param worldDimensions the dimensions of the {@link model.world.World} in which the {@link model.entities.Entity} 
+     * lives
      * @param sceneDimensions the dimensions of the view in which this {@link StaticDrawableEntity} will be drawn
      */
     public StaticDrawableEntity(final Image image, final UnmodifiableEntity entity, 
