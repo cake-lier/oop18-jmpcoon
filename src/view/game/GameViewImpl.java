@@ -172,7 +172,7 @@ public final class GameViewImpl implements GameView {
     public void showGameOver() {
         this.checkInitialization();
         Platform.runLater(() -> {
-            Sounds.PLAYER_DEATH.getSound().play(this.music.getVolume());
+            Sounds.PLAYER_DEATH.getSound().play(this.music.isMute() ? 0 : this.music.getVolume());
             this.showMessage(LOSE_MSG);
         });
     }
@@ -183,7 +183,7 @@ public final class GameViewImpl implements GameView {
     public void showPlayerWin() {
         this.checkInitialization();
         Platform.runLater(() -> {
-            Sounds.END_GAME.getSound().play(this.music.getVolume());
+            Sounds.END_GAME.getSound().play(this.music.isMute() ? 0 : this.music.getVolume());
             this.showMessage(WIN_MSG);
         });
     }
@@ -204,7 +204,7 @@ public final class GameViewImpl implements GameView {
      */
     @Override
     public void notifyJump() {
-        Platform.runLater(() -> Sounds.JUMP.getSound().play(this.music.getVolume())); 
+        Platform.runLater(() -> Sounds.JUMP.getSound().play(this.music.isMute() ? 0 : this.music.getVolume())); 
     }
 
     /*
@@ -295,7 +295,7 @@ public final class GameViewImpl implements GameView {
                       if (input.convert().isPresent()) {
                           final InputType type = input.convert().get();
                           if (forward && this.gameController.processInput(type) && type == InputType.UP) {
-                              Sounds.JUMP.getSound().play(this.music.getVolume());
+                              Sounds.JUMP.getSound().play(this.music.isMute() ? 0 : this.music.getVolume());
                           } else if (!forward) {
                               this.gameController.stopInput(type);
                           }

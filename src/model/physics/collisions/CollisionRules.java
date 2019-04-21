@@ -121,7 +121,7 @@ public class CollisionRules extends CollisionAdapter implements Serializable {
             || (enemyTriple.getRight() == EntityType.WALKING_ENEMY 
                 && PhysicsUtils.isBodyOnTop(playerPhysicalBody, enemyTriple.getMiddle(), collisionPoint))
             || (enemyTriple.getRight() == EntityType.ROLLING_ENEMY
-                && PhysicsUtils.isBodyAbove(playerPhysicalBody, enemyTriple.getMiddle(), collisionPoint.getRight()))) {
+                && PhysicsUtils.isBodyAbove(playerPhysicalBody, enemyTriple.getMiddle(), collisionPoint))) {
             enemyTriple.getLeft().setActive(false);
             this.outerWorld.notifyCollision(enemyTriple.getRight() == EntityType.WALKING_ENEMY
                                             ? CollisionEvent.WALKING_ENEMY_KILLED
