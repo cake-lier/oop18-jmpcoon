@@ -71,12 +71,6 @@ public interface UpdatableWorld extends Serializable {
     Queue<CollisionEvent> getCurrentEvents();
 
     /**
-     * Returns whether a jump happened during the last update.
-     * @return whether a jump has happened or not during the last update
-     */
-    boolean hasJumpHappened();
-
-    /**
      * Calculates the score currently totaled by the user.
      * @return the current game score
      */

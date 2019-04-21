@@ -19,10 +19,12 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import model.entities.EntityProperties;
+import model.entities.MovementType;
 import model.entities.UnmodifiableEntity;
 import model.world.UpdatableWorld;
 import model.world.WorldFactoryImpl;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Queues;
@@ -42,6 +44,7 @@ public class GameControllerImpl implements GameController {
     private final GameView gameView;
     private ScheduledThreadPoolExecutor timer;
     private boolean running;
+    private boolean jump;
 
     /**
      * Builds a new {@link GameControllerImpl}.
@@ -53,6 +56,7 @@ public class GameControllerImpl implements GameController {
         this.gameView = Objects.requireNonNull(view);
         this.timer = this.createTimer();
         this.running = false;
+        this.jump = false;
     }
 
     /**
@@ -162,7 +166,7 @@ public class GameControllerImpl implements GameController {
     @Override
     public Queue<GameEvent> getCurrentEvents() {
         final Queue<GameEvent> events = Queues.newConcurrentLinkedQueue();
-        if (this.gameWorld.hasJumpHappened()) {
+        if (this.jump) {
             events.offer(GameEvent.JUMP);
         }
         this.gameWorld.getCurrentEvents()
@@ -193,10 +197,13 @@ public class GameControllerImpl implements GameController {
             this.gameView.showPlayerWin();
             this.stopGame();
         } else {
+            this.jump = false;
             this.gameView.getInputs()
                          .stream()
                          .map(i -> i.getAssociatedMovementType())
-                         .forEach(this.gameWorld::movePlayer);
+                         .map(m -> new ImmutablePair<>(m, this.gameWorld.movePlayer(m)))
+                         .filter(p -> p.getLeft() == MovementType.JUMP && p.getRight())
+                         .forEach(b -> this.jump = true);
             this.gameWorld.update();
             this.gameView.update();
         }
