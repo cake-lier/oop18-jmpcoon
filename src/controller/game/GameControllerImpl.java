@@ -44,7 +44,7 @@ public class GameControllerImpl implements GameController {
     private final GameView gameView;
     private ScheduledThreadPoolExecutor timer;
     private boolean running;
-    private boolean jump;
+    private boolean jumped;
 
     /**
      * Builds a new {@link GameControllerImpl}.
@@ -56,7 +56,7 @@ public class GameControllerImpl implements GameController {
         this.gameView = Objects.requireNonNull(view);
         this.timer = this.createTimer();
         this.running = false;
-        this.jump = false;
+        this.jumped = false;
     }
 
     /**
@@ -118,7 +118,6 @@ public class GameControllerImpl implements GameController {
         if (this.running) {
             this.timer.shutdown();
             this.running = false;
-            this.timer = this.createTimer();
         }
     }
 
@@ -166,7 +165,7 @@ public class GameControllerImpl implements GameController {
     @Override
     public Queue<GameEvent> getCurrentEvents() {
         final Queue<GameEvent> events = Queues.newConcurrentLinkedQueue();
-        if (this.jump) {
+        if (this.jumped) {
             events.offer(GameEvent.JUMP);
         }
         this.gameWorld.getCurrentEvents()
@@ -197,13 +196,13 @@ public class GameControllerImpl implements GameController {
             this.gameView.showPlayerWin();
             this.stopGame();
         } else {
-            this.jump = false;
+            this.jumped = false;
             this.gameView.getInputs()
                          .stream()
                          .map(i -> i.getAssociatedMovementType())
                          .map(m -> new ImmutablePair<>(m, this.gameWorld.movePlayer(m)))
                          .filter(p -> p.getLeft() == MovementType.JUMP && p.getRight())
-                         .forEach(b -> this.jump = true);
+                         .forEach(b -> this.jumped = true);
             this.gameWorld.update();
             this.gameView.update();
         }

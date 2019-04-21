@@ -134,10 +134,8 @@ public final class WorldImpl implements World {
      * longer alive and has lost or if the "end level trigger" was reached and has consequently won. Then it separates all
      * {@link Entity}s no longer alive from the others and for last it signals to all {@link model.entities.EnemyGenerator}s 
      * that a lapse of time has passed and asking if they have created any new {@link model.entities.RollingEnemy}.
-     * The synchronization is required because an update of the {@link World} cannot be interleaved with a user movement,
-     * otherwise these two operations could interfere and make the state of the {@link Player} entity inconsistent.
      */
-    public synchronized void update() {
+    public void update() {
         this.checkInitialization();
         this.currentEvents.clear();
         this.deadEntities.clear();
@@ -160,11 +158,9 @@ public final class WorldImpl implements World {
 
     /**
      * {@inheritDoc}
-     * The synchronization is required because an update of the {@link World} cannot be interleaved with a user movement,
-     * otherwise these two operations could interfere and make the state of the {@link Player} entity inconsistent.
      */
     @Override
-    public synchronized boolean movePlayer(final MovementType movement) {
+    public boolean movePlayer(final MovementType movement) {
         this.checkInitialization();
         if (this.player.isPresent()) {
             final PhysicalBody playerBody = this.player.get().getPhysicalBody();
