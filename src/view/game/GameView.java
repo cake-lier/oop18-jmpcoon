@@ -1,6 +1,10 @@
 package view.game;
 
+import java.util.Set;
+
 import com.google.common.base.Optional;
+
+import controller.game.InputType;
 
 /**
  * Visual component of the game.
@@ -36,7 +40,8 @@ public interface GameView {
     void clean();
 
     /**
-     * Signals to the GameView that a jump happened in the model.
+     * Returns a set of the inputs currently being given by the user.
+     * @return a set of inputs
      */
-    void notifyJump();
+    Set<InputType> getInputs();
 }

@@ -9,26 +9,23 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import model.entities.EntityProperties;
-import model.entities.MovementType;
 import model.entities.UnmodifiableEntity;
-import model.world.CollisionEvent;
 import model.world.UpdatableWorld;
 import model.world.WorldFactoryImpl;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Queues;
 
 import controller.SaveFile;
 import view.game.GameView;
@@ -45,7 +42,6 @@ public class GameControllerImpl implements GameController {
     private final GameView gameView;
     private ScheduledThreadPoolExecutor timer;
     private boolean running;
-    private final Set<InputType> inputs;
 
     /**
      * Builds a new {@link GameControllerImpl}.
@@ -57,7 +53,6 @@ public class GameControllerImpl implements GameController {
         this.gameView = Objects.requireNonNull(view);
         this.timer = this.createTimer();
         this.running = false;
-        this.inputs = Sets.newConcurrentHashSet(); 
     }
 
     /**
@@ -127,27 +122,6 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public boolean processInput(final InputType givenInput) {
-        if (this.running) {
-            this.inputs.add(givenInput);
-            return this.gameWorld.movePlayer(givenInput.getAssociatedMovementType());
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void stopInput(final InputType stoppedInput) {
-        this.inputs.remove(stoppedInput);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public int getCurrentScore() {
         return this.gameWorld.getCurrentScore();
     }
@@ -186,8 +160,21 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public Queue<CollisionEvent> getCurrentEvents() {
-        return this.gameWorld.getCurrentEvents();
+    public Queue<GameEvent> getCurrentEvents() {
+        final Queue<GameEvent> events = Queues.newConcurrentLinkedQueue();
+        if (this.gameWorld.hasJumpHappened()) {
+            events.offer(GameEvent.JUMP);
+        }
+        this.gameWorld.getCurrentEvents()
+                      .forEach(event -> Arrays.asList(GameEvent.values())
+                                              .stream()
+                                              .filter(v -> v.getAssociatedCollisionEvent().isPresent())
+                                              .forEach(v -> {
+                                                  if (v.getAssociatedCollisionEvent().get() == event) {
+                                                      events.offer(v);
+                                                  }
+                                              }));
+        return events;
     }
 
     private ScheduledThreadPoolExecutor createTimer() {
@@ -206,12 +193,11 @@ public class GameControllerImpl implements GameController {
             this.gameView.showPlayerWin();
             this.stopGame();
         } else {
+            this.gameView.getInputs()
+                         .stream()
+                         .map(i -> i.getAssociatedMovementType())
+                         .forEach(this.gameWorld::movePlayer);
             this.gameWorld.update();
-            this.inputs.stream()
-                       .map(i -> i.getAssociatedMovementType())
-                       .map(m -> new ImmutablePair<MovementType, Boolean>(m, this.gameWorld.movePlayer(m)))
-                       .filter(p -> p.getRight() && p.getLeft() == MovementType.JUMP)
-                       .forEach(p -> this.gameView.notifyJump());
             this.gameView.update();
         }
     }

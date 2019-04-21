@@ -62,6 +62,7 @@ public final class WorldImpl implements World {
     private Optional<Player> player;
     private GameState currentState;
     private boolean initialized;
+    private boolean jump;
     private int score;
 
     /**
@@ -80,6 +81,7 @@ public final class WorldImpl implements World {
         this.player = Optional.absent();
         this.score = 0;
         this.initialized = false;
+        this.jump = false;
     }
 
     /**
@@ -181,6 +183,9 @@ public final class WorldImpl implements World {
                             || (playerState == EntityState.CLIMBING_UP || playerState == EntityState.CLIMBING_DOWN)))
                     || ((movement == MovementType.MOVE_LEFT || movement == MovementType.MOVE_RIGHT)
                         && (playerState != EntityState.CLIMBING_DOWN && playerState != EntityState.CLIMBING_UP)))) {
+                if (movement == MovementType.JUMP) {
+                    this.jump = true;
+                }
                 this.player.get().move(movement);
                 return true;
             }
@@ -274,6 +279,16 @@ public final class WorldImpl implements World {
     @Override
     public Queue<CollisionEvent> getCurrentEvents() {
         return UnmodifiableQueue.unmodifiableQueue(this.currentEvents);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasJumpHappened() {
+        final boolean jumpHappened = this.jump;
+        this.jump = false;
+        return jumpHappened;
     }
 
     private void checkInitialization() {

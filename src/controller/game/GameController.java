@@ -8,7 +8,6 @@ import java.util.Queue;
 import org.apache.commons.lang3.tuple.Pair;
 
 import model.entities.UnmodifiableEntity;
-import model.world.CollisionEvent;
 
 /**
  * A controller for the game playing.
@@ -58,20 +57,6 @@ public interface GameController {
     int getPlayerLives();
 
     /**
-     * Gives to the {@link World} in which the game is playing the input received from the view.
-     * @param givenInput the input received. Such input is propagated to the {@link World} until the view says differently using
-     * the method {@link #stopInput(InputType)}
-     * @return True if the command was successful and the {@link model.world.World} has accepted it, false otherwise
-     */
-    boolean processInput(InputType givenInput);
-
-    /**
-     * Stops the propagation of a previously given {@link InputType} to the {@link World}. 
-     * @param stoppedInput the input whose propagation has to stop
-     */
-    void stopInput(InputType stoppedInput);
-
-    /**
      * Returns the dimensions of the {@link model.world.World} in which the game is playing.
      * @return the dimensions (width and height) of the {@link model.world.World} in which the game is playing
      */
@@ -90,8 +75,8 @@ public interface GameController {
     Collection<UnmodifiableEntity> getDeadEntities();
 
     /**
-     * Returns a {@link Queue} of {@link CollisionEvent} that recently happened in the game.
-     * @return a {@link Queue} of the last {@link CollisionEvent} that happened.
+     * Returns a {@link Queue} of {@link GameEvent} that recently happened in the game.
+     * @return a {@link Queue} of the last {@link GameEvent} that happened.
      */
-    Queue<CollisionEvent> getCurrentEvents();
+    Queue<GameEvent> getCurrentEvents();
 }

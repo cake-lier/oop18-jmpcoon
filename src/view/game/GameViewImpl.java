@@ -33,14 +33,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 
 import controller.app.AppController;
 import controller.game.GameController;
@@ -81,6 +84,7 @@ public final class GameViewImpl implements GameView {
     private boolean isMenuVisible;
     private boolean isGameEnded;
     private boolean isInitialized;
+    private Set<InputType> inputs;
     @FXML
     private Text score;
     @FXML
@@ -109,6 +113,7 @@ public final class GameViewImpl implements GameView {
         this.isGameEnded = false;
         this.isMenuVisible = false;
         this.isInitialized = false;
+        this.inputs = Sets.newConcurrentHashSet();
     }
 
     /**
@@ -197,14 +202,7 @@ public final class GameViewImpl implements GameView {
         this.checkInitialization();
         this.stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
         this.stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this.closeHandler);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void notifyJump() {
-        Platform.runLater(() -> Sounds.JUMP.getSound().play(this.music.isMute() ? 0 : this.music.getVolume())); 
+        this.inputs.clear();
     }
 
     /*
@@ -293,11 +291,10 @@ public final class GameViewImpl implements GameView {
                       }
                   } else {
                       if (input.convert().isPresent()) {
-                          final InputType type = input.convert().get();
-                          if (forward && this.gameController.processInput(type) && type == InputType.UP) {
-                              Sounds.JUMP.getSound().play(this.music.isMute() ? 0 : this.music.getVolume());
-                          } else if (!forward) {
-                              this.gameController.stopInput(type);
+                          if (forward) {
+                              this.inputs.add(input.convert().get());
+                          } else {
+                              this.inputs.remove(input.convert().get());
                           }
                       }
                   }
@@ -333,5 +330,10 @@ public final class GameViewImpl implements GameView {
         if (!this.isInitialized) {
             throw new IllegalStateException(INIT_ERR);
         }
+    }
+
+    @Override
+    public Set<InputType> getInputs() {
+        return Collections.unmodifiableSet(this.inputs);
     }
 }
