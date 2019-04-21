@@ -146,6 +146,7 @@ public final class GameViewImpl implements GameView {
         }
         this.drawAliveEntities();
         this.music.play();
+        this.inputs.clear();
         this.isInitialized = true;
         this.gameController.startGame();
     }
@@ -201,6 +202,7 @@ public final class GameViewImpl implements GameView {
     public void clean() {
         this.checkInitialization();
         this.stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
+        this.stage.getScene().removeEventHandler(KeyEvent.KEY_RELEASED, this.commandHandler);
         this.stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this.closeHandler);
         this.inputs.clear();
     }
