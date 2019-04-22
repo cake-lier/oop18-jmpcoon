@@ -24,9 +24,12 @@ public final class ContactRules extends ContactAdapter implements Serializable {
     private final ReadablePhysicalWorld world;
 
     /**
-     * Default constructor, accepts a reference to an object which is a {@link PhysicalWorld}, but only with methods for
-     * getting informations about the current physical state of the game. This constructor is package protected because
-     * only the {@link PhysicalWorld} should create an instance of this object.
+     * Default constructor, accepts a reference to an object which is a {@link model.physics.ReadablePhysicalWorld}, so it's a
+     * {@link model.physics.PhysicalWorld} but only with methods for getting informations about the current physical state of
+     * the game. This constructor is package protected because only the {@link PhysicsRulesFactory} should create an instance of
+     * this object.
+     * @param world the {@link model.physics.ReadablePhysicalWorld} from which getting informations about the physical state
+     * of the game
      */
     ContactRules(final ReadablePhysicalWorld world) {
         super();

@@ -2,8 +2,8 @@ package model.entities;
 
 /**
  * An enumeration associating a {@link MovementType} with the appropriate impulse values 
- * used to move a {@link DynamicPhysicalBody}.Its scope is package protected because it should
- * be only used by the {@link Entity} associated with the {@link DynamicPhysicalBody} to be moved.
+ * used to move a {@link model.physics.DynamicPhysicalBody}.Its scope is package protected because it should
+ * be only used by the {@link Entity} associated with the {@link model.physics.DynamicPhysicalBody} to be moved.
  */
 enum MovementValues {
     CLIMB_DOWN(MovementType.CLIMB_DOWN, 0, -0.6),

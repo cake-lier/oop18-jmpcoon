@@ -1,19 +1,19 @@
 package view.game;
 
 /**
- * An enumeration representing the sprites for a {@link PowerUp}.
+ * An enumeration representing the sprites for a {@link model.entities.PowerUp}.
  */
 public enum PowerUpImage {
     /**
-     * Image for a {@link PowerUpType#GOAL}.
+     * Image for a {@link model.entities.PowerUpType#GOAL}.
      */
     GOAL("goal.png"),
     /**
-     * Image for a {@link PowerUpType#EXTRA_LIFE}.
+     * Image for a {@link model.entities.PowerUpType#EXTRA_LIFE}.
      */
     EXTRA_LIFE("extra_life.png"),
     /**
-     * Image for a {@link PowerUpType#INVINCIBILITY}.
+     * Image for a {@link model.entities.PowerUpType#INVINCIBILITY}.
      */
     INVINCIBILITY("invincibility.png");
 
@@ -26,8 +26,8 @@ public enum PowerUpImage {
     }
 
     /**
-     * Returns the url of the image associated to the {@link PowerUpType}.
-     * @return the url of the image associated to the {@link PowerUpType}
+     * Returns the URL of the image associated to the {@link model.entities.PowerUpType}.
+     * @return the URL of the image associated to the {@link model.entities.PowerUpType}
      */
     public String getImageUrl() {
         return SPRITES_DIR + this.imageUrl;

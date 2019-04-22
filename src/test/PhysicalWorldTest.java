@@ -17,7 +17,7 @@ import model.world.WorldFactoryImpl;
 import model.world.WorldImpl;
 
 /**
- * Test for the creation of {@link PhyisicalWorld}.
+ * Test for the creation of {@link model.physics.PhysicalWorld}.
  */
 public class PhysicalWorldTest {
     private static final double WORLD_WIDTH = 8;
@@ -31,8 +31,8 @@ public class PhysicalWorldTest {
     private PhysicalFactory factory;
 
     /**
-     * Initialization method needed for recreating a new {@link PhysicalFactory} for each test for performing a clean
-     * test.
+     * Initialization method needed for recreating a new {@link model.physics.PhysicalFactory} for each test for performing a
+     * clean test.
      */
     @Before
     public void initializePhysicalFactory() {
@@ -40,7 +40,8 @@ public class PhysicalWorldTest {
     }
 
     /**
-     * Test for the correct failure of creating a {@link PhysicalBody} before creating the {@link PhysicalWorld}.
+     * Test for the correct failure of creating a {@link model.physics.PhysicalBody} before creating the
+     * {@link model.physics.PhysicalWorld}.
      */
     @Test(expected = IllegalStateException.class)
     public void notYetCreatedWorldFail() {
@@ -49,7 +50,7 @@ public class PhysicalWorldTest {
     }
 
     /**
-     * Test for correct {@link PhysicalWorld} creation.
+     * Test for correct {@link model.physics.PhysicalWorld} creation.
      */
     @Test
     public void worldCreationTest() {
@@ -59,7 +60,7 @@ public class PhysicalWorldTest {
     }
 
     /**
-     * Test for the correct failure of creating a {@link PhysicalWorld} after the first created.
+     * Test for the correct failure of creating a {@link model.physics.PhysicalWorld} after the first created.
      */
     @Test(expected = IllegalStateException.class)
     public void alreadyCreatedWorldFail() {

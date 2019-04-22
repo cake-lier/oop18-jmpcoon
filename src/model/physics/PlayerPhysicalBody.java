@@ -4,8 +4,8 @@ import model.entities.PowerUpType;
 import model.serializable.SerializableBody;
 
 /**
- * A class representing a {@link PlayerPhysicalBody} that manages {@link Player} lives
- * and {@link PowerUp} effects on the player.
+ * A class representing a {@link PlayerPhysicalBody} that manages {@link model.entities.Player} lives and
+ * {@link model.entities.PowerUp} effects on the player.
  */
 public class PlayerPhysicalBody extends DynamicPhysicalBody {
     private static final long serialVersionUID = -6099710781272943170L;
@@ -48,8 +48,8 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     }
 
     /**
-     * Gives the specified {@link PowerUp} to the {@link PlayerPhysicalBody}.
-     * @param powerUpType the {@link PowerUpType} of the power-up
+     * Gives the specified {@link model.entities.PowerUp} to the {@link PlayerPhysicalBody}.
+     * @param powerUpType the {@link PowerUpType} of the power up
      */
     public void givePowerUp(final PowerUpType powerUpType) {
         if (powerUpType == PowerUpType.EXTRA_LIFE) {
@@ -91,7 +91,7 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     }
 
     /**
-     * The effect of the Invincibility {@link PowerUp} ends.
+     * The effect of the {@link model.entities.PowerUp} that makes the {@link model.entities.Player} invincible ends.
      */
     public void endInvincibility() {
         this.invincible = false;

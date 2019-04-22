@@ -23,7 +23,7 @@ import model.world.World;
 import model.world.WorldFactoryImpl;
 
 /**
- * Parameterized test for the creation of all types of {@link DynamicPhyisicalBody}s.
+ * Parameterized test for the creation of all types of {@link model.physics.DynamicPhysicalBody}s.
  */
 @RunWith(Parameterized.class)
 public class DynamicPhysicalBodyCreationTest {
@@ -96,8 +96,8 @@ public class DynamicPhysicalBodyCreationTest {
     }
 
     /**
-     * Returns the {@link EntityType}s of {@link Entity}s which are considered dynamic.
-     * @return a {@link Collection} of {@link EntityType}s of the {@link Entity}s which are dynamic
+     * Returns the {@link EntityType}s of {@link model.entities.Entity}s which are considered dynamic.
+     * @return a {@link Collection} of {@link EntityType}s of the {@link model.entities.Entity}s which are dynamic
      */
     @Parameters
     public static Collection<EntityType> dynamicTypes() {

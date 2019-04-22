@@ -63,7 +63,7 @@ public final class GameMenu implements Menu {
      * and the {@link GameController} of this particular instance of the game so as to save a game, go back to the main menu and
      * exit the game.
      * @param root the {@link Pane} in which to draw this menu
-     * @param stageHeight the height of {@link Stage} which contains the root
+     * @param stageHeight the height of {@link javafx.stage.Stage} which contains the root
      * @param appController the controller of this application
      * @param appView the view of this application
      * @param gameController the controller of this game

@@ -24,8 +24,8 @@ public final class EnemyGenerator extends StaticEntity {
      * Creates a new {@link EnemyGenerator} with the given {@link StaticPhysicalBody}. This constructor is package protected
      * because it should be only invoked by the {@link AbstractEntityBuilder} when creating a new instance of it and no one else.
      * @param body the {@link StaticPhysicalBody} that should be contained in this {@link EnemyGenerator}
-     * @param factory the {@link PhysicalFactory} that generates the RollingEnemy {@link PhysicalBody}
-     * @param world the {@link World} to notify when a {@link RollingEnemy} is created
+     * @param factory the {@link PhysicalFactory} that generates the {@link RollingEnemy}s' {@link model.physics.PhysicalBody}s
+     * @param world the {@link model.world.ModifiableWorld} to which hand the new {@link RollingEnemy}s created
      */
     EnemyGenerator(final StaticPhysicalBody body, final PhysicalFactory factory, final ModifiableWorld world) {
         super(body);

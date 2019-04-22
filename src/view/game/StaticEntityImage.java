@@ -1,19 +1,19 @@
 package view.game;
 
 /**
- * An enumeration representing the sprites for a {@link PowerUp}.
+ * An enumeration representing the sprites for a {@link model.entities.PowerUp}.
  */
 public enum StaticEntityImage {
     /**
-     * Modular image for a {@link Ladder}.
+     * Modular image for a {@link model.entities.Ladder}.
      */
     LADDER("ladder.png"),
     /**
-     * Modular image for a {@link Platform}.
+     * Modular image for a {@link model.entities.Platform}.
      */
     PLATFORM("platform.png"),
     /**
-     * Image for a {@link EnemyGenerator}.
+     * Image for a {@link model.entities.EnemyGenerator}.
      */
     ENEMY_GENERATOR("enemyGenerator.png");
 
@@ -26,8 +26,8 @@ public enum StaticEntityImage {
     }
 
     /**
-     * Returns the url of the image associated to the {@link StaticEntity}.
-     * @return the url of the image associated to the {@link StaticEntity}
+     * Returns the URL of the image associated to the {@link model.entities.StaticEntity}.
+     * @return the URL of the image associated to the {@link model.entities.StaticEntity}
      */
     public String getImageUrl() {
         return SPRITES_DIR + this.imageUrl;

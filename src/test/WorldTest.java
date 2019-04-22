@@ -26,7 +26,7 @@ import model.world.WorldFactory;
 import model.world.WorldFactoryImpl;
 
 /**
- * Test class for {@link WorldImpl}.
+ * Test class for {@link model.world.World}.
  */
 public class WorldTest {
     private static final double WORLD_WIDTH = 8;
@@ -80,7 +80,7 @@ public class WorldTest {
     }
 
     /**
-     * Test for the illegality of creating two {@link World}s from the same {@link WorldFactory}.
+     * Test for the illegality of creating two {@link model.world.UpdatableWorld}s from the same {@link WorldFactory}.
      */
     @Test(expected = IllegalStateException.class)
     public void failedCreationWorldTwiceTest() {
@@ -98,7 +98,7 @@ public class WorldTest {
     }
 
     /**
-     * Test for the correct throwing of exception by a {@link WorldImpl} updating without initialization.
+     * Test for the correct throwing of exception by a {@link model.world.UpdatableWorld} updating without initialization.
      */
     @Test(expected = IllegalStateException.class)
     public void worldUpdateWithoutInitializatonExceptionTest() {
@@ -106,8 +106,8 @@ public class WorldTest {
     }
 
     /**
-     * Test for the correct throwing of exception when trying to move the player inside a {@link WorldImpl} without 
-     * initialization.
+     * Test for the correct throwing of exception when trying to move the player inside a {@link model.world.UpdatableWorld}
+     * without initialization.
      */
     @Test(expected = IllegalStateException.class)
     public void worldMovePlayerWithoutInitializatonExceptionTest() {
@@ -115,8 +115,8 @@ public class WorldTest {
     }
 
     /**
-     * Test for the correct throwing of exception when trying to know the lives of the player inside a {@link WorldImpl} without
-     *  initialization.
+     * Test for the correct throwing of exception when trying to know the lives of the player inside a
+     * {@link model.world.UpdatableWorld} without prior initialization.
      */
     @Test(expected = IllegalStateException.class)
     public void worldPlayerLivesWithoutInitializatonExceptionTest() {

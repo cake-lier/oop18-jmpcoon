@@ -38,7 +38,7 @@ public class MemoizedEntityConverterImpl implements MemoizedEntityConverter {
 
     /**
      * builds a new {@link MemoizedEntityConverterImpl}.
-     * @param worldDimensions the dimensions of the world in which the {@link Entity} to convert lives
+     * @param worldDimensions the dimensions of the world in which the {@link model.entities.Entity} to convert lives
      * @param sceneDimensions the dimensions of the scene in which the {@link DrawableEntity} produced will be put
      */
     public MemoizedEntityConverterImpl(final Pair<Double, Double> worldDimensions, final Pair<Double, Double> sceneDimensions) {
@@ -101,7 +101,7 @@ public class MemoizedEntityConverterImpl implements MemoizedEntityConverter {
 
     /**
      * removes the {@link DrawableEntity}, saved converted in the past that are now unused.
-     * @param entities the {@link Entity} that will never be used in the future again
+     * @param entities the {@link model.entities.Entity} that will never be used in the future again
      */
     @Override
     public void removeUnusedEntities(final Collection<UnmodifiableEntity> entities) {

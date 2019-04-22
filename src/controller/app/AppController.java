@@ -20,9 +20,9 @@ public interface AppController {
     void exitApp();
 
     /**
-     * Starts the game. It can receive an integer index that represents the {@link SaveFile} or not. In the
+     * Starts the game. It can receive an integer index that represents the {@link controller.SaveFile} or not. In the
      * latter case, it will start a new game.
-     * @param saveFileIndex the index of the {@link SaveFile} from which to load the game, if present
+     * @param saveFileIndex the index of the {@link controller.SaveFile} from which to load the game, if present
      */
     void startGame(Optional<Integer> saveFileIndex);
 

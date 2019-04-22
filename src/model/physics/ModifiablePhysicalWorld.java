@@ -7,13 +7,15 @@ import model.entities.PowerUpType;
 import model.serializable.SerializableBody;
 
 /**
- * 
+ * An interface for letting a {@link PhysicalWorld} to be modified by the components responsible of creating new 
+ * {@link PhysicalBody}s, such as a {@link PhysicalFactory}, by adding this newly created instances to this {@link PhysicalWorld}
+ * and manage their physics along with the others already created.
  */
 public interface ModifiablePhysicalWorld {
     /**
      * Registers an association between a {@link PhysicalBody} and the {@link SerializableBody} contained within. It's done for 
-     * safety and style reasons, a {@link PhysicalBody} should not return the contained {@link Body} and if it did, the only 
-     * object which should be able to see it is a {@link ModifiablePhysicalWorld}. The {@link EntityType} of the 
+     * safety and style reasons, a {@link PhysicalBody} should not return the contained {@link SerializableBody} and if it did,
+     * the only object which should be able to see it is a {@link ModifiablePhysicalWorld}. The {@link EntityType} of the
      * {@link model.entities.Entity} which contains the passed {@link PhysicalBody} is also registered for future cross-checks.
      * @param container the {@link PhysicalBody} which contains the {@link SerializableBody}
      * @param contained the {@link SerializableBody} which is contained in the {@link PhysicalBody}
@@ -23,7 +25,7 @@ public interface ModifiablePhysicalWorld {
 
     /**
      * Registers an association between the {@link PlayerPhysicalBody} of a {@link model.entities.Player} and the
-     * {@link model.entities.Player}'s {@link Body}. This method is needed for the same reasons as the previous ones,
+     * {@link model.entities.Player}'s {@link SerializableBody}. This method is needed for the same reasons as the previous ones,
      * but exclusively for the {@link model.entities.Player} because it possesses a different {@link PhysicalBody} with
      * more peculiar methods, specific for it.
      * @param container the {@link PlayerPhysicalBody} of a {@link model.entities.Player}
@@ -32,12 +34,12 @@ public interface ModifiablePhysicalWorld {
     void addPlayerAssociation(PlayerPhysicalBody container, SerializableBody contained);
 
     /**
-     * Registers an association between the {@link PowerUpType} of a {@link PowerUp} and the power-up's {@link Body}.
-     * As for the previous method, it's done for safety and style reasons, a {@link Body} should not know anything
-     * about its {@link PhysicalBody} and this last should not know anything about the associated {@link Entity}.
-     * Because the physics of a {@link model.entities.PowerUp} needs to know to which {@link PowerUpType} is associated
-     * a specific {@link SerializableBody}, this method provide a way to register this association in advance, so as to
-     * recall it later on.
+     * Registers an association between the {@link PowerUpType} of a {@link model.entities.PowerUp} and the power-up's
+     * {@link SerializableBody}. As for the previous method, it's done for safety and style reasons, a {@link SerializableBody}
+     * should not know anything about its {@link PhysicalBody} and this last should not know anything about the associated
+     * {@link model.entities.Entity}. Because the physics of a {@link model.entities.PowerUp} needs to know to which
+     * {@link PowerUpType} is associated a specific {@link SerializableBody}, this method provide a way to register this
+     * association in advance, so as to recall it later on.
      * @param body the {@link SerializableBody} of a {@link model.entities.PowerUp}
      * @param powerUpType the {@link PowerUpType} of the {@link model.entities.PowerUp} which {@link SerializableBody} is
      * the one passed

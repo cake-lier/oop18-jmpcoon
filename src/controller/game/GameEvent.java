@@ -33,7 +33,7 @@ public enum GameEvent {
      */
     INVINCIBILITY_HIT(Optional.of(CollisionEvent.INVINCIBILITY_HIT)),
     /**
-     * A jump executed by the {@link Player}.
+     * A jump executed by the {@link model.entities.Player}.
      */
     JUMP(Optional.absent());
 

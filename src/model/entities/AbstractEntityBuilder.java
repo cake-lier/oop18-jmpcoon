@@ -124,10 +124,10 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the {@link World} the {@link model.entities.Entity} to be created by this {@link AbstractEntityBuilder} will notify
-     * when it creates a {@link RollingEnemy}, if the entity is a {@link EnemyGenerator}.
-     * @param world an {@link Optional} containing the world the {@link EnemyGenerator} will notify, 
-     * an empty {@link Optional} if a WalkingEnemy isn't being built
+     * Sets the {@link model.world.World} the {@link model.entities.Entity} to be created by this {@link AbstractEntityBuilder}
+     * will notify when it creates a {@link RollingEnemy}, if the entity is a {@link EnemyGenerator}.
+     * @param world an {@link Optional} containing the world the {@link EnemyGenerator} will notify, an empty {@link Optional}
+     * if a WalkingEnemy isn't being built
      * @return a reference to this {@link AbstractEntityBuilder}
      */
     public AbstractEntityBuilder<E> setWorld(final Optional<ModifiableWorld> world) {
@@ -182,7 +182,7 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Returns the {@link World} set.
+     * Returns the {@link model.world.ModifiableWorld} set.
      * @return an {@link Optional} containing the {@link ModifiableWorld} set if it was set, an empty Optional otherwise.
      */
     protected Optional<ModifiableWorld> getWorld() {

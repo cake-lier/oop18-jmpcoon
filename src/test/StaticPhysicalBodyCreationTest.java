@@ -26,7 +26,7 @@ import model.world.World;
 import model.world.WorldFactoryImpl;
 
 /**
- * Parameterized test for the creation of all types of {@link StaticPhyisicalBody}s.
+ * Parameterized test for the creation of all types of {@link model.physics.StaticPhysicalBody}s.
  */
 @RunWith(Parameterized.class)
 public class StaticPhysicalBodyCreationTest {
@@ -109,8 +109,8 @@ public class StaticPhysicalBodyCreationTest {
     }
 
     /**
-     * Returns the {@link EntityType}s of {@link Entity}s which are considered static.
-     * @return a {@link Collection} of {@link EntityType}s of the {@link Entity}s which are static
+     * Returns the {@link EntityType}s of {@link model.entities.Entity}s which are considered static.
+     * @return a {@link Collection} of {@link EntityType}s of the {@link model.entities.Entity}s which are static
      */
     @Parameters
     public static Collection<EntityType> staticTypes() {

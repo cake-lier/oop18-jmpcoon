@@ -18,10 +18,10 @@ import com.google.common.base.Optional;
 public interface PhysicalFactory extends Serializable {
     /**
      * A {@link PhysicalWorld} that manages the physics simulation needed by the {@link model.world.World}. Notifies the
-     * {@link model.world.World} of occurred events through the methods contained in the interface {@link AlertableWorld}. The
+     * {@link model.world.World} of occurred events through the methods contained in the interface {@link NotifiableWorld}. The
      * {@link PhysicalWorld} considers only positive coordinates.
      * @param outerWorld the reference to the {@link model.world.World} which contains only methods for notifying it of occurred
-     * physical events, such as {@link AlertableWorld#notifyCollision(model.world.CollisionType)}
+     * physical events, such as {@link model.world.NotifiableWorld#notifyCollision(model.world.CollisionEvent)}
      * @param width the width of the {@link PhysicalWorld}
      * @param height the height of the {@link PhysicalWorld}
      * @return the {@link PhysicalWorld} with the given dimensions
@@ -41,7 +41,7 @@ public interface PhysicalFactory extends Serializable {
      * shape)
      * @param type the {@link EntityType} of the {@link model.entities.Entity} that will use the created 
      * {@link StaticPhysicalBody}
-     * @param powerUpType the {@link PowerUpType} if the type is a {@link PowerUp}
+     * @param powerUpType the {@link PowerUpType} if the type is a {@link model.entities.PowerUp}
      * @return a {@link StaticPhysicalBody} with the given characteristics
      * @throws IllegalStateException if a {@link PhysicalWorld} has yet to be created
      * @throws IllegalArgumentException if the given position is outside the {@link PhysicalWorld} bounds, or if the combination

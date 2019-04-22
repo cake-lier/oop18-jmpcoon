@@ -54,19 +54,19 @@ public interface UpdatableWorld extends Serializable {
 
     /**
      * Produces all the entities which populate this world which are still alive since the last {@link #update()} method call.
-     * @return a {@link Collection} of the alive {@link Entity}s
+     * @return a {@link Collection} of the alive {@link model.entities.Entity}s
      */
     Collection<UnmodifiableEntity> getAliveEntities();
 
     /**
      * Produces all the entities which have died since the last {@link #update()} method call.
-     * @return a {@link Collection} of the {@link Entity}s which have died across last {@link World} update
+     * @return a {@link Collection} of the {@link model.entities.Entity}s which have died across last {@link World} update
      */
     Collection<UnmodifiableEntity> getDeadEntities();
 
     /**
      * Returns a queue of all events that happened during the last {@link #update()}. 
-     * @return a {@link Queue} which contains the {@link EventType}s that happened during the last update
+     * @return a {@link Queue} which contains the {@link CollisionEvent}s that happened during the last update
      */
     Queue<CollisionEvent> getCurrentEvents();
 

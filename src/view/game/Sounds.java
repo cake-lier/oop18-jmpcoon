@@ -11,31 +11,31 @@ import controller.game.GameEvent;
  */
 public enum Sounds {
     /**
-     * A sound associated to a jump action of the {@link Player}.
+     * A sound associated to a jump action of the {@link model.entities.Player}.
      */
     JUMP("jump", Optional.of(GameEvent.JUMP)),
     /**
-     * A sound associated to the death of a {@link RollingEnemy}.
+     * A sound associated to the death of a {@link model.entities.RollingEnemy}.
      */
     ROLLING_DESTROY("rollDestroy", Optional.of(GameEvent.ROLLING_ENEMY_KILLED)),
     /**
-     * A sound associated to the death of a {@link WalkingEnemy}.
+     * A sound associated to the death of a {@link model.entities.WalkingEnemy}.
      */
     WALKING_DESTROY("walkDestroy", Optional.of(GameEvent.WALKING_ENEMY_KILLED)),
     /**
-     * A sound associated to the death of the {@link Player}.
+     * A sound associated to the death of the {@link model.entities.Player}.
      */
     PLAYER_DEATH("death", Optional.absent()),
     /**
-     * A sound associated to the {@link Player} getting the {@link PowerUp} that makes invincible.
+     * A sound associated to the {@link model.entities.Player} getting the {@link model.entities.PowerUp} that makes invincible.
      */
     INVINCIBIITY("invincible", Optional.of(GameEvent.INVINCIBILITY_HIT)),
     /**
-     * A sound associated to the {@link Player} getting a generic {@link PowerUp}.
+     * A sound associated to the {@link model.entities.Player} getting a generic {@link model.entities.PowerUp}.
      */
     POWER_UP_GOT("powerUp", Optional.of(GameEvent.POWER_UP_HIT)),
     /**
-     * A sound associated to the {@link Player} winning and terminating the game.
+     * A sound associated to the {@link model.entities.Player} winning and terminating the game.
      */
     END_GAME("end", Optional.absent());
 

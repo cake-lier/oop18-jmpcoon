@@ -32,7 +32,7 @@ import controller.SaveFile;
 import view.game.GameView;
 
 /**
- * A {@link GameController} for a game set in a {@link World}.
+ * A {@link GameController} for a game set in a {@link model.world.World}.
  */
 public class GameControllerImpl implements GameController {
     private static final String INCOMPATIBLE_FILE_MSG = "The file read isn't compatible";

@@ -41,10 +41,11 @@ final class PhysicalWorldImpl implements PhysicalWorld {
     private int stepCounterInvincibility;
 
     /**
-     * Binds the current instance of {@link WholePhysicalWorldImpl} with the instance of {@link World} which will be wrapped and 
-     * used. This constructor is package protected because this class should be created only by the {@link PhysicalFactory}
-     * contained in this package and no one else.
-     * @param outerWorld the {@link model.world.World} that wraps this {@link PhysicalWorld}
+     * Binds the current instance of {@link PhysicalWorldImpl} with the instance of {@link SerializableWorld} which will be
+     * wrapped and used. This constructor is package protected because this class should be created only by the
+     * {@link PhysicalFactory} contained in this package and no one else.
+     * @param outerWorld the {@link model.world.World} that wraps this {@link PhysicalWorld} kept as a
+     * {@link model.world.NotifiableWorld} so as to just notify it of {@link model.world.CollisionEvent}s happened
      * @param world the {@link SerializableWorld} to wrap
      */
     PhysicalWorldImpl(final NotifiableWorld outerWorld, final SerializableWorld world) {

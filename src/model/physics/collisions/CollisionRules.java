@@ -33,13 +33,14 @@ public class CollisionRules extends CollisionAdapter implements Serializable {
     private final ReadablePhysicalWorld physicalWorld;
 
     /**
-     * Default constructor, accepts a reference to an object which is a {@link PhysicalWorld}, but only with methods for
-     * getting informations about the current physical state of the game. Moreover, it accepts a reference to an object
-     * which is a {@link model.world.World}, but with only methods to notify it of a particular collision that happened
-     * between bodies. This constructor is package protected because only the {@link PhysicalWorld} should create an
-     * instance of this object.
-     * @param physicalWorld the {@link PhysicalWorld} from which getting informations about the physical state of the game
-     * @param outerWorld the {@link model.world.World} to be notified of {@link CollisionEvent}s
+     * Default constructor, accepts a reference to an object which is a {@link model.physics.ReadablePhysicalWorld}, so it's a
+     * {@link model.physics.PhysicalWorld} but only with methods for getting informations about the current physical state of
+     * the game. Moreover, it accepts a reference to an object which is a {@link model.world.NotifiableWorld}, so it's a
+     * {@link model.world.World} but with only methods to notify it of a particular collision that happened between bodies.
+     * This constructor is package protected because only the {@link PhysicsRulesFactory} should create an instance of this object.
+     * @param physicalWorld the {@link model.physics.ReadablePhysicalWorld} from which getting informations about the physical
+     * state of the game
+     * @param outerWorld the {@link model.world.NotifiableWorld} to be notified of {@link CollisionEvent}s
      */
     CollisionRules(final ReadablePhysicalWorld physicalWorld, final NotifiableWorld outerWorld) {
         super();

@@ -11,7 +11,7 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * A {@link DynamicEntity} that can be drawn.
+ * A {@link model.entities.DynamicEntity} that can be drawn.
  */
 public class DynamicDrawableEntity extends AbstractDrawableEntity {
     private static final int DURATION = 550;
@@ -28,7 +28,7 @@ public class DynamicDrawableEntity extends AbstractDrawableEntity {
      * sheets that will represent it. The value of an entry is a pair with the sprite sheet and the number of frames it contains.
      * There must always be a sprite sheet for the {@link EntityState#IDLE}.
      * @param entity the {@link UnmodifiableEntity}
-     * @param worldDimensions the dimensions of the {@link World}
+     * @param worldDimensions the dimensions of the {@link model.world.World}
      * @param sceneDimensions the dimensions of the view in which this {@link UnmodifiableEntity} will be drawn
      */
     public DynamicDrawableEntity(final Map<EntityState, Pair<Image, Integer>> spritesheets, final UnmodifiableEntity entity,

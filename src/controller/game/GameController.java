@@ -25,17 +25,17 @@ public interface GameController {
 
     /**
      * Saves the current game.
-     * @param saveFileIndex the index of {@link SaveFile} referring to the chosen save file
+     * @param saveFileIndex the index of {@link controller.SaveFile} referring to the chosen save file
      * @throws IOException if an I/O error occurs
-     * @throws FileNotFoundException if the {@link URL} passed does not reference an existent file
+     * @throws FileNotFoundException if the {@link java.net.URL} passed does not reference an existent file
      */
     void saveGame(int saveFileIndex) throws FileNotFoundException, IOException;
 
     /**
      * Loads a previously saved game.
-     * @param saveFileIndex the index of {@link SaveFile} referring to the choosen save file
+     * @param saveFileIndex the index of {@link controller.SaveFile} referring to the choosen save file
      * @throws IOException if an I/O error occurs
-     * @throws IllegalArgumentException if the file referenced by the {@link URL} isn't compatible with this application
+     * @throws IllegalArgumentException if the file referenced by the {@link java.net.URL} isn't compatible with this application
      */
     void loadGame(int saveFileIndex) throws IOException, IllegalArgumentException;
 
@@ -64,13 +64,13 @@ public interface GameController {
 
     /**
      * Returns a {@link Collection} of the {@link model.entities.Entity} alive in the game.
-     * @return the alive entities in the {@link World} game
+     * @return the alive entities in the {@link model.world.World} game
      */
     Collection<UnmodifiableEntity> getAliveEntities();
 
     /**
      * Returns a {@link Collection} of the {@link model.entities.Entity} that recently died in the game.
-     * @return the dead entities in the {@link World} game
+     * @return the dead entities in the {@link model.world.World} game
      */
     Collection<UnmodifiableEntity> getDeadEntities();
 

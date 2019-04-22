@@ -1,31 +1,31 @@
 package view.game;
 
 /**
- * An enumeration representing the sprite sheets of the {@link PlayerView}.
+ * An enumeration representing the sprite sheets of the {@link model.entities.Player}.
  */
 public enum PlayerImage {
     /**
-     * Image for a {@link Player} climbing up.
+     * Image for a {@link model.entities.Player} climbing up.
      */
     CLIMBING_UP("raccoon_climb.png", 2),
     /**
-     * Image for a {@link Player} climbing down.
+     * Image for a {@link model.entities.Player} climbing down.
      */
     CLIMBING_DOWN("raccoon_climb.png", 2),
     /**
-     * Image for an idle {@link Player}.
+     * Image for an idle {@link model.entities.Player}.
      */
     IDLE("raccoon_idle.png", 1),
     /**
-     * Image for a {@link Player} jumping.
+     * Image for a {@link model.entities.Player} jumping.
      */
     JUMPING("raccoon_jump.png", 4),
     /**
-     * Image for a {@link Player} moving left.
+     * Image for a {@link model.entities.Player} moving left.
      */
     MOVING_LEFT("raccoon_walking.png", 2),
     /**
-     * Image for a {@link Player} moving left.
+     * Image for a {@link model.entities.Player} moving left.
      */
     MOVING_RIGHT("raccoon_walking.png", 2);
 
@@ -40,8 +40,8 @@ public enum PlayerImage {
     }
 
     /**
-     * Returns the url of the sprite sheet associated to the {@link model.entities.EntityState}.
-     * @return the url of the sprite sheet associated to the {@link model.entities.EntityState}
+     * Returns the URL of the sprite sheet associated to the {@link model.entities.EntityState}.
+     * @return the URL of the sprite sheet associated to the {@link model.entities.EntityState}
      */
     public String getImageUrl() {
         return SPRITES_DIR + this.spriteSheetUrl;

@@ -1,19 +1,19 @@
 package view.game;
 
 /**
- * An enumeration representing the sprite sheets of the {@link WalkingEnemyView}.
+ * An enumeration representing the sprite sheets of the {@link model.entities.WalkingEnemy}.
  */
 public enum WalkingEnemyImage {
     /**
-     * Image for an idle {@link WalkingEnemy}.
+     * Image for an idle {@link model.entities.WalkingEnemy}.
      */
     IDLE("walkingEnemy_idle.png", 1),
     /**
-     * Image for a {@link WalkingEnemy} moving left.
+     * Image for a {@link model.entities.WalkingEnemy} moving left.
      */
     MOVING_LEFT("walkingEnemy_walking.png", 3),
     /**
-     * Image for a {@link WalkingEnemy} moving left.
+     * Image for a {@link model.entities.WalkingEnemy} moving left.
      */
     MOVING_RIGHT("walkingEnemy_walking.png", 3);
 
@@ -28,8 +28,8 @@ public enum WalkingEnemyImage {
     }
 
     /**
-     * Returns the url of the sprite sheet associated to the {@link model.entities.EntityState}.
-     * @return the url of the sprite sheet associated to the {@link model.entities.EntityState}
+     * Returns the URL of the sprite sheet associated to the {@link model.entities.EntityState}.
+     * @return the URL of the sprite sheet associated to the {@link model.entities.EntityState}
      */
     public String getImageUrl() {
         return SPRITES_DIR + this.spriteSheetUrl;

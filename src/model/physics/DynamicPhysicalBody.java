@@ -85,7 +85,7 @@ public class DynamicPhysicalBody extends AbstractPhysicalBody {
     }
 
     /**
-     * Sets a linear velocity to this {@link Body} and its corresponding {@link State}.
+     * Sets a linear velocity to this {@link Body} and its corresponding {@link EntityState}.
      * @param movement the type of {@link MovementType}
      * @param x the horizontal component of the movement
      * @param y the vertical component of the movement

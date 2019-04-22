@@ -27,7 +27,7 @@ import model.world.WorldFactoryImpl;
 import model.world.WorldImpl;
 
 /**
- * Tests for the creation of {@link Entity}.
+ * Tests for the creation of {@link model.entities.Entity}.
  */
 public class EntityCreationTest {
     private static final double WORLD_WIDTH = 8;
@@ -141,7 +141,7 @@ public class EntityCreationTest {
 
     /**
      * Test which controls that the build should fail if the {@link AbstractEntityBuilder} for {@link WalkingEnemy}s tries to
-     * build it without inserting the walking range of this {@link Entity}.
+     * build it without inserting the walking range of this {@link model.entities.Entity}.
      */
     @Test(expected = IllegalStateException.class)
     public void walkingEnemyCreationWithoutWalkingRangeFail() {
@@ -284,7 +284,7 @@ public class EntityCreationTest {
 
     /**
      * Test which controls that the build should fail if the {@link AbstractEntityBuilder} for {@link EnemyGenerator}s tries to
-     * build it without inserting the {@link ModifiableWorld}.
+     * build it without inserting the {@link model.world.ModifiableWorld}.
      */
     @Test(expected = IllegalStateException.class)
     public void enemyGeneratorCreationWithoutWorldFail() {

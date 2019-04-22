@@ -12,8 +12,8 @@ import model.world.World;
 import model.world.WorldFactoryImpl;
 
 /**
- * Adjunctive tests over the creation of {@link PhysicalBody}s not covered into the {@link StaticPhysicalBodyCreationTest}
- * and the {@link DynamicPhysicalBodyCreationTest} tests.
+ * Adjunctive tests over the creation of {@link model.physics.PhysicalBody}s not covered into the
+ * {@link StaticPhysicalBodyCreationTest} and the {@link DynamicPhysicalBodyCreationTest} tests.
  */
 public class PhysicalBodyCreationTest {
     private static final double WORLD_WIDTH = 8;
@@ -27,7 +27,7 @@ public class PhysicalBodyCreationTest {
     private final PhysicalFactory factory;
 
     /**
-     * Constructor for this test over {@link PhysicalBody}s.
+     * Constructor for this test over {@link model.physics.PhysicalBody}s.
      */
     public PhysicalBodyCreationTest() {
         this.factory = new PhysicalFactoryImpl();
@@ -35,7 +35,7 @@ public class PhysicalBodyCreationTest {
     }
 
     /**
-     * Test for the correct creation of a {@link PlayerPhysicalBody} which has a rectangular shape.
+     * Test for the correct creation of a {@link model.physics.PlayerPhysicalBody} which has a rectangular shape.
      */
     @Test
     public void allowedPlayerBodyCreationTest() {
@@ -44,7 +44,7 @@ public class PhysicalBodyCreationTest {
     }
 
     /**
-     * Test for the correct failure resulting from creation of a {@link PlayerPhysicalBody} with a circular shape.
+     * Test for the correct failure resulting from creation of a {@link model.physics.PlayerPhysicalBody} with a circular shape.
      */
     @Test(expected = IllegalArgumentException.class)
     public void notAllowedPlayerBodyCreationTest() {
@@ -52,7 +52,8 @@ public class PhysicalBodyCreationTest {
     }
 
     /**
-     * Test for the creation of a circular {@link PhysicalBody} with the correct size, that is with same width and height.
+     * Test for the creation of a circular {@link model.physics.PhysicalBody} with the correct size, that is with same width
+     * and height.
      */
     @Test
     public void correctlySizedCircularBodyCreationTest() {
@@ -61,8 +62,8 @@ public class PhysicalBodyCreationTest {
     }
 
     /**
-     * Test for the correct failure resulting from creation of a circular {@link PhysicalBody} with the wrong size, that is
-     * with same width different from height.
+     * Test for the correct failure resulting from creation of a circular {@link model.physics.PhysicalBody} with the wrong
+     * size, that is with width different from height.
      */
     @Test(expected = IllegalArgumentException.class)
     public void outOfSizeCircularBodyCreationTest() {
