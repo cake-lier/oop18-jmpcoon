@@ -44,7 +44,7 @@ public class SpriteAnimation extends Transition {
         setInterpolator(Interpolator.LINEAR);
         this.list = new ArrayList<>();
         this.createList();
-        this.setImage(image);
+        this.setImage();
     }
 
     /**
@@ -73,7 +73,7 @@ public class SpriteAnimation extends Transition {
         });
     }
 
-    private void setImage(final Image image) {
+    private void setImage() {
         this.image = this.writeImage(0, 0);
     }
 

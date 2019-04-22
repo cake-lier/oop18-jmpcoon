@@ -1,6 +1,7 @@
 package test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -37,7 +38,7 @@ public class WorldTest {
     private static final double LADDER_HEIGHT = 1;
     private static final double LADDER_WIDTH = 0.3;
     private static final double ANGLE = 0;
-    private static final double PRECISION = 0.005;
+    private static final double PRECISION = 0.007;
     private static final int SHORT_UPDATE_STEPS = 10;
     private static final int LONG_UPDATE_STEPS = 100;
     private static final String WRONG_DIMENSIONS = "The world created had the wrong dimensions";
@@ -90,15 +91,7 @@ public class WorldTest {
     }
 
     /**
-     * Test for the correct dimensions of the world.
-     */
-    @Test
-    public void worldDimensionsTest() {
-        assertEquals(WRONG_DIMENSIONS, this.world.getDimensions(), new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT));
-    }
-
-    /**
-     * Test for the correct throwing of exception by a {@link model.world.UpdatableWorld} updating without initialization.
+     * Test for the correct throwing of exception by a {@link WorldImpl} updating without initialization.
      */
     @Test(expected = IllegalStateException.class)
     public void worldUpdateWithoutInitializatonExceptionTest() {
@@ -139,14 +132,25 @@ public class WorldTest {
     }
 
     /**
-     * Test for the creation of the correct number of entities inside the world.
+     * Test for the creation of the world with the right characteristics.
      */
     @Test
-    public void numberOfEntitiesCreationTest() {
-        final List<EntityProperties> entities = Arrays.asList(this.playerProperties, this.platformProperties,
+    public void worldStatusAtCreationTest() {
+        final UpdatableWorld world = new WorldFactoryImpl().create();
+        final List<EntityProperties> entities = Arrays.asList(this.playerProperties, 
+                                                              this.platformProperties, 
                                                               this.ladderProperties);
-        this.world.initLevel(entities);
-        assertEquals(WRONG_ENTITIES_NUMBER, entities.size(), this.world.getAliveEntities().size());
+        world.initLevel(entities);
+        assertEquals(WRONG_ENTITIES_NUMBER, entities.size(), world.getAliveEntities().size());
+        assertEquals("There shouldn't be dead entities", 0, world.getDeadEntities().size());
+        assertEquals("The score should be zero", 0, world.getCurrentScore());
+        assertEquals("There should be no events in queue", 0, world.getCurrentEvents().size());
+        assertFalse("The game should be ongoing", world.isGameOver());
+        assertFalse("The game shouldn't be terminated", world.hasPlayerWon());
+        assertEquals("The player should not have more than one life", 1, world.getPlayerLives());
+        assertEquals(WRONG_DIMENSIONS, 
+                     world.getDimensions(),
+                     new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT));
     }
 
     /**
@@ -337,9 +341,53 @@ public class WorldTest {
         assertEquals(PLAYER_MOVE, playerTopPosition.getRight(), player.get().getPosition().getRight(), PRECISION);
     }
 
+    /**
+     * Test for the death of the {@link Player} when falling outside the world bounds.
+     */
+    @Test
+    public void playerFallingDeathTest() {
+        this.world.initLevel(Arrays.asList(this.playerProperties));
+        while (!this.world.isGameOver()) {
+            this.world.update();
+        }
+        assertEquals("The player should have 0 lives", 0, this.world.getPlayerLives());
+    }
+
+    /**
+     * Test for the stop of the player climbing when at the top of a ladder.
+     */
+    @Test
+    public void stopPlayerClimbingTest() {
+        final EntityProperties platform2Properties = new EntityPropertiesImpl(EntityType.PLATFORM,
+                                                                              BodyShape.RECTANGLE,
+                                                                              WORLD_WIDTH / 2,
+                                                                              this.ladderProperties.getPosition().getRight()
+                                                                              + LADDER_HEIGHT / 2
+                                                                              - PLATFORM_HEIGHT,
+                                                                              PLATFORM_WIDTH,
+                                                                              PLATFORM_HEIGHT,
+                                                                              ANGLE,
+                                                                              Optional.absent(),
+                                                                              Optional.absent());
+        this.world.initLevel(Arrays.asList(this.playerProperties, this.platformProperties, 
+                                           this.ladderProperties, platform2Properties));
+        Pair<Double, Double> previousPosition = this.getPlayer().get().getPosition();
+        this.world.movePlayer(MovementType.CLIMB_UP);
+        this.world.update();
+        while (!previousPosition.equals(this.getPlayer().get().getPosition())) {
+            previousPosition = this.getPlayer().get().getPosition();
+            this.world.movePlayer(MovementType.CLIMB_UP);
+            this.world.update();
+        }
+        assertEquals(PLAYER_MOVE,
+                     platform2Properties.getPosition().getRight() + PLATFORM_HEIGHT / 2 + PLAYER_DIMENSION / 2,
+                     this.getPlayer().get().getPosition().getRight(),
+                     PRECISION);
+    }
+
     private Optional<UnmodifiableEntity> getPlayer() {
         return Optional.fromJavaUtil(this.world.getAliveEntities()
-                                               .parallelStream()
+                                               .stream()
                                                .filter(e -> e.getType() == EntityType.PLAYER)
                                                .findFirst());
     }
