@@ -15,11 +15,11 @@ public final class EntityBuilderUtils {
         return new AbstractEntityBuilder<EnemyGenerator>() {
             @Override
             protected EnemyGenerator buildEntity() {
-                try {
+                if (super.getPhysicalFactory().isPresent() && super.getWorld().isPresent()) {
                     return new EnemyGenerator(super.createStaticPhysicalBody(EntityType.ENEMY_GENERATOR),
-                            super.getPhysicalFactory().get(),
-                            super.getWorld().get());
-                } catch (final IllegalStateException e) {
+                                              super.getPhysicalFactory().get(),
+                                              super.getWorld().get());
+                } else {
                     throw new IllegalStateException("Not all the fields necessary to build an EnemyGenerator have been "
                                                     + "initialized");
                 }
@@ -74,10 +74,10 @@ public final class EntityBuilderUtils {
         return new AbstractEntityBuilder<PowerUp>() {
             @Override
             protected PowerUp buildEntity() {
-                try {
-                    return new PowerUp(super.createStaticPhysicalBody(EntityType.POWERUP), this.getPowerUpType().get());
-                } catch (final IllegalStateException e) {
-                    throw new IllegalStateException("Not all the fields to builds a PowerUp have been initialized");
+                if (super.getPowerUpType().isPresent()) {
+                    return new PowerUp(super.createStaticPhysicalBody(EntityType.POWERUP), super.getPowerUpType().get());
+                } else {
+                    throw new IllegalStateException("Not all the fields necessary to build a PowerUp have been initialized");
                 }
             }
         };
@@ -104,10 +104,10 @@ public final class EntityBuilderUtils {
         return new AbstractEntityBuilder<WalkingEnemy>() {
             @Override
             protected WalkingEnemy buildEntity() {
-                try {
+                if (super.getWalkingRange().isPresent()) {
                     return new WalkingEnemy(super.createDynamicPhysicalBody(EntityType.WALKING_ENEMY), 
                                             super.getWalkingRange().get());
-                } catch (final IllegalArgumentException e) {
+                } else {
                     throw new IllegalArgumentException("Not all the fields necessary to build a WalkingEnemy have been "
                                                        + "initialized");
                 }
