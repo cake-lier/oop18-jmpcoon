@@ -24,8 +24,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.entities.EntityType;
 import view.Ratios;
-import view.View;
 import view.ViewUtils;
+import view.app.AppView;
 import view.menus.GameMenu;
 import view.menus.Menu;
 
@@ -71,7 +71,7 @@ public final class GameViewImpl implements GameView {
     private static final int SCORE_PADDING_RATIO = 2500;
 
     private final AppController appController;
-    private final View appView;
+    private final AppView appView;
     private final Stage stage;
     private final Pane entities;
     private final MediaPlayer music;
@@ -102,7 +102,7 @@ public final class GameViewImpl implements GameView {
      * @param stage the stage in which to draw the game scene
      * @param music the music to play in background
      */
-    public GameViewImpl(final AppController appController, final View view, final Stage stage, final MediaPlayer music) {
+    public GameViewImpl(final AppController appController, final AppView view, final Stage stage, final MediaPlayer music) {
         this.appController = Objects.requireNonNull(appController);
         this.appView = Objects.requireNonNull(view);
         this.music = Objects.requireNonNull(music);

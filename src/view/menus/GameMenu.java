@@ -14,8 +14,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import view.Ratios;
-import view.View;
 import view.ViewUtils;
+import view.app.AppView;
 import view.game.GameView;
 import javafx.scene.control.Alert.AlertType;
 
@@ -32,7 +32,7 @@ public final class GameMenu implements Menu {
     private static final String BTN_STYLE_CLASS = "buttons";
 
     private final AppController appController;
-    private final View appView;
+    private final AppView appView;
     private final GameController gameController;
     private final GameView gameView;
     private final Pane root;
@@ -59,7 +59,7 @@ public final class GameMenu implements Menu {
     private Button backButton;
 
     /**
-     * The default constructor. It accepts the pane element in which to add itself, the {@link AppController}, the {@link View}
+     * The default constructor. It accepts the pane element in which to add itself, the {@link AppController}, the {@link AppView}
      * and the {@link GameController} of this particular instance of the game so as to save a game, go back to the main menu and
      * exit the game.
      * @param root the {@link Pane} in which to draw this menu
@@ -69,7 +69,7 @@ public final class GameMenu implements Menu {
      * @param gameController the controller of this game
      * @param gameView the view of this game
      */
-    public GameMenu(final Pane root, final double stageHeight, final AppController appController, final View appView,
+    public GameMenu(final Pane root, final double stageHeight, final AppController appController, final AppView appView,
                     final GameController gameController, final GameView gameView) {
         this.root = root;
         this.stageHeight = stageHeight;

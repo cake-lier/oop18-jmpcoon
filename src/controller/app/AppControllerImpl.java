@@ -12,7 +12,7 @@ import java.util.List;
 import com.google.common.base.Optional;
 
 import controller.SaveFile;
-import view.View;
+import view.app.AppView;
 
 /**
  * Class implementation of {@link AppController}.
@@ -21,13 +21,13 @@ public final class AppControllerImpl implements AppController {
     private static final String FOLDER = "jmpcoon";
     private static final String LOG_FILE = "jmpcoon.log";
 
-    private final View view;
+    private final AppView view;
 
     /**
      * Builds a new {@link AppControllerImpl}.
-     * @param view the {@link View} element responsible for the application
+     * @param view the {@link AppView} element responsible for the application
      */
-    public AppControllerImpl(final View view) {
+    public AppControllerImpl(final AppView view) {
         this.view = view;
     }
 

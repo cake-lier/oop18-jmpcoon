@@ -1,4 +1,4 @@
-package view;
+package view.app;
 
 import com.google.common.base.Optional;
 
@@ -18,9 +18,9 @@ import view.menus.AppMenu;
 import view.menus.Menu;
 
 /**
- * The class implementation of {@link View}.
+ * The class implementation of {@link AppView}.
  */
-public final class ViewImpl implements View {
+public final class AppViewImpl implements AppView {
     private static final String TITLE = "Jumping Raccoon Adventures";
     private static final Media MENU_MUSIC = new Media(ClassLoader.getSystemResource("sounds/stillalive.mp3").toExternalForm());
     private static final Media GAME_MUSIC = new Media(ClassLoader.getSystemResource("sounds/pixelland.mp3").toExternalForm());
@@ -39,7 +39,7 @@ public final class ViewImpl implements View {
      * instructs it to perform some operation, then starts the application via the {@link AppController}.
      * @param stage the {@link Stage} in which to draw all visual elements
      */
-    public ViewImpl(final Stage stage) {
+    public AppViewImpl(final Stage stage) {
         this.controller = new AppControllerImpl(this);
         this.stage = stage;
         this.stage.setTitle(TITLE);

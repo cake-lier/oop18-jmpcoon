@@ -2,7 +2,7 @@ package main;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import view.ViewImpl;
+import view.app.AppViewImpl;
 
 /**
  * The main class which starts the whole application.
@@ -23,6 +23,6 @@ public final class Main extends Application {
      */
     @Override
     public void start(final Stage stage) throws Exception {
-        new ViewImpl(stage);
+        new AppViewImpl(stage);
     }
 }

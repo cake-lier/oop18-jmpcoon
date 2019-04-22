@@ -1,12 +1,12 @@
-package view;
+package view.app;
 
 import com.google.common.base.Optional;
 
 /**
- * It represents the view of the game, the class which will be called by the controller for requesting to display the visual part
+ * It represents the view of this application, the component to which refer to for requesting to display the visual part
  * of the application. It can show the initial menu or the game itself.
  */
-public interface View {
+public interface AppView {
     /**
      * Displays the initial menu.
      */
