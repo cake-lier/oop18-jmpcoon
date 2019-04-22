@@ -43,8 +43,8 @@ public final class EnemyGenerator extends StaticEntity {
     }
 
     /**
-     * It notifies that a lapse of time have passed. If this {@link EnemyGenerator} has created a new {@link RollingEnemy},
-     * it adds it to the world.
+     * It notifies this {@link EnemyGenerator} that a lapse of time have passed. If this {@link EnemyGenerator} has created
+     * a new {@link RollingEnemy}, it adds it to the world.
      */
     public void onTimeAdvanced() {
         if (this.checkTime()) {
