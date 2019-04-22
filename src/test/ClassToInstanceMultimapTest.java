@@ -113,7 +113,7 @@ public class ClassToInstanceMultimapTest {
         final Collection<Number> doubles = multimap.get(Double.class);
         assertTrue(GET_FAILED, Arrays.asList(this.firstDouble, this.secondDouble).containsAll(doubles));
         assertEquals(NOT_SAME_NUMBER_ELEMENTS, 2, doubles.size());
-        multimap.putAll(Float.class, Arrays.asList(new Float(0), new Float(1)));
+        multimap.putAll(Float.class, Arrays.asList(Float.valueOf(0), Float.valueOf(1)));
         assertEquals(NOT_SAME_NUMBER_ELEMENTS, 2, multimap.get(Float.class).size());
         final ClassToInstanceMultimap<Integer> extMultimap = new ClassToInstanceMultimapImpl<>();
         extMultimap.put(Integer.class, Integer.valueOf(1));
@@ -145,7 +145,7 @@ public class ClassToInstanceMultimapTest {
      */
     @Test(expected = ClassCastException.class)
     public void wrongTypeMultipleInsertionTest() {
-        this.testMultimap.putAll(Integer.class, Arrays.asList(new Float(0), new Float(0)));
+        this.testMultimap.putAll(Integer.class, Arrays.asList(Float.valueOf(0), Float.valueOf(0)));
     }
 
     /**
@@ -157,7 +157,7 @@ public class ClassToInstanceMultimapTest {
         final Multimap<Class<? extends Number>, Number> extMultimap = MultimapBuilder.linkedHashKeys()
                                                                                      .linkedHashSetValues()
                                                                                      .build();
-        extMultimap.put(Integer.class, new Double(0));
+        extMultimap.put(Integer.class, Double.valueOf(0));
         this.testMultimap.putAll(extMultimap);
     }
 
@@ -238,7 +238,7 @@ public class ClassToInstanceMultimapTest {
      */
     @Test(expected = ClassCastException.class)
     public void replaceMethodTest() {
-        final Double newDouble = new Double(-1);
+        final Double newDouble = Double.valueOf(-1);
         this.testMultimap.replaceValues(Double.class, Arrays.asList(newDouble));
         assertEquals(NOT_SAME_NUMBER_ELEMENTS, 2, this.testMultimap.size());
         assertTrue(NO_REPLACED_DOUBLE, this.testMultimap.containsValue(newDouble));
