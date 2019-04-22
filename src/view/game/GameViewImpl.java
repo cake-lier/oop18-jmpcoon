@@ -76,6 +76,7 @@ public final class GameViewImpl implements GameView {
     private final Pane entities;
     private final MediaPlayer music;
     private final EventHandler<KeyEvent> commandHandler;
+    private final Set<InputType> inputs;
     private EventHandler<WindowEvent> closeHandler;
     private GameController gameController;
     private MemoizedEntityConverter entityConverter;
@@ -84,7 +85,6 @@ public final class GameViewImpl implements GameView {
     private boolean isMenuVisible;
     private boolean isGameEnded;
     private boolean isInitialized;
-    private Set<InputType> inputs;
     @FXML
     private Text score;
     @FXML
@@ -165,7 +165,9 @@ public final class GameViewImpl implements GameView {
                                                        .filter(sounds -> sounds.getAssociatedEvent().isPresent())
                                                        .filter(eventSounds -> eventSounds.getAssociatedEvent().get() == event)
                                                        .findFirst()
-                                                       .ifPresent(sound -> sound.getSound().play(this.music.getVolume())));
+                                                       .ifPresent(sound -> sound.getSound()
+                                                                                .play(this.music.isMute() ? 0 
+                                                                                      : this.music.getVolume())));
             this.score.setText(SCORE_STR + this.gameController.getCurrentScore() + LIVES_STR 
                                + this.gameController.getPlayerLives());
         });
@@ -204,7 +206,6 @@ public final class GameViewImpl implements GameView {
         this.stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, this.commandHandler);
         this.stage.getScene().removeEventHandler(KeyEvent.KEY_RELEASED, this.commandHandler);
         this.stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this.closeHandler);
-        this.inputs.clear();
     }
 
     /*

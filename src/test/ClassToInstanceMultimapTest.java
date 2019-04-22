@@ -22,18 +22,52 @@ import model.ClassToInstanceMultimap;
  * Test for checking he correctness of a {@link ClassToInstanceMultimap}.
  */
 public class ClassToInstanceMultimapTest {
-    private final Integer integer = Integer.valueOf(0);
-    private final Double firstDouble = new Double(0);
-    private final Double secondDouble = new Double(1);
-    private final ClassToInstanceMultimap<Number> testMultimap = new ClassToInstanceMultimapImpl<>();
+    private static final String NOT_EMPTY = "The multimap should be empty";
+    private static final String EMPTY = "The multimap should not be empty";
+    private static final String NOT_SAME_NUMBER_ELEMENTS = "There isn't the same number of elements as presumed";
+    private static final String NOT_SAME_ELEMENTS = "Some or all the elements previously inserted are not the same as before";
+    private static final String PUT_OR_VALUES_FAILED = "The 'put' method didn't insert elements correctly or the 'values' "
+                                                       + "method didn't return the correct values for this multimap";
+    private static final String NOT_SAME_NUMBER_VALUES = "There aren't the same number of values as presumed";
+    private static final String NOT_SAME_VALUES = "The values aren't the same as before";
+    private static final String GET_FAILED = "The 'get' method didn't obtain the two instances of Double present";
+    private static final String MORE_INSTANCES = "No instances of this type should be inside the multimap";
+    private static final String NO_INSTANCES = "The multimap should contain this instance type";
+    private static final String NOT_SAME_NUMBER_DISTINCT_KEYS = "The distinct keys in the map aren't in the same number as "
+                                                                + "presumed";
+    private static final String NOT_SAME_DISTINCT_KEYS = "The distinct keys aren't the same as before";
+    private static final String NOT_SAME_NUMBER_KEYS = "The total keys in this multimap aren't in the same number as presumed";
+    private static final String NOT_SAME_KEYS = "The total keys in this multimap aren't the same as before";
+    private static final String NOT_SAME_NUMBER_ENTRIES = "There isn't the same number of entries in the multimap as presumed";
+    private static final String NO_SAME_ENTRIES = "The multimap should contain every entry which already contains";
+    private static final String NOT_SAME_KEYS_IN_ENTRIES = "The keys in the entries aren't the same as before";
+    private static final String NOT_SAME_VALUES_IN_ENTRIES = "The values in the entries aren't the same as before";
+    private static final String ENTRIES_CHANGED = "The 'entries' method should leave unchanged the entries";
+    private static final String WRONG_EXCEPTION = "Any exception different from ClassCastException should not be thrown";
+    private static final String NO_NEW_ELEMENTS = "The multimap shouldn't already contain a newly generated instance";
+    private static final String NO_REPLACED_DOUBLE = "There isn't the newly replaced Double instance inside the multimap";
+
+    private final Integer integer;
+    private final Double firstDouble;
+    private final Double secondDouble;
+    private ClassToInstanceMultimap<Number> testMultimap;
 
     /**
-     * Default initialization of a {@link ClassToInstanceMultimap}, it's emptied and then three dummy objects are added, 
-     * an {@link Integer} one and two {@link Double} ones.
+     * Initializes the three dummy elements which will be inserted into the multimap: an {@link Integer} one and two
+     * {@link Double} ones.
+     */
+    public ClassToInstanceMultimapTest() {
+        this.integer = Integer.valueOf(0);
+        this.firstDouble = Double.valueOf(0);
+        this.secondDouble = Double.valueOf(1);
+    }
+
+    /**
+     * Default initialization of a {@link ClassToInstanceMultimap}, it's created and then the three elements are added.
      */
     @Before
     public void initializeMultimap() {
-        this.testMultimap.clear();
+        this.testMultimap = new ClassToInstanceMultimapImpl<>();
         this.testMultimap.putInstance(Integer.class, integer);
         this.testMultimap.putInstance(Double.class, firstDouble);
         this.testMultimap.putInstance(Double.class, secondDouble);
@@ -45,12 +79,12 @@ public class ClassToInstanceMultimapTest {
     @Test
     public void emptyMultimapTest() {
         final ClassToInstanceMultimap<Number> newMultimap = new ClassToInstanceMultimapImpl<>();
-        assertTrue("The ClassToInstanceMultimap is initially not empty", newMultimap.isEmpty());
+        assertTrue(NOT_EMPTY, newMultimap.isEmpty());
         final ClassToInstanceMultimap<Number> suppliedMultimap 
-                                                   = new ClassToInstanceMultimapImpl<Number>(MultimapBuilder.linkedHashKeys()
-                                                                                                            .arrayListValues()
-                                                                                                            .build());
-        assertTrue("The ClassToInstanceMultimap is initially not empty", suppliedMultimap.isEmpty());
+            = new ClassToInstanceMultimapImpl<Number>(MultimapBuilder.linkedHashKeys()
+                                                                     .arrayListValues()
+                                                                     .build());
+        assertTrue(NOT_EMPTY, suppliedMultimap.isEmpty());
     }
 
     /**
@@ -60,14 +94,12 @@ public class ClassToInstanceMultimapTest {
      */
     @Test
     public void instancesInsertionTest() {
-        assertEquals("There aren't three elements currently in the test multimap", 3, this.testMultimap.size());
-        assertFalse("The multimap should not be empty", this.testMultimap.isEmpty());
+        assertEquals(NOT_SAME_NUMBER_ELEMENTS, 3, this.testMultimap.size());
+        assertFalse(EMPTY, this.testMultimap.isEmpty());
         final Collection<Integer> integers = this.testMultimap.getInstances(Integer.class);
-        assertEquals("There isn't only one instance of the Integer class", 1, integers.size());
-        assertTrue("The Integer instance in the multimap is not the one previously inserted",
-                   Arrays.asList(this.integer).containsAll(integers));
-        assertTrue("There shouldn't be any Byte instance in the multimap",
-                   this.testMultimap.getInstances(Byte.class).isEmpty());
+        assertEquals(NOT_SAME_NUMBER_ELEMENTS, 1, integers.size());
+        assertTrue(NOT_SAME_ELEMENTS, Arrays.asList(this.integer).containsAll(integers));
+        assertTrue(NOT_SAME_NUMBER_ELEMENTS, this.testMultimap.getInstances(Byte.class).isEmpty());
     }
 
     /**
@@ -81,24 +113,22 @@ public class ClassToInstanceMultimapTest {
         multimap.put(Double.class, this.firstDouble);
         multimap.put(Double.class, this.secondDouble);
         final Collection<Number> values = multimap.values();
-        assertTrue("The 'put' method didn't insert elements correctly or the 'values' method didn't return the correct values for"
-                   + " this multimap", Arrays.asList(this.integer, this.firstDouble, this.secondDouble).containsAll(values));
-        assertEquals("There should be three values in this multimap", 3, values.size());
+        assertTrue(PUT_OR_VALUES_FAILED, Arrays.asList(this.integer, this.firstDouble, this.secondDouble).containsAll(values));
+        assertEquals(NOT_SAME_NUMBER_VALUES, 3, values.size());
         final Collection<Number> doubles = multimap.get(Double.class);
-        assertTrue("The 'get' method didn't obtain the two instances of Double present",
-                   Arrays.asList(this.firstDouble, this.secondDouble).containsAll(doubles));
-        assertEquals("There should be two instances of Double into the multimap", 2, doubles.size());
+        assertTrue(GET_FAILED, Arrays.asList(this.firstDouble, this.secondDouble).containsAll(doubles));
+        assertEquals(NOT_SAME_NUMBER_ELEMENTS, 2, doubles.size());
         multimap.putAll(Float.class, Arrays.asList(new Float(0), new Float(1)));
-        assertEquals("There should be two instances of Float in the multimap", 2, multimap.get(Float.class).size());
+        assertEquals(NOT_SAME_NUMBER_ELEMENTS, 2, multimap.get(Float.class).size());
         final ClassToInstanceMultimap<Integer> extMultimap = new ClassToInstanceMultimapImpl<>();
         extMultimap.put(Integer.class, Integer.valueOf(1));
         multimap.putAll(extMultimap);
-        assertEquals("There should be two Integer instances now", 2, multimap.get(Integer.class).size());
+        assertEquals(NOT_SAME_NUMBER_ELEMENTS, 2, multimap.get(Integer.class).size());
     }
 
     /**
-     * Tests if the incorrect use of the {@link ClassToInstanceMultimap#put(Object, Object)} raises the {@link ClassCastException}
-     * exception as it should do.
+     * Tests if the incorrect use of the {@link ClassToInstanceMultimap#put(Object, Object)} raises the
+     * {@link ClassCastException} exception as it should do.
      */
     @Test(expected = ClassCastException.class)
     public void wrongTypeInsertionTest() {
@@ -142,15 +172,13 @@ public class ClassToInstanceMultimapTest {
     @Test
     public void removalTest() {
         this.testMultimap.remove(Integer.class, this.integer);
-        assertEquals("There aren't only two elements in the multimap now", 2, this.testMultimap.size());
-        assertTrue("The two elements left aren't the two Double instances inserted before", 
-                   this.testMultimap.values().containsAll(Arrays.asList(this.firstDouble, this.secondDouble)));
+        assertEquals(NOT_SAME_NUMBER_ELEMENTS, 2, this.testMultimap.size());
+        assertTrue(NOT_SAME_ELEMENTS, this.testMultimap.values().containsAll(Arrays.asList(this.firstDouble, this.secondDouble)));
         this.testMultimap.putInstance(Integer.class, Integer.valueOf(-1));
         this.testMultimap.removeAll(Double.class);
-        assertTrue("No Double instance should be left inside the multimap",
-                   this.testMultimap.getInstances(Double.class).isEmpty());
+        assertTrue(MORE_INSTANCES, this.testMultimap.getInstances(Double.class).isEmpty());
         this.testMultimap.clear();
-        assertTrue("The multimap should be empty now", this.testMultimap.isEmpty());
+        assertTrue(NOT_EMPTY, this.testMultimap.isEmpty());
     }
 
     /**
@@ -159,31 +187,27 @@ public class ClassToInstanceMultimapTest {
      */
     @Test
     public void mapAndMultimapGettersTest() {
-        assertEquals("There aren't two distinct keys in the multimap",  2, this.testMultimap.keySet().size());
-        assertTrue("The distinct keys in the multimap aren't the same as before",
-                   this.testMultimap.keySet().containsAll(Arrays.asList(Integer.class, Double.class)));
-        assertEquals("The total keys in this multimap aren't three", 3, this.testMultimap.keys().size());
-        assertTrue("The total keys in this multimap aren't the one inserted before",
-                   this.testMultimap.keys().containsAll(Arrays.asList(Integer.class, Double.class, Double.class)));
-        assertEquals("There aren't three entries in the multimap", 3, this.testMultimap.entries().size());
-        assertTrue("The keys in the entries aren't the same as before", this.testMultimap.entries()
-                                                                                         .stream()
-                                                                                         .map(entry -> entry.getKey())
-                                                                                         .collect(Collectors.toList())
-                                                                                         .containsAll(this.testMultimap.keys()));
-        assertTrue("The values in the entries aren't the same as before", this.testMultimap.entries()
-                                                                                           .stream()
-                                                                                           .map(entry -> entry.getValue())
-                                                                                           .collect(Collectors.toList())
-                                                                                           .containsAll(this.testMultimap
-                                                                                                            .values()));
+        assertEquals(NOT_SAME_NUMBER_DISTINCT_KEYS,  2, this.testMultimap.keySet().size());
+        assertTrue(NOT_SAME_DISTINCT_KEYS, this.testMultimap.keySet().containsAll(Arrays.asList(Integer.class, Double.class)));
+        assertEquals(NOT_SAME_NUMBER_KEYS, 3, this.testMultimap.keys().size());
+        assertTrue(NOT_SAME_KEYS, this.testMultimap.keys()
+                                                   .containsAll(Arrays.asList(Integer.class, Double.class, Double.class)));
+        assertEquals(NOT_SAME_NUMBER_ENTRIES, 3, this.testMultimap.entries().size());
+        assertTrue(NOT_SAME_KEYS_IN_ENTRIES, this.testMultimap.entries().stream()
+                                                                        .map(entry -> entry.getKey())
+                                                                        .collect(Collectors.toList())
+                                                                        .containsAll(this.testMultimap.keys()));
+        assertTrue(NOT_SAME_VALUES_IN_ENTRIES, this.testMultimap.entries().stream()
+                                                                          .map(entry -> entry.getValue())
+                                                                          .collect(Collectors.toList())
+                                                                          .containsAll(this.testMultimap.values()));
         this.testMultimap.entries().forEach(entry -> {
             try {
                 entry.getKey().cast(entry.getValue());
-            } catch (final ClassCastException exception) {
-                fail("The 'entries' method should leave unchanged the entries");
-            } catch (final Exception exception) {
-                fail("Any exception different from ClassCastException should not be thrown");
+            } catch (final ClassCastException e) {
+                fail(ENTRIES_CHANGED);
+            } catch (final Exception e) {
+                fail(WRONG_EXCEPTION);
             }
         });
     }
@@ -194,18 +218,16 @@ public class ClassToInstanceMultimapTest {
     @Test
     public void multimapToMapConversionTest() {
         final Map<Class<? extends Number>, Collection<Number>> map = this.testMultimap.asMap();
-        assertEquals("The distrinct keys in the map aren't in the same number as before", this.testMultimap.keySet().size(), 
-                     map.keySet().size());
-        assertTrue("The distinct keys aren't the same as before", map.keySet().containsAll(this.testMultimap.keySet()));
-        assertEquals("The values aren't in the same number as before", this.testMultimap.size(), map.values()
-                                                                                                    .stream()
-                                                                                                    .flatMap(c -> c.stream())
-                                                                                                    .collect(Collectors.toList())
-                                                                                                    .size());
-        assertTrue("The values aren't the same as before", map.values().stream()
-                                                                       .flatMap(c -> c.stream())
-                                                                       .collect(Collectors.toList())
-                                                                       .containsAll(this.testMultimap.values()));
+        assertEquals(NOT_SAME_NUMBER_DISTINCT_KEYS, this.testMultimap.keySet().size(), map.keySet().size());
+        assertTrue(NOT_SAME_DISTINCT_KEYS, map.keySet().containsAll(this.testMultimap.keySet()));
+        assertEquals(NOT_SAME_NUMBER_VALUES, this.testMultimap.size(), map.values().stream()
+                                                                                   .flatMap(c -> c.stream())
+                                                                                   .collect(Collectors.toList())
+                                                                                   .size());
+        assertTrue(NOT_SAME_VALUES, map.values().stream()
+                                                .flatMap(c -> c.stream())
+                                                .collect(Collectors.toList())
+                                                .containsAll(this.testMultimap.values()));
     }
 
     /**
@@ -214,18 +236,14 @@ public class ClassToInstanceMultimapTest {
      */
     @Test
     public void containsMethodsTest() {
-        assertTrue("The multimap should contain the Integer class key", this.testMultimap.containsKey(Integer.class));
-        assertFalse("The multimap shouldn't contain the Float class key", this.testMultimap.containsKey(Float.class));
-        assertTrue("The multimap should contain the Double instance previously inserted",
-                   this.testMultimap.containsValue(this.firstDouble));
-        assertFalse("The multimap shouldn't contain a Player instance newly generated",
-                    this.testMultimap.containsValue(Integer.valueOf(-1)));
+        assertTrue(NO_INSTANCES, this.testMultimap.containsKey(Integer.class));
+        assertFalse(MORE_INSTANCES, this.testMultimap.containsKey(Float.class));
+        assertTrue(NOT_SAME_NUMBER_ELEMENTS, this.testMultimap.containsValue(this.firstDouble));
+        assertFalse(NO_NEW_ELEMENTS, this.testMultimap.containsValue(Integer.valueOf(-1)));
         this.testMultimap.entries().forEach(entry -> {
-            assertTrue("The multimap should contain every entry which already contains",
-                       this.testMultimap.containsEntry(entry.getKey(), entry.getValue()));
+            assertTrue(NO_SAME_ENTRIES, this.testMultimap.containsEntry(entry.getKey(), entry.getValue()));
         });
-        assertFalse("The multimap shouldn't contain an entry made with a never inserted value",
-                    this.testMultimap.containsEntry(Integer.class, Integer.valueOf(-1)));
+        assertFalse(NO_NEW_ELEMENTS, this.testMultimap.containsEntry(Integer.class, Integer.valueOf(-1)));
     }
 
     /**
@@ -235,9 +253,8 @@ public class ClassToInstanceMultimapTest {
     public void replaceMethodTest() {
         final Double newDouble = new Double(-1);
         this.testMultimap.replaceValues(Double.class, Arrays.asList(newDouble));
-        assertEquals("There aren't two values in the multimap as it should be", 2, this.testMultimap.size());
-        assertTrue("There isn't the newly replaced Double instance inside the multimap",
-                   this.testMultimap.containsValue(newDouble));
+        assertEquals(NOT_SAME_NUMBER_ELEMENTS, 2, this.testMultimap.size());
+        assertTrue(NO_REPLACED_DOUBLE, this.testMultimap.containsValue(newDouble));
         this.testMultimap.replaceValues(Double.class, Arrays.asList(Integer.valueOf(0)));
     }
 }

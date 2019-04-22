@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -27,8 +28,6 @@ import model.world.WorldFactoryImpl;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.google.common.collect.Queues;
-
 import controller.SaveFile;
 import view.game.GameView;
 
@@ -38,6 +37,7 @@ import view.game.GameView;
 public class GameControllerImpl implements GameController {
     private static final String INCOMPATIBLE_FILE_MSG = "The file read isn't compatible";
     private static final long DELTA_UPDATE = 15;
+    private static final int JUMP_DELAY = 2;
     private static final URL LEVEL_FILE = ClassLoader.getSystemResource("level1.lev");
 
     private UpdatableWorld gameWorld;
@@ -45,6 +45,7 @@ public class GameControllerImpl implements GameController {
     private ScheduledThreadPoolExecutor timer;
     private boolean running;
     private boolean jumped;
+    private int timeFromLastJump;
 
     /**
      * Builds a new {@link GameControllerImpl}.
@@ -57,6 +58,7 @@ public class GameControllerImpl implements GameController {
         this.timer = this.createTimer();
         this.running = false;
         this.jumped = false;
+        this.timeFromLastJump = JUMP_DELAY - 1;
     }
 
     /**
@@ -164,8 +166,8 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public Queue<GameEvent> getCurrentEvents() {
-        final Queue<GameEvent> events = Queues.newConcurrentLinkedQueue();
-        if (this.jumped) {
+        final Queue<GameEvent> events = new ConcurrentLinkedQueue<>();
+        if (this.jumped && this.timeFromLastJump == 0) {
             events.offer(GameEvent.JUMP);
         }
         this.gameWorld.getCurrentEvents()
@@ -203,6 +205,11 @@ public class GameControllerImpl implements GameController {
                          .map(m -> new ImmutablePair<>(m, this.gameWorld.movePlayer(m)))
                          .filter(p -> p.getLeft() == MovementType.JUMP && p.getRight())
                          .forEach(b -> this.jumped = true);
+            if (!this.jumped) {
+                this.timeFromLastJump = JUMP_DELAY - 1;
+            } else {
+                this.timeFromLastJump = (this.timeFromLastJump + 1) % JUMP_DELAY;
+            }
             this.gameWorld.update();
             this.gameView.update();
         }
