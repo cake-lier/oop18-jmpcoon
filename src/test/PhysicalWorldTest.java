@@ -1,5 +1,7 @@
 package test;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -23,6 +25,7 @@ public class PhysicalWorldTest {
     private static final double STD_WIDTH = WORLD_WIDTH / 15;
     private static final double STD_HEIGHT = WORLD_HEIGHT / 15;
     private static final ImmutablePair<Double, Double> STD_POSITION = new ImmutablePair<>(WORLD_WIDTH / 2, WORLD_HEIGHT / 2);
+    private static final String NOT_CREATED = "This instance should have been created correctly";
 
     private final World world = WorldImpl.class.cast(new WorldFactoryImpl().create());
     private PhysicalFactory factory;
@@ -50,8 +53,9 @@ public class PhysicalWorldTest {
      */
     @Test
     public void worldCreationTest() {
-        this.factory.createPhysicalWorld(this.world, WORLD_WIDTH, WORLD_HEIGHT);
-        this.factory.createPlayerPhysicalBody(STD_POSITION, 0, BodyShape.RECTANGLE, STD_WIDTH, STD_HEIGHT);
+        assertNotNull(NOT_CREATED, this.factory.createPhysicalWorld(this.world, WORLD_WIDTH, WORLD_HEIGHT));
+        assertNotNull(NOT_CREATED, this.factory.createPlayerPhysicalBody(STD_POSITION, 0, BodyShape.RECTANGLE, STD_WIDTH,
+                                                                         STD_HEIGHT));
     }
 
     /**
