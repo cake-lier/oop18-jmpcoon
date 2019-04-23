@@ -106,7 +106,7 @@ public class GameControllerImpl implements GameController {
                  = new ObjectInputStream(new BufferedInputStream(new FileInputStream(SaveFile.values()[saveFileIndex]
                                                                                              .getSavePath())))) {
             this.gameWorld = (UpdatableWorld) in.readObject();
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             throw new IllegalArgumentException(INCOMPATIBLE_FILE_MSG);
         }
     }
@@ -224,9 +224,9 @@ public class GameControllerImpl implements GameController {
                     entities.add((EntityProperties) obj);
                 }
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             e.printStackTrace();
         }
         return entities;
