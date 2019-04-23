@@ -27,7 +27,7 @@ import it.unibo.jmpcoon.model.world.NotifiableWorld;
 /**
  * Class representing a listener for physical collisions between bodies required by the dyn4j library so as to rule them.
  */
-public class CollisionRules extends CollisionAdapter implements Serializable {
+public final class CollisionRules extends CollisionAdapter implements Serializable {
     private static final long serialVersionUID = 7929553481812283534L;
     private final NotifiableWorld outerWorld;
     private final ReadablePhysicalWorld physicalWorld;
@@ -102,11 +102,14 @@ public class CollisionRules extends CollisionAdapter implements Serializable {
      */
     private void processPowerUp(final PlayerPhysicalBody playerPhysicalBody, final Body powerUpBody) {
         powerUpBody.setActive(false);
-        final PowerUpType type = this.physicalWorld.getPowerUpTypeFromBody(powerUpBody);
-        if (type != PowerUpType.GOAL) {
-            playerPhysicalBody.givePowerUp(type);
+        final Optional<PowerUpType> optionalType = this.physicalWorld.getPowerUpTypeFromBody(powerUpBody);
+        if (optionalType.isPresent()) {
+            final PowerUpType type = optionalType.get();
+            if (type != PowerUpType.GOAL) {
+                playerPhysicalBody.givePowerUp(type);
+            }
+            this.outerWorld.notifyCollision(type.getAssociatedEvent());
         }
-        this.outerWorld.notifyCollision(type.getAssociatedEvent());
     }
 
     /*

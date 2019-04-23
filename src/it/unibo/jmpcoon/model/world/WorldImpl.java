@@ -205,7 +205,7 @@ public final class WorldImpl implements World {
     @Override
     public Collection<UnmodifiableEntity> getAliveEntities() {
         return Stream.concat(Stream.concat(this.getEntitiesStream(this.aliveEntities, 
-                                                                  UnmodifiableEntityImpl::ofStaticEntity, 
+                                                                  UnmodifiableEntityImpl::new, 
                                                                   Arrays.asList(Platform.class, Ladder.class)),
                                            this.getDynamicEntitiesStream(this.aliveEntities)),
                              this.getPowerUpStream(this.aliveEntities))
@@ -313,7 +313,7 @@ public final class WorldImpl implements World {
 
     private Stream<UnmodifiableEntity> getDynamicEntitiesStream(final ClassToInstanceMultimap<Entity> multimap) {
         return this.getEntitiesStream(multimap,
-                                      UnmodifiableEntityImpl::ofDynamicEntity,
+                                      UnmodifiableEntityImpl::new,
                                       Arrays.asList(Player.class, RollingEnemy.class, WalkingEnemy.class));
     }
 
@@ -324,7 +324,7 @@ public final class WorldImpl implements World {
     }
 
     private Stream<UnmodifiableEntity> getPowerUpStream(final ClassToInstanceMultimap<Entity> multimap) {
-        return this.getEntityKeyStream(multimap, UnmodifiableEntityImpl::ofPowerUp, PowerUp.class);
+        return this.getEntityKeyStream(multimap, UnmodifiableEntityImpl::new, PowerUp.class);
     }
 
     private <E extends Entity> Stream<UnmodifiableEntity> getEntityKeyStream(final ClassToInstanceMultimap<Entity> multimap,

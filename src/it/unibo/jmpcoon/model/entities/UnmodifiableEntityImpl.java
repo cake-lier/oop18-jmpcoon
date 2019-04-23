@@ -13,45 +13,45 @@ import it.unibo.jmpcoon.model.physics.BodyShape;
  * Class implementation of {@link UnmodifiableEntity}.
  */
 public final class UnmodifiableEntityImpl implements UnmodifiableEntity {
+    private static final String WRONG_CONSTRUCTOR = "Wrong constructor used, use the other one instead";
+
     private final Entity innerEntity;
     private final boolean dynamic;
     private final Optional<PowerUpType> powerUpType;
 
-    /*
-     * This constructor accepts an entity to wrap so as to delegate to it the calls to methods that should be exposed,
-     * if is a dynamic entity and, if it's a power up, an optional with its type, otherwise an empty optional.
-     */
-    private UnmodifiableEntityImpl(final Entity innerEntity, final boolean isDynamic, final Optional<PowerUpType> powerUpType) {
-        this.innerEntity = innerEntity;
-        this.dynamic = isDynamic;
-        this.powerUpType = powerUpType;
-    }
-
     /**
-     * Factory method for creating an {@link UnmodifiableEntity} from a {@link DynamicEntity}.
+     * Constructor for creating an {@link UnmodifiableEntity} from a {@link DynamicEntity}. 
      * @param entity the {@link DynamicEntity} to wrap
-     * @return an {@link UnmodifiableEntity} that wraps the {@link DynamicEntity} passed
      */
-    public static UnmodifiableEntity ofDynamicEntity(final DynamicEntity entity) {
-        return new UnmodifiableEntityImpl(entity, true, Optional.absent());
+    public UnmodifiableEntityImpl(final DynamicEntity entity) {
+        this.innerEntity = Objects.requireNonNull(entity);
+        this.dynamic = true;
+        this.powerUpType = Optional.absent();
     }
 
     /**
-     * Factory method for creating an {@link UnmodifiableEntity} from a {@link StaticEntity}.
+     * Constructor for creating an {@link UnmodifiableEntity} from a {@link StaticEntity}.
      * @param entity the {@link StaticEntity} to wrap
-     * @return an {@link UnmodifiableEntity} that wraps the {@link StaticEntity} passed
+     * @throws IllegalArgumentException if the {@link EntityType} of the {@link StaticEntity} passed is
+     * {@link EntityType#POWERUP} because the wrong constructor has been used
      */
-    public static UnmodifiableEntity ofStaticEntity(final StaticEntity entity) {
-        return new UnmodifiableEntityImpl(entity, false, Optional.absent());
+    public UnmodifiableEntityImpl(final StaticEntity entity) throws IllegalArgumentException {
+        if (Objects.requireNonNull(entity).getType() == EntityType.POWERUP) {
+            throw new IllegalArgumentException(WRONG_CONSTRUCTOR);
+        }
+        this.innerEntity = entity;
+        this.dynamic = false;
+        this.powerUpType = Optional.absent();
     }
 
     /**
-     * Factory method for creating an {@link UnmodifiableEntity} from a {@link PowerUp}.
+     * Constructor for creating an {@link UnmodifiableEntity} from a {@link PowerUp}.
      * @param powerUp the {@link PowerUp} to wrap
-     * @return an {@link UnmodifiableEntity} that wraps the {@link PowerUp} passed
      */
-    public static UnmodifiableEntity ofPowerUp(final PowerUp powerUp) {
-        return new UnmodifiableEntityImpl(powerUp, false, Optional.of(powerUp.getPowerUpType()));
+    public UnmodifiableEntityImpl(final PowerUp powerUp) {
+        this.innerEntity = Objects.requireNonNull(powerUp);
+        this.dynamic = false;
+        this.powerUpType = Optional.of(powerUp.getPowerUpType());
     }
 
     /**

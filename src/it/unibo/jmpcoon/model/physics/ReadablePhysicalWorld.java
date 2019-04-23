@@ -46,9 +46,10 @@ public interface ReadablePhysicalWorld extends Serializable {
 
     /**
      * Gets the {@link PowerUpType} of the {@link it.unibo.jmpcoon.model.entities.PowerUp} which {@link PhysicalBody} is associated to the
-     * given {@link Body}.
+     * given {@link Body}, if it's a PowerUp, otherwise nothing.
      * @param body the {@link Body} from which getting its associated {@link PowerUpType}
-     * @return the {@link PowerUpType} associated with the passed {@link Body}
+     * @return an {@link Optional} containing a {@link PowerUpType} associated with the passed {@link Body} if it's
+     * associated with a {@link it.unibo.jmpcoon.model.entities.PowerUp}, {@link Optional#absent()} otherwise
      */
-    PowerUpType getPowerUpTypeFromBody(Body body);
+    Optional<PowerUpType> getPowerUpTypeFromBody(Body body);
 }

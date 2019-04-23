@@ -6,7 +6,7 @@ import it.unibo.jmpcoon.model.world.NotifiableWorld;
 /**
  * Class implementation of {@link PhysicsRulesFactory}.
  */
-public class PhysicsRulesFactoryImpl implements PhysicsRulesFactory {
+public final class PhysicsRulesFactoryImpl implements PhysicsRulesFactory {
     private static final String CONT_INIT_ERR = "A ContactRules instance has already been created";
     private static final String COLL_INIT_ERR = "A CollisionRules instance has already been created";
     private boolean contactRulesCreated;

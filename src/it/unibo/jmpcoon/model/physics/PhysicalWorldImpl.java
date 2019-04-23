@@ -98,8 +98,8 @@ final class PhysicalWorldImpl implements PhysicalWorld {
      * {@inheritDoc}
      */
     @Override
-    public PowerUpType getPowerUpTypeFromBody(final Body body) {
-        return this.bodyToPowerUpTypeAssociations.get(body);
+    public Optional<PowerUpType> getPowerUpTypeFromBody(final Body body) {
+        return Optional.fromNullable(this.bodyToPowerUpTypeAssociations.get(body));
     }
 
     /**

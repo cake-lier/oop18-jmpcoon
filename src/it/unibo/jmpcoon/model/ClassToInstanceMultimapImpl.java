@@ -23,6 +23,7 @@ import com.google.common.primitives.Primitives;
 public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Class<? extends B>, B> 
                                                   implements ClassToInstanceMultimap<B> {
     private static final long serialVersionUID = -9047286057610567233L;
+    private static final String NO_NULL = "A null key is not accepted!";
 
     private final Multimap<Class<? extends B>, B> backingMap;
 
@@ -47,29 +48,12 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
         this(MultimapBuilder.hashKeys().hashSetValues().build());
     }
 
-    /*
-     * A method for checking all if the entries of a multimap follow the rule for which the key is the class of the value
-     * instance before using the map.
-     */
-    private void checkMultimapEntries(final Multimap<Class<? extends B>, B> multimap) {
-        multimap.entries()
-                .forEach(entry -> this.cast(entry.getKey(), entry.getValue()));
-    }
-
     /**
      * {@inheritDoc}
      */
     @Override
     protected Multimap<Class<? extends B>, B> delegate() {
         return this.backingMap;
-    }
-
-    /*
-     * The method used instead of make a cast. It's copied from the MutableClassToInstanceMap implementation in the Guava
-     * library, although this it isn't static. It returns "value" casted to "type".
-     */
-    private <T extends B> T cast(final Class<T> type, final B value) {
-        return Primitives.wrap(type).cast(value);
     }
 
     /**
@@ -84,7 +68,7 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
     @Override
     public boolean put(final Class<? extends B> key, final B value) throws ClassCastException, IllegalArgumentException {
         if (key == null) {
-            throw new IllegalArgumentException("A null key is not accepted!");
+            throw new IllegalArgumentException(NO_NULL);
         }
         return super.put(key, this.cast(key, Objects.requireNonNull(value)));
     }
@@ -101,6 +85,15 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
                                                                     .build(Objects.requireNonNull(multimap));
         this.checkMultimapEntries(copy);
         return super.putAll(copy);
+    }
+
+    /*
+     * A method for checking all if the entries of a multimap follow the rule for which the key is the class of the value
+     * instance before using the map.
+     */
+    private void checkMultimapEntries(final Multimap<Class<? extends B>, B> multimap) {
+        multimap.entries()
+                .forEach(entry -> this.cast(Objects.requireNonNull(entry.getKey()), Objects.requireNonNull(entry.getValue())));
     }
 
     /**
@@ -124,6 +117,14 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
         return super.replaceValues(key, values);
     }
 
+    /*
+     * Given an iterable and a type, checks if all the values inside the iterable are of the same type specified.
+     */
+    private void checkIterableValues(final Class<? extends B> type, final Iterable<? extends B> values) {
+        StreamSupport.stream(Objects.requireNonNull(values).spliterator(), true)
+                     .forEach(value -> this.cast(Objects.requireNonNull(type), Objects.requireNonNull(value)));
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -144,10 +145,10 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
     }
 
     /*
-     * Given an iterable and a type, checks if all the values inside the iterable are of the same type specified.
+     * The method used instead of make a cast. It's copied from the MutableClassToInstanceMap implementation in the Guava
+     * library, although this it isn't static. It returns "value" casted to "type".
      */
-    private void checkIterableValues(final Class<? extends B> type, final Iterable<? extends B> values) {
-        StreamSupport.stream(Objects.requireNonNull(values).spliterator(), true)
-                     .forEach(value -> this.cast(Objects.requireNonNull(type), value));
+    private <T extends B> T cast(final Class<T> type, final B value) {
+        return Primitives.wrap(type).cast(value);
     }
 }
