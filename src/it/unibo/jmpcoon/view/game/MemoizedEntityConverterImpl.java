@@ -161,7 +161,7 @@ public class MemoizedEntityConverterImpl implements MemoizedEntityConverter {
         Arrays.asList(generators).forEach(e -> mapToFill.put(keyGetter.apply(e), valueGetter.apply(e)));
     }
 
-    private <E extends SpriteSheetGetter> Pair<Image, Integer> createPair(final E getter) {
+    private <E extends SpriteSheetInformationGetter> Pair<Image, Integer> createPair(final E getter) {
         return new ImmutablePair<>(this.loadImage(getter.getImageUrl()), getter.getFramesNumber());
     }
 

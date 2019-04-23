@@ -5,7 +5,7 @@ import it.unibo.jmpcoon.model.entities.EntityState;
 /**
  * An enumeration representing the sprite sheets of the {@link it.unibo.jmpcoon.model.entities.WalkingEnemy}.
  */
-public enum WalkingEnemyImage implements SpriteSheetGetter {
+public enum WalkingEnemyImage implements SpriteSheetInformationGetter {
     /**
      * Image for an idle {@link model.entities.WalkingEnemy}.
      */

@@ -5,7 +5,7 @@ import it.unibo.jmpcoon.model.entities.EntityState;
 /**
  * An enumeration representing the sprite sheets of the {@link it.unibo.jmpcoon.model.entities.Player}.
  */
-public enum PlayerImage implements SpriteSheetGetter {
+public enum PlayerImage implements SpriteSheetInformationGetter {
     /**
      * Image for a {@link model.entities.Player} climbing up.
      */
