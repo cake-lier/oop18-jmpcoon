@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -116,14 +115,17 @@ public class MemoizedEntityConverterImpl implements MemoizedEntityConverter {
     }
 
     private void fillStaticEntitiesMap() {
-        this.fillMap(StaticEntityImage.values(), 
-                     this.getMapFiller(this.imagesForStaticEntities, EntityType.class, s -> this.loadImage(s.getImageUrl())));
+        this.fillMap(this.imagesForStaticEntities, 
+                       StaticEntityImage.values(), 
+                       e -> e.getAssociatedEntityType(),
+                       e -> this.loadImage(e.getImageUrl()));
     }
 
     private void fillPowerUpsMap() {
-        this.fillMap(PowerUpImage.values(), 
-                     this.getMapFiller(this.imagesForPowerUps, PowerUpType.class, s -> this.loadImage(s.getImageUrl())));
-
+        this.fillMap(this.imagesForPowerUps, 
+                PowerUpImage.values(), 
+                e -> e.getAssociatedPowerUpType(),
+                e -> this.loadImage(e.getImageUrl()));
     }
 
     private void fillDynamicEntitiesMap() {
@@ -131,39 +133,36 @@ public class MemoizedEntityConverterImpl implements MemoizedEntityConverter {
         final Map<EntityState, Pair<Image, Integer>> walkingEnemyImages = new EnumMap<>(EntityState.class);
         final Map<EntityState, Pair<Image, Integer>> rollingEnemyImages = new EnumMap<>(EntityState.class);
         /* player images */
-        this.fillMap(PlayerImage.values(), 
-                     this.getMapFiller(playerImages, 
-                                       EntityState.class, 
-                                       s -> new ImmutablePair<>(this.loadImage(s.getImageUrl()), s.getFramesNumber())));
+        this.fillMap(playerImages, 
+                       PlayerImage.values(),
+                       e -> e.getAssociatedEntityState(),
+                       e -> this.createPair(e));
         /* walking enemies images */
-        this.fillMap(WalkingEnemyImage.values(), 
-                     this.getMapFiller(walkingEnemyImages, 
-                                       EntityState.class, 
-                                       s -> new ImmutablePair<>(this.loadImage(s.getImageUrl()), s.getFramesNumber())));
+        this.fillMap(walkingEnemyImages, 
+                       WalkingEnemyImage.values(),
+                       e -> e.getAssociatedEntityState(),
+                       e -> this.createPair(e));
         /* rolling enemies images */
-        this.fillMap(RollingEnemyImage.values(), 
-                     this.getMapFiller(rollingEnemyImages, 
-                                       EntityState.class, 
-                                       s -> new ImmutablePair<>(this.loadImage(s.getImageUrl()), s.getFramesNumber())));
+        this.fillMap(rollingEnemyImages, 
+                       RollingEnemyImage.values(),
+                       e -> e.getAssociatedEntityState(),
+                       e -> this.createPair(e));
         this.imagesForDynamicEntities.put(EntityType.WALKING_ENEMY, walkingEnemyImages);
         this.imagesForDynamicEntities.put(EntityType.PLAYER, playerImages);
         this.imagesForDynamicEntities.put(EntityType.ROLLING_ENEMY, rollingEnemyImages);
     }
 
     /*
-     * fills a map using as key generators the values of the array
+     * given a mapToFill and an array of values, fills the map using the functions given to generate the keys and 
+     * the values starting from thevalues.
      */
-    private <V extends Enum<V>> void fillMap(final V[] keys, final Consumer<V> mapFiller) {
-        Arrays.asList(keys).stream().forEach(mapFiller);
+    private <K, V, E> void fillMap(final Map<K, V> mapToFill, final E[] generators, 
+                                                     final Function<E, K> keyGetter, final Function<E, V> valueGetter) {
+        Arrays.asList(generators).forEach(e -> mapToFill.put(keyGetter.apply(e), valueGetter.apply(e)));
     }
 
-    /*
-     * given a map, it generates the key converting from enum E to enum K and it generates the value using the function
-     */
-    private <K extends Enum<K>, V, E extends Enum<E>> Consumer<E> getMapFiller(final Map<K, V> mapToFill, 
-                                                                               final Class<K> keyClass,
-                                                                               final Function<E, V> value) {
-        return e -> mapToFill.put(Enum.valueOf(keyClass, e.toString()), value.apply(e));
+    private <E extends SpriteSheetGetter> Pair<Image, Integer> createPair(final E getter) {
+        return new ImmutablePair<>(this.loadImage(getter.getImageUrl()), getter.getFramesNumber());
     }
 
     private Image loadImage(final String imageUrl) {
