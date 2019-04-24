@@ -3,7 +3,6 @@ package it.unibo.jmpcoon.model.entities;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import it.unibo.jmpcoon.model.physics.BodyShape;
 import it.unibo.jmpcoon.model.physics.DynamicPhysicalBody;
 
 /**
@@ -29,14 +28,6 @@ public final class WalkingEnemy extends DynamicEntity {
         this.walkingRange = walkingRange;
         this.currentMovement = MovementType.MOVE_RIGHT;
         this.extremePosition = new MutablePair<>(this.body.getPosition().getLeft(), this.body.getPosition().getRight());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public BodyShape getShape() {
-        return BodyShape.RECTANGLE;
     }
 
     /**
