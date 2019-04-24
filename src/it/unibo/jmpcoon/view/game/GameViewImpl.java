@@ -69,6 +69,7 @@ public final class GameViewImpl implements GameView {
     private static final String PADDING = "-fx-padding: ";
     private static final String SIZE_UNIT = "em";
     private static final int SCORE_PADDING_RATIO = 2500;
+    private static final int SOUND_DELAY = 3;
 
     private final AppController appController;
     private final AppView appView;
@@ -85,6 +86,7 @@ public final class GameViewImpl implements GameView {
     private boolean isMenuVisible;
     private boolean isGameEnded;
     private boolean isInitialized;
+    private int updatesFromLastSound;
     @FXML
     private Text score;
     @FXML
@@ -114,6 +116,7 @@ public final class GameViewImpl implements GameView {
         this.isMenuVisible = false;
         this.isInitialized = false;
         this.inputs = Sets.newConcurrentHashSet();
+        this.updatesFromLastSound = 0;
     }
 
     /**
@@ -165,9 +168,19 @@ public final class GameViewImpl implements GameView {
                                                        .filter(sounds -> sounds.getAssociatedEvent().isPresent())
                                                        .filter(eventSounds -> eventSounds.getAssociatedEvent().get() == event)
                                                        .findFirst()
-                                                       .ifPresent(sound -> sound.getSound()
-                                                                                .play(this.music.isMute() ? 0 
-                                                                                      : this.music.getVolume())));
+                                                       .ifPresent(sound -> {
+                                                           if (this.updatesFromLastSound >= SOUND_DELAY) {
+                                                               sound.getSound().play(this.music.isMute() 
+                                                                                     ? 0 
+                                                                                     : this.music.getVolume());
+                                                               this.updatesFromLastSound = 0;
+                                                           } else {
+                                                               this.updatesFromLastSound = this.updatesFromLastSound + 1;
+                                                           }
+                                                       }));
+            if (this.gameController.getCurrentEvents().isEmpty()) {
+                this.updatesFromLastSound = this.updatesFromLastSound + 1;
+            }
             this.score.setText(SCORE_STR + this.gameController.getCurrentScore() + LIVES_STR 
                                + this.gameController.getPlayerLives());
         });

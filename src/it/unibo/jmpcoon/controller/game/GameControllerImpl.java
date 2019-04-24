@@ -36,7 +36,6 @@ import it.unibo.jmpcoon.view.game.GameView;
 public class GameControllerImpl implements GameController {
     private static final String INCOMPATIBLE_FILE_MSG = "The file read isn't compatible";
     private static final long DELTA_UPDATE = 15;
-    private static final int JUMP_DELAY = 2;
     private static final URL LEVEL_FILE = ClassLoader.getSystemResource("level.lev");
 
     private UpdatableWorld gameWorld;
@@ -44,7 +43,6 @@ public class GameControllerImpl implements GameController {
     private ScheduledThreadPoolExecutor timer;
     private boolean running;
     private boolean jumped;
-    private int timeFromLastJump;
 
     /**
      * Builds a new {@link GameControllerImpl}.
@@ -57,7 +55,6 @@ public class GameControllerImpl implements GameController {
         this.timer = this.createTimer();
         this.running = false;
         this.jumped = false;
-        this.timeFromLastJump = JUMP_DELAY - 1;
     }
 
     /**
@@ -166,7 +163,7 @@ public class GameControllerImpl implements GameController {
     @Override
     public Queue<GameEvent> getCurrentEvents() {
         final Queue<GameEvent> events = new ConcurrentLinkedQueue<>();
-        if (this.jumped && this.timeFromLastJump == 0) {
+        if (this.jumped) {
             events.offer(GameEvent.JUMP);
         }
         this.gameWorld.getCurrentEvents()
@@ -204,11 +201,6 @@ public class GameControllerImpl implements GameController {
                          .map(m -> new ImmutablePair<>(m, this.gameWorld.movePlayer(m)))
                          .filter(p -> p.getLeft() == MovementType.JUMP && p.getRight())
                          .forEach(b -> this.jumped = true);
-            if (!this.jumped) {
-                this.timeFromLastJump = JUMP_DELAY - 1;
-            } else {
-                this.timeFromLastJump = (this.timeFromLastJump + 1) % JUMP_DELAY;
-            }
             this.gameWorld.update();
             this.gameView.update();
         }
