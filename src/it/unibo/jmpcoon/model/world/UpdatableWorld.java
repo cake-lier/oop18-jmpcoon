@@ -61,7 +61,8 @@ public interface UpdatableWorld extends Serializable {
 
     /**
      * Produces all the entities which have died since the last {@link #update()} method call.
-     * @return a {@link Collection} of the {@link it.unibo.jmpcoon.model.entities.Entity}s which have died across last {@link World} update
+     * @return a {@link Collection} of the {@link it.unibo.jmpcoon.model.entities.Entity}s which have died across
+     * last {@link World} update
      */
     Collection<UnmodifiableEntity> getDeadEntities();
 

@@ -59,8 +59,8 @@ public class SpriteAnimation extends Transition {
     }
 
     /**
-     * Returns this image.
-     * @return this image
+     * Returns the image to be displayed.
+     * @return an image
      */
     public Image getImage() {
         return this.image;

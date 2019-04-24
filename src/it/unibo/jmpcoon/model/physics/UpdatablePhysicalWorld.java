@@ -6,8 +6,8 @@ import java.util.Collection;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * An interface for providing physics management of {@link PhysicalBody}s to the {@link it.unibo.jmpcoon.model.world.World} and management
- * of the physical simulation in general.
+ * An interface for providing physics management of {@link PhysicalBody}s to the {@link it.unibo.jmpcoon.model.world.World} and
+ * management of the physical simulation in general.
  */
 public interface UpdatablePhysicalWorld extends Serializable {
     /**

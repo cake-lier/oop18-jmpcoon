@@ -2,9 +2,9 @@ package it.unibo.jmpcoon.model.world;
 
 /**
  * This enum represents all types of possible outcomes that a collision could have. The collision can be neutral, such as the
- * {@link it.unibo.jmpcoon.model.entities.Player} hitting a {@link it.unibo.jmpcoon.model.entities.Platform}, can kill the enemy when the
- * {@link it.unibo.jmpcoon.model.entities.Player} jumps on it or can kill the {@link it.unibo.jmpcoon.model.entities.Player} if instead is the enemy that jumps or
- * touches the {@link it.unibo.jmpcoon.model.entities.Player}.
+ * {@link it.unibo.jmpcoon.model.entities.Player} hitting a {@link it.unibo.jmpcoon.model.entities.Platform}, can kill the enemy when
+ * the {@link it.unibo.jmpcoon.model.entities.Player} jumps on it or can kill the {@link it.unibo.jmpcoon.model.entities.Player}
+ * if instead is the enemy that jumps or touches the {@link it.unibo.jmpcoon.model.entities.Player}.
  */
 public enum CollisionEvent {
     /**

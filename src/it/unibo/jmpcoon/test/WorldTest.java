@@ -99,8 +99,8 @@ public class WorldTest {
     }
 
     /**
-     * Test for the correct throwing of exception when trying to move the player inside a {@link it.unibo.jmpcoon.model.world.UpdatableWorld}
-     * without initialization.
+     * Test for the correct throwing of exception when trying to move the player inside a
+     * {@link it.unibo.jmpcoon.model.world.UpdatableWorld} without initialization.
      */
     @Test(expected = IllegalStateException.class)
     public void worldMovePlayerWithoutInitializatonExceptionTest() {

@@ -24,10 +24,10 @@ public final class ContactRules extends ContactAdapter implements Serializable {
     private final ReadablePhysicalWorld world;
 
     /**
-     * Default constructor, accepts a reference to an object which is a {@link it.unibo.jmpcoon.model.physics.ReadablePhysicalWorld}, so it's a
-     * {@link it.unibo.jmpcoon.model.physics.PhysicalWorld} but only with methods for getting informations about the current physical state of
-     * the game. This constructor is package protected because only the {@link PhysicsRulesFactory} should create an instance of
-     * this object.
+     * Default constructor, accepts a reference to an object which is a {@link it.unibo.jmpcoon.model.physics.ReadablePhysicalWorld},
+     * so it's a {@link it.unibo.jmpcoon.model.physics.PhysicalWorld} but only with methods for getting informations about the
+     * current physical state of the game. This constructor is package protected because only the {@link PhysicsRulesFactory} should
+     * create an instance of this object.
      * @param world the {@link it.unibo.jmpcoon.model.physics.ReadablePhysicalWorld} from which getting informations about the physical state
      * of the game
      */
@@ -38,14 +38,15 @@ public final class ContactRules extends ContactAdapter implements Serializable {
 
     /**
      * {@inheritDoc}
-     * The only contacts that matters are the ones between {@link it.unibo.jmpcoon.model.entities.Player} and {@link it.unibo.jmpcoon.model.entities.Platform}.
-     * If the {@link it.unibo.jmpcoon.model.entities.Player} is in contact (the prior collision already happened) with a
-     * {@link it.unibo.jmpcoon.model.entities.Ladder} and it was climbing it up or down and is not at the top part of the
-     * {@link it.unibo.jmpcoon.model.entities.Ladder} where the climb should end, this means that the contact with the
-     * {@link it.unibo.jmpcoon.model.entities.Ladder} should be ignored because it represents a traversal of a {@link it.unibo.jmpcoon.model.entities.Platform}
-     * while the {@link it.unibo.jmpcoon.model.entities.Player} is climbing and it shouldn't generate any physical response. The same goes
-     * if the {@link it.unibo.jmpcoon.model.entities.Player} is climbing up the {@link it.unibo.jmpcoon.model.entities.Ladder} and is at its bottom or if
-     * it's climbing down it and is at it's top, in those cases the {@link it.unibo.jmpcoon.model.entities.Ladder} is just moving on the
+     * The only contacts that matters are the ones between {@link it.unibo.jmpcoon.model.entities.Player} and
+     * {@link it.unibo.jmpcoon.model.entities.Platform}. If the {@link it.unibo.jmpcoon.model.entities.Player} is in contact
+     * (the prior collision already happened) with a {@link it.unibo.jmpcoon.model.entities.Ladder} and it was climbing it up
+     * or down and is not at the top part of the {@link it.unibo.jmpcoon.model.entities.Ladder} where the climb should end, this
+     * means that the contact with the {@link it.unibo.jmpcoon.model.entities.Ladder} should be ignored because it represents
+     * a traversal of a {@link it.unibo.jmpcoon.model.entities.Platform} while the {@link it.unibo.jmpcoon.model.entities.Player}
+     * is climbing and it shouldn't generate any physical response. The same goes if the {@link it.unibo.jmpcoon.model.entities.Player}
+     * is climbing up the {@link it.unibo.jmpcoon.model.entities.Ladder} and is at its bottom or if it's climbing down it and
+     * is at it's top, in those cases the {@link it.unibo.jmpcoon.model.entities.Ladder} is just moving on the
      * {@link it.unibo.jmpcoon.model.entities.Ladder} and as such the contact has shouldn't have any physical response.
      */
     @Override

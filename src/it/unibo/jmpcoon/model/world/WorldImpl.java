@@ -131,7 +131,7 @@ public final class WorldImpl implements World {
      * {@inheritDoc}
      * For first, it checks if the game has currently ended or not by checking if during this step the {@link Player} is no 
      * longer alive and has lost or if the "end level trigger" was reached and has consequently won. Then it separates all
-     * {@link Entity}s no longer alive from the others and for last it signals to all {@link it.unibo.jmpcoon.model.entities.EnemyGenerator}s 
+     * {@link Entity}s no longer alive from the others; for last it signals to all {@link it.unibo.jmpcoon.model.entities.EnemyGenerator}s 
      * that a lapse of time has passed and asking if they have created any new {@link it.unibo.jmpcoon.model.entities.RollingEnemy}.
      */
     public void update() {

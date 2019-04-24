@@ -20,8 +20,8 @@ public interface AppController {
     void exitApp();
 
     /**
-     * Starts the game. It can receive an integer index that represents the {@link it.unibo.jmpcoon.controller.SaveFile} or not. In the
-     * latter case, it will start a new game.
+     * Starts the game. It can receive an integer index that represents the {@link it.unibo.jmpcoon.controller.SaveFile} or not.
+     * In the latter case, it will start a new game.
      * @param saveFileIndex the index of the {@link it.unibo.jmpcoon.controller.SaveFile} from which to load the game, if present
      */
     void startGame(Optional<Integer> saveFileIndex);

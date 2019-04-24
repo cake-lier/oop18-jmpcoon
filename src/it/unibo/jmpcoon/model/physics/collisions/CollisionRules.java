@@ -33,13 +33,14 @@ public final class CollisionRules extends CollisionAdapter implements Serializab
     private final ReadablePhysicalWorld physicalWorld;
 
     /**
-     * Default constructor, accepts a reference to an object which is a {@link it.unibo.jmpcoon.model.physics.ReadablePhysicalWorld}, so it's a
-     * {@link it.unibo.jmpcoon.model.physics.PhysicalWorld} but only with methods for getting informations about the current physical state of
-     * the game. Moreover, it accepts a reference to an object which is a {@link it.unibo.jmpcoon.model.world.NotifiableWorld}, so it's a
-     * {@link it.unibo.jmpcoon.model.world.World} but with only methods to notify it of a particular collision that happened between bodies.
-     * This constructor is package protected because only the {@link PhysicsRulesFactory} should create an instance of this object.
-     * @param physicalWorld the {@link it.unibo.jmpcoon.model.physics.ReadablePhysicalWorld} from which getting informations about the physical
-     * state of the game
+     * Default constructor, accepts a reference to an object which is a {@link it.unibo.jmpcoon.model.physics.ReadablePhysicalWorld},
+     * so it's a {@link it.unibo.jmpcoon.model.physics.PhysicalWorld} but only with methods for getting informations about the current
+     * physical state of the game. Moreover, it accepts a reference to an object which is a
+     * {@link it.unibo.jmpcoon.model.world.NotifiableWorld}, so it's a {@link it.unibo.jmpcoon.model.world.World} but with only methods
+     * to notify it of a particular collision that happened between bodies. This constructor is package protected because only the
+     * {@link PhysicsRulesFactory} should create an instance of this object.
+     * @param physicalWorld the {@link it.unibo.jmpcoon.model.physics.ReadablePhysicalWorld} from which getting informations about
+     * the physical state of the game
      * @param outerWorld the {@link it.unibo.jmpcoon.model.world.NotifiableWorld} to be notified of {@link CollisionEvent}s
      */
     CollisionRules(final ReadablePhysicalWorld physicalWorld, final NotifiableWorld outerWorld) {
@@ -50,19 +51,20 @@ public final class CollisionRules extends CollisionAdapter implements Serializab
 
     /**
      * {@inheritDoc}
-     * The only collisions that should be managed are the ones between the {@link it.unibo.jmpcoon.model.entities.Player} and the other
-     * {@link it.unibo.jmpcoon.model.entities.Entity}s. If the {@link it.unibo.jmpcoon.model.entities.Player} collides with a {@link it.unibo.jmpcoon.model.entities.PowerUp},
-     * this last one should be destroyed and the {@link it.unibo.jmpcoon.model.entities.Player} should acquire its power, unless the
-     * {@link it.unibo.jmpcoon.model.entities.PowerUp} is the goal and as such the game should end. After this, the {@link NotifiableWorld}
-     * should be notified that a {@link it.unibo.jmpcoon.model.entities.PowerUp} was acquired.
-     * If the {@link it.unibo.jmpcoon.model.entities.Player} collides with an enemy, such as a {@link it.unibo.jmpcoon.model.entities.WalkingEnemy} or a
-     * {@link it.unibo.jmpcoon.model.entities.RollingEnemy}, if it's invincible or it collides with it on the top of the enemy, the enemy
-     * should die and the {@link NotifiableWorld} gets informed of it. If the player is invulnerable the collision simply
-     * is ignored, as never happened in the first place, otherwise the {@link it.unibo.jmpcoon.model.entities.Player} gets hit and, if it
-     * has no lives left, it should die, and the {@link NotifiableWorld} get notified of this.
-     * If the {@link it.unibo.jmpcoon.model.entities.Player} collides with a {@link it.unibo.jmpcoon.model.entities.Platform} on its top and does this
-     * while it's climbing up and is at the top of the {@link it.unibo.jmpcoon.model.entities.Ladder} or is climbing down and is at the
-     * bottom of it, this means the {@link it.unibo.jmpcoon.model.entities.Player} reached an end of the {@link it.unibo.jmpcoon.model.entities.Ladder}
+     * The only collisions that should be managed are the ones between the {@link it.unibo.jmpcoon.model.entities.Player} and the
+     * other {@link it.unibo.jmpcoon.model.entities.Entity}s. If the {@link it.unibo.jmpcoon.model.entities.Player} collides with
+     * a {@link it.unibo.jmpcoon.model.entities.PowerUp}, the latter should be destroyed while the former should acquire its power,
+     * unless the {@link it.unibo.jmpcoon.model.entities.PowerUp} is the goal and as such the game should end. After this, the
+     * {@link NotifiableWorld} should be notified that a {@link it.unibo.jmpcoon.model.entities.PowerUp} was acquired.
+     * If the {@link it.unibo.jmpcoon.model.entities.Player} collides with an enemy, such as a
+     * {@link it.unibo.jmpcoon.model.entities.WalkingEnemy} or a {@link it.unibo.jmpcoon.model.entities.RollingEnemy}, if it's invincible
+     * or it collides with it on the top of the enemy, the enemy should die and the {@link NotifiableWorld} gets informed of it.
+     * If the player is invulnerable the collision simply is ignored, as never happened in the first place, otherwise the
+     * {@link it.unibo.jmpcoon.model.entities.Player} gets hit and, if it has no lives left, it should die, and the {@link NotifiableWorld}
+     * get notified of this. If the {@link it.unibo.jmpcoon.model.entities.Player} collides with a
+     * {@link it.unibo.jmpcoon.model.entities.Platform} on its top and does this while it's climbing up and is at the top of the
+     * {@link it.unibo.jmpcoon.model.entities.Ladder} or is climbing down and is at the bottom of it, this means the
+     * {@link it.unibo.jmpcoon.model.entities.Player} reached an end of the {@link it.unibo.jmpcoon.model.entities.Ladder}
      * and for this its climb should stop by going back to an {@link EntityState#IDLE} state.
      */
     @Override

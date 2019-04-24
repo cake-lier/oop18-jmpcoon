@@ -30,7 +30,7 @@ public final class RollingEnemy extends DynamicEntity {
     }
 
     /**
-     * Applies a fixed velocity to this {@link RollingEnemy}.
+     * Applies an impulse to this {@link RollingEnemy}.
      */
     public void applyImpulse() {
         this.body.setFixedVelocity(MovementType.MOVE_RIGHT, ROLLING_ENEMY_SPEED, 0);

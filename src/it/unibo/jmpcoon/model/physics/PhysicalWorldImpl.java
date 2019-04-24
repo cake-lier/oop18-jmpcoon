@@ -45,7 +45,8 @@ final class PhysicalWorldImpl implements PhysicalWorld {
      * wrapped and used. This constructor is package protected because this class should be created only by the
      * {@link PhysicalFactory} contained in this package and no one else.
      * @param outerWorld the {@link it.unibo.jmpcoon.model.world.World} that wraps this {@link PhysicalWorld} kept as a
-     * {@link it.unibo.jmpcoon.model.world.NotifiableWorld} so as to just notify it of {@link it.unibo.jmpcoon.model.world.CollisionEvent}s happened
+     * {@link it.unibo.jmpcoon.model.world.NotifiableWorld} so as to just notify it of
+     * {@link it.unibo.jmpcoon.model.world.CollisionEvent}s happened
      * @param world the {@link SerializableWorld} to wrap
      */
     PhysicalWorldImpl(final NotifiableWorld outerWorld, final SerializableWorld world) {

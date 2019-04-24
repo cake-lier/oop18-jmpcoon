@@ -23,7 +23,8 @@ public abstract class AbstractDrawableEntity implements DrawableEntity {
      * Builds a new {@link AbstractDrawableEntity}.
      * @param image the {@link Image} representing the entity in the view
      * @param entity the {@link UnmodifiableEntity} represented by this {@link AbstractDrawableEntity}
-     * @param worldDimensions the dimensions of the {@link it.unibo.jmpcoon.model.world.World} in which the {@link UnmodifiableEntity} lives
+     * @param worldDimensions the dimensions of the {@link it.unibo.jmpcoon.model.world.World} in which the
+     * {@link UnmodifiableEntity} lives
      * @param sceneDimensions the dimensions of the view in which this {@link AbstractDrawableEntity} will be drawn
      */
     public AbstractDrawableEntity(final Image image, final UnmodifiableEntity entity, 

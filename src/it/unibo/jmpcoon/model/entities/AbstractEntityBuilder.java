@@ -15,7 +15,8 @@ import it.unibo.jmpcoon.model.world.ModifiableWorld;
 
 /**
  * A class representing a general builder for building all types of {@link it.unibo.jmpcoon.model.entities.Entity}.
- * @param <E> the type of {@link it.unibo.jmpcoon.model.entities.Entity} to create, which should be a subclass of {@link it.unibo.jmpcoon.model.entities.Entity}
+ * @param <E> the type of {@link it.unibo.jmpcoon.model.entities.Entity} to create, which should be a subclass
+ * of {@link it.unibo.jmpcoon.model.entities.Entity}
  */
 public abstract class AbstractEntityBuilder<E extends Entity> {
     private static final String INCOMPLETE_BUILDER_MSG = "Not all the fields have been initialized";
@@ -47,7 +48,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the position of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created by this {@link AbstractEntityBuilder}.
+     * Sets the position of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
+     * by this {@link AbstractEntityBuilder}.
      * @param center the position of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
      * @return a reference to this {@link AbstractEntityBuilder}
      */
@@ -57,8 +59,10 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the dimensions of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created by this {@link AbstractEntityBuilder}.
-     * @param dimensions the dimensions (width and height) of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
+     * Sets the dimensions of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
+     * by this {@link AbstractEntityBuilder}.
+     * @param dimensions the dimensions (width and height) of the {@link it.unibo.jmpcoon.model.entities.Entity}
+     * that will be created
      * @return a reference to this {@link AbstractEntityBuilder}
      */
     public AbstractEntityBuilder<E> setDimensions(final Pair<Double, Double> dimensions) {
@@ -67,8 +71,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the {@link BodyShape} of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created by this 
-     * {@link AbstractEntityBuilder}.
+     * Sets the {@link BodyShape} of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
+     * by this {@link AbstractEntityBuilder}.
      * @param shape the {@link BodyShape} of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
      * @return a reference to this {@link AbstractEntityBuilder}
      */
@@ -78,7 +82,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the angle of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created by this {@link AbstractEntityBuilder}.
+     * Sets the angle of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
+     * by this {@link AbstractEntityBuilder}.
      * @param angle the angle of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
      * @return a reference to this {@link AbstractEntityBuilder}
      */
@@ -88,10 +93,10 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the {@link PhysicalFactory} that will be used to create the {@link it.unibo.jmpcoon.model.physics.PhysicalBody} of the 
-     * {@link it.unibo.jmpcoon.model.entities.Entity} that will be created by this {@link AbstractEntityBuilder}.
-     * @param factory the {@link PhysicalFactory} that will be used to create the {@link it.unibo.jmpcoon.model.physics.PhysicalBody} of the
-     * {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
+     * Sets the {@link PhysicalFactory} that will be used to create the {@link it.unibo.jmpcoon.model.physics.PhysicalBody}
+     * of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created by this {@link AbstractEntityBuilder}.
+     * @param factory the {@link PhysicalFactory} that will be used to create the {@link it.unibo.jmpcoon.model.physics.PhysicalBody}
+     * of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
      * @return a reference to this {@link AbstractEntityBuilder}
      */
     public AbstractEntityBuilder<E> setFactory(final PhysicalFactory factory) {
@@ -112,8 +117,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the distance the {@link it.unibo.jmpcoon.model.entities.Entity} to be created by this {@link AbstractEntityBuilder} will walk across, 
-     * if said Entity is a {@link WalkingEnemy}.
+     * Sets the distance the {@link it.unibo.jmpcoon.model.entities.Entity} to be created by this {@link AbstractEntityBuilder}
+     * will walk across, if said Entity is a {@link WalkingEnemy}.
      * @param walkingRange an {@link Optional} containing the distance the {@link WalkingEnemy} being built should walk across, 
      * an empty {@link Optional} if a WalkingEnemy isn't being built
      * @return a reference to this {@link AbstractEntityBuilder}
@@ -124,8 +129,9 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Sets the {@link it.unibo.jmpcoon.model.world.World} the {@link it.unibo.jmpcoon.model.entities.Entity} to be created by this {@link AbstractEntityBuilder}
-     * will notify when it creates a {@link RollingEnemy}, if the entity is a {@link EnemyGenerator}.
+     * Sets the {@link it.unibo.jmpcoon.model.world.World} the {@link it.unibo.jmpcoon.model.entities.Entity} to be created
+     * by this {@link AbstractEntityBuilder} will notify when it creates a {@link RollingEnemy}, if said entity is a
+     * {@link EnemyGenerator}.
      * @param world an {@link Optional} containing the world the {@link EnemyGenerator} will notify, an empty {@link Optional}
      * if a WalkingEnemy isn't being built
      * @return a reference to this {@link AbstractEntityBuilder}
@@ -136,10 +142,10 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * Builds the {@link it.unibo.jmpcoon.model.entities.Entity} with the parameters previously set. All the parameters (except for walking range
-     * and {@link PowerUpType} that must be set only for {@link WalkingEnemy} and {@link PowerUp} respectively) are needed and, 
-     * as any builder, once the build has happened this builder won't produce any other copies of the produced 
-     * {@link it.unibo.jmpcoon.model.entities.Entity}.
+     * Builds the {@link it.unibo.jmpcoon.model.entities.Entity} with the parameters previously set. All the parameters
+     * (except for walking range and {@link PowerUpType} that must be set only for {@link WalkingEnemy} and {@link PowerUp}
+     * respectively) are needed and, as any builder, once the build has happened this builder won't produce any other copies of
+     * the produced {@link it.unibo.jmpcoon.model.entities.Entity}.
      * @return the {@link it.unibo.jmpcoon.model.entities.Entity} with parameters specified with the others methods
      * @throws IllegalStateException if not every necessary field has been initialized or if this {@link AbstractEntityBuilder}
      * has already been built
@@ -151,8 +157,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     }
 
     /**
-     * The actual method the subclass of this class should implement to correctly create a new {@link it.unibo.jmpcoon.model.entities.Entity} 
-     * of this type.
+     * The actual method the subclass of this class should implement to correctly create a new
+     * {@link it.unibo.jmpcoon.model.entities.Entity} of this type.
      * @return the {@link it.unibo.jmpcoon.model.entities.Entity} that should be returned by the {@link #build()} method
      */
     protected abstract E buildEntity();
@@ -193,7 +199,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     /**
      * Returns a {@link StaticPhysicalBody} for the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created.
      * @param type the {@link EntityType} of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
-     * @return the {@link StaticPhysicalBody} that the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created should contain
+     * @return the {@link StaticPhysicalBody} that the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
+     * should contain
      */
     protected StaticPhysicalBody createStaticPhysicalBody(final EntityType type) {
         return this.factory.get().createStaticPhysicalBody(this.center.get(), 
@@ -208,7 +215,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
     /**
      * Returns a {@link DynamicPhysicalBody} for the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created.
      * @param type the {@link EntityType} of the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
-     * @return the {@link DynamicPhysicalBody} that the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created should contain
+     * @return the {@link DynamicPhysicalBody} that the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
+     * should contain
      */
     protected DynamicPhysicalBody createDynamicPhysicalBody(final EntityType type) {
         return this.factory.get().createDynamicPhysicalBody(this.center.get(), 
@@ -221,7 +229,8 @@ public abstract class AbstractEntityBuilder<E extends Entity> {
 
     /**
      * Returns a {@link PlayerPhysicalBody} for the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created.
-     * @return the {@link PlayerPhysicalBody} that the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created should contain
+     * @return the {@link PlayerPhysicalBody} that the {@link it.unibo.jmpcoon.model.entities.Entity} that will be created
+     * should contain
      */
     protected PlayerPhysicalBody createPlayerPhysicalBody() {
         return this.factory.get().createPlayerPhysicalBody(this.center.get(), 

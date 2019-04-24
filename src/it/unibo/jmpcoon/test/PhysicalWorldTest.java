@@ -31,8 +31,8 @@ public class PhysicalWorldTest {
     private PhysicalFactory factory;
 
     /**
-     * Initialization method needed for recreating a new {@link it.unibo.jmpcoon.model.physics.PhysicalFactory} for each test for performing a
-     * clean test.
+     * Initialization method needed for recreating a new {@link it.unibo.jmpcoon.model.physics.PhysicalFactory} for each test
+     * for performing a clean test.
      */
     @Before
     public void initializePhysicalFactory() {

@@ -16,9 +16,9 @@ public interface GameView {
     void update();
 
     /**
-     * Initializes the game scene and starts the game by calling the {@link it.unibo.jmpcoon.controller.game.GameController} appropriately. If a
-     * file is specified, it means the game should be started by loading data from the specified file, otherwise a new game 
-     * should be started.
+     * Initializes the game scene and starts the game by calling the {@link it.unibo.jmpcoon.controller.game.GameController}
+     * appropriately. If a file is specified, it means the game should be started by loading data from the specified file,
+     * otherwise a new game should be started.
      * @param saveFileIndex the index of the file with the saved game from which starting the game, if present
      */
     void initialize(Optional<Integer> saveFileIndex);

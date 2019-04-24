@@ -335,6 +335,9 @@ public final class GameViewImpl implements GameView {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<InputType> getInputs() {
         return Collections.unmodifiableSet(this.inputs);

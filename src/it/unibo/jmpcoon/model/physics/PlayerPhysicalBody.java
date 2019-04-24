@@ -91,7 +91,8 @@ public class PlayerPhysicalBody extends DynamicPhysicalBody {
     }
 
     /**
-     * The effect of the {@link it.unibo.jmpcoon.model.entities.PowerUp} that makes the {@link it.unibo.jmpcoon.model.entities.Player} invincible ends.
+     * The effect of the {@link it.unibo.jmpcoon.model.entities.PowerUp} that makes the {@link it.unibo.jmpcoon.model.entities.Player}
+     * invincible ends.
      */
     public void endInvincibility() {
         this.invincible = false;

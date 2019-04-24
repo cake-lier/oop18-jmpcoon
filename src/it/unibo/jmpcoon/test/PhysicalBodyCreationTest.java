@@ -44,7 +44,8 @@ public class PhysicalBodyCreationTest {
     }
 
     /**
-     * Test for the correct failure resulting from creation of a {@link it.unibo.jmpcoon.model.physics.PlayerPhysicalBody} with a circular shape.
+     * Test for the correct failure resulting from creation of a {@link it.unibo.jmpcoon.model.physics.PlayerPhysicalBody}
+     * with a circular shape.
      */
     @Test(expected = IllegalArgumentException.class)
     public void notAllowedPlayerBodyCreationTest() {
@@ -52,8 +53,8 @@ public class PhysicalBodyCreationTest {
     }
 
     /**
-     * Test for the creation of a circular {@link it.unibo.jmpcoon.model.physics.PhysicalBody} with the correct size, that is with same width
-     * and height.
+     * Test for the creation of a circular {@link it.unibo.jmpcoon.model.physics.PhysicalBody} with the correct size, that is
+     * with same width and height.
      */
     @Test
     public void correctlySizedCircularBodyCreationTest() {
@@ -62,8 +63,8 @@ public class PhysicalBodyCreationTest {
     }
 
     /**
-     * Test for the correct failure resulting from creation of a circular {@link it.unibo.jmpcoon.model.physics.PhysicalBody} with the wrong
-     * size, that is with width different from height.
+     * Test for the correct failure resulting from creation of a circular {@link it.unibo.jmpcoon.model.physics.PhysicalBody} with
+     * the wrong size, that is with width different from height.
      */
     @Test(expected = IllegalArgumentException.class)
     public void outOfSizeCircularBodyCreationTest() {
