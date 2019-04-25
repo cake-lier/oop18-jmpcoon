@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,6 +35,13 @@ public class WorldCollisionsTest {
     private static final double POWER_UP_DIMENSION = 0.4;
     private static final double ANGLE = 0;
     private static final String NOT_STARTED_MSG = "The simulation has yet to start";
+    private static final String NO_WIN = "The player is colliding with the goal but not winning";
+    private static final String NO_LOSE = "The player is colliding with the enemy but not losing";
+    private static final String TWO_ALIVE_ENTITIES = "The alive entities should be two";
+    private static final String ONE_DEAD_ENTITY = "There should be only one dead entity";
+    private static final String ROLLING_DEAD = "The dead entities should only be rolling enemies";
+    private static final String WALKING_DEAD = "The dead entities should only be walking enemies";
+    private static final String EXTRA_LIFE = "The player should have acquired a life";
 
     private final EntityProperties platformProperties;
     private final EntityProperties playerProperties;
@@ -43,24 +51,13 @@ public class WorldCollisionsTest {
      * Builds a new {@link WorldTest}.
      */
     public WorldCollisionsTest() {
-        this.platformProperties = new EntityPropertiesImpl(EntityType.PLATFORM, 
-                                                           BodyShape.RECTANGLE,
-                                                           WORLD_WIDTH / 2, 
-                                                           WORLD_HEIGHT / 2, 
-                                                           PLATFORM_WIDTH, 
-                                                           PLATFORM_HEIGHT, 
-                                                           ANGLE, 
-                                                           Optional.absent(),
-                                                           Optional.absent());
-        this.playerProperties = new EntityPropertiesImpl(EntityType.PLAYER, 
-                                                         BodyShape.RECTANGLE,
-                                                         WORLD_WIDTH / 2, 
-                                                         WORLD_HEIGHT / 2 + PLATFORM_HEIGHT / 2 + PLAYER_DIMENSION / 2, 
-                                                         PLAYER_DIMENSION, 
-                                                         PLAYER_DIMENSION, 
-                                                         ANGLE, 
-                                                         Optional.absent(),
-                                                         Optional.absent());
+        this.platformProperties 
+            = new EntityPropertiesImpl(EntityType.PLATFORM, BodyShape.RECTANGLE, WORLD_WIDTH / 2, WORLD_HEIGHT / 2, 
+                                       PLATFORM_WIDTH, PLATFORM_HEIGHT, ANGLE, Optional.absent(), Optional.absent());
+        this.playerProperties 
+            = new EntityPropertiesImpl(EntityType.PLAYER, BodyShape.RECTANGLE, WORLD_WIDTH / 2,
+                                       WORLD_HEIGHT / 2 + PLATFORM_HEIGHT / 2 + PLAYER_DIMENSION / 2, PLAYER_DIMENSION, 
+                                       PLAYER_DIMENSION, ANGLE, Optional.absent(), Optional.absent());
     }
 
     /**
@@ -77,20 +74,16 @@ public class WorldCollisionsTest {
      */
     @Test
     public void playerGoalCollisionTest() {
-        final EntityProperties goalProperties = new EntityPropertiesImpl(EntityType.POWERUP, 
-                                                                         BodyShape.RECTANGLE, 
-                                                                         this.playerProperties.getPosition().getLeft()
-                                                                         + POWER_UP_DIMENSION / 2 + PLAYER_DIMENSION / 2,
-                                                                         this.playerProperties.getPosition().getRight(),
-                                                                         POWER_UP_DIMENSION,
-                                                                         POWER_UP_DIMENSION,
-                                                                         ANGLE,
-                                                                         Optional.of(PowerUpType.GOAL),
-                                                                         Optional.absent());
+        final Pair<Double, Double> playerPosition = this.playerProperties.getPosition();
+        final EntityProperties goalProperties 
+            = new EntityPropertiesImpl(EntityType.POWERUP, BodyShape.RECTANGLE,
+                                       playerPosition.getLeft() + POWER_UP_DIMENSION / 2 + PLAYER_DIMENSION / 2,
+                                       playerPosition.getRight(), POWER_UP_DIMENSION, POWER_UP_DIMENSION, ANGLE,
+                                       Optional.of(PowerUpType.GOAL), Optional.absent());
         this.world.initLevel(Arrays.asList(this.platformProperties, this.playerProperties, goalProperties));
         assertFalse(NOT_STARTED_MSG, this.world.hasPlayerWon());
         this.world.update();
-        assertTrue("The player is colliding with the goal but not winning", this.world.hasPlayerWon());
+        assertTrue(NO_WIN, this.world.hasPlayerWon());
     }
 
     /**
@@ -98,21 +91,16 @@ public class WorldCollisionsTest {
      */
     @Test
     public void playerKilledByRollingEnemyCollisionTest() {
-        final EntityProperties rollingEnemyProperties = new EntityPropertiesImpl(EntityType.ROLLING_ENEMY, 
-                                                                                 BodyShape.CIRCLE, 
-                                                                                 this.playerProperties.getPosition().getLeft()
-                                                                                 + ROLLING_ENEMY_DIMENSION / 2 
-                                                                                 + PLAYER_DIMENSION / 2,
-                                                                                 this.playerProperties.getPosition().getRight(),
-                                                                                 ROLLING_ENEMY_DIMENSION,
-                                                                                 ROLLING_ENEMY_DIMENSION,
-                                                                                 ANGLE,
-                                                                                 Optional.absent(),
-                                                                                 Optional.absent());
+        final Pair<Double, Double> playerPosition = this.playerProperties.getPosition();
+        final EntityProperties rollingEnemyProperties
+            = new EntityPropertiesImpl(EntityType.ROLLING_ENEMY, BodyShape.CIRCLE, 
+                                       playerPosition.getLeft() + ROLLING_ENEMY_DIMENSION / 2 + PLAYER_DIMENSION / 2,
+                                       playerPosition.getRight(), ROLLING_ENEMY_DIMENSION, ROLLING_ENEMY_DIMENSION,
+                                       ANGLE, Optional.absent(), Optional.absent());
         this.world.initLevel(Arrays.asList(this.platformProperties, this.playerProperties, rollingEnemyProperties));
         assertFalse(NOT_STARTED_MSG, this.world.isGameOver());
         this.world.update();
-        assertTrue("The player is colliding with the enemy but not losing", this.world.isGameOver());
+        assertTrue(NO_LOSE, this.world.isGameOver());
     }
 
     /**
@@ -120,37 +108,28 @@ public class WorldCollisionsTest {
      */
     @Test
     public void playerKillingARollingEnemyCollisionTest() {
-        final EntityProperties rollingEnemyProperties = new EntityPropertiesImpl(EntityType.ROLLING_ENEMY, 
-                                                                                 BodyShape.CIRCLE, 
-                                                                                 this.playerProperties.getPosition().getLeft(),
-                                                                                 this.playerProperties.getPosition().getRight()
-                                                                                 - PLAYER_DIMENSION / 2 
-                                                                                 - ROLLING_ENEMY_DIMENSION / 2,
-                                                                                 ROLLING_ENEMY_DIMENSION,
-                                                                                 ROLLING_ENEMY_DIMENSION,
-                                                                                 ANGLE,
-                                                                                 Optional.absent(),
-                                                                                 Optional.absent());
-        final EntityProperties playerJumpingProperties = new EntityPropertiesImpl(EntityType.PLAYER, 
-                                                                                  BodyShape.RECTANGLE,
-                                                                                  WORLD_WIDTH / 2,
-                                                                                  this.platformProperties.getPosition().getRight()
-                                                                                  + PLATFORM_HEIGHT / 2 
-                                                                                  + ROLLING_ENEMY_DIMENSION
-                                                                                  + PLAYER_DIMENSION / 2,
-                                                                                  PLAYER_DIMENSION,
-                                                                                  PLAYER_DIMENSION,
-                                                                                  ANGLE,
-                                                                                  Optional.absent(),
-                                                                                  Optional.absent());
+        final Pair<Double, Double> playerPosition = this.playerProperties.getPosition();
+        final EntityProperties rollingEnemyProperties 
+            = new EntityPropertiesImpl(EntityType.ROLLING_ENEMY, BodyShape.CIRCLE, playerPosition.getLeft(),
+                                       playerPosition.getRight() - PLAYER_DIMENSION / 2 - ROLLING_ENEMY_DIMENSION / 2,
+                                       ROLLING_ENEMY_DIMENSION, ROLLING_ENEMY_DIMENSION, ANGLE, Optional.absent(),
+                                       Optional.absent());
+        final EntityProperties playerJumpingProperties
+            = new EntityPropertiesImpl(EntityType.PLAYER, BodyShape.RECTANGLE, WORLD_WIDTH / 2,
+                                       playerPosition.getRight() + PLATFORM_HEIGHT / 2 + ROLLING_ENEMY_DIMENSION 
+                                       + PLAYER_DIMENSION / 2,
+                                       PLAYER_DIMENSION,
+                                       PLAYER_DIMENSION,
+                                       ANGLE,
+                                       Optional.absent(),
+                                       Optional.absent());
         this.world.initLevel(Arrays.asList(this.platformProperties, playerJumpingProperties, rollingEnemyProperties));
         while (this.world.getAliveEntities().size() == 3) {
             this.world.update();
         }
-        assertEquals("The alive entities should be two", 2, this.world.getAliveEntities().size());
-        assertEquals("There should be only one dead entity", 1, this.world.getDeadEntities().size());
-        assertTrue("The dead entities should only be rolling enemies", 
-                   this.world.getDeadEntities().stream().allMatch(e -> e.getType() == EntityType.ROLLING_ENEMY));
+        assertEquals(TWO_ALIVE_ENTITIES, 2, this.world.getAliveEntities().size());
+        assertEquals(ONE_DEAD_ENTITY, 1, this.world.getDeadEntities().size());
+        assertTrue(ROLLING_DEAD, this.world.getDeadEntities().stream().allMatch(e -> e.getType() == EntityType.ROLLING_ENEMY));
     }
 
     /**
@@ -158,21 +137,16 @@ public class WorldCollisionsTest {
      */
     @Test
     public void playerKilledByWalkingEnemyCollisionTest() {
-        final EntityProperties walkingEnemyProperties = new EntityPropertiesImpl(EntityType.WALKING_ENEMY, 
-                                                                                 BodyShape.RECTANGLE, 
-                                                                                 this.playerProperties.getPosition().getLeft()
-                                                                                 + WALKING_ENEMY_DIMENSION / 2 
-                                                                                 + PLAYER_DIMENSION / 2,
-                                                                                 this.playerProperties.getPosition().getRight(),
-                                                                                 WALKING_ENEMY_DIMENSION,
-                                                                                 WALKING_ENEMY_DIMENSION,
-                                                                                 ANGLE,
-                                                                                 Optional.absent(),
-                                                                                 Optional.of(WALKING_RANGE));
+        final Pair<Double, Double> playerPosition = this.playerProperties.getPosition();
+        final EntityProperties walkingEnemyProperties
+            = new EntityPropertiesImpl(EntityType.WALKING_ENEMY, BodyShape.RECTANGLE, 
+                                       playerPosition.getLeft() + WALKING_ENEMY_DIMENSION / 2 + PLAYER_DIMENSION / 2,
+                                       playerPosition.getRight(), WALKING_ENEMY_DIMENSION, WALKING_ENEMY_DIMENSION, ANGLE,
+                                       Optional.absent(), Optional.of(WALKING_RANGE));
         this.world.initLevel(Arrays.asList(this.platformProperties, this.playerProperties, walkingEnemyProperties));
         assertFalse(NOT_STARTED_MSG, this.world.isGameOver());
         this.world.update();
-        assertTrue("The player is colliding with the enemy but not losing", this.world.isGameOver());
+        assertTrue(NO_LOSE, this.world.isGameOver());
     }
 
     /**
@@ -180,37 +154,28 @@ public class WorldCollisionsTest {
      */
     @Test
     public void playerKillingAWalkingEnemyCollisionTest() {
-        final EntityProperties walkingEnemyProperties = new EntityPropertiesImpl(EntityType.WALKING_ENEMY, 
-                                                                                 BodyShape.RECTANGLE, 
-                                                                                 WORLD_WIDTH / 2,
-                                                                                 this.platformProperties.getPosition().getRight()
-                                                                                 + PLATFORM_HEIGHT / 2 
-                                                                                 + WALKING_ENEMY_DIMENSION / 2,
-                                                                                 WALKING_ENEMY_DIMENSION,
-                                                                                 WALKING_ENEMY_DIMENSION,
-                                                                                 ANGLE,
-                                                                                 Optional.absent(),
-                                                                                 Optional.of(WALKING_RANGE));
-        final EntityProperties playerJumpingProperties = new EntityPropertiesImpl(EntityType.PLAYER, 
-                                                                                  BodyShape.RECTANGLE,
-                                                                                  WORLD_WIDTH / 2,
-                                                                                  this.platformProperties.getPosition().getRight()
-                                                                                  + PLATFORM_HEIGHT / 2 
-                                                                                  + WALKING_ENEMY_DIMENSION
-                                                                                  + PLAYER_DIMENSION / 2,
-                                                                                  PLAYER_DIMENSION,
-                                                                                  PLAYER_DIMENSION,
-                                                                                  ANGLE,
-                                                                                  Optional.absent(),
-                                                                                  Optional.absent());
+        final Pair<Double, Double> playerPosition = this.playerProperties.getPosition();
+        final EntityProperties walkingEnemyProperties
+            = new EntityPropertiesImpl(EntityType.WALKING_ENEMY, BodyShape.RECTANGLE, WORLD_WIDTH / 2,
+                                       playerPosition.getRight() + PLATFORM_HEIGHT / 2 + WALKING_ENEMY_DIMENSION / 2,
+                                       WALKING_ENEMY_DIMENSION, WALKING_ENEMY_DIMENSION, ANGLE, Optional.absent(),
+                                       Optional.of(WALKING_RANGE));
+        final EntityProperties playerJumpingProperties
+            = new EntityPropertiesImpl(EntityType.PLAYER, BodyShape.RECTANGLE, WORLD_WIDTH / 2,
+                                       playerPosition.getRight() + PLATFORM_HEIGHT / 2 + WALKING_ENEMY_DIMENSION
+                                       + PLAYER_DIMENSION / 2,
+                                       PLAYER_DIMENSION,
+                                       PLAYER_DIMENSION,
+                                       ANGLE,
+                                       Optional.absent(),
+                                       Optional.absent());
         this.world.initLevel(Arrays.asList(this.platformProperties, playerJumpingProperties, walkingEnemyProperties));
         while (this.world.getAliveEntities().size() == 3) {
             this.world.update();
         }
-        assertEquals("The alive entities should be two", 2, this.world.getAliveEntities().size());
-        assertEquals("There should be only one dead entity", 1, this.world.getDeadEntities().size());
-        assertTrue("The dead entities should only be rolling enemies", 
-                   this.world.getDeadEntities().stream().allMatch(e -> e.getType() == EntityType.WALKING_ENEMY));
+        assertEquals(TWO_ALIVE_ENTITIES, 2, this.world.getAliveEntities().size());
+        assertEquals(ONE_DEAD_ENTITY, 1, this.world.getDeadEntities().size());
+        assertTrue(WALKING_DEAD, this.world.getDeadEntities().stream().allMatch(e -> e.getType() == EntityType.WALKING_ENEMY));
     }
 
     /**
@@ -218,20 +183,15 @@ public class WorldCollisionsTest {
      */
     @Test
     public void playerCollisionWithExtraLifeTest() {
-        final EntityProperties extraLifeProperties = new EntityPropertiesImpl(EntityType.POWERUP,
-                                                                              BodyShape.RECTANGLE,
-                                                                              this.playerProperties.getPosition().getLeft()
-                                                                              + PLAYER_DIMENSION / 2
-                                                                              + POWER_UP_DIMENSION / 2,
-                                                                              this.playerProperties.getPosition().getRight(),
-                                                                              POWER_UP_DIMENSION,
-                                                                              POWER_UP_DIMENSION,
-                                                                              ANGLE,
-                                                                              Optional.of(PowerUpType.EXTRA_LIFE),
-                                                                              Optional.absent());
+        final Pair<Double, Double> playerPosition = this.playerProperties.getPosition();
+        final EntityProperties extraLifeProperties 
+            = new EntityPropertiesImpl(EntityType.POWERUP, BodyShape.RECTANGLE,
+                                       playerPosition.getLeft() + PLAYER_DIMENSION / 2 + POWER_UP_DIMENSION / 2,
+                                       playerPosition.getRight(), POWER_UP_DIMENSION, POWER_UP_DIMENSION, ANGLE,
+                                       Optional.of(PowerUpType.EXTRA_LIFE), Optional.absent());
         this.world.initLevel(Arrays.asList(this.platformProperties, this.playerProperties, extraLifeProperties));
         final int playerLives = this.world.getPlayerLives();
         this.world.update();
-        assertEquals("The player should have acquired a life", playerLives + 1, this.world.getPlayerLives());
+        assertEquals(EXTRA_LIFE, playerLives + 1, this.world.getPlayerLives());
     }
 }

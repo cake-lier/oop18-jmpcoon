@@ -22,28 +22,7 @@ public final class PhysicsUtils {
      */
     public static boolean isBodyOnTop(final PhysicalBody aboveBody, final PhysicalBody belowBody,
                                       final Pair<Double, Double> contactPoint) {
-        final double slope = Math.tan(belowBody.getAngle());
-        if (Double.compare(slope, 0) == 0) {
-            return Math.abs((aboveBody.getPosition().getRight() - aboveBody.getDimensions().getRight() / 2)
-                            - contactPoint.getRight()) < PRECISION
-                   && Math.abs(contactPoint.getRight()
-                               - (belowBody.getPosition().getRight() + belowBody.getDimensions().getRight() / 2)) < PRECISION;
-        }
-        final double interPerp = contactPoint.getRight() + (1 / slope) * contactPoint.getLeft();
-        final double interParalAbove = aboveBody.getPosition().getRight() - slope * aboveBody.getPosition().getLeft();
-        final double newXAbove = (interPerp - interParalAbove) * slope / (1 + Math.pow(slope, 2));
-        final double newYAbove = slope * newXAbove + interParalAbove;
-        final Vector2 rotatedHalfAboveHeight = new Vector2(0, -aboveBody.getDimensions().getRight() / 2)
-                                               .rotate(aboveBody.getAngle())
-                                               .add(newXAbove, newYAbove);
-        final double interParalBelow = belowBody.getPosition().getRight() - slope * belowBody.getPosition().getLeft();
-        final double newXBelow = (interPerp - interParalBelow) * slope / (1 + Math.pow(slope, 2));
-        final double newYBelow = slope * newXBelow + interParalBelow;
-        final Vector2 rotatedHalfBelowHeight = new Vector2(0, belowBody.getDimensions().getRight() / 2)
-                                               .rotate(belowBody.getAngle())
-                                               .add(newXBelow, newYBelow);
-        return Math.abs(rotatedHalfAboveHeight.y - contactPoint.getRight()) < PRECISION
-               && Math.abs(contactPoint.getRight() - rotatedHalfBelowHeight.y) < PRECISION;
+        return isContactAtEdgeBody(aboveBody, contactPoint, true) && isContactAtEdgeBody(belowBody, contactPoint, false);
     }
 
     /**
@@ -81,22 +60,27 @@ public final class PhysicsUtils {
      */
     public static boolean isBodyAbove(final PhysicalBody aboveBody, final PhysicalBody belowBody,
                                       final Pair<Double, Double> contactPoint) {
-        final double slope = Math.tan(aboveBody.getAngle());
+        return isContactAtEdgeBody(aboveBody, contactPoint, true)
+               && contactPoint.getRight() >= (belowBody.getPosition().getRight() + belowBody.getDimensions().getRight() / 4);
+    }
+
+    /*
+     * Calculates if a given contact point is at the edge of a physical body, considering also its rotation with respect to
+     * the world axis, on its top or on its bottom depending on the passed parameter.
+     */
+    private static boolean isContactAtEdgeBody(final PhysicalBody body, final Pair<Double, Double> contact, final boolean onTop) {
+        final double slope = Math.tan(body.getAngle());
         if (Double.compare(slope, 0) == 0) {
-            return Math.abs((aboveBody.getPosition().getRight() - aboveBody.getDimensions().getRight() / 2)
-                            - contactPoint.getRight()) < PRECISION
-                   && (contactPoint.getRight()
-                       >= (belowBody.getPosition().getRight() + belowBody.getDimensions().getRight() / 4));
+            return Math.abs((body.getPosition().getRight() + (onTop ? -1 : 1) * body.getDimensions().getRight() / 2)
+                            - contact.getRight()) < PRECISION;
         }
-        final double interPerp = contactPoint.getRight() + (1 / slope) * contactPoint.getLeft();
-        final double interParalAbove = aboveBody.getPosition().getRight() - slope * aboveBody.getPosition().getLeft();
-        final double newXAbove = ((interPerp - interParalAbove) * slope) / (1 + Math.pow(slope, 2));
+        final double interPerp = contact.getRight() + (1 / slope) * contact.getLeft();
+        final double interParalAbove = body.getPosition().getRight() - slope * body.getPosition().getLeft();
+        final double newXAbove = (interPerp - interParalAbove) * slope / (1 + Math.pow(slope, 2));
         final double newYAbove = slope * newXAbove + interParalAbove;
-        final Vector2 rotatedHalfAboveHeight 
-            = new Vector2(0, -(aboveBody.getDimensions().getRight() / 2)).rotate(belowBody.getAngle())
-                                                                         .add(newXAbove, newYAbove);
-        return Math.abs(rotatedHalfAboveHeight.y - contactPoint.getRight()) < PRECISION
-               && (contactPoint.getRight()
-                   >= (belowBody.getPosition().getRight() + belowBody.getDimensions().getRight() / 4));
+        final Vector2 rotatedHalfHeight = new Vector2(0, (onTop ? -1 : 1) * body.getDimensions().getRight() / 2)
+                                          .rotate(body.getAngle())
+                                          .add(newXAbove, newYAbove);
+        return Math.abs(rotatedHalfHeight.y - contact.getRight()) < PRECISION;
     }
 }

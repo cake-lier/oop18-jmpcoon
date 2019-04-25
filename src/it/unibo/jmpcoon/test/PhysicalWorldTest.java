@@ -12,6 +12,9 @@ import it.unibo.jmpcoon.model.entities.EntityType;
 import it.unibo.jmpcoon.model.physics.BodyShape;
 import it.unibo.jmpcoon.model.physics.PhysicalFactory;
 import it.unibo.jmpcoon.model.physics.PhysicalFactoryImpl;
+import it.unibo.jmpcoon.model.physics.PhysicalWorld;
+import it.unibo.jmpcoon.model.physics.collisions.PhysicsRulesFactory;
+import it.unibo.jmpcoon.model.physics.collisions.PhysicsRulesFactoryImpl;
 import it.unibo.jmpcoon.model.world.World;
 import it.unibo.jmpcoon.model.world.WorldFactoryImpl;
 import it.unibo.jmpcoon.model.world.WorldImpl;
@@ -65,5 +68,39 @@ public class PhysicalWorldTest {
     @Test(expected = IllegalStateException.class)
     public void alreadyCreatedWorldFail() {
         IntStream.range(0, 2).forEach(i -> this.factory.createPhysicalWorld(this.world, WORLD_WIDTH, WORLD_HEIGHT));
+    }
+
+    /**
+     * Test for the correct creation of a {@link it.unibo.jmpcoon.model.physics.collisions.CollisionRules} and a
+     * {@link it.unibo.jmpcoon.model.physics.collisions.ContactRules} instances via a {@link PhysicsRulesFactory}.
+     */
+    @Test
+    public void physicalRulesCreationTest() {
+        final PhysicalWorld physicalWorld = PhysicalWorld.class.cast(this.factory.createPhysicalWorld(this.world, WORLD_WIDTH, WORLD_HEIGHT));
+        final PhysicsRulesFactory rulesFactory = new PhysicsRulesFactoryImpl();
+        rulesFactory.createCollisionRules(physicalWorld, this.world);
+        rulesFactory.createContactRules(physicalWorld);
+    }
+
+    /**
+     * Test for the correct failure while creating a second {@link it.unibo.jmpcoon.model.physics.collisions.CollisionRules}
+     * instance after the first one.
+     */
+    @Test(expected = IllegalStateException.class)
+    public void alreadyCreatedCollisionRulesFail() {
+        final PhysicalWorld physicalWorld = PhysicalWorld.class.cast(this.factory.createPhysicalWorld(this.world, WORLD_WIDTH, WORLD_HEIGHT));
+        final PhysicsRulesFactory rulesFactory = new PhysicsRulesFactoryImpl();
+        IntStream.range(0, 2).forEach(i -> rulesFactory.createCollisionRules(physicalWorld, this.world));
+    }
+
+    /**
+     * Test for the correct failure while creating a second {@link it.unibo.jmpcoon.model.physics.collisions.ContactRules}
+     * instance after the first one.
+     */
+    @Test(expected = IllegalStateException.class)
+    public void alreadyCreatedContactRulesFail() {
+        final PhysicalWorld physicalWorld = PhysicalWorld.class.cast(this.factory.createPhysicalWorld(this.world, WORLD_WIDTH, WORLD_HEIGHT));
+        final PhysicsRulesFactory rulesFactory = new PhysicsRulesFactoryImpl();
+        IntStream.range(0, 2).forEach(i -> rulesFactory.createContactRules(physicalWorld));
     }
 }

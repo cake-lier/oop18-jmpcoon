@@ -50,6 +50,12 @@ public class WorldTest {
     private static final String NO_PLAYER_JUMP = "The player didn't jump";
     private static final String NO_PLAYER_CLIMB_UP = "The player didn't climb up when prompted";
     private static final String NO_PLAYER_CLIMB_DOWN = "The player didn't climb down when prompted";
+    private static final String NO_DEAD_ENTITIES = "There shouldn't be dead entities";
+    private static final String SCORE_ZERO = "The score should be zero";
+    private static final String NO_EVENTS = "There should be no events in queue";
+    private static final String GAME_ONGOING = "The game should be ongoing";
+    private static final String INITIAL_LIVES = "The player should not have more than one life";
+    private static final String ZERO_LIVES = "The player should have zero lives";
 
     private final EntityProperties platformProperties;
     private final EntityProperties playerProperties;
@@ -127,8 +133,9 @@ public class WorldTest {
         if (!player.isPresent()) {
             fail(NO_PLAYER);
         }
-        assertEquals(PLAYER_MOVE, playerInitialPosition.getLeft(), player.get().getPosition().getLeft(), PRECISION);
-        assertEquals(PLAYER_MOVE, playerInitialPosition.getRight(), player.get().getPosition().getRight(), PRECISION);
+        final Pair<Double, Double> playerCurrentPosition = player.get().getPosition();
+        assertEquals(PLAYER_MOVE, playerInitialPosition.getLeft(), playerCurrentPosition.getLeft(), PRECISION);
+        assertEquals(PLAYER_MOVE, playerInitialPosition.getRight(), playerCurrentPosition.getRight(), PRECISION);
     }
 
     /**
@@ -137,20 +144,17 @@ public class WorldTest {
     @Test
     public void worldStatusAtCreationTest() {
         final UpdatableWorld world = new WorldFactoryImpl().create();
-        final List<EntityProperties> entities = Arrays.asList(this.playerProperties, 
-                                                              this.platformProperties, 
+        final List<EntityProperties> entities = Arrays.asList(this.playerProperties, this.platformProperties,
                                                               this.ladderProperties);
         world.initLevel(entities);
         assertEquals(WRONG_ENTITIES_NUMBER, entities.size(), world.getAliveEntities().size());
-        assertEquals("There shouldn't be dead entities", 0, world.getDeadEntities().size());
-        assertEquals("The score should be zero", 0, world.getCurrentScore());
-        assertEquals("There should be no events in queue", 0, world.getCurrentEvents().size());
-        assertFalse("The game should be ongoing", world.isGameOver());
-        assertFalse("The game shouldn't be terminated", world.hasPlayerWon());
-        assertEquals("The player should not have more than one life", 1, world.getPlayerLives());
-        assertEquals(WRONG_DIMENSIONS, 
-                     world.getDimensions(),
-                     new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT));
+        assertEquals(NO_DEAD_ENTITIES, 0, world.getDeadEntities().size());
+        assertEquals(SCORE_ZERO, 0, world.getCurrentScore());
+        assertEquals(NO_EVENTS, 0, world.getCurrentEvents().size());
+        assertFalse(GAME_ONGOING, world.isGameOver());
+        assertFalse(GAME_ONGOING, world.hasPlayerWon());
+        assertEquals(INITIAL_LIVES, 1, world.getPlayerLives());
+        assertEquals(WRONG_DIMENSIONS, world.getDimensions(), new ImmutablePair<>(WORLD_WIDTH, WORLD_HEIGHT));
     }
 
     /**
@@ -223,8 +227,9 @@ public class WorldTest {
             this.world.update();
         }
         /* assuming player was created correctly, because previous tests said so */
-        assertEquals(PLAYER_MOVE, playerInitialPosition.getLeft(), player.get().getPosition().getLeft(), PRECISION);
-        assertEquals(PLAYER_MOVE, playerInitialPosition.getRight(), player.get().getPosition().getRight(), PRECISION);
+        final Pair<Double, Double> playerCurrentPosition = player.get().getPosition();
+        assertEquals(PLAYER_MOVE, playerInitialPosition.getLeft(), playerCurrentPosition.getLeft(), PRECISION);
+        assertEquals(PLAYER_MOVE, playerInitialPosition.getRight(), playerCurrentPosition.getRight(), PRECISION);
     }
 
     /**
@@ -264,8 +269,9 @@ public class WorldTest {
         for (int i = 0; i < LONG_UPDATE_STEPS; i++) {
             this.world.update();
         }
-        assertEquals(PLAYER_MOVE, playerInitialPosition.getLeft(), player.get().getPosition().getLeft(), PRECISION);
-        assertEquals(PLAYER_MOVE, playerInitialPosition.getRight(), player.get().getPosition().getRight(), PRECISION);
+        final Pair<Double, Double> playerCurrentPosition = player.get().getPosition();
+        assertEquals(PLAYER_MOVE, playerInitialPosition.getLeft(), playerCurrentPosition.getLeft(), PRECISION);
+        assertEquals(PLAYER_MOVE, playerInitialPosition.getRight(), playerCurrentPosition.getRight(), PRECISION);
     }
 
     /**
@@ -312,8 +318,9 @@ public class WorldTest {
             this.world.update();
         }
         /* assuming player was created correctly, because previous tests said so */
-        assertEquals(PLAYER_MOVE, playerTopPosition.getLeft(),  player.get().getPosition().getLeft(), PRECISION);
-        assertEquals(PLAYER_MOVE, playerTopPosition.getRight(), player.get().getPosition().getRight(), PRECISION);
+        final Pair<Double, Double> playerCurrentPosition = player.get().getPosition();
+        assertEquals(PLAYER_MOVE, playerTopPosition.getLeft(),  playerCurrentPosition.getLeft(), PRECISION);
+        assertEquals(PLAYER_MOVE, playerTopPosition.getRight(), playerCurrentPosition.getRight(), PRECISION);
     }
 
     /**
@@ -337,8 +344,9 @@ public class WorldTest {
             this.world.update();
         }
         /* assuming player was created correctly, because previous tests said so */
-        assertEquals(PLAYER_MOVE, playerTopPosition.getLeft(), player.get().getPosition().getLeft(), PRECISION);
-        assertEquals(PLAYER_MOVE, playerTopPosition.getRight(), player.get().getPosition().getRight(), PRECISION);
+        final Pair<Double, Double> playerCurrentPosition = player.get().getPosition();
+        assertEquals(PLAYER_MOVE, playerTopPosition.getLeft(), playerCurrentPosition.getLeft(), PRECISION);
+        assertEquals(PLAYER_MOVE, playerTopPosition.getRight(), playerCurrentPosition.getRight(), PRECISION);
     }
 
     /**
@@ -350,7 +358,7 @@ public class WorldTest {
         while (!this.world.isGameOver()) {
             this.world.update();
         }
-        assertEquals("The player should have 0 lives", 0, this.world.getPlayerLives());
+        assertEquals(ZERO_LIVES, 0, this.world.getPlayerLives());
     }
 
     /**
@@ -358,19 +366,12 @@ public class WorldTest {
      */
     @Test
     public void stopPlayerClimbingTest() {
-        final EntityProperties platform2Properties = new EntityPropertiesImpl(EntityType.PLATFORM,
-                                                                              BodyShape.RECTANGLE,
-                                                                              WORLD_WIDTH / 2,
-                                                                              this.ladderProperties.getPosition().getRight()
-                                                                              + LADDER_HEIGHT / 2
-                                                                              - PLATFORM_HEIGHT,
-                                                                              PLATFORM_WIDTH,
-                                                                              PLATFORM_HEIGHT,
-                                                                              ANGLE,
-                                                                              Optional.absent(),
-                                                                              Optional.absent());
-        this.world.initLevel(Arrays.asList(this.playerProperties, this.platformProperties, 
-                                           this.ladderProperties, platform2Properties));
+        final EntityProperties secondPlatformProperties
+            = new EntityPropertiesImpl(EntityType.PLATFORM, BodyShape.RECTANGLE, WORLD_WIDTH / 2,
+                                       this.ladderProperties.getPosition().getRight() + LADDER_HEIGHT / 2 - PLATFORM_HEIGHT,
+                                       PLATFORM_WIDTH, PLATFORM_HEIGHT, ANGLE, Optional.absent(), Optional.absent());
+        this.world.initLevel(Arrays.asList(this.playerProperties, this.platformProperties, this.ladderProperties,
+                                           secondPlatformProperties));
         Pair<Double, Double> previousPosition = this.getPlayer().get().getPosition();
         this.world.movePlayer(MovementType.CLIMB_UP);
         this.world.update();
@@ -379,10 +380,8 @@ public class WorldTest {
             this.world.movePlayer(MovementType.CLIMB_UP);
             this.world.update();
         }
-        assertEquals(PLAYER_MOVE,
-                     platform2Properties.getPosition().getRight() + PLATFORM_HEIGHT / 2 + PLAYER_DIMENSION / 2,
-                     this.getPlayer().get().getPosition().getRight(),
-                     PRECISION);
+        assertEquals(PLAYER_MOVE, secondPlatformProperties.getPosition().getRight() + PLATFORM_HEIGHT / 2 + PLAYER_DIMENSION / 2,
+                     this.getPlayer().get().getPosition().getRight(), PRECISION);
     }
 
     private Optional<UnmodifiableEntity> getPlayer() {
