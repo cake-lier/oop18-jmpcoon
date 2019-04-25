@@ -26,7 +26,7 @@ import it.unibo.jmpcoon.model.world.NotifiableWorld;
  * The class implementation of {@link PhysicalWorld}. It's package protected so the only class which can build it is the 
  * {@link PhysicalFactory}, the factory class for each one of the physical entities of this game.
  */
-final class PhysicalWorldImpl implements PhysicalWorld {
+class PhysicalWorldImpl implements PhysicalWorld {
     private static final long serialVersionUID = -8486558535164534658L;
     private static final int INVINCIBILITY_DURATION = 400;
     private static final int HIT_COOLDOWN = 60;

@@ -27,7 +27,7 @@ import it.unibo.jmpcoon.model.world.NotifiableWorld;
 /**
  * Class representing a listener for physical collisions between bodies required by the dyn4j library so as to rule them.
  */
-public final class CollisionRules extends CollisionAdapter implements Serializable {
+public class CollisionRules extends CollisionAdapter implements Serializable {
     private static final long serialVersionUID = 7929553481812283534L;
     private final NotifiableWorld outerWorld;
     private final ReadablePhysicalWorld physicalWorld;

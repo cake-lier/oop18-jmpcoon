@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 /**
  * The class implementation of {@link AppView}.
  */
-public final class AppViewImpl implements AppView {
+public class AppViewImpl implements AppView {
     private static final String TITLE = "Jumping Raccoon Adventures";
     private static final Media MENU_MUSIC = new Media(ClassLoader.getSystemResource("sounds/stillalive.mp3").toExternalForm());
     private static final Media GAME_MUSIC = new Media(ClassLoader.getSystemResource("sounds/pixelland.mp3").toExternalForm());

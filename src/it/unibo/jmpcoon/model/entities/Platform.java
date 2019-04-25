@@ -5,7 +5,7 @@ import it.unibo.jmpcoon.model.physics.StaticPhysicalBody;
 /**
  * A platform inside the {@link it.unibo.jmpcoon.model.world.World} of the game.
  */
-public final class Platform extends StaticEntity {
+public class Platform extends StaticEntity {
     private static final long serialVersionUID = 2006372527364015609L;
 
     /**

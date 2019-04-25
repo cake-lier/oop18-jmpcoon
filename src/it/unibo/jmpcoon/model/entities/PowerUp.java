@@ -5,7 +5,7 @@ import it.unibo.jmpcoon.model.physics.StaticPhysicalBody;
 /**
  * A class representing a PowerUp.
  */
-public final class PowerUp extends StaticEntity {
+public class PowerUp extends StaticEntity {
     private static final long serialVersionUID = -6954816914217174592L;
 
     private final PowerUpType powerUpType;

@@ -76,10 +76,12 @@ public class PhysicalWorldTest {
      */
     @Test
     public void physicalRulesCreationTest() {
-        final PhysicalWorld physicalWorld = PhysicalWorld.class.cast(this.factory.createPhysicalWorld(this.world, WORLD_WIDTH, WORLD_HEIGHT));
+        final PhysicalWorld physicalWorld = PhysicalWorld.class.cast(this.factory.createPhysicalWorld(this.world, 
+                                                                                                      WORLD_WIDTH,
+                                                                                                      WORLD_HEIGHT));
         final PhysicsRulesFactory rulesFactory = new PhysicsRulesFactoryImpl();
-        rulesFactory.createCollisionRules(physicalWorld, this.world);
-        rulesFactory.createContactRules(physicalWorld);
+        assertNotNull(NOT_CREATED, rulesFactory.createCollisionRules(physicalWorld, this.world));
+        assertNotNull(NOT_CREATED, rulesFactory.createContactRules(physicalWorld));
     }
 
     /**

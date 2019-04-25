@@ -5,7 +5,7 @@ import it.unibo.jmpcoon.model.physics.DynamicPhysicalBody;
 /**
  * A rolling enemy inside the {@link it.unibo.jmpcoon.model.world.World} of the game.
  */
-public final class RollingEnemy extends DynamicEntity {
+public class RollingEnemy extends DynamicEntity {
     private static final long serialVersionUID = -6624661835399417683L;
     private static final double ROLLING_ENEMY_SPEED = 3;
 

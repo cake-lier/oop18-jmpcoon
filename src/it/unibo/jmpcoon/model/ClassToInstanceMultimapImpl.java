@@ -20,7 +20,7 @@ import com.google.common.primitives.Primitives;
  * instance, is an absence of instance, because it references to nothing. Hence, a {@code null} as a value can't be inserted.
  * @param <B> an upper bound supertype shared by all the instances in the multimap
  */
-public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Class<? extends B>, B> 
+public class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Class<? extends B>, B> 
                                                   implements ClassToInstanceMultimap<B> {
     private static final long serialVersionUID = -9047286057610567233L;
     private static final String NO_NULL = "A null key is not accepted!";

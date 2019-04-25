@@ -19,7 +19,7 @@ import it.unibo.jmpcoon.model.physics.ReadablePhysicalWorld;
 /**
  * Class representing a listener for physical contacts between bodies required the dyn4j library so as to rule them.
  */
-public final class ContactRules extends ContactAdapter implements Serializable {
+public class ContactRules extends ContactAdapter implements Serializable {
     private static final long serialVersionUID = -5814150230389633139L;
     private final ReadablePhysicalWorld world;
 

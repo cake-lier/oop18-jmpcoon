@@ -7,7 +7,7 @@ import it.unibo.jmpcoon.model.physics.PlayerPhysicalBody;
 /**
  * The player inside the {@link it.unibo.jmpcoon.model.world.World} of the game.
  */
-public final class Player extends DynamicEntity {
+public class Player extends DynamicEntity {
     private static final long serialVersionUID = 7632362148460378676L;
 
     private final PlayerPhysicalBody body;

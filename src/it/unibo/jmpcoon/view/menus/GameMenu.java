@@ -22,7 +22,7 @@ import javafx.scene.control.Alert.AlertType;
 /**
  * Represents the menu which will be launched during the game.
  */
-public final class GameMenu implements Menu {
+public class GameMenu implements Menu {
     private static final String LAYOUT_PATH = "layouts/";
     private static final String LAYOUT_EXT = ".fxml";
     private static final String GAME_MENU_SRC = LAYOUT_PATH + "gameMenu" + LAYOUT_EXT;

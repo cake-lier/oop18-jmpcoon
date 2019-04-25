@@ -19,7 +19,7 @@ import it.unibo.jmpcoon.view.app.AppView;
 /**
  * Class implementation of {@link AppController}.
  */
-public final class AppControllerImpl implements AppController {
+public class AppControllerImpl implements AppController {
     private static final String FOLDER = "jmpcoon";
     private static final String LOG_FILE = "jmpcoon.log";
 

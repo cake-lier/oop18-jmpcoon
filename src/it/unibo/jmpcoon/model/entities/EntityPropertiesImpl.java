@@ -13,7 +13,7 @@ import it.unibo.jmpcoon.model.physics.BodyShape;
 /**
  * Class implementation of {@link EntityProperties}.
  */
-public final class EntityPropertiesImpl implements EntityProperties {
+public class EntityPropertiesImpl implements EntityProperties {
     private static final long serialVersionUID = -6863412268735663647L;
 
     private final EntityType type;

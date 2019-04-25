@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 /**
  * Represents the menu which will be launched before the game.
  */
-public final class AppMenu implements Menu {
+public class AppMenu implements Menu {
     private static final String LAYOUT_PATH = "layouts/";
     private static final String LAYOUT_EXT = ".fxml";
     private static final String MENU_LAYOUT = LAYOUT_PATH + "menu" + LAYOUT_EXT;

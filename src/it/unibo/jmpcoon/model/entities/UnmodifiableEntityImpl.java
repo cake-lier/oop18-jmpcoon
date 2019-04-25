@@ -12,7 +12,7 @@ import it.unibo.jmpcoon.model.physics.BodyShape;
 /**
  * Class implementation of {@link UnmodifiableEntity}.
  */
-public final class UnmodifiableEntityImpl implements UnmodifiableEntity {
+public class UnmodifiableEntityImpl implements UnmodifiableEntity {
     private static final String WRONG_CONSTRUCTOR = "Wrong constructor used, use the other one instead";
 
     private final Entity innerEntity;

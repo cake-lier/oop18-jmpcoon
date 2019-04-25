@@ -5,7 +5,7 @@ import it.unibo.jmpcoon.model.physics.StaticPhysicalBody;
 /**
  * A ladder inside the {@link it.unibo.jmpcoon.model.world.World} of the game.
  */
-public final class Ladder extends StaticEntity {
+public class Ladder extends StaticEntity {
     private static final long serialVersionUID = -1338548627689639626L;
 
     /**

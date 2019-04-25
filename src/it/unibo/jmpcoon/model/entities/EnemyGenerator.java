@@ -11,7 +11,7 @@ import it.unibo.jmpcoon.model.world.ModifiableWorld;
  * An enemy generator inside the {@link it.unibo.jmpcoon.model.world.World} of the game.
  * It creates a new instance of the {@link RollingEnemy} on a regular interval of time.
  */
-public final class EnemyGenerator extends StaticEntity {
+public class EnemyGenerator extends StaticEntity {
     private static final long serialVersionUID = -3160192139428572083L;
     private static final ImmutablePair<Double, Double> ROLLING_ENEMY_DIMENSIONS = new ImmutablePair<Double, Double>(0.23, 0.23);
     private static final int DELTA = 280;

@@ -3,7 +3,7 @@ package it.unibo.jmpcoon.model.world;
 /**
  * The class implementation of a {@link WorldFactory}.
  */
-public final class WorldFactoryImpl implements WorldFactory {
+public class WorldFactoryImpl implements WorldFactory {
     private static final String NO_TWO_WORLDS_MSG = "There should be only one instance of World";
 
     private boolean worldCreated;

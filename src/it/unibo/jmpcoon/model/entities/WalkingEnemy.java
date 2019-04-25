@@ -8,7 +8,7 @@ import it.unibo.jmpcoon.model.physics.DynamicPhysicalBody;
 /**
  * A walking enemy inside the {@link it.unibo.jmpcoon.model.world.World} of the game.
  */
-public final class WalkingEnemy extends DynamicEntity {
+public class WalkingEnemy extends DynamicEntity {
     private static final long serialVersionUID = 5020187009003425168L;
     private static final double WALKING_SPEED = 0.4;
 

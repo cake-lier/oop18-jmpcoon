@@ -53,7 +53,7 @@ import it.unibo.jmpcoon.view.menus.Menu;
 /**
  * The class implementation of the {@link GameView} interface.
  */
-public final class GameViewImpl implements GameView {
+public class GameViewImpl implements GameView {
     private static final String INIT_ERR = "You can't call this method before initializing the instance";
     private static final String BG_IMAGE = "images/bg_game.png";
     private static final String LAYOUT_PATH = "layouts/";
