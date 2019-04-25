@@ -120,11 +120,6 @@ final class PhysicalWorldImpl implements PhysicalWorld {
         this.putAssociation(container, contained, EntityType.PLAYER);
     }
 
-    private void putAssociation(final PhysicalBody container, final SerializableBody contained, final EntityType type) {
-        this.physicalToBodyAssociations.putIfAbsent(container, contained);
-        this.bodyToEntityTypeAssociations.putIfAbsent(container, type);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -202,6 +197,14 @@ final class PhysicalWorldImpl implements PhysicalWorld {
             }
         }
         this.world.step(1);
+    }
+
+    /*
+     * Puts a generic association inside this PhysicalWorld between a PhysicalBody, its Body and its EntityType.
+     */
+    private void putAssociation(final PhysicalBody container, final SerializableBody contained, final EntityType type) {
+        this.physicalToBodyAssociations.putIfAbsent(container, contained);
+        this.bodyToEntityTypeAssociations.putIfAbsent(container, type);
     }
 
     /*

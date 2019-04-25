@@ -50,14 +50,6 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    protected Multimap<Class<? extends B>, B> delegate() {
-        return this.backingMap;
-    }
-
-    /**
-     * {@inheritDoc}
      * This particular type of multimap doesn't accept a {@code null} as a key or value. For a greater safety and a better
      * understandability, use {@link #putInstance(Class, Object)} instead. For "overwriting" the contract placed by
      * {@link ForwardingMultimap}, input {@code null} values can't throw a {@link NullPointerException}, because they were
@@ -87,15 +79,6 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
         return super.putAll(copy);
     }
 
-    /*
-     * A method for checking all if the entries of a multimap follow the rule for which the key is the class of the value
-     * instance before using the map.
-     */
-    private void checkMultimapEntries(final Multimap<Class<? extends B>, B> multimap) {
-        multimap.entries()
-                .forEach(entry -> this.cast(Objects.requireNonNull(entry.getKey()), Objects.requireNonNull(entry.getValue())));
-    }
-
     /**
      * {@inheritDoc}
      * @throws ClassCastException if the values inside the iterable aren't all of the same type specified by key
@@ -117,14 +100,6 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
         return super.replaceValues(key, values);
     }
 
-    /*
-     * Given an iterable and a type, checks if all the values inside the iterable are of the same type specified.
-     */
-    private void checkIterableValues(final Class<? extends B> type, final Iterable<? extends B> values) {
-        StreamSupport.stream(Objects.requireNonNull(values).spliterator(), true)
-                     .forEach(value -> this.cast(Objects.requireNonNull(type), Objects.requireNonNull(value)));
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -142,6 +117,31 @@ public final class ClassToInstanceMultimapImpl<B> extends ForwardingMultimap<Cla
     @Override
     public <T extends B> boolean putInstance(final Class<T> type, final T value) {
         return this.put(Objects.requireNonNull(type), Objects.requireNonNull(value));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Multimap<Class<? extends B>, B> delegate() {
+        return this.backingMap;
+    }
+
+    /*
+     * A method for checking all if the entries of a multimap follow the rule for which the key is the class of the value
+     * instance before using the map.
+     */
+    private void checkMultimapEntries(final Multimap<Class<? extends B>, B> multimap) {
+        multimap.entries()
+                .forEach(entry -> this.cast(Objects.requireNonNull(entry.getKey()), Objects.requireNonNull(entry.getValue())));
+    }
+
+    /*
+     * Given an iterable and a type, checks if all the values inside the iterable are of the same type specified.
+     */
+    private void checkIterableValues(final Class<? extends B> type, final Iterable<? extends B> values) {
+        StreamSupport.stream(Objects.requireNonNull(values).spliterator(), true)
+                     .forEach(value -> this.cast(Objects.requireNonNull(type), Objects.requireNonNull(value)));
     }
 
     /*

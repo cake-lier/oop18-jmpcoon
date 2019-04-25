@@ -280,16 +280,14 @@ public final class WorldImpl implements World {
     /*
      * Gets if the Player is currently standing on a platform or not. This is true only if is currently in contact with
      * a Platform and the contact point is at the bottom of the player bounding box and at the top of the platform bounding box.
+     * If it's in contact with the platform, but still jumping, it means the player has yet to complete (or start)
+     * the previous jump, so it isn't standing.
      */
     private boolean isBodyStanding(final PhysicalBody body) {
         final Collection<PhysicalBody> platformsBodies = this.aliveEntities.getInstances(Platform.class)
                                                                            .parallelStream()
                                                                            .map(Platform::getPhysicalBody)
                                                                            .collect(Collectors.toSet());
-        /* 
-         * If it's in contact with the platform, but still jumping, it means the player has yet to complete (or start)
-         * the previous jump, so it isn't standing.
-         */
         return this.innerWorld.getCollidingBodies(body)
                               .parallelStream()
                               .filter(collision -> platformsBodies.contains(collision.getLeft()))

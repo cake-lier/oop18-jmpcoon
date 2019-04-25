@@ -74,6 +74,9 @@ public final class AppViewImpl implements AppView {
         gameView.initialize(saveFileIndex);
     }
 
+    /*
+     * Sets the size of the Stage to the max possible square with ratio 16:9 inside the visual bounds of the primary screen. 
+     */
     private void setScreenSize() {
         final Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         this.stage.setX(screenBounds.getMinX());

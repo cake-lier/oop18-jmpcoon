@@ -1,7 +1,9 @@
 package it.unibo.jmpcoon.controller.app;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,11 +49,11 @@ public final class AppControllerImpl implements AppController {
                 ex.printStackTrace();
             }
         }
-/*        try {
+        try {
             System.setErr(new PrintStream(logPath.toFile()));
         } catch (final FileNotFoundException ex) {
             ex.printStackTrace();
-        }*/
+        }
         this.view.displayMenu();
     }
 
