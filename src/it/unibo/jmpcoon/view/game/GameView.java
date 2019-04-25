@@ -1,6 +1,6 @@
 package it.unibo.jmpcoon.view.game;
 
-import java.util.Set;
+import java.util.Collection;
 
 import com.google.common.base.Optional;
 
@@ -40,8 +40,8 @@ public interface GameView {
     void clean();
 
     /**
-     * Returns a set of the inputs currently being given by the user.
-     * @return a set of inputs
+     * Returns a {@link Collection} of the inputs given by the user after the last update.
+     * @return a collection of inputs
      */
-    Set<InputType> getInputs();
+    Collection<InputType> getInputs();
 }
