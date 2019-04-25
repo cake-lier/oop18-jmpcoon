@@ -11,7 +11,7 @@ SPACE to jump
 ESC to open in-game menu  
 
 _Credits:_  
-Made with love and sweat from GEMY Studios:  
+Made with love and sweat from:
 Giorgia Rondinini  
 Elena Rughi  
 Matteo Castellucci  
